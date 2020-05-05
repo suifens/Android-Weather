@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.goodtech.tq.util.Constant;
+import com.goodtech.tq.util.Constants;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
@@ -66,7 +66,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
 
     private String getPosId() {
         String posId = getIntent().getStringExtra("ad_id");
-        return TextUtils.isEmpty(posId) ? Constant.AD_ID : posId;
+        return TextUtils.isEmpty(posId) ? Constants.AD_ID : posId;
     }
 
     /**
@@ -149,7 +149,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     private void fetchSplashAD(Activity activity, ViewGroup adContainer, View skipContainer,
                                String posId, SplashADListener adListener) {
         fetchSplashADTime = System.currentTimeMillis();
-        splashAD = new SplashAD(activity, skipContainer, Constant.APP_ID, posId, adListener, 0);
+        splashAD = new SplashAD(activity, skipContainer, Constants.APP_ID, posId, adListener, 0);
         splashAD.fetchAndShowIn(adContainer);
     }
 

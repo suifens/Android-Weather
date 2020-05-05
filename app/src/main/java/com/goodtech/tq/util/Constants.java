@@ -1,6 +1,6 @@
 package com.goodtech.tq.util;
 
-public class Constant {
+public class Constants {
     //tencentAds
     public static final String APP_ID = "1106354620"; //应用ID
     public static final String AD_ID = "9000928561858848";  //广告id
