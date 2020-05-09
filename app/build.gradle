@@ -21,6 +21,12 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
 }
 
 dependencies {
@@ -37,4 +43,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     //网络加载图片工具
     implementation 'com.github.bumptech.glide:glide:4.7.1'
+    // umeng
+    implementation 'com.umeng.umsdk:common:2.2.5'
+    implementation 'com.umeng.umsdk:analytics:8.1.6'
+    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
 }

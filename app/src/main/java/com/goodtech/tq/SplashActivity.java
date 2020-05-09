@@ -24,6 +24,7 @@ import com.goodtech.tq.util.Constants;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
+import com.umeng.commonsdk.UMConfigure;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -96,7 +97,6 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
             lackedPermission.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
 
-        // 快手SDK所需相关权限，存储权限，此处配置作用于流量分配功能，关于流量分配，详情请咨询商务;如果您的APP不需要快手SDK的流量分配功能，则无需申请SD卡权限
         if (!(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED )){
             lackedPermission.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
@@ -233,6 +233,12 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
         } else {
             canJump = true;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        UMConfigure.init(this, Constants.UM_APP_ID, Constants.UM_APP_CHANNEL, UMConfigure.DEVICE_TYPE_PHONE, "");
     }
 
     @Override
