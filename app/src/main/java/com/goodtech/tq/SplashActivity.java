@@ -96,6 +96,9 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
         if (!(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
             lackedPermission.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            lackedPermission.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
 
         if (!(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED )){
             lackedPermission.add(Manifest.permission.READ_EXTERNAL_STORAGE);

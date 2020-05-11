@@ -4,8 +4,8 @@ import android.app.Application;
 import android.app.Service;
 import android.os.Vibrator;
 
-import com.baidu.mapapi.CoordType;
-import com.baidu.mapapi.SDKInitializer;
+//import com.baidu.mapapi.CoordType;
+//import com.baidu.mapapi.SDKInitializer;
 import com.goodtech.tq.service.LocationService;
 
 public class WeatherApplication extends Application {
@@ -19,7 +19,7 @@ public class WeatherApplication extends Application {
          */
         locationService = new LocationService(getApplicationContext());
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
-        SDKInitializer.initialize(getApplicationContext());
-        SDKInitializer.setCoordType(CoordType.BD09LL);
+//        SDKInitializer.initialize(getApplicationContext());
+//        SDKInitializer.setCoordType(CoordType.BD09LL);
     }
 }
