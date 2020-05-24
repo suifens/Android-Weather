@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.app;
 
 import android.app.Application;
 import android.app.Service;
@@ -6,14 +6,23 @@ import android.os.Vibrator;
 
 //import com.baidu.mapapi.CoordType;
 //import com.baidu.mapapi.SDKInitializer;
-import com.goodtech.tq.service.LocationService;
+import com.goodtech.tq.location.helper.LocationHelper;
+import com.goodtech.tq.location.services.LocationService;
 
-public class WeatherApplication extends Application {
+public class WeatherApp extends Application {
     public LocationService locationService;
     public Vibrator mVibrator;
+    public LocationHelper locationHelper = new LocationHelper();
+    private static WeatherApp mApplication;
+
+    public static WeatherApp getInstance() {
+        return mApplication;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mApplication = this;
         /***
          * 初始化定位sdk，建议在Application中创建
          */

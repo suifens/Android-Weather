@@ -1,4 +1,4 @@
-package com.goodtech.tq.util;
+package com.goodtech.tq.utils;
 
 public class Constants {
     //tencentAds
@@ -7,4 +7,6 @@ public class Constants {
 
     public static final String UM_APP_ID = "595a3b236e27a468630021e8";
     public static final String UM_APP_CHANNEL = "jinli";
+
+    public static final String SP_LOCATION = "sp_location_cur";
 }

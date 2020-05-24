@@ -4,4 +4,31 @@
     <string name="splash_loading" tools:ignore="TypographyEllipsis">广告加载中...</string>
     <string name="click_to_skip">点击跳过</string>
 
+    <!-- 后端错误码 -->
+    <string name="SUCCESS">请求成功！</string>
+    <string name="SVRFAIL">连接服务器失败！</string>
+    <string name="UNKNOWN">未知错误！</string>
+    <string name="TIMEOUT">请求超时！</string>
+    <string name="EMPTY_USER_INFO">用户信息为空！</string>
+    <string name="ERRJSON">数据解析错误！</string>
+    <string name="ERR000">系统错误！</string>
+    <string name="ERR001">未知用户！</string>
+    <string name="ERR002">用户名或密码错误！</string>
+    <string name="ERR0003">用户授权失败！</string>
+    <string name="ERR004">key值校验失败！</string>
+    <string name="ERR005">附加特征码校验失败！</string>
+    <string name="ERR006">验证码错误！</string>
+    <string name="ERR007">用户已存在！</string>
+    <string name="ERR008">用户不存在！</string>
+    <string name="ERR009">错误码009！</string>
+    <string name="ERR010">错误码010！</string>
+    <string name="ERR011">错误码011！</string>
+    <string name="ERR012">错误码012！</string>
+    <string name="ERR400">参数错误！</string>
+    <string name="ERR401">授权失败！</string>
+    <string name="ERR404">找不到指定的URL！</string>
+    <string name="ERR405">json序列化失败或者未使用json序列化！</string>
+    <string name="title_activity_record">RecordActivity</string>
+    <string name="title_activity_agreement">AgreementActivity</string>
+
 </resources>

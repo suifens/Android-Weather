@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.goodtech.tq.util.Constants;
+import com.goodtech.tq.utils.Constants;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
