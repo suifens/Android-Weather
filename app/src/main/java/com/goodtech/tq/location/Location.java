@@ -121,10 +121,8 @@ public class Location implements Serializable {
         this.addrStr = addrStr;
     }
 
-    public static void saveWithLocation(BDLocation bdLocation) {
+    public static Location location(BDLocation bdLocation) {
         Location location = new Location();
-        location.listNum = 0;
-        location.location = true;
         location.latitude = bdLocation.getLatitude();
         location.longitude = bdLocation.getLongitude();
         location.province = bdLocation.getProvince();
@@ -134,7 +132,7 @@ public class Location implements Serializable {
         location.town = bdLocation.getTown();
         location.street = bdLocation.getStreet();
         location.addrStr = bdLocation.getAddrStr();
-        SpUtils.getInstance().saveSerializableObject(Constants.SP_LOCATION, location);
+        return location;
     }
 
 }

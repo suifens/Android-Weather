@@ -7,10 +7,10 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
 import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.ApiCallback;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.location.Location;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.models.WeatherModel;
 
@@ -19,7 +19,7 @@ import com.goodtech.tq.models.WeatherModel;
  */
 public class LocationHelper {
 
-    private static final String TAG = "LocationHelper";
+    private static final String TAG = "LocationSpHelper";
     private LocationService locationService;
 
     public void start() {
@@ -54,7 +54,7 @@ public class LocationHelper {
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
 
                 //保存
-                Location.saveWithLocation(location);
+                LocationSpHelper.saveWithLocation(location);
 
                 WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
                 httpHelper.getWeather(location.getLatitude(), location.getLongitude(), new ApiCallback() {
