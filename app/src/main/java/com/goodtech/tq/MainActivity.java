@@ -31,8 +31,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.layout_address).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CityListActivity.class);
-                startActivity(intent);
+                CityListActivity.redirectTo(MainActivity.this);
             }
         });
 

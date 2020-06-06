@@ -1,5 +1,7 @@
 package com.goodtech.tq;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +9,12 @@ import android.view.View;
 import android.widget.Button;
 
 public class CityListActivity extends BaseActivity implements View.OnClickListener {
+
+    public static void redirectTo(Activity ctx) {
+        Intent intent = new Intent(ctx, CityListActivity.class);
+        ctx.startActivity(intent);
+        ctx.overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
+    }
 
     private Button mEditBtn;
     private boolean mEdit = false;
@@ -44,6 +52,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.button_close:
                 finish();
+                overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
                 break;
             case R.id.city_add:
                 //  添加城市
