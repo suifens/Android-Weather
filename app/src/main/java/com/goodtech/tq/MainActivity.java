@@ -1,31 +1,49 @@
 package com.goodtech.tq;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.location.Location;
 import com.goodtech.tq.utils.DeviceUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
 
-    private View mStationBar;
+    private TextView mAddressTv;
+    //  当前城市
+    private Location mCurLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mStationBar = findViewById(R.id.private_station_bar);
 
-        ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(mStationBar.getLayoutParams());
-        bars.height = bars.height + DeviceUtils.getStatusBarHeight();
-        mStationBar.setLayoutParams(bars);
+        //  配置station
+        configStationBar(findViewById(R.id.private_station_bar));
 
-        Log.d(TAG, "onCreate: bar height = " + bars.height);
+        //  点击地址，跳转到城市列表
+        findViewById(R.id.layout_address).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CityListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //  跳转到设置页面
+        findViewById(R.id.img_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -40,5 +58,4 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         WeatherApp.getInstance().locationHelper.start();
     }
-
-    }
+}
