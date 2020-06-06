@@ -1,5 +1,8 @@
 package com.goodtech.tq.utils;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
 import com.goodtech.tq.app.WeatherApp;
@@ -24,6 +27,22 @@ public class DeviceUtils {
             result = resources.getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    /**
+     * 返回版本名字
+     * 对应build.gradle中的versionName
+     */
+    public static String getVersionName(Context context) {
+        String versionName = "";
+        try {
+            PackageManager packageManager = WeatherApp.getInstance().getPackageManager();
+            PackageInfo packInfo = packageManager.getPackageInfo(WeatherApp.getInstance().getPackageName(), 0);
+            versionName = packInfo.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return versionName;
     }
 
 }
