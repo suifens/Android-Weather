@@ -3,4 +3,21 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="clear">#00000000</color>
+
+    <color name="black">#000000</color>
+    <color name="black_alpha10">#1A000000</color>
+
+    <!--副标题颜色-->
+    <color name="colorSubtitle">#9B9B9B</color>
+
+    <color name="color_d8d8d8">#d8d8d8</color>
+    <color name="color_979797">#979797</color>
+    <color name="color_4a4a4a">#4a4a4a</color>
+    <color name="color_00c4ff">#00C4FF</color>
+    <color name="color_d1d1d1">#D1D1D1</color>
+    <color name="color_current_location">#FAFAFA</color>
+    <color name="color_line">#ECECEC</color>
+
 </resources>
