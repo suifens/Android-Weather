@@ -59,6 +59,13 @@ public class WeatherHttpHelper {
                         List<Hourly> hourlies = new Gson().fromJson(forecasts, new TypeToken<List<Hourly>>() {
                         }.getType());
 
+                        if (hourlies.size() > 0) {
+                            Hourly hourly = hourlies.get(0);
+                            if (hourly != null) {
+                                model.icon_cd = hourly.icon_cd;
+                            }
+                        }
+
                         model.hourlies = hourlies;
                         Log.e(TAG, "onResponse: hourly = " + hourlies);
                     }

@@ -9,4 +9,5 @@ public class Constants {
     public static final String UM_APP_CHANNEL = "jinli";
 
     public static final String SP_LOCATION = "sp_location_cur";
+    public static final String SP_LOCATION_LIST = "sp_location_list";
 }

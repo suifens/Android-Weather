@@ -16,6 +16,8 @@ public class WeatherModel {
 
     public long expireTime;
 
+    public int icon_cd;
+
     public Observation observation;
 
     //  24小时天气
@@ -31,6 +33,13 @@ public class WeatherModel {
             return true;
         }
         return false;
+    }
+
+    public Daily today() {
+        if (dailies.size() > 0) {
+            return dailies.get(0);
+        }
+        return null;
     }
 
 }

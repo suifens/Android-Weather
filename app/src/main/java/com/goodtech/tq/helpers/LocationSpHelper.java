@@ -4,6 +4,8 @@ import com.baidu.location.BDLocation;
 import com.goodtech.tq.location.Location;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,38 +22,57 @@ public class LocationSpHelper {
         Location location = Location.location(bdLocation);
         location.setListNum(0);
         location.setLocation(true);
-        SpUtils.getInstance().saveSerializableObject(Constants.SP_LOCATION, location);
+        Gson gson = new Gson();
+        String json = gson.toJson(location);
+        SpUtils.getInstance().putString(Constants.SP_LOCATION, json);
     }
 
     /**
      * 获取当前定位
      */
     public static Location getLocation() {
-        return SpUtils.getInstance().getSerializableObject(Constants.SP_LOCATION);
+        String json = SpUtils.getInstance().getString(Constants.SP_LOCATION, "");
+        if (!json.isEmpty()) {
+            Gson gson = new Gson();
+            Location location = gson.fromJson(json, new TypeToken<Location>(){}.getType());
+            return location;
+        } else {
+            return null;
+        }
     }
 
     /**
      * 获取城市列表
      */
     public static List<Location> getLocationList() {
-        List<Location> locations = SpUtils.getInstance().getSerializableObject(Constants.SP_LOCATION_LIST);
-        if (locations != null) {
-            locations = new ArrayList<>();
+        String json = SpUtils.getInstance().getString(Constants.SP_LOCATION_LIST, "");
+        if (!json.isEmpty()) {
+            Gson gson = new Gson();
+            List<Location> locations = gson.fromJson(json, new TypeToken<List<Location>>(){}.getType());
+            if (locations != null) {
+                locations = new ArrayList<>();
+            }
+            Location location = getLocation();
+            if (location != null && !location.getAddrStr().isEmpty()) {
+                locations.add(0, getLocation());
+            }
+            return locations;
+        } else {
+            return new ArrayList<>();
         }
-        locations.add(0, getLocation());
-        return locations;
     }
 
     /**
      * 添加城市
      */
     public static void addCity(Location city) {
-        List<Location> locations = SpUtils.getInstance().getSerializableObject(Constants.SP_LOCATION_LIST);
-        if (locations != null) {
-            locations = new ArrayList<>();
-        }
+        List<Location> locations = getLocationList();
+
+        city.setListNum(locations.size());
         locations.add(city);
-        SpUtils.getInstance().saveSerializableObject(Constants.SP_LOCATION, locations);
+        Gson gson = new Gson();
+        String json = gson.toJson(locations);
+        SpUtils.getInstance().putString(Constants.SP_LOCATION, json);
     }
 
 }

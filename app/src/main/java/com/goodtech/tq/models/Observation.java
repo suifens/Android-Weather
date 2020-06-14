@@ -12,24 +12,8 @@ public class Observation implements Parcelable {
     @SerializedName("valid_time_gmt")
     public long validTime;
 
-    @SerializedName("metric.dewpt")
-    public int dewpt;
-    @SerializedName("metric.feels_like")
-    public int feelsLike;
-    @SerializedName("metric.max_temp")
-    public int maxTemp;
-    @SerializedName("metric.min_temp")
-    public int minTemp;
-    @SerializedName("metric.precip_total")
-    public float precipTotal;
-    @SerializedName("metric.pressure")
-    public float pressure;
-    @SerializedName("metric.temp")
-    public int temp;
-    @SerializedName("metric.vis")
-    public float vis;
-    @SerializedName("metric.wspd")
-    public int wspd;
+    @SerializedName("metric")
+    public Metric metric;
 
     @SerializedName("obs_id")
     public String obsId;
@@ -39,14 +23,14 @@ public class Observation implements Parcelable {
     public String pressureDesc;
     @SerializedName("pressure_tend")
     public int pressureTend;
-    public int rh;
+    public int rh;  //  湿度
     //  紫外线
     //  "低"
     @SerializedName("uv_desc")
     public String uvDesc;
     //  0
     @SerializedName("uv_index")
-    public int uvInde;
+    public int uvIndex;  //  紫外线指数
 
     //  69
     @SerializedName("wdir")
@@ -61,22 +45,14 @@ public class Observation implements Parcelable {
 
     protected Observation(Parcel in) {
         validTime = in.readLong();
-        dewpt = in.readInt();
-        feelsLike = in.readInt();
-        maxTemp = in.readInt();
-        minTemp = in.readInt();
-        precipTotal = in.readFloat();
-        pressure = in.readFloat();
-        temp = in.readInt();
-        vis = in.readFloat();
-        wspd = in.readInt();
+        metric = in.readParcelable(Metric.class.getClassLoader());
         obsId = in.readString();
         obsName = in.readString();
         pressureDesc = in.readString();
         pressureTend = in.readInt();
         rh = in.readInt();
         uvDesc = in.readString();
-        uvInde = in.readInt();
+        uvIndex = in.readInt();
         wdir = in.readInt();
         wdirCardinal = in.readString();
         wxIcon = in.readInt();
@@ -103,22 +79,14 @@ public class Observation implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(validTime);
-        dest.writeInt(dewpt);
-        dest.writeInt(feelsLike);
-        dest.writeInt(maxTemp);
-        dest.writeInt(minTemp);
-        dest.writeFloat(precipTotal);
-        dest.writeFloat(pressure);
-        dest.writeInt(temp);
-        dest.writeFloat(vis);
-        dest.writeInt(wspd);
+        dest.writeParcelable(metric, flags);
         dest.writeString(obsId);
         dest.writeString(obsName);
         dest.writeString(pressureDesc);
         dest.writeInt(pressureTend);
         dest.writeInt(rh);
         dest.writeString(uvDesc);
-        dest.writeInt(uvInde);
+        dest.writeInt(uvIndex);
         dest.writeInt(wdir);
         dest.writeString(wdirCardinal);
         dest.writeInt(wxIcon);

@@ -56,14 +56,6 @@ public class LocationHelper {
                 //保存
                 LocationSpHelper.saveWithLocation(location);
 
-                WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
-                httpHelper.getWeather(location.getLatitude(), location.getLongitude(), new ApiCallback() {
-                    @Override
-                    public void onResponse(boolean success, WeatherModel weather, ErrorCode errCode) {
-                        super.onResponse(success, weather, errCode);
-                    }
-                });
-
                 {
                     int tag = 1;
                     StringBuffer sb = new StringBuffer(256);

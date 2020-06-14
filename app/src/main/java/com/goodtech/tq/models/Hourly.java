@@ -43,6 +43,13 @@ public class Hourly implements Parcelable {
     @SerializedName("wdir_cardinal")
     public String wdir_cardinal;
 
+    public boolean sunrise;
+    public boolean sunset;
+
+    public Hourly() {
+
+    }
+
     protected Hourly(Parcel in) {
         num = in.readInt();
         dayInd = in.readString();

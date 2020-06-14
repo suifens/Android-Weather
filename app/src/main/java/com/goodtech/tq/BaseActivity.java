@@ -1,6 +1,8 @@
 package com.goodtech.tq;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +14,8 @@ import com.goodtech.tq.utils.DeviceUtils;
  * com.goodtech.tq
  */
 public class BaseActivity extends AppCompatActivity {
+
+    protected Handler mHandler = new Handler(Looper.getMainLooper());
 
     private static final String TAG = "BaseActivity";
 

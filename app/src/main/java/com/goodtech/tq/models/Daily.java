@@ -18,11 +18,11 @@ public class Daily implements Parcelable {
     @SerializedName("fcst_valid")
     public long fcst_valid;
 
-    @SerializedName("metric.max_temp")
-    public int max_temp;
+    @SerializedName("fcst_valid_local")
+    public String fcst_valid_local;
 
-    @SerializedName("metric.min_temp")
-    public int min_temp;
+    @SerializedName("metric")
+    public Metric metric;
 
     @SerializedName("moonrise")
     public String moonRise;
@@ -47,8 +47,8 @@ public class Daily implements Parcelable {
         num = in.readInt();
         dow = in.readString();
         fcst_valid = in.readLong();
-        max_temp = in.readInt();
-        min_temp = in.readInt();
+        fcst_valid_local = in.readString();
+        metric = in.readParcelable(Metric.class.getClassLoader());
         moonRise = in.readString();
         moonSet = in.readString();
         moon_phase = in.readString();
@@ -81,8 +81,8 @@ public class Daily implements Parcelable {
         dest.writeInt(num);
         dest.writeString(dow);
         dest.writeLong(fcst_valid);
-        dest.writeInt(max_temp);
-        dest.writeInt(min_temp);
+        dest.writeString(fcst_valid_local);
+        dest.writeParcelable(metric, flags);
         dest.writeString(moonRise);
         dest.writeString(moonSet);
         dest.writeString(moon_phase);

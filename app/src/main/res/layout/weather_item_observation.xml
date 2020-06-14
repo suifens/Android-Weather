@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="15dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="15dp"
+    android:layout_marginBottom="23dp"
+    android:orientation="vertical"
+    android:background="@drawable/bg_circle_white_6"
+    android:minHeight="543dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="124dp"
+        android:layout_marginStart="18dp">
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="湖里区，湖里大道 今日天气"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_16"
+            android:layout_marginTop="14dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="体感温度"
+            android:textColor="@color/colorSubtitle"
+            android:textSize="@dimen/sp_14"
+            android:layout_marginTop="9dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_address" />
+        
+        <com.goodtech.tq.utils.font.AlternateBoldTextView
+            android:id="@+id/tv_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="48sp"
+            android:textColor="#00C4FF"
+            android:text="29"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <com.goodtech.tq.utils.font.AlternateBoldTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:textColor="#00C4FF"
+            android:text="℃"
+            android:layout_marginBottom="9dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@+id/tv_temperature"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="1dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/sunset"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_sunrise"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_sunrise"
+                android:textColor="@color/colorSubtitle"
+                android:textSize="@dimen/sp_14"
+                android:layout_marginStart="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_time_sunrise"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="08:00"
+                android:textAlignment="textEnd"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_14" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sunset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_sunset"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_sunset"
+                android:textColor="@color/colorSubtitle"
+                android:textSize="@dimen/sp_14"
+                android:layout_marginStart="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_time_sunset"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="18:00"
+                android:textAlignment="textEnd"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_14" />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_d8d8d8"
+        android:alpha="0.3"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="18dp" >
+
+<!--高温/低温-->
+        <com.goodtech.tq.views.ObservationItemView
+            android:id="@+id/layout_temperature"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:img_icon="@drawable/ic_temperature"
+            app:tv_title="高温/低温"
+            />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#ECECEC" />
+
+<!--风速-->
+        <com.goodtech.tq.views.ObservationItemView
+            android:id="@+id/layout_wind_speed"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:img_icon="@drawable/ic_gale"
+            app:tv_title="风速"
+            />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#ECECEC" />
+
+<!--湿度-->
+        <com.goodtech.tq.views.ObservationItemView
+            android:id="@+id/layout_rh"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:img_icon="@drawable/ic_humidity"
+            app:tv_title="湿度" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#ECECEC" />
+
+<!--露点-->
+        <com.goodtech.tq.views.ObservationItemView
+            android:id="@+id/layout_dewpt"
+            layout="@layout/linear_item_observation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:img_icon="@drawable/ic_dew"
+            app:tv_title="露点" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#ECECEC" />
+
+<!--        气压-->
+        <com.goodtech.tq.views.ObservationItemView
+            android:id="@+id/layout_pressure"
+            layout="@layout/linear_item_observation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:img_icon="@drawable/ic_pressure"
+            app:tv_title="气压" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#ECECEC" />
+
+<!--        紫外线指数-->
+        <com.goodtech.tq.views.ObservationItemView
+            android:id="@+id/layout_uv_index"
+            layout="@layout/linear_item_observation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:img_icon="@drawable/ic_ultraviolet"
+            app:tv_title="紫外线指数" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#ECECEC" />
+
+<!--        能见度-->
+        <com.goodtech.tq.views.ObservationItemView
+            android:id="@+id/layout_visibility"
+            layout="@layout/linear_item_observation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:img_icon="@drawable/ic_vis"
+            app:tv_title="能见度" />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#ECECEC" />
+
+        <!--月相-->
+        <com.goodtech.tq.views.ObservationItemView
+            android:id="@+id/layout_moon_phase"
+            layout="@layout/linear_item_observation"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:img_icon="@drawable/ic_moon"
+            app:tv_title="月相" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

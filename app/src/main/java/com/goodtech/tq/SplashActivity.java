@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.httpClient.ApiClient;
 import com.goodtech.tq.utils.Constants;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
@@ -63,6 +65,8 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
             // 如果是Android6.0以下的机器，建议在manifest中配置相关权限，这里可以直接调用SDK
             fetchSplashAD(this, container, skipView, getPosId(), this);
         }
+
+        ApiClient.getInstance();
     }
 
     private String getPosId() {
@@ -242,6 +246,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     protected void onStart() {
         super.onStart();
         UMConfigure.init(this, Constants.UM_APP_ID, Constants.UM_APP_CHANNEL, UMConfigure.DEVICE_TYPE_PHONE, "");
+        WeatherApp.getInstance().locationHelper.start();
     }
 
     @Override

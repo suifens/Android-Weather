@@ -3,20 +3,41 @@ package com.goodtech.tq.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * com.goodtech.tq.models
  */
 public class Metric implements Parcelable {
 
-    public int dewpt;
     public int gust;
-    public int temp;
-    public float vis;
-    public int wspd;
+    @SerializedName("dewpt")
+    public int dewpt;   //  露点
+    @SerializedName("feels_like")
+    public int feelsLike;
+    @SerializedName("max_temp")
+    public int maxTemp; //  最高温
+    @SerializedName("min_temp")
+    public int minTemp; //  最低温
+    @SerializedName("precip_total")
+    public float precipTotal;
+    @SerializedName("pressure")
+    public float pressure;  //  气压
+    @SerializedName("temp")
+    public int temp;    //  温度
+    @SerializedName("vis")
+    public float vis;   //  能见度
+    @SerializedName("wspd")
+    public int wspd;    //  风速 km/h
 
     protected Metric(Parcel in) {
-        dewpt = in.readInt();
         gust = in.readInt();
+        dewpt = in.readInt();
+        feelsLike = in.readInt();
+        maxTemp = in.readInt();
+        minTemp = in.readInt();
+        precipTotal = in.readFloat();
+        pressure = in.readFloat();
         temp = in.readInt();
         vis = in.readFloat();
         wspd = in.readInt();
@@ -41,8 +62,13 @@ public class Metric implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(dewpt);
         dest.writeInt(gust);
+        dest.writeInt(dewpt);
+        dest.writeInt(feelsLike);
+        dest.writeInt(maxTemp);
+        dest.writeInt(minTemp);
+        dest.writeFloat(precipTotal);
+        dest.writeFloat(pressure);
         dest.writeInt(temp);
         dest.writeFloat(vis);
         dest.writeInt(wspd);
