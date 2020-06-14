@@ -11,7 +11,7 @@
         android:id="@+id/private_station_bar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#487233"
+        android:background="@drawable/gradient_007bff_00c4ff"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

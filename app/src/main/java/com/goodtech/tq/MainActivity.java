@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -18,7 +19,10 @@ import com.goodtech.tq.httpClient.ApiCallback;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.Location;
+import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +37,7 @@ public class MainActivity extends BaseActivity {
 
     private ViewPager mViewPager;
     private ViewPagerAdapter mAdapter;
+    private ImageView mBgImgView;
     private RadioGroup mRgIndicator;
     private List<Location> mLocationList;
     private List<Fragment> mFragmentList = new ArrayList<>();
@@ -43,6 +48,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mAddressTv = findViewById(R.id.tv_address);
         mViewPager = findViewById(R.id.viewpager_main);
+        mBgImgView = findViewById(R.id.img_background);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -73,6 +79,7 @@ public class MainActivity extends BaseActivity {
 
     private void configViewPager() {
         WeatherFragment fragment = new WeatherFragment();
+        fragment.setStateBar(findViewById(R.id.station_bg_view));
         mFragmentList.add(fragment);
         WeatherFragment2 nextFragment = new WeatherFragment2();
         mFragmentList.add(nextFragment);
@@ -103,6 +110,7 @@ public class MainActivity extends BaseActivity {
                         String address = String.format("%s %s", mCurLocation.getDistrict(), mCurLocation.getStreet());
                         WeatherFragment fragment = (WeatherFragment) mFragmentList.get(0);
                         fragment.changeWeather(weather, address);
+                        changeBg(weather);
                     }
                 });
             }
@@ -113,5 +121,25 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: ");
+    }
+
+    private void changeBg(final WeatherModel model) {
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (model != null && model.dailies != null) {
+                    Daily daily = model.dailies.get(0);
+                    if (daily != null) {
+                        long tSunrise = TimeUtils.switchTime(daily.sunRise);
+                        long tSunset = TimeUtils.switchTime(daily.sunSet);
+                        long current = System.currentTimeMillis();
+
+                        boolean night = current < tSunrise || current > tSunset;
+                        mBgImgView.setImageResource(ImageUtils.bgImageRes(model.icon_cd, night));
+                    }
+                }
+            }
+        });
     }
 }
