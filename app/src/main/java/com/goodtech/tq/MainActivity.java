@@ -23,6 +23,7 @@ import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +121,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: ");
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     private void changeBg(final WeatherModel model) {

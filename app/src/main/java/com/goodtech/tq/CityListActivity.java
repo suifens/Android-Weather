@@ -8,7 +8,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import com.umeng.analytics.MobclickAgent;
+
 public class CityListActivity extends BaseActivity implements View.OnClickListener {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
     public static void redirectTo(Activity ctx) {
         Intent intent = new Intent(ctx, CityListActivity.class);

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.goodtech.tq.utils.DeviceUtils;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * com.goodtech.tq

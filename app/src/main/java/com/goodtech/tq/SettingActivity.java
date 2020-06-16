@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.umeng.analytics.MobclickAgent;
+
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
@@ -19,6 +21,18 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.layout_praise).setOnClickListener(this);
         findViewById(R.id.layout_about).setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

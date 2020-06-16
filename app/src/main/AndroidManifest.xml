@@ -31,6 +31,9 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="MW7mNdpfGlsgjWqD9BGv1jHWlSfTBLOO" />
 
+        <!--value的值填写你在友盟后台申请的应用Appkey-->
+        <meta-data android:value="595a3b236e27a468630021e8" android:name="UMENG_APPKEY"/>
+
         <activity
             android:name=".SplashActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
