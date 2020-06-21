@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CityListActivity">
+    tools:context=".cityList.CityListActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/private_station_bar"
@@ -22,7 +22,7 @@
             android:layout_height="44dp"
             android:layout_marginStart="7dp"
             android:layout_marginBottom="4dp"
-            android:background="@color/clear"
+            android:background="@color/color_clear"
             android:src="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -33,7 +33,7 @@
             android:layout_height="44dp"
             android:layout_marginEnd="7dp"
             android:layout_marginBottom="4dp"
-            android:background="@color/clear"
+            android:background="@color/color_clear"
             android:text="@string/button_edit"
             android:textColor="@color/white"
             android:textSize="18sp"

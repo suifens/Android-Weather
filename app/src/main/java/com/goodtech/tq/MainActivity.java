@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.fragement.WeatherFragment;
 import com.goodtech.tq.fragement.WeatherFragment2;
 import com.goodtech.tq.fragement.adapter.ViewPagerAdapter;
@@ -18,7 +19,7 @@ import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.ApiCallback;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.location.Location;
+import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.ImageUtils;
@@ -34,13 +35,13 @@ public class MainActivity extends BaseActivity {
 
     protected TextView mAddressTv;
     //  当前城市
-    private Location mCurLocation;
+    private CityMode mCurLocation;
 
     private ViewPager mViewPager;
     private ViewPagerAdapter mAdapter;
     private ImageView mBgImgView;
     private RadioGroup mRgIndicator;
-    private List<Location> mLocationList;
+    private List<CityMode> mLocationList;
     private List<Fragment> mFragmentList = new ArrayList<>();
 
     @Override
@@ -73,7 +74,7 @@ public class MainActivity extends BaseActivity {
 
         mLocationList = LocationSpHelper.getLocationList();
         mCurLocation = LocationSpHelper.getLocation();
-        mAddressTv.setText(String.format("%s %s", mCurLocation.getDistrict(), mCurLocation.getStreet()));
+        mAddressTv.setText(mCurLocation.city);
 
         configViewPager();
     }
@@ -102,15 +103,14 @@ public class MainActivity extends BaseActivity {
         Log.d(TAG, "onStart: ");
 
         WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
-        httpHelper.getWeather(mCurLocation.getLatitude(), mCurLocation.getLongitude(), new ApiCallback() {
+        httpHelper.getWeather(mCurLocation.lat, mCurLocation.lon, new ApiCallback() {
             @Override
             public void onResponse(boolean success, final WeatherModel weather, ErrorCode errCode) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        String address = String.format("%s %s", mCurLocation.getDistrict(), mCurLocation.getStreet());
                         WeatherFragment fragment = (WeatherFragment) mFragmentList.get(0);
-                        fragment.changeWeather(weather, address);
+                        fragment.changeWeather(weather, mCurLocation.city);
                         changeBg(weather);
                     }
                 });

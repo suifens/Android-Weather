@@ -1,0 +1,112 @@
+{
+  "citys": [
+    {
+      "city": "实时定位城市",
+      "lat": "39.55",
+      "lon": "116.24",
+      "pinyin": "bei jing shi"
+    },
+    {
+      "city": "热门城市",
+      "lat": "39.55",
+      "lon": "116.24",
+      "pinyin": "bei jing shi"
+    },
+    {
+      "cid": 10000,
+      "province": "北京市",
+      "city": "北京市",
+      "lat": "39.55",
+      "lon": "116.24",
+      "pinyin": "bei jing shi"
+    },
+    {
+      "cid": 10001,
+      "province": "上海市",
+      "city": "上海市",
+      "lat": "31.14",
+      "lon": "121.29",
+      "pinyin": "shang hai shi"
+    },
+    {
+      "cid": 10057,
+      "province": "广东省",
+      "city": "广州",
+      "lat": "23.08",
+      "lon": "113.14",
+      "pinyin": "guang zhou"
+    },
+    {
+      "cid": 10092,
+      "province": "广东省",
+      "city": "深圳",
+      "lat": "22.33",
+      "lon": "114.07",
+      "pinyin": "shen "
+    },
+    {
+      "cid": 10520,
+      "province": "四川省",
+      "city": "成都",
+      "lat": "30.40",
+      "lon": "104.04",
+      "pinyin": "cheng du"
+    },
+    {
+      "cid": 10349,
+      "province": "江苏省",
+      "city": "苏州",
+      "lat": "31.19",
+      "lon": "120.37",
+      "pinyin": "su zhou"
+    },
+    {
+      "cid": 10620,
+      "province": "重庆市",
+      "city": "重庆市",
+      "lat": "29.35",
+      "lon": "106.33",
+      "pinyin": "zhong qing shi"
+    },
+    {
+      "cid": 10174,
+      "province": "河南省",
+      "city": "郑州",
+      "lat": "34.46",
+      "lon": "113.40",
+      "pinyin": "zheng zhou"
+    },
+    {
+      "cid": 10506,
+      "province": "陕西省",
+      "city": "西安",
+      "lat": "34.17",
+      "lon": "108.57",
+      "pinyin": "xi an"
+    },
+    {
+      "cid": 10022,
+      "province": "福建省",
+      "city": "福州",
+      "lat": "26.05",
+      "lon": "119.18",
+      "pinyin": "fu zhou"
+    },
+    {
+      "cid": 10040,
+      "province": "福建省",
+      "city": "厦门",
+      "lat": "24.27",
+      "lon": "118.06",
+      "pinyin": "xia men"
+    },
+    {
+      "cid": 10239,
+      "province": "湖北省",
+      "city": "武汉",
+      "lat": "30.35",
+      "lon": "114.17",
+      "pinyin": "wu han"
+    }
+  ]
+}

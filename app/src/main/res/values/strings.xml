@@ -46,4 +46,6 @@
     <string name="title_activity_record">RecordActivity</string>
     <string name="title_activity_agreement">AgreementActivity</string>
 
+    <string name="hint_search_city">搜索全球城市</string>
+
 </resources>

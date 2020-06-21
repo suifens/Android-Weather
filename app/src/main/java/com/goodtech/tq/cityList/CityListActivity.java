@@ -1,13 +1,15 @@
-package com.goodtech.tq;
+package com.goodtech.tq.cityList;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.R;
+import com.goodtech.tq.citySearch.LocationSearchActivity;
 import com.umeng.analytics.MobclickAgent;
 
 public class CityListActivity extends BaseActivity implements View.OnClickListener {
@@ -70,7 +72,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.city_add:
                 //  添加城市
-
+                Intent intent = new Intent(CityListActivity.this, LocationSearchActivity.class);
+                startActivity(intent);
                 break;
             case R.id.button_city_edit:
                 //  点击编辑/取消按钮

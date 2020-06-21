@@ -6,6 +6,7 @@ import android.os.Vibrator;
 
 //import com.baidu.mapapi.CoordType;
 //import com.baidu.mapapi.SDKInitializer;
+import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.umeng.commonsdk.UMConfigure;
@@ -33,5 +34,7 @@ public class WeatherApp extends Application {
 //        SDKInitializer.setCoordType(CoordType.BD09LL);
 
         UMConfigure.init(getApplicationContext(), UMConfigure.DEVICE_TYPE_PHONE, "");
+
+        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
 }
