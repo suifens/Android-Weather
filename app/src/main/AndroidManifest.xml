@@ -75,6 +75,10 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity android:name=".citySearch.LocationSearchActivity"
+        android:screenOrientation="portrait"
+        tools:ignore="LockedOrientationActivity" />
+
+        <activity android:name=".PermissionActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         
