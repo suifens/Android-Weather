@@ -21,15 +21,16 @@ public class LocationSpHelper {
      * 保存当前定位
      */
     public static void saveWithLocation(BDLocation bdLocation) {
-        if (bdLocation.getTime() == null) {
-            return;
-        }
         CityMode cityMode = new CityMode();
-        cityMode.listNum = 0;
-        cityMode.cid = 1000;
-        cityMode.lat = bdLocation.getLatitude();
-        cityMode.lon = bdLocation.getLongitude();
-        cityMode.city = String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet());
+        if (TextUtils.isEmpty(bdLocation.getCity())) {
+            cityMode.cid = 0;
+        } else {
+            cityMode.listNum = 0;
+            cityMode.cid = 1000;
+            cityMode.lat = bdLocation.getLatitude();
+            cityMode.lon = bdLocation.getLongitude();
+            cityMode.city = String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet());
+        }
         Gson gson = new Gson();
         String json = gson.toJson(cityMode);
         SpUtils.getInstance().putString(Constants.SP_LOCATION, json);
@@ -44,23 +45,25 @@ public class LocationSpHelper {
             Gson gson = new Gson();
             return gson.fromJson(json, new TypeToken<CityMode>(){}.getType());
         } else {
-            return null;
+            CityMode cityMode = new CityMode();
+            cityMode.cid = 0;
+            return cityMode;
         }
     }
 
     /**
      * 获取城市列表
      */
-    public static List<CityMode> getLocationList() {
+    public static ArrayList<CityMode> getLocationList() {
         String json = SpUtils.getInstance().getString(Constants.SP_LOCATION_LIST, "");
         if (!json.isEmpty()) {
             Gson gson = new Gson();
-            List<CityMode> locations = gson.fromJson(json, new TypeToken<List<CityMode>>(){}.getType());
+            ArrayList<CityMode> locations = gson.fromJson(json, new TypeToken<ArrayList<CityMode>>(){}.getType());
             if (locations == null) {
                 locations = new ArrayList<>();
             }
             CityMode location = getLocation();
-            if (location != null && !TextUtils.isEmpty(location.city)) {
+            if (location != null) {
                 locations.add(0, getLocation());
             }
             return locations;

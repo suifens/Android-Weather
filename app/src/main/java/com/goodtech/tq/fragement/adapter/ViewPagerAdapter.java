@@ -30,7 +30,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return mFragments.size();
     }
 
-
     public void replaceAll(List<Fragment> fragments){
         this.mFragments = fragments;
         notifyDataSetChanged();

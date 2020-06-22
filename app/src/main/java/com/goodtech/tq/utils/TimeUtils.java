@@ -53,4 +53,17 @@ public class TimeUtils {
         return format.format(timeMills);
     }
 
+    /**
+     * 是否需要重新定位， 5分钟内不需要
+     */
+    public static boolean needLocation() {
+        long locationTime = SpUtils.getInstance().getLong(Constants.TIME_LOCATION, (long) 0);
+        return System.currentTimeMillis() - locationTime > 5 * 60 * 1000;
+    }
+
+    public static boolean needFetchWeather() {
+        long locationTime = SpUtils.getInstance().getLong(Constants.TIME_WEATHER, (long) 0);
+        return System.currentTimeMillis() - locationTime > 5 * 60 * 1000;
+    }
+
 }

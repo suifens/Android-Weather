@@ -88,6 +88,6 @@ public class WeatherFragment extends BaseFragment {
     public void changeWeather(WeatherModel model, String address) {
         mModel = model;
 
-//        mAdapter.notifyDataSetChanged(model, address);
+        mAdapter.notifyDataSetChanged(model, address);
     }
 }

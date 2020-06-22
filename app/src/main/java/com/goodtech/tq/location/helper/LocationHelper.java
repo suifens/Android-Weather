@@ -13,6 +13,8 @@ import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.SpUtils;
 
 /**
  * com.goodtech.tq.location.service
@@ -55,6 +57,8 @@ public class LocationHelper {
 
                 //保存
                 LocationSpHelper.saveWithLocation(location);
+
+                SpUtils.getInstance().putLong(Constants.TIME_LOCATION, System.currentTimeMillis());
 
                 {
                     int tag = 1;

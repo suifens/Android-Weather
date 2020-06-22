@@ -16,7 +16,7 @@ public class CityMode implements Parcelable {
      * "lon": "117.17",
      * "pinyin": "he fei"
      */
-    public long cid = 0;
+    public int cid = 0;
 
     public String province;
 
@@ -33,7 +33,7 @@ public class CityMode implements Parcelable {
     public CityMode() {}
 
     protected CityMode(Parcel in) {
-        cid = in.readLong();
+        cid = in.readInt();
         province = in.readString();
         city = in.readString();
         lat = in.readDouble();
@@ -55,7 +55,7 @@ public class CityMode implements Parcelable {
     };
 
     public void resolveCour(Cursor cursor){
-        this.cid = cursor.getLong(cursor.getColumnIndex("cid"));
+        this.cid = cursor.getInt(cursor.getColumnIndex("cid"));
         this.province = cursor.getString(cursor.getColumnIndex("province"));
         this.city = cursor.getString(cursor.getColumnIndex("city"));
         this.lat = cursor.getDouble(cursor.getColumnIndex("lat"));

@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
-import com.goodtech.tq.citySearch.LocationSearchActivity;
+import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.umeng.analytics.MobclickAgent;
 
 public class CityListActivity extends BaseActivity implements View.OnClickListener {
@@ -72,7 +72,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.city_add:
                 //  添加城市
-                Intent intent = new Intent(CityListActivity.this, LocationSearchActivity.class);
+                Intent intent = new Intent(CityListActivity.this, CitySearchActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button_city_edit:

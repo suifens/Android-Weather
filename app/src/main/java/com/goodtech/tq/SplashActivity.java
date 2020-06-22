@@ -182,7 +182,9 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     protected void onStart() {
         super.onStart();
         UMConfigure.init(this, Constants.UM_APP_ID, Constants.UM_APP_CHANNEL, UMConfigure.DEVICE_TYPE_PHONE, "");
-        WeatherApp.getInstance().locationHelper.start();
+
+        SpUtils.getInstance().remove(Constants.TIME_LOCATION);
+        SpUtils.getInstance().remove(Constants.TIME_WEATHER);
 
         String versionName = DeviceUtils.getVersionName(this);
         if (SpUtils.getInstance().getString("version", "0").equals(versionName)) {

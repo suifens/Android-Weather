@@ -41,7 +41,11 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return 14;
+        if (mModel != null) {
+            return 14;
+        } else {
+            return 0;
+        }
     }
 
     @Override

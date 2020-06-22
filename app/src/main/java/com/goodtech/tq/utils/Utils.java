@@ -2,6 +2,8 @@ package com.goodtech.tq.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.util.TypedValue;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.httpClient.ErrorCode;
@@ -58,6 +60,15 @@ public class Utils {
             e.printStackTrace();
         }
         return stringBuilder.toString();
+    }
+
+    public static float dp2px(float dp) {
+        Resources r = Resources.getSystem();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+    }
+
+    public static int dp2pxInt(float dp) {
+        return (int) dp2px(dp);
     }
 
 }

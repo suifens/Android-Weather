@@ -17,4 +17,7 @@ public class Constants {
     public final static String URL_CITY = "file:///android_asset/cityRecommend.json";
 
     public final static String RECOMMEND_CITY = "cityRecommend.json";
+
+    public final static String TIME_LOCATION = "location_time";
+    public final static String TIME_WEATHER = "weather_fetch_time";
 }
