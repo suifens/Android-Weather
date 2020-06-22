@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:section="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/private_station_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/gradient_007bff_00c4ff"
+        section:layout_constraintEnd_toEndOf="parent"
+        section:layout_constraintStart_toStartOf="parent"
+        section:layout_constraintTop_toTopOf="parent">
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/bg_circle_white"
+            android:imeOptions="actionSearch"
+            android:inputType="textCapWords"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            section:queryHint="@string/hint_search_city"
+            section:searchIcon="@drawable/ic_search"
+            section:layout_constraintBottom_toBottomOf="parent"
+            section:layout_constraintEnd_toStartOf="@+id/search_btn_cancel"
+            section:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/search_btn_cancel"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/color_clear"
+            android:gravity="center"
+            android:text="@string/button_cancel"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            section:layout_constraintBottom_toBottomOf="parent"
+            section:layout_constraintEnd_toEndOf="parent"
+            section:layout_constraintStart_toEndOf="@+id/search_view"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        section:layout_constraintTop_toBottomOf="@+id/private_station_bar"
+        section:layout_constraintStart_toStartOf="parent"
+        section:layout_constraintEnd_toEndOf="parent"
+        section:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_recommend"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:numColumns="3"
+            android:scrollbars="none"
+            android:verticalSpacing="0dp"
+            android:visibility="gone"
+            section:layoutManager="GridLayoutManager"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            section:layoutManager="LinearLayoutManager"/>
+
+        <LinearLayout
+            android:id="@+id/layout_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            section:layout_constraintBottom_toBottomOf="parent"
+            section:layout_constraintEnd_toEndOf="parent"
+            section:layout_constraintStart_toStartOf="parent"
+            section:layout_constraintTop_toTopOf="parent"
+            section:layout_constraintVertical_bias="0.25">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                section:srcCompat="@drawable/ic_nothing"
+                section:layout_constraintTop_toTopOf="parent"
+                section:layout_constraintStart_toStartOf="parent"
+                section:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="很遗憾"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="未能找到该城市"
+                android:textColor="@color/color_9b9b9b"
+                android:textSize="@dimen/sp_14" />
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

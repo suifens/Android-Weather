@@ -10,7 +10,7 @@ import android.webkit.WebViewClient;
 import com.goodtech.tq.utils.Constants;
 import com.umeng.analytics.MobclickAgent;
 
-public class AgreementActivity extends BaseActivity {
+public class PrivateActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
@@ -43,7 +43,7 @@ public class AgreementActivity extends BaseActivity {
             }
         });
         //  设置url
-        String guideUrl = Constants.URL_AGREEMENT;
+        String guideUrl = Constants.URL_PRIVACY;
         mWebView.loadUrl(guideUrl);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override

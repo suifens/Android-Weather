@@ -44,9 +44,16 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 finish();
                 break;
 
-            case R.id.tv_agreement:
+            case R.id.tv_agreement: {
                 Intent intent = new Intent(this, AgreementActivity.class);
                 startActivity(intent);
+            }
+                break;
+
+            case R.id.tv_private: {
+                Intent intent = new Intent(this, PrivateActivity.class);
+                startActivity(intent);
+            }
                 break;
         }
     }

@@ -1,0 +1,121 @@
+.mod {
+  width: 100%;
+  height: 1706px;
+}
+
+body {
+    margin: 0;
+}
+
+.mod .box {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  width: 100%;
+  height: 5500px;
+}
+
+.mod .bd {
+  box-sizing: border-box;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-left: 22px;
+  border-radius: 14px;
+  background-color: #3764e1;
+  padding-right: 12px;
+  padding-left: 12px;
+  height: 28px;
+}
+
+.mod .tag {
+  opacity: 1;
+  margin-top: 28px;
+  margin-left: 28px;
+  margin-bottom: 15px;
+  line-height: 28px;
+  color: #000000;
+  font-size: 18px;
+  font-weight: 500;
+  font-family:"PingFangSC-Medium";
+}
+
+.mod .subtitle {
+  position: relative;
+  margin-left: 24px;
+  margin-right: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 22px;
+  color: #4A4A4A;
+  font-size: 14px;
+  -webkit-line-clamp: 3;
+  font-family:"PingFangSC-Light";
+  >b {
+    color: 000000;
+    font-family:"PingFangSC-Medium";
+  }
+}
+
+.mod .submain {
+  position: relative;
+  margin-left: 24px;
+  margin-right: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 22px;
+  color: #000000;
+  font-size: 14px;
+  -webkit-line-clamp: 3;
+  font-family:"PingFangSC-Medium";
+}
+
+.paragram {
+    color: rgba(255,255,255,0.80);
+    font-size: 14px;
+    font-family:"PingFangSC-Light";
+    margin: 0 22px;
+    margin-top: 27px;
+    >b{
+        font-family:"PingFangSC-Medium";
+    }
+}
+
+.margin {
+    margin-top: 41px;
+}
+
+.marginTop {
+    margin-top: 20px;
+}
+
+.marginBottom {
+  margin-bottom: 20px;
+}
+
+.colorLine {
+    display: flex;
+    margin-top: 30px;
+    width: 100%;
+    height: 1px;
+    background-color: #2A2C49;
+}
+
+.mod .row1 {
+  box-sizing: border-box;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 26px;
+  margin-left: 22px;
+  border-radius: 14px;
+  background-color: #3764e1;
+  padding-right: 13px;
+  padding-left: 11px;
+  height: 28px;
+}
+
