@@ -10,7 +10,11 @@ import android.widget.Button;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
+import com.goodtech.tq.helpers.LocationSpHelper;
+import com.goodtech.tq.models.CityMode;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.ArrayList;
 
 public class CityListActivity extends BaseActivity implements View.OnClickListener {
 
@@ -36,6 +40,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     private boolean mEdit = false;
 
     private RecyclerView mRecyclerView;
+    private CityListRecyclerAdapter mAdapter;
+    private ArrayList<CityMode> mCityModes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,23 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
         mEditBtn = findViewById(R.id.button_city_edit);
         mRecyclerView = findViewById(R.id.recycler_city);
+
+        mAdapter = new CityListRecyclerAdapter(this, mCityModes);
+        mAdapter.setOnItemClickListener(new CityListRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, CityMode cityMode) {
+                
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
+
         setClickListener();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAdapter.notifyDataSetChanged(LocationSpHelper.getLocationList());
     }
 
     private void setClickListener() {

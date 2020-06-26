@@ -34,6 +34,7 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
 
     protected TextView mAddressTv;
+    protected ImageView mLocationTip;
     //  当前城市
     private CityMode mCurLocation;
 
@@ -52,6 +53,7 @@ public class MainActivity extends BaseActivity {
         mAddressTv = findViewById(R.id.tv_address);
         mViewPager = findViewById(R.id.viewpager_main);
         mBgImgView = findViewById(R.id.img_background);
+        mLocationTip = findViewById(R.id.img_location);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -116,9 +118,8 @@ public class MainActivity extends BaseActivity {
         }
 
         mCityModes = LocationSpHelper.getLocationList();
-        reloadFragment();
 
-        if (TimeUtils.needFetchWeather()) {
+        if (TimeUtils.needFetchWeather() && mFragmentList.size() != mCityModes.size()) {
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
 
             for (int i = 0; i < mCityModes.size(); i++) {
@@ -139,6 +140,8 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }
+
+        reloadFragment();
     }
 
     private void reloadFragment() {
@@ -212,6 +215,11 @@ public class MainActivity extends BaseActivity {
                 CityMode cityMode = mCityModes.get(position);
                 if (cityMode != null) {
                     setAddress(cityMode);
+                    if (cityMode.location) {
+                        mLocationTip.setVisibility(View.VISIBLE);
+                    } else {
+                        mLocationTip.setVisibility(View.GONE);
+                    }
 
                     WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(cityMode.cid);
                     changeBg(weatherModel);

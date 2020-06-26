@@ -21,7 +21,6 @@
         android:id="@+id/tv_city_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我的城市"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -48,15 +47,13 @@
         <ImageView
             android:id="@+id/img_icon"
             android:layout_width="30dp"
-            android:layout_height="30dp"
-            app:srcCompat="@drawable/icon36" />
+            android:layout_height="30dp" />
 
         <com.goodtech.tq.utils.font.AlternateBoldTextView
             android:id="@+id/tv_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
-            android:text="29℃"
             android:textColor="@color/color_00c4ff"
             android:textSize="@dimen/sp_20" />
 

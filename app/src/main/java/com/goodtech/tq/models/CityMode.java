@@ -30,6 +30,8 @@ public class CityMode implements Parcelable {
 
     public int listNum;
 
+    public boolean location = false;
+
     public CityMode() {}
 
     protected CityMode(Parcel in) {
@@ -40,6 +42,7 @@ public class CityMode implements Parcelable {
         lon = in.readDouble();
         pinyin = in.readString();
         listNum = in.readInt();
+        location = in.readInt() == 0;
     }
 
     public static final Creator<CityMode> CREATOR = new Creator<CityMode>() {
@@ -77,5 +80,6 @@ public class CityMode implements Parcelable {
         dest.writeDouble(lon);
         dest.writeString(pinyin);
         dest.writeInt(listNum);
+        dest.writeInt(location ? 1 : 0);
     }
 }
