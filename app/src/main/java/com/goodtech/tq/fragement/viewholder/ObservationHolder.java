@@ -55,25 +55,30 @@ public class ObservationHolder extends RecyclerView.ViewHolder {
         if (model != null) {
             mAddressTv.setText(address);
             Observation observation = model.observation;
+            if (observation == null) {
+                return;
+            }
             Metric metric = observation.metric;
-
             long current = System.currentTimeMillis();
             String currentStr = TimeUtils.stringToLong(current, "yyyy-MM-dd");
-            Daily daily = null;
-            for (int i = 0; i < model.dailies.size(); i++) {
-                Daily temp = model.dailies.get(i);
-                if (temp != null && temp.fcst_valid_local.contains(currentStr)) {
-                    daily = temp;
-                    break;
-                }
-            }
 
-            if (daily != null) {
-                String sunrise = TimeUtils.timeToHHmm(TimeUtils.switchTime(daily.sunRise));
-                String sunset = TimeUtils.timeToHHmm(TimeUtils.switchTime(daily.sunSet));
-                mSunriseTimeTv.setText(sunrise);
-                mSunsetTimeTv.setText(sunset);
-                mMoonItemView.setValue(daily.moon_phase);
+            if (model.dailies != null) {
+                Daily daily = null;
+                for (int i = 0; i < model.dailies.size(); i++) {
+                    Daily temp = model.dailies.get(i);
+                    if (temp != null && temp.fcst_valid_local.contains(currentStr)) {
+                        daily = temp;
+                        break;
+                    }
+                }
+
+                if (daily != null) {
+                    String sunrise = TimeUtils.timeToHHmm(TimeUtils.switchTime(daily.sunRise));
+                    String sunset = TimeUtils.timeToHHmm(TimeUtils.switchTime(daily.sunSet));
+                    mSunriseTimeTv.setText(sunrise);
+                    mSunsetTimeTv.setText(sunset);
+                    mMoonItemView.setValue(daily.moon_phase);
+                }
             }
 
             mTempTv.setText(String.format("%d", metric.temp));

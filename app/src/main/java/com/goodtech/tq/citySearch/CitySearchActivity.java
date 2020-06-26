@@ -39,6 +39,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
 
+        /**
+         * 推荐列表
+         */
         mRecommendView = findViewById(R.id.recycler_recommend);
         mRecommendView.setVisibility(View.VISIBLE);
         final ArrayList<CityMode> recommends = CityHelper.getRecommends(this);
@@ -73,6 +76,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         int itemWidth = Utils.dp2pxInt(100); //每个item的宽度
         mRecommendView.addItemDecoration(new SpaceItemDecoration((screenWidth - itemWidth* 3)/6));
 
+        /**
+         * 搜索列表
+         */
         mSearchListView = findViewById(R.id.recycler_search);
         mSearchListView.setVisibility(View.GONE);
         mSearchAdapter = new CityRecyclerAdapter(this, null, SearchCityType.Search);
@@ -121,6 +127,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         return (s == null) || (s.trim().length() == 0);
     }
 
+    /**
+     * 搜索城市
+     */
     @Override
     public boolean onQueryTextSubmit(String s) {
 

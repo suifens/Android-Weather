@@ -86,7 +86,7 @@ public class DatabaseHelper {
 
     public ArrayList<CityMode> queryCity(String name) {
 
-        String sql = "select * from city where city like '" + name + "'";
+        String sql = "select * from city where city like '%" + name + "%'";
         Cursor cursor = mDatabase.rawQuery(sql, null);
 
         ArrayList<CityMode> list = new ArrayList<>();
