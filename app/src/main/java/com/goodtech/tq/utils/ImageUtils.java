@@ -115,7 +115,7 @@ public class ImageUtils {
             case 20:
             case 21:
             case 22:
-                return R.drawable.bg_0;
+                return R.drawable.bg_wumai;
             case 1:
             case 2:
             case 3:
