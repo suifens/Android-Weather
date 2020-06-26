@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.goodtech.tq.app.WeatherApp;
@@ -57,6 +59,14 @@ public class MainActivity extends BaseActivity {
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
+
+        //  静止底部图片滑动
+        findViewById(R.id.scroll_background).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         //  点击地址，跳转到城市列表
         findViewById(R.id.layout_address).setOnClickListener(new View.OnClickListener() {

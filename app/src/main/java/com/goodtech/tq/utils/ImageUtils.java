@@ -130,7 +130,7 @@ public class ImageUtils {
             case 40:
             case 45:
             case 47:
-                return night ? R.drawable.bg_2 : R.drawable.bg_1;
+                return night ? R.drawable.bg_yutian_night : R.drawable.bg_yutian;
             case 5:
             case 6:
             case 7:
@@ -147,7 +147,7 @@ public class ImageUtils {
             case 42:
             case 43:
             case 46:
-                return night ? R.drawable.bg_4 : R.drawable.bg_3;
+                return night ? R.drawable.bg_xiaxue_night : R.drawable.bg_xiaxue;
             case 26:
             case 27:
             case 28:
@@ -155,17 +155,18 @@ public class ImageUtils {
             case 30:
             case 33:
             case 34:
-                return night ? R.drawable.bg_6 : R.drawable.bg_5;
+                return night ? R.drawable.bg_yintian_duoyun_night : R.drawable.bg_duoyun;
             //  晴
             case 23:
             case 24:
             case 31:
             case 32:
             case 36:
-                return night ? R.drawable.bg_8 : R.drawable.bg_7;
+                return night ? R.drawable.bg_qin_night : R.drawable.bg_qintian;
             case 44:
+                return night ? R.drawable.bg_yintian_duoyun_night : R.drawable.bg_yintian;
             default:
-                return R.drawable.bg_9;
+                return R.drawable.bg_normal;
         }
     }
 

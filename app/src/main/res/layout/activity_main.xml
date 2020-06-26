@@ -6,13 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/img_background"
+    <ScrollView
+        android:id="@+id/scroll_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg_7"
-        />
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
+        >
+
+        <ImageView
+            android:id="@+id/img_background"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:src="@drawable/bg_normal"
+            />
+
+    </ScrollView>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager_main"
