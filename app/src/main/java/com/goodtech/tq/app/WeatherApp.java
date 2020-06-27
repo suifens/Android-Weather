@@ -37,4 +37,12 @@ public class WeatherApp extends Application {
 
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
+
+    public void startLocation() {
+        locationHelper.start();
+    }
+
+    public void stopLocation() {
+        locationHelper.stop();
+    }
 }

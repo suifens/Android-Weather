@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Weather</string>
+    <string name="app_name">预知天气</string>
 
     <string name="splash_loading" tools:ignore="TypographyEllipsis">广告加载中...</string>
     <string name="click_to_skip">点击跳过</string>

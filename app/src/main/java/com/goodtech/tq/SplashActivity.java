@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.httpClient.ApiClient;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
@@ -188,6 +189,12 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
 
         String versionName = DeviceUtils.getVersionName(this);
         if (SpUtils.getInstance().getString("version", "0").equals(versionName)) {
+
+            WeatherApp.getInstance().startLocation();
+
+            WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
+            httpHelper.fetchCitiesWeather();
+            //  获取广告
             fetchSplashAD(this, container, skipView, getPosId(), this);
         } else {
             SpUtils.getInstance().putString("version", versionName);

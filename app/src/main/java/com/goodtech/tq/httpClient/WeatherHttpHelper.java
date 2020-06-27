@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
@@ -19,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,10 +45,17 @@ public class WeatherHttpHelper {
         this.mContext = context;
     }
 
-    public void fetchWeather(final CityMode cityMode) {
-        if (cityMode != null && !TextUtils.isEmpty(cityMode.lat) && TextUtils.isEmpty(cityMode.lon)) {
+    public void fetchCitiesWeather() {
+        ArrayList<CityMode> cityModes = LocationSpHelper.getCityListAndLocation();
+        for (CityMode cityMode : cityModes) {
+            fetchWeather(cityMode);
+        }
+    }
 
-            this.getWeather(Double.parseDouble(cityMode.lat), Double.parseDouble(cityMode.lon), new ApiCallback() {
+    public void fetchWeather(final CityMode cityMode) {
+        if (cityMode != null && !TextUtils.isEmpty(cityMode.lat) && !TextUtils.isEmpty(cityMode.lon)) {
+
+            getWeather(Double.parseDouble(cityMode.lat), Double.parseDouble(cityMode.lon), new ApiCallback() {
                 @Override
                 public void onResponse(boolean success, final WeatherModel weather, ErrorCode errCode) {
                     Handler handler = new Handler(Looper.getMainLooper());

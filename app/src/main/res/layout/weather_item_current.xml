@@ -4,13 +4,13 @@
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="440dp">
+    android:minHeight="360dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:gravity="center"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="90dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView

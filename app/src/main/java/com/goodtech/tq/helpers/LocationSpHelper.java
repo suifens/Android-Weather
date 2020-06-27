@@ -1,8 +1,11 @@
 package com.goodtech.tq.helpers;
 
+import android.support.constraint.solver.ArrayLinkedVariables;
 import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
+import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
@@ -31,6 +34,9 @@ public class LocationSpHelper {
             cityMode.lat = String.valueOf(bdLocation.getLatitude());
             cityMode.lon = String.valueOf(bdLocation.getLongitude());
             cityMode.city = String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet());
+            //  获取天气信息
+            WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
+            httpHelper.fetchWeather(cityMode);
         }
         Gson gson = new Gson();
         String json = gson.toJson(cityMode);
@@ -57,21 +63,23 @@ public class LocationSpHelper {
      */
     public static ArrayList<CityMode> getCityListAndLocation() {
         String json = SpUtils.getInstance().getString(Constants.SP_LOCATION_LIST, "");
+
+        ArrayList<CityMode> locations = new ArrayList<>();
         if (!json.isEmpty()) {
             Gson gson = new Gson();
-            ArrayList<CityMode> locations = gson.fromJson(json, new TypeToken<ArrayList<CityMode>>(){}.getType());
+            locations = gson.fromJson(json, new TypeToken<ArrayList<CityMode>>(){}.getType());
             if (locations == null) {
                 locations = new ArrayList<>();
             }
-
-            CityMode location = getLocation();
-            if (location != null) {
-                locations.add(0, location);
-            }
-            return locations;
-        } else {
-            return new ArrayList<>();
         }
+
+        CityMode location = getLocation();
+        if (location != null) {
+            locations.add(0, location);
+        }
+        return locations;
+
+
     }
 
     /**
@@ -94,9 +102,9 @@ public class LocationSpHelper {
     /**
      * 添加城市
      */
-    public static void addCity(CityMode city) {
+    public static boolean addCity(CityMode city) {
         if (!canAddCity(city)) {
-            return;
+            return false;
         }
         List<CityMode> locations = getCityList();
         city.listNum = locations.size() + 1;
@@ -104,6 +112,7 @@ public class LocationSpHelper {
         Gson gson = new Gson();
         String json = gson.toJson(locations);
         SpUtils.getInstance().putString(Constants.SP_LOCATION_LIST, json);
+        return true;
     }
 
     private static boolean canAddCity(CityMode city) {

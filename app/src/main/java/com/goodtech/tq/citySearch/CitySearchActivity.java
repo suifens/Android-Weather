@@ -13,6 +13,7 @@ import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.Utils;
@@ -47,13 +48,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 Log.d(TAG, "recommend onItemClick: view " + view + " position = " + position);
 
                 if (cityMode != null && cityMode.cid != 0) {
-                    LocationSpHelper.addCity(cityMode);
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 200);
+                    addCity(cityMode);
                 }
             }
         });
@@ -71,13 +66,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 Log.d(TAG, "recommend onItemClick: view " + view + " position = " + position);
 
                 if (cityMode != null && cityMode.cid != 0) {
-                    LocationSpHelper.addCity(cityMode);
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 200);
+                    addCity(cityMode);
                 }
             }
         });
@@ -100,16 +89,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             public void onItemClick(View view, int position, CityMode cityMode) {
                 Log.d(TAG, "recommend onItemClick: view " + view + " position = " + position);
 
-                if (cityMode != null) {
-                    LocationSpHelper.addCity(cityMode);
-                }
-
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, 200);
+                addCity(cityMode);
             }
         });
         mSearchListView.setAdapter(mSearchAdapter);
@@ -117,6 +97,23 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mEmptyView = findViewById(R.id.layout_no_data);
 
         findViewById(R.id.search_btn_cancel).setOnClickListener(this);
+    }
+
+    private void addCity(CityMode cityMode) {
+        if (cityMode != null) {
+            boolean success = LocationSpHelper.addCity(cityMode);
+            if (success) {
+                WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
+                helper.fetchWeather(cityMode);
+            }
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 200);
     }
 
     private void initSearchView() {

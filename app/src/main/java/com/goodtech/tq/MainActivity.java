@@ -17,9 +17,6 @@ import com.goodtech.tq.fragement.WeatherFragment;
 import com.goodtech.tq.fragement.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
-import com.goodtech.tq.httpClient.ApiCallback;
-import com.goodtech.tq.httpClient.ErrorCode;
-import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
@@ -90,7 +87,6 @@ public class MainActivity extends BaseActivity {
         setAddress(mCurLocation);
 
         configViewPager();
-        WeatherApp.getInstance().locationHelper.start();
     }
 
     private void setAddress(CityMode cityMode) {
@@ -113,7 +109,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
-        WeatherApp.getInstance().locationHelper.stop();
+        WeatherApp.getInstance().stopLocation();
         Log.d(TAG, "onStop: ");
         super.onStop();
     }
@@ -121,37 +117,19 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart: ");
+
+        if (mViewPager.getCurrentItem() == 0) {
+            setAddress(LocationSpHelper.getLocation());
+        }
 
         if (TimeUtils.needLocation()) {
-            WeatherApp.getInstance().locationHelper.start();
+            WeatherApp.getInstance().startLocation();
         }
 
         mCityModes = LocationSpHelper.getCityListAndLocation();
 
-        if (TimeUtils.needFetchWeather() && mFragmentList.size() != mCityModes.size()) {
-            WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
-
-            for (int i = 0; i < mCityModes.size(); i++) {
-                final CityMode cityMode = mCityModes.get(i);
-                if (cityMode != null && cityMode.cid != 0) {
-                    httpHelper.getWeather(Double.parseDouble(cityMode.lat), Double.parseDouble(cityMode.lon), new ApiCallback() {
-                        @Override
-                        public void onResponse(boolean success, final WeatherModel weather, ErrorCode errCode) {
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    WeatherSpHelper.saveWeather(weather, cityMode.cid);
-                                    reloadWeathers();
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        }
-
         reloadFragment();
+        reloadWeathers();
     }
 
     private void reloadFragment() {
