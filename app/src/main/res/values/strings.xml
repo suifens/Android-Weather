@@ -10,7 +10,8 @@
     <string name="title_sunrise">日出</string>
     <string name="title_sunset">日落</string>
 
-    <string name="title_agreement">隐私协议与用户协议</string>
+    <string name="title_agreement">用户协议</string>
+    <string name="title_private">隐私协议</string>
     <string name="title_about">关于我们</string>
 
     <string name="button_edit">编辑</string>

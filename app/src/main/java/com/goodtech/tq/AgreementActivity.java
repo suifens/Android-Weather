@@ -6,6 +6,7 @@ import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.goodtech.tq.utils.Constants;
 import com.umeng.analytics.MobclickAgent;
@@ -30,6 +31,9 @@ public class AgreementActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agreement);
+
+        TextView mTitleView = findViewById(R.id.tv_title);
+        if (mTitleView != null) mTitleView.setText(R.string.title_agreement);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));

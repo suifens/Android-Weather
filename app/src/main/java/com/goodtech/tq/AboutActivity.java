@@ -35,6 +35,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
 
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.tv_agreement).setOnClickListener(this);
+        findViewById(R.id.tv_private).setOnClickListener(this);
     }
 
     @Override
