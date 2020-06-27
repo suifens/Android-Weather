@@ -28,8 +28,8 @@ public class LocationSpHelper {
         } else {
             cityMode.listNum = 0;
             cityMode.cid = 1000;
-            cityMode.lat = bdLocation.getLatitude();
-            cityMode.lon = bdLocation.getLongitude();
+            cityMode.lat = String.valueOf(bdLocation.getLatitude());
+            cityMode.lon = String.valueOf(bdLocation.getLongitude());
             cityMode.city = String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet());
         }
         Gson gson = new Gson();
@@ -53,9 +53,9 @@ public class LocationSpHelper {
     }
 
     /**
-     * 获取城市列表
+     * 获取定位和城市列表，定位index = 0
      */
-    public static ArrayList<CityMode> getLocationList() {
+    public static ArrayList<CityMode> getCityListAndLocation() {
         String json = SpUtils.getInstance().getString(Constants.SP_LOCATION_LIST, "");
         if (!json.isEmpty()) {
             Gson gson = new Gson();
@@ -63,9 +63,10 @@ public class LocationSpHelper {
             if (locations == null) {
                 locations = new ArrayList<>();
             }
+
             CityMode location = getLocation();
             if (location != null) {
-                locations.add(0, getLocation());
+                locations.add(0, location);
             }
             return locations;
         } else {
@@ -74,12 +75,29 @@ public class LocationSpHelper {
     }
 
     /**
+     * 获取添加的城市列表
+     */
+    public static ArrayList<CityMode> getCityList() {
+        String json = SpUtils.getInstance().getString(Constants.SP_LOCATION_LIST, "");
+        ArrayList<CityMode> cityList = new ArrayList<>();
+        if (!json.isEmpty()) {
+            Gson gson = new Gson();
+            ArrayList<CityMode> locations = gson.fromJson(json, new TypeToken<ArrayList<CityMode>>() {
+            }.getType());
+            if (locations != null) {
+                cityList = locations;
+            }
+        }
+        return cityList;
+    }
+
+    /**
      * 添加城市
      */
     public static void addCity(CityMode city) {
-        List<CityMode> locations = getLocationList();
+        List<CityMode> locations = getCityList();
 
-        city.listNum = locations.size();
+        city.listNum = locations.size() + 1;
         locations.add(city);
         Gson gson = new Gson();
         String json = gson.toJson(locations);

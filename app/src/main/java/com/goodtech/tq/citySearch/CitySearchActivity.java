@@ -64,13 +64,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         });
         mRecommendView.setAdapter(mRecommendAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                int item = recommends.get(position).cid == 0 ? 1 : 3;
-                return item;
-            }
-        });
         mRecommendView.setLayoutManager(gridLayoutManager);
         int screenWidth = DeviceUtils.getScreenWidth(this); //屏幕宽度
         int itemWidth = Utils.dp2pxInt(100); //每个item的宽度

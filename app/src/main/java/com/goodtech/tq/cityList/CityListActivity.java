@@ -69,7 +69,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onStart() {
         super.onStart();
-        mAdapter.notifyDataSetChanged(LocationSpHelper.getLocationList());
+        mAdapter.notifyDataSetChanged(LocationSpHelper.getCityListAndLocation());
     }
 
     private void setClickListener() {
