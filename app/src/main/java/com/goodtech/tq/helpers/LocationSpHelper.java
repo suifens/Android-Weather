@@ -95,13 +95,25 @@ public class LocationSpHelper {
      * 添加城市
      */
     public static void addCity(CityMode city) {
+        if (!canAddCity(city)) {
+            return;
+        }
         List<CityMode> locations = getCityList();
-
         city.listNum = locations.size() + 1;
         locations.add(city);
         Gson gson = new Gson();
         String json = gson.toJson(locations);
         SpUtils.getInstance().putString(Constants.SP_LOCATION_LIST, json);
+    }
+
+    private static boolean canAddCity(CityMode city) {
+        List<CityMode> locations = getCityListAndLocation();
+        for (CityMode cityMode : locations) {
+            if (cityMode.cid == city.cid) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

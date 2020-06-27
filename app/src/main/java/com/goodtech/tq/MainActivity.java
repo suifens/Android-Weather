@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.goodtech.tq.app.WeatherApp;
@@ -23,6 +22,7 @@ import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
+import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        mLocationList = LocationSpHelper.getLocationList();
+        mLocationList = LocationSpHelper.getCityListAndLocation();
         mCurLocation = LocationSpHelper.getLocation();
         setAddress(mCurLocation);
 
@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity {
             WeatherApp.getInstance().locationHelper.start();
         }
 
-        mCityModes = LocationSpHelper.getLocationList();
+        mCityModes = LocationSpHelper.getCityListAndLocation();
 
         if (TimeUtils.needFetchWeather() && mFragmentList.size() != mCityModes.size()) {
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity {
             for (int i = 0; i < mCityModes.size(); i++) {
                 final CityMode cityMode = mCityModes.get(i);
                 if (cityMode != null && cityMode.cid != 0) {
-                    httpHelper.getWeather(cityMode.lat, cityMode.lon, new ApiCallback() {
+                    httpHelper.getWeather(Double.parseDouble(cityMode.lat), Double.parseDouble(cityMode.lon), new ApiCallback() {
                         @Override
                         public void onResponse(boolean success, final WeatherModel weather, ErrorCode errCode) {
                             mHandler.post(new Runnable() {
@@ -194,6 +194,9 @@ public class MainActivity extends BaseActivity {
         MobclickAgent.onPause(this);
     }
 
+    /**
+     * 更改背景
+     */
     private void changeBg(final WeatherModel model) {
 
         mHandler.post(new Runnable() {
@@ -201,14 +204,21 @@ public class MainActivity extends BaseActivity {
             public void run() {
                 if (model != null && model.dailies != null) {
                     Daily daily = model.dailies.get(0);
+                    boolean night = false;
                     if (daily != null) {
                         long tSunrise = TimeUtils.switchTime(daily.sunRise);
                         long tSunset = TimeUtils.switchTime(daily.sunSet);
                         long current = System.currentTimeMillis();
 
-                        boolean night = current < tSunrise || current > tSunset;
-                        mBgImgView.setImageResource(ImageUtils.bgImageRes(model.icon_cd, night));
+                        night = current < tSunrise || current > tSunset;
                     }
+                    //  天气图标
+                    int icon_cd = -1;
+                    if (model.hourlies != null && model.hourlies.size() > 0) {
+                        Hourly hourly = model.hourlies.get(0);
+                        icon_cd = hourly.icon_cd;
+                    }
+                    mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
                 }
             }
         });

@@ -25,8 +25,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     private SearchView mSearchView;// 输入搜索关键字
     private RecyclerView mRecommendView;
     private RecyclerView mSearchListView;
-    private CityRecyclerAdapter mRecommendAdapter;
+    private CityRecommendAdapter mRecommendAdapter;
     private CityRecyclerAdapter mSearchAdapter;
+    private CityRecommendHeaderView mRecommendHeaderView;
 
     private View mEmptyView;
 
@@ -39,14 +40,32 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
 
+        mRecommendHeaderView = findViewById(R.id.header_recommend);
+        mRecommendHeaderView.setListener(new CityRecommendAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, CityMode cityMode) {
+                Log.d(TAG, "recommend onItemClick: view " + view + " position = " + position);
+
+                if (cityMode != null && cityMode.cid != 0) {
+                    LocationSpHelper.addCity(cityMode);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 200);
+                }
+            }
+        });
+
         /**
          * 推荐列表
          */
         mRecommendView = findViewById(R.id.recycler_recommend);
         mRecommendView.setVisibility(View.VISIBLE);
         final ArrayList<CityMode> recommends = CityHelper.getRecommends(this);
-        mRecommendAdapter = new CityRecyclerAdapter(this, recommends, SearchCityType.Recommend);
-        mRecommendAdapter.setOnItemClickListener(new CityRecyclerAdapter.OnItemClickListener() {
+        mRecommendAdapter = new CityRecommendAdapter(this, recommends);
+        mRecommendAdapter.setOnItemClickListener(new CityRecommendAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
                 Log.d(TAG, "recommend onItemClick: view " + view + " position = " + position);
@@ -63,6 +82,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             }
         });
         mRecommendView.setAdapter(mRecommendAdapter);
+        //  样式
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         mRecommendView.setLayoutManager(gridLayoutManager);
         int screenWidth = DeviceUtils.getScreenWidth(this); //屏幕宽度
@@ -74,7 +94,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
          */
         mSearchListView = findViewById(R.id.recycler_search);
         mSearchListView.setVisibility(View.GONE);
-        mSearchAdapter = new CityRecyclerAdapter(this, null, SearchCityType.Search);
+        mSearchAdapter = new CityRecyclerAdapter(this, null);
         mSearchAdapter.setOnItemClickListener(new CityRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
@@ -105,7 +125,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         //设置SearchView默认为展开显示
         mSearchView.setIconified(false);
         mSearchView.onActionViewExpanded();
-        mSearchView.setIconifiedByDefault(true);
+        mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(false);
     }
 
@@ -132,7 +152,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             mRecommendView.setVisibility(View.GONE);
             if (list != null && list.size() > 0) {
                 mSearchListView.setVisibility(View.VISIBLE);
-                mSearchAdapter.notifyDataSetChanged(list, false);
+                mSearchAdapter.notifyDataSetChanged(list);
                 mEmptyView.setVisibility(View.GONE);
             } else {
                 mSearchListView.setVisibility(View.GONE);

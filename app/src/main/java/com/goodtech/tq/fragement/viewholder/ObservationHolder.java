@@ -50,6 +50,10 @@ public class ObservationHolder extends RecyclerView.ViewHolder {
         mMoonItemView = view.findViewById(R.id.layout_moon_phase);
     }
 
+    public static int getResource() {
+        return R.layout.weather_item_observation;
+    }
+
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel model, String address) {
         if (model != null) {

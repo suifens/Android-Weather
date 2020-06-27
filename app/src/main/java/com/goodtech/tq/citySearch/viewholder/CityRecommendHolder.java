@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.citySearch.CityRecommendAdapter;
 import com.goodtech.tq.citySearch.CityRecyclerAdapter;
 import com.goodtech.tq.models.CityMode;
 
@@ -13,11 +14,11 @@ import com.goodtech.tq.models.CityMode;
  */
 public class CityRecommendHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private CityRecyclerAdapter.OnItemClickListener mListener;
+    private CityRecommendAdapter.OnItemClickListener mListener;
     private TextView mRecommendTv;
     private CityMode mCityMode;
 
-    public CityRecommendHolder(View view, CityRecyclerAdapter.OnItemClickListener listener) {
+    public CityRecommendHolder(View view, CityRecommendAdapter.OnItemClickListener listener) {
         super(view);
         mRecommendTv = view.findViewById(R.id.tv_recommend);
         mListener = listener;

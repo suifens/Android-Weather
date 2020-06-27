@@ -28,14 +28,6 @@ public class CityHelper {
             ArrayList<CityMode> list = new Gson().fromJson(jsonArray, new TypeToken<ArrayList<CityMode>>() {}.getType());
             cityModes.addAll(list);
         }
-        if (cityModes.size() > 0) {
-            CityMode location = LocationSpHelper.getLocation();
-            if (location == null) {
-                location = new CityMode();
-                location.city = "定位失败";
-            }
-            cityModes.add(1, location);
-        }
         return cityModes;
     }
 

@@ -27,6 +27,10 @@ public class HoursHolder extends RecyclerView.ViewHolder {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    public static int getResource() {
+        return R.layout.weather_item_hours;
+    }
+
     public void setHourlies(WeatherModel model) {
         if (model != null && model.hourlies != null) {
             List<Hourly> hourlies = model.hourlies;

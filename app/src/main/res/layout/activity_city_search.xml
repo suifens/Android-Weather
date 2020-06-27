@@ -59,17 +59,30 @@
         section:layout_constraintBottom_toBottomOf="parent"
         >
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_recommend"
+        <LinearLayout
+            android:id="@+id/layout_recommend"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:numColumns="3"
-            android:scrollbars="none"
-            android:verticalSpacing="0dp"
-            android:visibility="gone"
-            section:layoutManager="GridLayoutManager"/>
+            android:orientation="vertical">
+
+            <com.goodtech.tq.citySearch.CityRecommendHeaderView
+                android:id="@+id/header_recommend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_recommend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:numColumns="3"
+                android:scrollbars="none"
+                android:verticalSpacing="0dp"
+                android:visibility="gone"
+                section:layoutManager="GridLayoutManager"/>
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_search"

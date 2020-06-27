@@ -1,18 +1,6 @@
 {
   "citys": [
     {
-      "city": "实时定位城市",
-      "lat": "39.55",
-      "lon": "116.24",
-      "pinyin": "bei jing shi"
-    },
-    {
-      "city": "热门城市",
-      "lat": "39.55",
-      "lon": "116.24",
-      "pinyin": "bei jing shi"
-    },
-    {
       "cid": 10000,
       "province": "北京市",
       "city": "北京市",

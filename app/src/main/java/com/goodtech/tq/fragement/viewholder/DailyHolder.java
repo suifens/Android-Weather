@@ -31,6 +31,10 @@ public class DailyHolder extends RecyclerView.ViewHolder {
         mIconImgV = view.findViewById(R.id.img_icon);
     }
 
+    public static int getResource() {
+        return R.layout.weather_item_daily;
+    }
+
     @SuppressLint("DefaultLocale")
     public void setData(Daily daily) {
         if (daily != null) {

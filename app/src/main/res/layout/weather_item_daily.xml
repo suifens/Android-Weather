@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="星期日"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,14 +27,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon36" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.goodtech.tq.utils.font.AlternateBoldTextView
         android:id="@+id/tv_max_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="29℃"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_18"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -46,7 +43,6 @@
         android:id="@+id/tv_space"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" / "
         android:textColor="@color/white"
         android:textSize="@dimen/sp_18"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,13 +54,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:text="21℃"
         android:textColor="@color/white_alpha80"
         android:textSize="@dimen/sp_18"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
 
 </android.support.constraint.ConstraintLayout>

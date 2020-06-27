@@ -35,27 +35,35 @@ public class RecentHolder extends RecyclerView.ViewHolder {
         mMQualityTv = view.findViewById(R.id.tv_quality_morn);
     }
 
+    public static int gerResource() {
+        return R.layout.weather_item_recent;
+    }
+
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel weatherModel) {
-        if (weatherModel != null
-                && weatherModel.dailies != null
-                && weatherModel.dailies.size() > 2) {
+        if (weatherModel != null) {
 
-            Daily today = weatherModel.dailies.get(0);
-            Daily tomorrow = weatherModel.dailies.get(1);
+            Daily today = weatherModel.today();
+            if (today != null) {
+                long currentTime = System.currentTimeMillis();
+                long sunSetTime = TimeUtils.switchTime(today.sunSet);
+                boolean day = currentTime < sunSetTime;
 
-            long currentTime = System.currentTimeMillis();
-            long sunSetTime = TimeUtils.switchTime(today.sunSet);
-            boolean day = currentTime < sunSetTime;
+                Daypart todayPart = day ? today.dayPart : today.nightPart;
+                mTTempTv.setText(String.format("%d/%d℃", today.metric.maxTemp, today.metric.minTemp));
+                if (todayPart != null) mTPhraseTv.setText(todayPart.wdirCardinal);
 
-            Daypart todayPart = day ? today.dayPart : today.nightPart;
-            Daypart tomorrowPart = day ? tomorrow.dayPart : tomorrow.nightPart;
+                Daily tomorrow = weatherModel.tomorrow();
+                if (tomorrow != null) {
+                    Daypart tomorrowPart = day ? tomorrow.dayPart : tomorrow.nightPart;
+                    mMTempTv.setText(String.format("%d/%d℃", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
+                    if (tomorrowPart != null) mMPhraseTv.setText(tomorrowPart.wdirCardinal);
+                }
+            }
 
-            mTTempTv.setText(String.format("%d/%d℃", today.metric.maxTemp, today.metric.minTemp));
-            mTPhraseTv.setText(todayPart.wdirCardinal);
 
-            mMTempTv.setText(String.format("%d/%d℃", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
-            mMPhraseTv.setText(tomorrowPart.wdirCardinal);
+
+
         }
     }
 

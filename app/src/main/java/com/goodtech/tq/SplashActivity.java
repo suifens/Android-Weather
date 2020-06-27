@@ -67,7 +67,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
 
     private String getPosId() {
         String posId = getIntent().getStringExtra("ad_id");
-        return TextUtils.isEmpty(posId) ? Constants.AD_ID : posId;
+        return TextUtils.isEmpty(posId) ? Constants.SPLASH_POS_ID : posId;
     }
 
 

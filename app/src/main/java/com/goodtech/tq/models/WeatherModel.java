@@ -16,8 +16,6 @@ public class WeatherModel {
 
     public long expireTime;
 
-    public int icon_cd;
-
     public Observation observation;
 
     //  24小时天气
@@ -37,7 +35,34 @@ public class WeatherModel {
 
     public Daily today() {
         if (dailies.size() > 0) {
-            return dailies.get(0);
+            long currentTime = System.currentTimeMillis();
+            String currentLoc = TimeUtils.stringToLong(currentTime, "yyyy-MM-dd");
+
+            for (int i = 0; i < dailies.size(); i++) {
+                Daily daily = dailies.get(i);
+                String dayLocal = daily.fcst_valid_local;
+                if (dayLocal.contains(currentLoc)) {
+                    return daily;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Daily tomorrow() {
+
+        if (dailies.size() > 0) {
+
+            long time = System.currentTimeMillis() + 1000*3600*24;
+            String timeLoc = TimeUtils.stringToLong(time, "yyyy-MM-dd");
+
+            for (int i = 0; i < dailies.size(); i++) {
+                Daily daily = dailies.get(i);
+                String dayLocal = daily.fcst_valid_local;
+                if (dayLocal.contains(timeLoc)) {
+                    return daily;
+                }
+            }
         }
         return null;
     }

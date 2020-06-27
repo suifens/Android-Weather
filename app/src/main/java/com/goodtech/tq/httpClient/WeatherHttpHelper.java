@@ -1,8 +1,13 @@
 package com.goodtech.tq.httpClient;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.goodtech.tq.helpers.WeatherSpHelper;
+import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.Observation;
@@ -38,6 +43,24 @@ public class WeatherHttpHelper {
         this.mContext = context;
     }
 
+    public void fetchWeather(final CityMode cityMode) {
+        if (cityMode != null && !TextUtils.isEmpty(cityMode.lat) && TextUtils.isEmpty(cityMode.lon)) {
+
+            this.getWeather(Double.parseDouble(cityMode.lat), Double.parseDouble(cityMode.lon), new ApiCallback() {
+                @Override
+                public void onResponse(boolean success, final WeatherModel weather, ErrorCode errCode) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            WeatherSpHelper.saveWeather(weather, cityMode.cid);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     public void getWeather(double latitude, double longitude, final ApiCallback callback) {
 
         ApiClient client = ApiClient.getInstance();
@@ -58,13 +81,6 @@ public class WeatherHttpHelper {
                         JsonArray forecasts = new Gson().fromJson(hourlyElement.get(KEY_FORECASTS), JsonArray.class);
                         List<Hourly> hourlies = new Gson().fromJson(forecasts, new TypeToken<List<Hourly>>() {
                         }.getType());
-
-                        if (hourlies.size() > 0) {
-                            Hourly hourly = hourlies.get(0);
-                            if (hourly != null) {
-                                model.icon_cd = hourly.icon_cd;
-                            }
-                        }
 
                         model.hourlies = hourlies;
                         Log.e(TAG, "onResponse: hourly = " + hourlies);
@@ -96,8 +112,6 @@ public class WeatherHttpHelper {
 //                        model.longitude = metadata.get("longitude").getAsDouble();
                         model.expireTime = metadata.get("expire_time_gmt").getAsLong();
                     }
-
-                    Log.e(TAG, "onResponse: model = " + model );
                 }
                 if (callback != null) {
                     callback.onResponse(success, model, errCode);

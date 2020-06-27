@@ -22,9 +22,9 @@ public class CityMode implements Parcelable {
 
     public String city;
 
-    public double lat;
+    public String lat;
 
-    public double lon;
+    public String lon;
 
     public String pinyin;
 
@@ -38,8 +38,8 @@ public class CityMode implements Parcelable {
         cid = in.readInt();
         province = in.readString();
         city = in.readString();
-        lat = in.readDouble();
-        lon = in.readDouble();
+        lat = in.readString();
+        lon = in.readString();
         pinyin = in.readString();
         listNum = in.readInt();
         location = in.readInt() == 0;
@@ -61,8 +61,8 @@ public class CityMode implements Parcelable {
         this.cid = cursor.getInt(cursor.getColumnIndex("cid"));
         this.province = cursor.getString(cursor.getColumnIndex("province"));
         this.city = cursor.getString(cursor.getColumnIndex("city"));
-        this.lat = cursor.getDouble(cursor.getColumnIndex("lat"));
-        this.lon = cursor.getDouble(cursor.getColumnIndex("lon"));
+        this.lat = cursor.getString(cursor.getColumnIndex("lat"));
+        this.lon = cursor.getString(cursor.getColumnIndex("lon"));
         this.pinyin = cursor.getString(cursor.getColumnIndex("pinyin"));
     }
 
@@ -76,8 +76,8 @@ public class CityMode implements Parcelable {
         dest.writeLong(cid);
         dest.writeString(province);
         dest.writeString(city);
-        dest.writeDouble(lat);
-        dest.writeDouble(lon);
+        dest.writeString(lat);
+        dest.writeString(lon);
         dest.writeString(pinyin);
         dest.writeInt(listNum);
         dest.writeInt(location ? 1 : 0);

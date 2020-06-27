@@ -115,14 +115,14 @@ public class CityListRecyclerAdapter extends Adapter {
 
             if (weatherModel != null) {
                 mWeatherIcon.setVisibility(View.VISIBLE);
-                mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(weatherModel.icon_cd));
+                mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(weatherModel.observation.wxIcon));
                 if (weatherModel.observation != null && weatherModel.observation.metric != null) {
                     mTempTv.setText(String.format("%d℃", weatherModel.observation.metric.temp));
                 }
                 mTempTv.setTextColor(ContextCompat.getColor(mTempTv.getContext(), R.color.color_00c4ff));
             } else {
                 mWeatherIcon.setVisibility(View.GONE);
-                mTempTv.setText("暂无数据");
+                mTempTv.setText("数据更新中");
                 mTempTv.setTextColor(ContextCompat.getColor(mTempTv.getContext(), R.color.color_4a4a4a));
             }
         }

@@ -38,13 +38,17 @@ public class CurrentHolder extends RecyclerView.ViewHolder {
         mNotice = view.findViewById(R.id.tv_notice);
     }
 
+    public static int getResource() {
+        return R.layout.weather_item_current;
+    }
+
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel model) {
         if (model != null && model.observation != null) {
             Observation observation = model.observation;
             Metric metric = observation.metric;
             mWind_rh.setText(String.format("%s %d级｜ 湿度%d%%", observation.wdirCardinal, WeatherUtils.windGrade(metric.wspd), observation.rh));
-            mIconImgV.setImageResource(ImageUtils.weatherImageRes(model.icon_cd));
+            mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
             mTempTv.setText(String.format("%d", metric.temp));
             mPhraseTv.setText(observation.wxPhrase);
             mNotice.setText(String.format("今天：%s，最高气温 %dºC，最低气温 %dºC", observation.wxPhrase, metric.maxTemp, metric.minTemp));

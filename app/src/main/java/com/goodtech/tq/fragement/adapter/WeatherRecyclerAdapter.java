@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.goodtech.tq.R;
 import com.goodtech.tq.fragement.viewholder.CurrentHolder;
 import com.goodtech.tq.fragement.viewholder.DailyHolder;
 import com.goodtech.tq.fragement.viewholder.HoursHolder;
@@ -22,7 +21,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final int RECENT_VIEW = 2;
     private final int HOURS_VIEW = 3;
     private final int DAILY_VIEW = 4;
-    private final int OBSERVAT_VIEW = 5;
+    private final int OBSERVANT_VIEW = 5;
 
     private Context mContext;
     private WeatherModel mModel;
@@ -58,7 +57,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             case 2:
                 return HOURS_VIEW;
             case 13:
-                return OBSERVAT_VIEW;
+                return OBSERVANT_VIEW;
             default:
                 return DAILY_VIEW;
         }
@@ -69,20 +68,20 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case CURRENT_VIEW:
-                View current = getInflater().inflate(R.layout.weather_item_current, parent, false);
+                View current = getInflater().inflate(CurrentHolder.getResource(), parent, false);
                 return new CurrentHolder(current);
 
             case RECENT_VIEW:
-                View recentView = getInflater().inflate(R.layout.weather_item_recent, parent, false);
+                View recentView = getInflater().inflate(RecentHolder.gerResource(), parent, false);
                 return new RecentHolder(recentView);
             case HOURS_VIEW:
-                View hoursView = getInflater().inflate(R.layout.weather_item_hours, parent, false);
+                View hoursView = getInflater().inflate(HoursHolder.getResource(), parent, false);
                 return new HoursHolder(hoursView);
-            case OBSERVAT_VIEW:
-                View observationView = getInflater().inflate(R.layout.weather_item_observation, parent, false);
+            case OBSERVANT_VIEW:
+                View observationView = getInflater().inflate(ObservationHolder.getResource(), parent, false);
                 return new ObservationHolder(observationView);
             default:
-                View dailyView = getInflater().inflate(R.layout.weather_item_daily, parent, false);
+                View dailyView = getInflater().inflate(DailyHolder.getResource(), parent, false);
                 return new DailyHolder(dailyView);
         }
     }
