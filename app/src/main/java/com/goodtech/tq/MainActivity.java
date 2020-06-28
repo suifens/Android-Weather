@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -44,6 +46,7 @@ public class MainActivity extends BaseActivity {
     private List<CityMode> mLocationList;
     private List<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<CityMode> mCityModes = new ArrayList<>();
+    private int mCurrIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class MainActivity extends BaseActivity {
         mViewPager = findViewById(R.id.viewpager_main);
         mBgImgView = findViewById(R.id.img_background);
         mLocationTip = findViewById(R.id.img_location);
+        mRgIndicator = findViewById(R.id.indicator_city);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -87,6 +91,7 @@ public class MainActivity extends BaseActivity {
         setAddress(mCurLocation);
 
         configViewPager();
+        mCurrIndex = 0;
     }
 
     private void setAddress(CityMode cityMode) {
@@ -104,6 +109,43 @@ public class MainActivity extends BaseActivity {
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList);
         mViewPager.setAdapter(mAdapter);
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+    }
+
+    private void configRgIndicator(int pagerSize) {
+        if (mRgIndicator == null) {
+            return;
+        }
+        mRgIndicator.removeAllViews();
+
+        int width = DeviceUtils.dip2px(getBaseContext(), 5);
+        int height = DeviceUtils.dip2px(getBaseContext(), 5);
+        int margin = DeviceUtils.dip2px(getBaseContext(), 6);
+        RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(width, height);
+        for (int i = 0; i < pagerSize; i++) {
+            RadioButton tempButton = new RadioButton(MainActivity.this);
+            tempButton.setEnabled(false);
+            tempButton.setChecked(false);
+            tempButton.setBackgroundResource(R.drawable.sl_indicator_white);   // 设置RadioButton的背景图片
+            tempButton.setButtonDrawable(null);
+            if (i > 0) {
+                layoutParams.leftMargin = margin;
+            }
+            mRgIndicator.addView(tempButton, layoutParams);
+        }
+        setIndicator(mCurrIndex);
+    }
+
+    protected void setIndicator(int position) {
+        if (position >= 0 && position < mRgIndicator.getChildCount()) {
+            mRgIndicator.check(mRgIndicator.getChildAt(position).getId());
+
+            CityMode cityMode = mCityModes.get(position);
+            if (cityMode != null) {
+                setAddress(cityMode);
+                WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(cityMode.cid);
+                changeBg(weatherModel);
+            }
+        }
     }
 
     @Override
@@ -130,6 +172,7 @@ public class MainActivity extends BaseActivity {
 
         reloadFragment();
         reloadWeathers();
+        configRgIndicator(mCityModes.size());
     }
 
     private void reloadFragment() {
@@ -209,19 +252,9 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onPageSelected(int position) {
-            if (mCityModes.size() > position) {
-                CityMode cityMode = mCityModes.get(position);
-                if (cityMode != null) {
-                    setAddress(cityMode);
-                    if (cityMode.location) {
-                        mLocationTip.setVisibility(View.VISIBLE);
-                    } else {
-                        mLocationTip.setVisibility(View.GONE);
-                    }
-
-                    WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(cityMode.cid);
-                    changeBg(weatherModel);
-                }
+            if (mCurrIndex != position) {
+                mCurrIndex = position;
+                setIndicator(position);
             }
         }
 

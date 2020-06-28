@@ -16,6 +16,8 @@ import java.lang.reflect.Field;
  */
 public class DeviceUtils {
 
+    private static float currentDensity = 0;
+
     /**
      * 利用反射获取状态栏高度
      * @return
@@ -91,6 +93,10 @@ public class DeviceUtils {
         return statusBarHeight;
     }
 
+    public static float getScreenDensity(Context context) {
+        return context.getResources().getDisplayMetrics().density;
+    }
+
     private static int getInternalDimenPixelSize(Context context, String fieldName) {
         int result = 0;
         try {
@@ -103,6 +109,14 @@ public class DeviceUtils {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static int dip2px(Context context, float dipValue) {
+        if (currentDensity > 0)
+            return (int) (dipValue * currentDensity + 0.5f);
+
+        currentDensity = getScreenDensity(context);
+        return (int) (dipValue * currentDensity + 0.5f);
     }
 
 }
