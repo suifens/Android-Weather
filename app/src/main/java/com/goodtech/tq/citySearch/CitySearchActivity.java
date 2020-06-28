@@ -147,6 +147,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (!TextUtils.isEmpty(s)) {
             ArrayList<CityMode> list = DatabaseHelper.getInstance(this).queryCity(s);
             mRecommendView.setVisibility(View.GONE);
+            mRecommendHeaderView.setVisibility(View.GONE);
             if (list != null && list.size() > 0) {
                 mSearchListView.setVisibility(View.VISIBLE);
                 mSearchAdapter.notifyDataSetChanged(list);
