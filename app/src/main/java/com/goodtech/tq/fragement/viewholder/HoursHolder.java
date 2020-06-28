@@ -33,7 +33,9 @@ public class HoursHolder extends RecyclerView.ViewHolder {
 
     public void setHourlies(WeatherModel model) {
         if (model != null && model.hourlies != null) {
-            List<Hourly> hourlies = model.hourlies;
+            ArrayList<Hourly> hourlies = new ArrayList<>();
+            hourlies.addAll(model.hourlies);
+
             Daily daily = model.dailies.get(0);
             Daily tomorrow = model.dailies.get(1);
             if (daily != null) {
