@@ -197,7 +197,6 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
             //  获取广告
             fetchSplashAD(this, container, skipView, getPosId(), this);
         } else {
-            SpUtils.getInstance().putString("version", versionName);
             PermissionActivity.redirectTo(this);
             this.finish();
         }

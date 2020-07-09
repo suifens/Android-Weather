@@ -10,33 +10,28 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.goodtech.tq.helpers.ClickMovementMethod;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.DisagreeAlert;
+import com.goodtech.tq.utils.DisagreeAlert.DisagreeAlertListener;
 import com.goodtech.tq.utils.SpUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PermissionActivity extends BaseActivity implements View.OnClickListener {
 
@@ -57,7 +52,11 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission);
-        configStationBar(findViewById(R.id.status));
+
+        View stationBar = findViewById(R.id.status);
+        LinearLayout.LayoutParams bars = new LinearLayout.LayoutParams(stationBar.getLayoutParams());
+        bars.height = bars.height + DeviceUtils.getStatusBarHeight();
+        stationBar.setLayoutParams(bars);
 
         mspannableTv = findViewById(R.id.tv_spannable);
 
@@ -125,7 +124,13 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
                 checkAndRequestPermission();
                 break;
             case R.id.button_disagree: {
-                finish();
+                DisagreeAlert alert = new DisagreeAlert(PermissionActivity.this, new DisagreeAlertListener() {
+                    @Override
+                    public void onConfirmClick(View view) {
+                        checkAndRequestPermission();
+                    }
+                });
+                alert.show();
             }
             break;
         }
@@ -149,36 +154,32 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
      */
     @TargetApi(Build.VERSION_CODES.M)
     private void checkAndRequestPermission() {
-        ArrayList<String> lackedPermission = new ArrayList<>();
-
-        Log.d("TAG", "checkAndRequestPermission: location = " + getBaseContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE));
-        Log.d("TAG", "checkAndRequestPermission: location = " + checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION));
+        ArrayList<String> lackedPermissions = new ArrayList<>();
 
         if (!(checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)) {
-            lackedPermission.add(Manifest.permission.READ_PHONE_STATE);
+            lackedPermissions.add(Manifest.permission.READ_PHONE_STATE);
         }
 
         if (!(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
-            lackedPermission.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            lackedPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
         if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            lackedPermission.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
 
         if (!(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED )){
-            lackedPermission.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            lackedPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
         if (!(checkSelfPermission( Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            lackedPermission.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            lackedPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
         // 如果需要的权限都已经有了，那么直接调用SDK
-        if (lackedPermission.size() == 0) {
+        if (lackedPermissions.size() == 0) {
             onStartWeather();
         } else {
-            ArrayList<String> permissions = getIntent().getStringArrayListExtra(EXTRA_PERMISSIONS);
-            String[] requestPermissions = new String[permissions.size()];
-            permissions.toArray(requestPermissions);
+            String[] requestPermissions = new String[lackedPermissions.size()];
+            lackedPermissions.toArray(requestPermissions);
             requestPermissions(requestPermissions, 1024);
         }
     }
