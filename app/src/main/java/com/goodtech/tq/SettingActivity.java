@@ -41,11 +41,57 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.layout_permission_location).setOnClickListener(this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
         checkPermission();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_back:
+                finish();
+                break;
+            case R.id.layout_praise: {
+                //  评论
+                Uri uri = Uri.parse("market://details?id=" + getPackageName());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+            break;
+            case R.id.layout_about: {
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+            }
+            break;
+            case R.id.layout_permission_phone:
+            case R.id.layout_permission_storage: {
+
+                Intent intent = new Intent();
+                intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.parse("package:" + this.getPackageName()));
+                startActivity(intent);
+            }
+            break;
+            case R.id.layout_permission_location: {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -98,48 +144,5 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         boolean coarsePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
         boolean finePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
         return isAvailable && (coarsePermissionCheck || finePermissionCheck);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_back:
-                finish();
-                break;
-            case R.id.layout_praise: {
-                //  评论
-                Uri uri = Uri.parse("market://details?id=" + getPackageName());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-            break;
-            case R.id.layout_about: {
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-            }
-            break;
-            case R.id.layout_permission_phone:
-            case R.id.layout_permission_storage:
-            case R.id.layout_permission_location: {
-
-                Intent intent = new Intent();
-                intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setData(Uri.parse("package:" + this.getPackageName()));
-                startActivity(intent);
-            }
-            break;
-        }
     }
 }

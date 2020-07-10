@@ -6,10 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -21,7 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DisagreeAlert;
@@ -156,21 +153,21 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     private void checkAndRequestPermission() {
         ArrayList<String> lackedPermissions = new ArrayList<>();
 
-        if (!(checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)) {
+        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             lackedPermissions.add(Manifest.permission.READ_PHONE_STATE);
         }
 
-        if (!(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             lackedPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
         if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
 
-        if (!(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED )){
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             lackedPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-        if (!(checkSelfPermission( Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+        if (checkSelfPermission( Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             lackedPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
