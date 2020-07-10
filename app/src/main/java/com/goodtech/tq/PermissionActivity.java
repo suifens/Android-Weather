@@ -187,15 +187,21 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1024 && hasAllPermissionsGranted(grantResults)) {
+        Log.d("TAG", "onRequestPermissionsResult: " + permissions);
+
+        if (requestCode == 1024) {
             onStartWeather();
-        } else {
-            Toast.makeText(this, "应用缺少必要的权限！请点击\"权限\"，打开所需要的权限。", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.parse("package:" + getPackageName()));
-            startActivity(intent);
-            finish();
         }
+
+//        if (requestCode == 1024 && hasAllPermissionsGranted(grantResults)) {
+//            onStartWeather();
+//        } else {
+//            Toast.makeText(this, "应用缺少必要的权限！请点击\"权限\"，打开所需要的权限。", Toast.LENGTH_LONG).show();
+//            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//            intent.setData(Uri.parse("package:" + getPackageName()));
+//            startActivity(intent);
+//            finish();
+//        }
     }
 
     private void onStartWeather() {
