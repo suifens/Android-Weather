@@ -10,7 +10,7 @@ import android.os.Parcelable;
 public class CityMode implements Parcelable {
     /**
      * "id": 10000,
-     * "province": "安徽省",
+     * "mergerName": "安徽省",
      * "city": "合肥",
      * "lat": "31.52",
      * "lon": "117.17",
@@ -18,7 +18,7 @@ public class CityMode implements Parcelable {
      */
     public int cid = 0;
 
-    public String province;
+    public String mergerName;
 
     public String city;
 
@@ -36,7 +36,7 @@ public class CityMode implements Parcelable {
 
     protected CityMode(Parcel in) {
         cid = in.readInt();
-        province = in.readString();
+        mergerName = in.readString();
         city = in.readString();
         lat = in.readString();
         lon = in.readString();
@@ -58,11 +58,11 @@ public class CityMode implements Parcelable {
     };
 
     public void resolveCour(Cursor cursor){
-        this.cid = cursor.getInt(cursor.getColumnIndex("cid"));
-        this.province = cursor.getString(cursor.getColumnIndex("province"));
-        this.city = cursor.getString(cursor.getColumnIndex("city"));
-        this.lat = cursor.getString(cursor.getColumnIndex("lat"));
-        this.lon = cursor.getString(cursor.getColumnIndex("lon"));
+        this.cid = cursor.getInt(cursor.getColumnIndex("id"));
+        this.mergerName = cursor.getString(cursor.getColumnIndex("mergerName"));
+        this.city = cursor.getString(cursor.getColumnIndex("cityName"));
+        this.lat = cursor.getString(cursor.getColumnIndex("latitude"));
+        this.lon = cursor.getString(cursor.getColumnIndex("longitude"));
         this.pinyin = cursor.getString(cursor.getColumnIndex("pinyin"));
     }
 
@@ -74,7 +74,7 @@ public class CityMode implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(cid);
-        dest.writeString(province);
+        dest.writeString(mergerName);
         dest.writeString(city);
         dest.writeString(lat);
         dest.writeString(lon);
