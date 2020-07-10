@@ -37,9 +37,9 @@ public class TimeUtils {
     public static String timeToHH(long timeMills) {
         SimpleDateFormat format = new SimpleDateFormat("HH");
         String timeStr = format.format(timeMills);
-        if (timeStr.equals("00")) {
-            return "24";
-        }
+//        if (timeStr.equals("00")) {
+//            return "24";
+//        }
         return timeStr;
     }
 
@@ -48,7 +48,7 @@ public class TimeUtils {
         return format.format(timeMills);
     }
 
-    public static String stringToLong(long timeMills, String pattern) {
+    public static String longToString(long timeMills, String pattern) {
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         return format.format(timeMills);
     }

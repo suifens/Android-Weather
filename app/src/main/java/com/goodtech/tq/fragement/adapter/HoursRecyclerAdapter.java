@@ -75,11 +75,12 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
         void setData(Hourly hourly) {
 
             String hour = TimeUtils.timeToHH(hourly.fcst_valid * 1000);
-            String current = TimeUtils.timeToHH(System.currentTimeMillis());
+            String dayHour = TimeUtils.longToString(hourly.fcst_valid * 1000, "MMddHH");
+            String current = TimeUtils.longToString(System.currentTimeMillis(), "MMddHH");
             String timeStr;
             boolean sun = hourly.sunrise | hourly.sunset;
             
-            if (hour.equals(current)) {
+            if (dayHour.equals(current)) {
                 timeStr = "现在";
             } else {
                 timeStr = String.format("%s时", hour);

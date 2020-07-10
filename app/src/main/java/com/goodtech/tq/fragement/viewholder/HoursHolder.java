@@ -63,7 +63,7 @@ public class HoursHolder extends RecyclerView.ViewHolder {
                         riseHourly.fcst_valid = sunrise / 1000;
                         riseHourly.fcst_valid_local = daily.sunRise;
                         riseHourly.sunrise = true;
-                        hourlies.add(i + 1, riseHourly);
+                        hourlies.add(i, riseHourly);
                         continue;
                     }
                     if (currentStr.compareTo(setString) != 0 && sunset < hourly.fcst_valid * 1000) {
