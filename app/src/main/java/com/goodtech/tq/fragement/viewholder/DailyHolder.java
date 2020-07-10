@@ -9,9 +9,12 @@ import android.widget.TextView;
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Daypart;
+import com.goodtech.tq.models.Metric;
+import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
+import com.goodtech.tq.utils.WeatherUtils;
 
 /**
  * com.goodtech.tq.fragement.viewholder
@@ -36,7 +39,7 @@ public class DailyHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("DefaultLocale")
-    public void setData(Daily daily) {
+    public void setData(WeatherModel model, Daily daily) {
         if (daily != null) {
             mDayTv.setText(daily.dow);
             mMaxTempTv.setText(String.format("%d℃", daily.metric.maxTemp));
@@ -47,8 +50,14 @@ public class DailyHolder extends RecyclerView.ViewHolder {
             boolean day = currentTime < sunSetTime;
 
             Daypart dayPart = day ? daily.dayPart : daily.nightPart;
-            mIconImgV.setImageResource(ImageUtils.weatherImageRes(dayPart.iconCd));
-
+            if (dayPart == null) {
+                Observation observation = model.observation;
+                if (observation != null) {
+                    mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
+                }
+            } else {
+                mIconImgV.setImageResource(ImageUtils.weatherImageRes(dayPart.iconCd));
+            }
         }
     }
 

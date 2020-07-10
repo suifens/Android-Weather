@@ -74,7 +74,7 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
         @SuppressLint("DefaultLocale")
         void setData(Hourly hourly) {
 
-            String hour = TimeUtils.timeToHH((hourly.fcst_valid - 1) * 1000);
+            String hour = TimeUtils.timeToHH(hourly.fcst_valid * 1000);
             String current = TimeUtils.timeToHH(System.currentTimeMillis());
             String timeStr;
             boolean sun = hourly.sunrise | hourly.sunset;

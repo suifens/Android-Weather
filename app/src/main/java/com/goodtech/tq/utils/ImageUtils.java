@@ -153,14 +153,14 @@ public class ImageUtils {
             case 28:
             case 29:
             case 30:
-            case 33:
-            case 34:
                 return night ? R.drawable.bg_yintian_duoyun_night : R.drawable.bg_duoyun;
             //  晴
             case 23:
             case 24:
             case 31:
             case 32:
+            case 33:
+            case 34:
             case 36:
                 return night ? R.drawable.bg_qin_night : R.drawable.bg_qintian;
             case 44:

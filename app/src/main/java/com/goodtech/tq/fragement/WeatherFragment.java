@@ -24,6 +24,8 @@ public class WeatherFragment extends BaseFragment {
 
     protected View mStateBarBg;
 
+    protected String mAddress;
+
     @Override
     protected int getViewLayoutRes() {
         return R.layout.fragment_item_list;
@@ -45,7 +47,7 @@ public class WeatherFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new WeatherRecyclerAdapter(getContext(), mModel);
+        mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mAddress);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -73,8 +75,13 @@ public class WeatherFragment extends BaseFragment {
     }
 
     public void changeWeather(WeatherModel model, String address) {
-        mModel = model;
 
+        if (mModel != null && model.expireTime == mModel.expireTime) {
+            return;
+        }
+
+        this.mModel = model;
+        this.mAddress = address;
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged(model, address);
         }

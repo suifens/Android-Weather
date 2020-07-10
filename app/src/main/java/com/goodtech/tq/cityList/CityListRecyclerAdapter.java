@@ -113,7 +113,7 @@ public class CityListRecyclerAdapter extends Adapter {
 
             mLocationTip.setVisibility(mode.location ? View.VISIBLE : View.GONE);
 
-            if (weatherModel != null) {
+            if (weatherModel != null && weatherModel.observation != null) {
                 mWeatherIcon.setVisibility(View.VISIBLE);
                 mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(weatherModel.observation.wxIcon));
                 if (weatherModel.observation != null && weatherModel.observation.metric != null) {

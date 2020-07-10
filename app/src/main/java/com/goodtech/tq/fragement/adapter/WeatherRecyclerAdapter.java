@@ -3,6 +3,7 @@ package com.goodtech.tq.fragement.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.goodtech.tq.models.WeatherModel;
 
 public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder > {
 
+    private static final String TAG = "WeatherRecyclerAdapter";
+
     private final int CURRENT_VIEW = 1;
     private final int RECENT_VIEW = 2;
     private final int HOURS_VIEW = 3;
@@ -28,10 +31,11 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private LayoutInflater mInflater;
     private String mAddress;
 
-    public WeatherRecyclerAdapter(Context context, WeatherModel model) {
+    public WeatherRecyclerAdapter(Context context, WeatherModel model, String address) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.mModel = model;
+        this.mAddress = address;
     }
 
     public LayoutInflater getInflater() {
@@ -100,16 +104,20 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     ((HoursHolder) viewHolder).setHourlies(mModel);
                 }
 
-            } else if (viewHolder instanceof DailyHolder && i > 3) {
+            } else if (viewHolder instanceof DailyHolder && i >= 3) {
                 int index = i - 3;
                 if (mModel.dailies != null && mModel.dailies.size() > index) {
                     Daily daily = mModel.dailies.get(index);
-                    ((DailyHolder) viewHolder).setData(daily);
+                    ((DailyHolder) viewHolder).setData(mModel, daily);
                 }
             } else if (viewHolder instanceof ObservationHolder) {
                 ((ObservationHolder) viewHolder).setData(mModel, mAddress);
             }
         }
+    }
+
+    public void setAddress(String address) {
+        this.mAddress = address;
     }
 
     public void notifyDataSetChanged(WeatherModel model, String address) {

@@ -12,6 +12,8 @@ import com.goodtech.tq.utils.SpUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,9 @@ public class LocationSpHelper {
         CityMode cityMode = new CityMode();
         cityMode.location = true;
         if (TextUtils.isEmpty(bdLocation.getCity())) {
+            if (getLocation().cid != 0) {
+                return;
+            }
             cityMode.cid = 0;
         } else {
             cityMode.listNum = 0;
@@ -41,6 +46,8 @@ public class LocationSpHelper {
         Gson gson = new Gson();
         String json = gson.toJson(cityMode);
         SpUtils.getInstance().putString(Constants.SP_LOCATION, json);
+
+        EventBus.getDefault().post(cityMode);
     }
 
     /**
@@ -50,12 +57,15 @@ public class LocationSpHelper {
         String json = SpUtils.getInstance().getString(Constants.SP_LOCATION, "");
         if (!json.isEmpty()) {
             Gson gson = new Gson();
-            return gson.fromJson(json, new TypeToken<CityMode>(){}.getType());
-        } else {
-            CityMode cityMode = new CityMode();
-            cityMode.cid = 0;
-            return cityMode;
+            CityMode mode = gson.fromJson(json, new TypeToken<CityMode>(){}.getType());
+            if (mode != null) {
+                return mode;
+            }
         }
+
+        CityMode cityMode = new CityMode();
+        cityMode.cid = 0;
+        return cityMode;
     }
 
     /**

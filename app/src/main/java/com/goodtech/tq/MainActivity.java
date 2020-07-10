@@ -18,6 +18,7 @@ import com.goodtech.tq.fragement.WeatherFragment;
 import com.goodtech.tq.fragement.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
@@ -26,6 +27,10 @@ import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.umeng.analytics.MobclickAgent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +62,8 @@ public class MainActivity extends BaseActivity {
         mBgImgView = findViewById(R.id.img_background);
         mLocationTip = findViewById(R.id.img_location);
         mRgIndicator = findViewById(R.id.indicator_city);
+
+        EventBus.getDefault().register(this);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -94,12 +101,123 @@ public class MainActivity extends BaseActivity {
         mCurrIndex = 0;
     }
 
-    private void setAddress(CityMode cityMode) {
-        if (cityMode != null && cityMode.cid != 0) {
-            mAddressTv.setText(cityMode.city);
-        } else {
-            mAddressTv.setText("定位失败");
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        WeatherApp.getInstance().stopLocation();
+        Log.d(TAG, "onStop: ");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mViewPager.getCurrentItem() == 0) {
+            setAddress(LocationSpHelper.getLocation());
         }
+
+        if (TimeUtils.needLocation()) {
+            WeatherApp.getInstance().startLocation();
+        }
+
+        mCityModes = LocationSpHelper.getCityListAndLocation();
+
+        reloadFragment();
+        reloadWeathers();
+        configRgIndicator(mCityModes.size());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(CityMode event) {
+        if (mCityModes != null && mCityModes.size() > 0) {
+            if (event.listNum == 0) {
+                WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
+                helper.fetchWeather(event);
+                if (mCurrIndex == 0) {
+                    setIndicator(mCurrIndex);
+                }
+            }
+        }
+    }
+//    public void onReceiveMsg(EventM message) {
+//        Log.e(TAG, "onReceiveMsg: " + message.toString());
+//    }
+
+    private void reloadFragment() {
+        if (mFragmentList.size() != mCityModes.size()) {
+
+            while (mFragmentList.size() > mCityModes.size()) {
+                mFragmentList.remove(mFragmentList.size() - 1);
+            }
+            while (mFragmentList.size() < mCityModes.size()) {
+                WeatherFragment fragment = new WeatherFragment();
+                fragment.setStateBar(findViewById(R.id.station_bg_view));
+                mFragmentList.add(fragment);
+            }
+            mAdapter.replaceAll(mFragmentList);
+        }
+    }
+
+    private void reloadWeathers() {
+        for (int i = 0; i < mCityModes.size(); i++) {
+            CityMode cityMode = mCityModes.get(i);
+            if (cityMode.cid != 0) {
+                WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
+                if (mFragmentList.size() > i) {
+                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(i);
+                    fragment.changeWeather(model, cityMode.city);
+                }
+            }
+        }
+    }
+
+    /**
+     * 更改背景
+     */
+    private void changeBg(final WeatherModel model) {
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (model != null && model.dailies != null) {
+                    Daily daily = model.dailies.get(0);
+                    boolean night = false;
+                    if (daily != null) {
+                        long tSunrise = TimeUtils.switchTime(daily.sunRise);
+                        long tSunset = TimeUtils.switchTime(daily.sunSet);
+                        long current = System.currentTimeMillis();
+
+                        night = current < tSunrise || current > tSunset;
+                    }
+                    //  天气图标
+                    int icon_cd = -1;
+                    if (model.hourlies != null && model.hourlies.size() > 0) {
+                        Hourly hourly = model.hourlies.get(0);
+                        icon_cd = hourly.icon_cd;
+                    }
+                    mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
+                }
+            }
+        });
     }
 
     private void configViewPager() {
@@ -144,105 +262,26 @@ public class MainActivity extends BaseActivity {
                 setAddress(cityMode);
                 WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(cityMode.cid);
                 changeBg(weatherModel);
-            }
-        }
-    }
 
-    @Override
-    protected void onStop() {
-        // TODO Auto-generated method stub
-        WeatherApp.getInstance().stopLocation();
-        Log.d(TAG, "onStop: ");
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (mViewPager.getCurrentItem() == 0) {
-            setAddress(LocationSpHelper.getLocation());
-        }
-
-        if (TimeUtils.needLocation()) {
-            WeatherApp.getInstance().startLocation();
-        }
-
-        mCityModes = LocationSpHelper.getCityListAndLocation();
-
-        reloadFragment();
-        reloadWeathers();
-        configRgIndicator(mCityModes.size());
-    }
-
-    private void reloadFragment() {
-        if (mFragmentList.size() != mCityModes.size()) {
-
-            while (mFragmentList.size() > mCityModes.size()) {
-                mFragmentList.remove(mFragmentList.size() - 1);
-            }
-            while (mFragmentList.size() < mCityModes.size()) {
-                WeatherFragment fragment = new WeatherFragment();
-                fragment.setStateBar(findViewById(R.id.station_bg_view));
-                mFragmentList.add(fragment);
-            }
-            mAdapter.replaceAll(mFragmentList);
-        }
-    }
-
-    private void reloadWeathers() {
-        for (int i = 0; i < mCityModes.size(); i++) {
-            CityMode cityMode = mCityModes.get(i);
-            if (cityMode.cid != 0) {
-                WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
-                if (mFragmentList.size() > i) {
-                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(i);
-                    fragment.changeWeather(model, cityMode.city);
+                if (mFragmentList.size() > position) {
+                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(position);
+                    fragment.changeWeather(weatherModel, cityMode.city);
                 }
             }
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
+    private void setAddress(CityMode cityMode) {
+        if (cityMode != null) {
+            mLocationTip.setVisibility(cityMode.location ? View.VISIBLE : View.GONE);
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
-
-    /**
-     * 更改背景
-     */
-    private void changeBg(final WeatherModel model) {
-
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (model != null && model.dailies != null) {
-                    Daily daily = model.dailies.get(0);
-                    boolean night = false;
-                    if (daily != null) {
-                        long tSunrise = TimeUtils.switchTime(daily.sunRise);
-                        long tSunset = TimeUtils.switchTime(daily.sunSet);
-                        long current = System.currentTimeMillis();
-
-                        night = current < tSunrise || current > tSunset;
-                    }
-                    //  天气图标
-                    int icon_cd = -1;
-                    if (model.hourlies != null && model.hourlies.size() > 0) {
-                        Hourly hourly = model.hourlies.get(0);
-                        icon_cd = hourly.icon_cd;
-                    }
-                    mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
-                }
+            if (cityMode.location && cityMode.cid == 0) {
+                mAddressTv.setText("定位失败");
+            } else {
+                mAddressTv.setText(cityMode.city);
             }
-        });
+        }
+
     }
 
     protected ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
