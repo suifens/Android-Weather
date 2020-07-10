@@ -64,6 +64,7 @@ public class LocationSpHelper {
         }
 
         CityMode cityMode = new CityMode();
+        cityMode.location = true;
         cityMode.cid = 0;
         return cityMode;
     }

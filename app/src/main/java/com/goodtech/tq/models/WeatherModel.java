@@ -10,10 +10,12 @@ import java.util.List;
  */
 public class WeatherModel {
 
+    public int cid;
+
     public double latitude;
 
     public double longitude;
-
+    //  到期时间
     public long expireTime;
 
     public Observation observation;
@@ -34,9 +36,9 @@ public class WeatherModel {
     }
 
     public Daily today() {
-        if (dailies.size() > 0) {
+        if (dailies != null && dailies.size() > 0) {
             long currentTime = System.currentTimeMillis();
-            String currentLoc = TimeUtils.stringToLong(currentTime, "yyyy-MM-dd");
+            String currentLoc = TimeUtils.longToString(currentTime, "yyyy-MM-dd");
 
             for (int i = 0; i < dailies.size(); i++) {
                 Daily daily = dailies.get(i);
@@ -51,10 +53,10 @@ public class WeatherModel {
 
     public Daily tomorrow() {
 
-        if (dailies.size() > 0) {
+        if (dailies != null && dailies.size() > 0) {
 
             long time = System.currentTimeMillis() + 1000*3600*24;
-            String timeLoc = TimeUtils.stringToLong(time, "yyyy-MM-dd");
+            String timeLoc = TimeUtils.longToString(time, "yyyy-MM-dd");
 
             for (int i = 0; i < dailies.size(); i++) {
                 Daily daily = dailies.get(i);
