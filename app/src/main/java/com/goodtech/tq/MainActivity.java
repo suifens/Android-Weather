@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.cityList.CityListActivity;
@@ -52,6 +54,7 @@ public class MainActivity extends BaseActivity {
     private List<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<CityMode> mCityModes = new ArrayList<>();
     private int mCurrIndex;
+    private long mBackTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,25 @@ public class MainActivity extends BaseActivity {
 
         configViewPager();
         mCurrIndex = 0;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            backAction();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    protected void backAction(){
+        long current = System.currentTimeMillis();
+        if (current - mBackTime < 3 * 1000) {
+            finish();
+        } else {
+            mBackTime = current;
+            Toast.makeText(MainActivity.this.getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
