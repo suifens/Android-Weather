@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
 import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
@@ -47,7 +48,7 @@ public class LocationSpHelper {
         String json = gson.toJson(cityMode);
         SpUtils.getInstance().putString(Constants.SP_LOCATION, json);
 
-        EventBus.getDefault().post(cityMode);
+        EventBus.getDefault().post(new MessageEvent().setLocation(cityMode.cid != 0));
     }
 
     /**

@@ -10,9 +10,12 @@ import android.widget.Button;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
+import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.umeng.analytics.MobclickAgent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -54,11 +57,19 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mEditBtn = findViewById(R.id.button_city_edit);
         mRecyclerView = findViewById(R.id.recycler_city);
 
+        mCityModes = LocationSpHelper.getCityListAndLocation();
         mAdapter = new CityListRecyclerAdapter(this, mCityModes);
         mAdapter.setOnItemClickListener(new CityListRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
-                
+                if (cityMode.cid != 0) {
+
+                    EventBus.getDefault().post(new MessageEvent().setCityIndex(position));
+                    finish();
+
+                } else {
+
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);

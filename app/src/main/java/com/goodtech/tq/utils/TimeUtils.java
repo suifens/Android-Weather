@@ -58,7 +58,7 @@ public class TimeUtils {
      */
     public static boolean needLocation() {
         long locationTime = SpUtils.getInstance().getLong(Constants.TIME_LOCATION, (long) 0);
-        return System.currentTimeMillis() - locationTime > 5 * 60 * 1000;
+        return System.currentTimeMillis() - locationTime > 30 * 60 * 1000;
     }
 
     public static boolean needFetchWeather() {

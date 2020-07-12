@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
+import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
@@ -13,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +44,8 @@ public class WeatherSpHelper {
         String key = String.format("weather_%d", cid);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject.toString());
+
+            EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
         }
     }
 

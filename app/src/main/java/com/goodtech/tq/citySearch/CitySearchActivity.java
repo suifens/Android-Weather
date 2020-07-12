@@ -1,5 +1,6 @@
 package com.goodtech.tq.citySearch;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,13 +11,17 @@ import android.util.Log;
 import android.view.View;
 
 import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
+import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -105,12 +110,17 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             if (success) {
                 WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
                 helper.fetchWeather(cityMode);
+
+                EventBus.getDefault().post(new MessageEvent().addCity(true));
             }
         }
 
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         }, 200);

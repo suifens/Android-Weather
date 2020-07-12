@@ -64,7 +64,7 @@ public class ObservationHolder extends RecyclerView.ViewHolder {
             }
             Metric metric = observation.metric;
             long current = System.currentTimeMillis();
-            String currentStr = TimeUtils.stringToLong(current, "yyyy-MM-dd");
+            String currentStr = TimeUtils.longToString(current, "yyyy-MM-dd");
 
             if (model.dailies != null) {
                 Daily daily = null;

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.cityList.CityListActivity;
+import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragement.WeatherFragment;
 import com.goodtech.tq.fragement.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -55,6 +56,7 @@ public class MainActivity extends BaseActivity {
     private ArrayList<CityMode> mCityModes = new ArrayList<>();
     private int mCurrIndex;
     private long mBackTime;
+    private boolean mLoadLast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +163,19 @@ public class MainActivity extends BaseActivity {
             WeatherApp.getInstance().startLocation();
         }
 
+        reloadView();
+
+        Log.d(TAG, "onMessageEvent: load last = " + mLoadLast);
+        if (mLoadLast) {
+            mViewPager.setCurrentItem(mFragmentList.size() - 1);
+            mLoadLast = false;
+
+        } else if (mCityModes.size() > mCurrIndex) {
+            mViewPager.setCurrentItem(mCurrIndex);
+        }
+    }
+
+    private void reloadView() {
         mCityModes = LocationSpHelper.getCityListAndLocation();
 
         reloadFragment();
@@ -169,20 +184,29 @@ public class MainActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(CityMode event) {
-        if (mCityModes != null && mCityModes.size() > 0) {
-            if (event.listNum == 0) {
-                WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
-                helper.fetchWeather(event);
-                if (mCurrIndex == 0) {
-                    setIndicator(mCurrIndex);
+    public void onMessageEvent(MessageEvent event) {
+
+        if (event.isSuccessLocation()) {
+
+            reloadView();
+        }
+        if (event.getFetchCId() != 0) {
+            for (int i = 0; i < mCityModes.size(); i++) {
+                CityMode cityMode = mCityModes.get(i);
+                if (cityMode.cid == event.getFetchCId()) {
+                    reloadWeather(i);
+                    break;
                 }
             }
         }
+        if (event.showIndex() >= 0) {
+            mCurrIndex = event.showIndex();
+        }
+        if (event.isAddCity()) {
+            mLoadLast = true;
+            Log.d(TAG, "onMessageEvent: load last = " + mLoadLast);
+        }
     }
-//    public void onReceiveMsg(EventM message) {
-//        Log.e(TAG, "onReceiveMsg: " + message.toString());
-//    }
 
     private void reloadFragment() {
         if (mFragmentList.size() != mCityModes.size()) {
@@ -191,25 +215,39 @@ public class MainActivity extends BaseActivity {
                 mFragmentList.remove(mFragmentList.size() - 1);
             }
             while (mFragmentList.size() < mCityModes.size()) {
-                WeatherFragment fragment = new WeatherFragment();
-                fragment.setStateBar(findViewById(R.id.station_bg_view));
-                mFragmentList.add(fragment);
+                addFragment();
             }
             mAdapter.replaceAll(mFragmentList);
         }
     }
 
+    private void addFragment() {
+        WeatherFragment fragment = new WeatherFragment();
+        fragment.setStateBar(findViewById(R.id.station_bg_view));
+        mFragmentList.add(fragment);
+    }
+
     private void reloadWeathers() {
         for (int i = 0; i < mCityModes.size(); i++) {
-            CityMode cityMode = mCityModes.get(i);
-            if (cityMode.cid != 0) {
-                WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
-                if (mFragmentList.size() > i) {
-                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(i);
-                    fragment.changeWeather(model, cityMode.city);
+            reloadWeather(i);
+        }
+    }
+
+    private void reloadWeather(final int index) {
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                CityMode cityMode = mCityModes.get(index);
+                if (cityMode.cid != 0) {
+                    WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
+                    if (mFragmentList.size() > index) {
+                        WeatherFragment fragment = (WeatherFragment) mFragmentList.get(index);
+                        fragment.changeWeather(model, cityMode.city);
+                    }
                 }
             }
-        }
+        });
     }
 
     /**
@@ -232,9 +270,8 @@ public class MainActivity extends BaseActivity {
                     }
                     //  天气图标
                     int icon_cd = -1;
-                    if (model.hourlies != null && model.hourlies.size() > 0) {
-                        Hourly hourly = model.hourlies.get(0);
-                        icon_cd = hourly.icon_cd;
+                    if (model.observation != null) {
+                        icon_cd = model.observation.wxIcon;
                     }
                     mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
                 }

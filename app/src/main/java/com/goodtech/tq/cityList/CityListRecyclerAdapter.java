@@ -60,6 +60,8 @@ public class CityListRecyclerAdapter extends Adapter {
             if (mode.cid != 0) {
                 WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(mode.cid);
                 ((CityHolder) viewHolder).setCityMode(mode, weatherModel);
+            } else {
+                ((CityHolder) viewHolder).setCityMode(mode, null);
             }
         }
     }
@@ -83,7 +85,7 @@ public class CityListRecyclerAdapter extends Adapter {
     /**
      * holder
      */
-    public class CityHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class CityHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private OnItemClickListener mListener;
         private TextView mCityNameTv;
         private CityMode mCityMode;
@@ -130,7 +132,7 @@ public class CityListRecyclerAdapter extends Adapter {
         @Override
         public void onClick(View v) {
             if (mListener != null) {
-                mListener.onItemClick(v, getPosition(), mCityMode);
+                mListener.onItemClick(v, getAdapterPosition(), mCityMode);
             }
         }
     }

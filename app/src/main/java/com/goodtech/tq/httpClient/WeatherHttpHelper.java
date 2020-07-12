@@ -104,7 +104,6 @@ public class WeatherHttpHelper {
             }.getType());
 
             model.hourlies = hourlies;
-            Log.e(TAG, "onResponse: hourly = " + hourlies);
         }
 
         //  10天
@@ -115,7 +114,6 @@ public class WeatherHttpHelper {
             }.getType());
 
             model.dailies = dailies;
-            Log.e(TAG, "onResponse: dailies = " + dailies);
         }
 
         //
@@ -123,7 +121,6 @@ public class WeatherHttpHelper {
         if (conditionElement != null) {
             Observation observation = new Gson().fromJson(conditionElement.get(KEY_OBSERVATION), Observation.class);
             model.observation = observation;
-            Log.e(TAG, "onResponse: observation = " + observation);
         }
 
         //  定位和更新时间
