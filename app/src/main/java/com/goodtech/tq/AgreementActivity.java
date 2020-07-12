@@ -39,6 +39,7 @@ public class AgreementActivity extends BaseActivity {
         configStationBar(findViewById(R.id.private_station_bar));
 
         mWebView = findViewById(R.id.web_agreement);
+        mWebView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
         mWebView.setLongClickable(true);
         mWebView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
