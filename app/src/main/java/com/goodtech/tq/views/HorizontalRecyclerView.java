@@ -1,8 +1,8 @@
 package com.goodtech.tq.views;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.view.ViewPager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewParent;

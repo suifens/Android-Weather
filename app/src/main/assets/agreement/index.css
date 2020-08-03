@@ -1,6 +1,6 @@
 .mod {
   width: 100%;
-  height: 6500px;
+  height: auto;
 }
 
 body {
@@ -13,7 +13,7 @@ body {
   flex-direction: column;
   background-color: #FFFFFF;
   width: 100%;
-  height: 6500px;
+  height: auto;
 }
 
 .mod .bd {

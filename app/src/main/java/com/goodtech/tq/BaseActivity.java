@@ -3,13 +3,13 @@ package com.goodtech.tq;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.goodtech.tq.utils.DeviceUtils;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * com.goodtech.tq

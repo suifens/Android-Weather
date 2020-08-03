@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.ConstraintLayout
         android:id="@+id/private_station_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -40,7 +40,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/layout_current"
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:text="用于正常识别手机设备,保证账号安全"
                     android:textColor="@color/color_4a4a4a"
-                    android:textSize="13sp"/>
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 
@@ -210,7 +210,7 @@
                     android:layout_height="wrap_content"
                     android:text="用于存储天气数据缓存"
                     android:textColor="@color/color_4a4a4a"
-                    android:textSize="13sp"/>
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 
@@ -268,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:text="提供精准定位天气及短时预报服务"
                     android:textColor="@color/color_4a4a4a"
-                    android:textSize="13sp"/>
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 
@@ -298,4 +298,4 @@
         
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.ConstraintLayout>

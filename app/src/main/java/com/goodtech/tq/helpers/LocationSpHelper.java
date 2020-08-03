@@ -1,6 +1,5 @@
 package com.goodtech.tq.helpers;
 
-import android.support.constraint.solver.ArrayLinkedVariables;
 import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;

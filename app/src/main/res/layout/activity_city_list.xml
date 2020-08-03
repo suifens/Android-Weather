@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".cityList.CityListActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.ConstraintLayout
         android:id="@+id/private_station_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -54,7 +54,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,12 +99,12 @@
                 />
         </LinearLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="80dp">
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.ConstraintLayout>
 
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.ConstraintLayout>

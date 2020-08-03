@@ -7,7 +7,7 @@
     android:background="@color/black_alpha10"
     android:minHeight="74dp">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginStart="4dp"
@@ -67,7 +67,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 
     <View
         android:layout_width="1dp"
@@ -78,7 +78,7 @@
         android:layout_marginBottom="10dp"
         />
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="4dp"
@@ -137,6 +137,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 
 </LinearLayout>

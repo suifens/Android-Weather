@@ -11,9 +11,10 @@
     android:background="@drawable/bg_circle_white_6"
     android:minHeight="543dp">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="124dp"
+        android:layout_height="wrap_content"
+        android:minHeight="124dp"
         android:layout_marginStart="18dp">
 
         <TextView
@@ -28,25 +29,28 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
             android:text="体感温度"
             android:textColor="@color/colorSubtitle"
             android:textSize="@dimen/sp_14"
-            android:layout_marginTop="9dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_address" />
-        
+
         <com.goodtech.tq.utils.font.AlternateBoldTextView
             android:id="@+id/tv_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="48sp"
-            android:textColor="#00C4FF"
-            android:text="29"
             android:layout_marginBottom="4dp"
+            android:layout_marginTop="6dp"
+            android:text="29"
+            android:textColor="#00C4FF"
+            android:textSize="48sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="@+id/textView" />
 
         <com.goodtech.tq.utils.font.AlternateBoldTextView
             android:layout_width="wrap_content"
@@ -83,7 +87,8 @@
 
             <TextView
                 android:id="@+id/tv_time_sunrise"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
+                android:minWidth="40dp"
                 android:layout_height="wrap_content"
                 android:text="08:00"
                 android:textAlignment="textEnd"
@@ -117,7 +122,8 @@
 
             <TextView
                 android:id="@+id/tv_time_sunset"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
+                android:minWidth="40dp"
                 android:layout_height="wrap_content"
                 android:text="18:00"
                 android:textAlignment="textEnd"
@@ -126,7 +132,7 @@
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.ConstraintLayout>
 
     <View
         android:layout_width="match_parent"

@@ -4,12 +4,12 @@
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/gradient_007bff_00c4ff"
     android:minHeight="360dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="120dp"
+        android:layout_height="120dp"
         android:gravity="center"
         android:layout_marginBottom="90dp"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -29,14 +29,11 @@
             <TextView
                 android:id="@+id/tv_rh_wrap"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:text="东风 3级｜ 湿度47%"
                 android:textColor="@color/white"
                 android:textSize="13sp"
-                android:gravity="bottom"
-                android:layout_marginTop="10sp"
                 android:layout_marginBottom="17dp"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/alternateBoldTextView" />
 
@@ -78,14 +75,12 @@
             <TextView
                 android:id="@+id/tv_wx_phrase"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="多云"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_18"
                 android:textStyle="bold"
-                android:layout_marginBottom="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tv_current"
                 app:layout_constraintTop_toBottomOf="@+id/alternateBoldTextView" />
 
@@ -113,13 +108,11 @@
             android:id="@+id/tv_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="得关掉重新打开才能更新数据，刷新没有更新数据得关掉重新打开才能更新数据，刷新没有更新数据"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:lines="1"
-            android:gravity="center"
             android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMinTextSize="10sp"
             android:layout_marginStart="4dp"
             />
     </LinearLayout>

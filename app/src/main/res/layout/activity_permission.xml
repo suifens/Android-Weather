@@ -64,7 +64,7 @@
                 android:id="@+id/tv_spannable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:lineSpacingExtra="8sp"
+                android:lineSpacingExtra="2sp"
                 android:text="@string/permission_title1"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="14sp"
@@ -78,14 +78,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:lineSpacingExtra="6sp"
+            android:lineSpacingExtra="2sp"
             android:text="@string/permission_title2"
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.ConstraintLayout
             android:id="@+id/layout_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,18 +116,26 @@
 
             <TextView
                 android:id="@+id/detail_phone"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="38dp"
+                android:layout_marginEnd="10dp"
+                android:autoSizeMinTextSize="10sp"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:lines="1"
                 android:text="用于正常识别手机设备,保证账号安全"
                 android:textColor="@color/colorSubtitle"
                 android:textSize="13sp"
-                android:layout_marginStart="38dp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_phone" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.ConstraintLayout
             android:id="@+id/layout_storage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -167,9 +175,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_storage" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.ConstraintLayout
             android:id="@+id/layout_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -200,16 +208,24 @@
 
             <TextView
                 android:id="@+id/detail_location"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="38dp"
+                android:layout_marginEnd="10dp"
+                android:autoSizeMinTextSize="10sp"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:lines="1"
                 android:text="提供精准定位天气及短时预报服务"
                 android:textColor="@color/colorSubtitle"
                 android:textSize="13sp"
-                android:layout_marginStart="38dp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_location" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.ConstraintLayout>
 
     </LinearLayout>
 
