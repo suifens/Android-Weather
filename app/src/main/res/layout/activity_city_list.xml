@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".cityList.CityListActivity">
 
-    <androidx.constraintlayout.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/private_station_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -36,7 +36,7 @@
             android:background="@color/color_clear"
             android:text="@string/button_edit"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="18dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -47,14 +47,14 @@
             android:layout_marginBottom="12dp"
             android:text="我的城市"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,12 +64,11 @@
         app:layout_constraintTop_toBottomOf="@+id/private_station_bar"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_city"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+            android:layout_weight="1" />
 
         <LinearLayout
             android:id="@+id/city_add"
@@ -94,17 +93,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:text="添加城市"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:textColor="@color/white"
                 />
         </LinearLayout>
 
-        <androidx.constraintlayout.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="80dp">
 
-        </androidx.constraintlayout.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
-</androidx.constraintlayout.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

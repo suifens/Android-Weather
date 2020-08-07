@@ -2,39 +2,51 @@ package com.goodtech.tq.cityList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.SearchCityType;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemState;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
+import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
-import java.util.ArrayList;
 
-public class CityListRecyclerAdapter extends Adapter {
+public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecyclerAdapter.CityHolder> implements DraggableItemAdapter<CityListRecyclerAdapter.CityHolder> {
+
+    private static final String TAG = "CityListRecyclerAdapter";
 
     private Context mContext;
     private WeatherModel mModel;
     private LayoutInflater mInflater;
+    private CityListProvider mProvider;
 
-    private ArrayList<CityMode> mCityList;
     private SearchCityType mType;
 
-    public CityListRecyclerAdapter(Context context, ArrayList<CityMode> cityModeArrayList) {
+    public CityListRecyclerAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        this.mCityList = cityModeArrayList;
+        this.mProvider = new CityListProvider();
+
+        setHasStableIds(true);
     }
 
     public LayoutInflater getInflater() {
@@ -43,32 +55,46 @@ public class CityListRecyclerAdapter extends Adapter {
 
     @Override
     public int getItemCount() {
-        return mCityList.size();
+        return mProvider.getCount();
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CityHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View section = getInflater().inflate(R.layout.item_city, parent, false);
         return new CityHolder(section, mOnItemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        if (mCityList != null && mCityList.size() > i) {
-            CityMode mode = mCityList.get(i);
-            if (mode.cid != 0) {
-                WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(mode.cid);
-                ((CityHolder) viewHolder).setCityMode(mode, weatherModel);
-            } else {
-                ((CityHolder) viewHolder).setCityMode(mode, null);
-            }
-        }
-    }
+    public void onBindViewHolder(@NonNull CityHolder viewHolder, int i) {
 
-    public void notifyDataSetChanged(ArrayList<CityMode> cityModeArrayList) {
-        this.mCityList = cityModeArrayList;
-        super.notifyDataSetChanged();
+        final CityMode item = mProvider.getItem(i);
+        if (item.cid != 0) {
+            WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(item.cid);
+            viewHolder.setCityMode(item, weatherModel);
+        } else {
+            viewHolder.setCityMode(item, null);
+        }
+
+        // set background resource (target view ID: container)
+        final DraggableItemState dragState = viewHolder.getDragState();
+
+        if (dragState.isUpdated()) {
+            int bgResId;
+
+            if (dragState.isActive()) {
+                bgResId = R.drawable.bg_item_dragging_active_state;
+
+                // need to clear drawable state here to get correct appearance of the dragging item.
+                DeviceUtils.clearState(viewHolder.mContainer.getForeground());
+            } else if (dragState.isDragging()) {
+                bgResId = R.drawable.bg_item_dragging_state;
+            } else {
+                bgResId = R.drawable.bg_item_normal_state;
+            }
+
+            viewHolder.mContainer.setBackgroundResource(bgResId);
+        }
     }
 
     public interface OnItemClickListener {
@@ -81,26 +107,81 @@ public class CityListRecyclerAdapter extends Adapter {
         mOnItemClickListener = onItemClickListener;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return mProvider.getItem(position).getId();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mProvider.getItem(position).getViewType();
+    }
+
+    @Override
+    public boolean onCheckCanStartDrag(@NonNull CityHolder holder, int position, int x, int y) {
+
+        final View containerView = holder.mContainer;
+        final View dragHandleView = holder.mDragHandle;
+
+        final int offsetX = containerView.getLeft() + (int) (containerView.getTranslationX() + 0.5f);
+        final int offsetY = containerView.getTop() + (int) (containerView.getTranslationY() + 0.5f);
+
+        return DeviceUtils.hitTest(dragHandleView, x - offsetX, y - offsetY);
+    }
+
+    @Nullable
+    @Override
+    public ItemDraggableRange onGetItemDraggableRange(@NonNull CityHolder holder, int position) {
+        return null;
+    }
+
+    @Override
+    public void onMoveItem(int fromPosition, int toPosition) {
+        Log.d(TAG, "onMoveItem: ");
+
+        mProvider.moveItem(fromPosition, toPosition);
+    }
+
+    @Override
+    public boolean onCheckCanDrop(int draggingPosition, int dropPosition) {
+        return true;
+    }
+
+    @Override
+    public void onItemDragStarted(int position) {
+        Log.d(TAG, "onItemDragStarted: ");
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemDragFinished(int fromPosition, int toPosition, boolean result) {
+        Log.d(TAG, "onItemDragFinished: ");
+        notifyDataSetChanged();
+    }
 
     /**
      * holder
      */
-    public static class CityHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class CityHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener {
         private OnItemClickListener mListener;
         private TextView mCityNameTv;
         private CityMode mCityMode;
         private ImageView mWeatherIcon;
         private TextView mTempTv;
         private ImageView mLocationTip;
+        public RelativeLayout mContainer;
+        public View mDragHandle;
 
         public CityHolder(View view, OnItemClickListener listener) {
             super(view);
+            mContainer = view.findViewById(R.id.container);
+            mContainer.setOnClickListener(this);
+            mDragHandle = view.findViewById(R.id.img_city_drag);
             mCityNameTv = view.findViewById(R.id.tv_city_name);
             mLocationTip = view.findViewById(R.id.img_location);
             mWeatherIcon = view.findViewById(R.id.img_icon);
             mTempTv = view.findViewById(R.id.tv_temperature);
             mListener = listener;
-            view.setOnClickListener(this);
         }
 
         @SuppressLint("DefaultLocale")
@@ -109,7 +190,7 @@ public class CityListRecyclerAdapter extends Adapter {
 
             if (mode.location && TextUtils.isEmpty(mode.city)) {
                 mCityNameTv.setText("定位");
-            }  else {
+            } else {
                 mCityNameTv.setText(mode.city);
             }
 

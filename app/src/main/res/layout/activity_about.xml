@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AboutActivity">
 
-    <androidx.constraintlayout.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/private_station_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -33,21 +33,21 @@
             android:layout_marginBottom="12dp"
             android:text="@string/title_about"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="一古（厦门）科技有限公司 版权所有"
         android:textColor="@color/color_d1d1d1"
-        android:textSize="13sp"
+        android:textSize="13dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,13 +71,13 @@
             android:gravity="center"
             android:text="《隐私协议》"
             android:textColor="@color/color_00c4ff"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="与"
             android:textColor="@color/color_4a4a4a"
-            android:textSize="14sp"/>
+            android:textSize="14dp"/>
         <TextView
             android:id="@+id/tv_agreement"
             android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
             android:gravity="center"
             android:text="《用户协议》"
             android:textColor="@color/color_00c4ff"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
     </LinearLayout>
 
@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:text="Q Q：965977542"
         android:textColor="@color/color_4a4a4a"
-        android:textSize="16sp"
+        android:textSize="16dp"
         android:textStyle="bold"
         android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -108,7 +108,7 @@
         android:layout_height="wrap_content"
         android:text="邮箱：app@1goodtech.com"
         android:textColor="@color/color_4a4a4a"
-        android:textSize="16sp"
+        android:textSize="16dp"
         android:textStyle="bold"
         android:layout_marginBottom="124dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -121,7 +121,7 @@
         android:layout_height="wrap_content"
         android:text="联系我们及商务合作"
         android:textColor="@color/colorSubtitle"
-        android:textSize="13sp"
+        android:textSize="13dp"
         android:layout_marginBottom="150dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -151,8 +151,8 @@
             android:layout_marginTop="10dp"
             android:text="版本：V 4.2.0"
             android:textColor="@color/color_4a4a4a"
-            android:textSize="14sp"/>
+            android:textSize="14dp"/>
 
     </LinearLayout>
 
-</androidx.constraintlayout.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

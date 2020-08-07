@@ -2,7 +2,11 @@ package com.goodtech.tq.cityList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +17,11 @@ import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.models.CityMode;
+import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
+import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -29,8 +38,32 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void onPause() {
-        super.onPause();
+        mRecyclerViewDragDropManager.cancelDrag();
         MobclickAgent.onPause(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mRecyclerViewDragDropManager != null) {
+            mRecyclerViewDragDropManager.release();
+            mRecyclerViewDragDropManager = null;
+        }
+
+        if (mRecyclerView != null) {
+            mRecyclerView.setItemAnimator(null);
+            mRecyclerView.setAdapter(null);
+            mRecyclerView = null;
+        }
+
+        if (mWrappedAdapter != null) {
+            WrapperAdapterUtils.releaseAll(mWrappedAdapter);
+            mWrappedAdapter = null;
+        }
+        mAdapter = null;
+        mLayoutManager = null;
+
+        super.onDestroy();
     }
 
     public static void redirectTo(Activity ctx) {
@@ -43,7 +76,10 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     private boolean mEdit = false;
 
     private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
     private CityListRecyclerAdapter mAdapter;
+    private RecyclerView.Adapter mWrappedAdapter;
+    private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
     private ArrayList<CityMode> mCityModes;
 
     @Override
@@ -55,10 +91,18 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         configStationBar(findViewById(R.id.private_station_bar));
 
         mEditBtn = findViewById(R.id.button_city_edit);
-        mRecyclerView = findViewById(R.id.recycler_city);
 
-        mCityModes = LocationSpHelper.getCityListAndLocation();
-        mAdapter = new CityListRecyclerAdapter(this, mCityModes);
+        //noinspection ConstantConditions
+        mRecyclerView = findViewById(R.id.recycler_city);
+        mLayoutManager = new LinearLayoutManager(CityListActivity.this, RecyclerView.VERTICAL, false);
+
+        // drag & drop manager
+        mRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
+        mRecyclerViewDragDropManager.setDraggingItemShadowDrawable(
+                (NinePatchDrawable) ContextCompat.getDrawable(CityListActivity.this, R.drawable.material_shadow_z3));
+
+        //adapter
+        mAdapter = new CityListRecyclerAdapter(CityListActivity.this);
         mAdapter.setOnItemClickListener(new CityListRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
@@ -72,7 +116,19 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 }
             }
         });
-        mRecyclerView.setAdapter(mAdapter);
+
+        mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mAdapter);      // wrap for dragging
+
+        final GeneralItemAnimator animator = new DraggableItemAnimator();
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mWrappedAdapter);  // requires *wrapped* adapter
+        mRecyclerView.setItemAnimator(animator);
+
+        mRecyclerView.addItemDecoration(new SimpleListDividerDecorator(ContextCompat.getDrawable(CityListActivity.this, R.drawable.list_divider_h), true));
+
+        mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
+
 
         setClickListener();
     }
@@ -80,7 +136,6 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onStart() {
         super.onStart();
-        mAdapter.notifyDataSetChanged(LocationSpHelper.getCityListAndLocation());
     }
 
     private void setClickListener() {

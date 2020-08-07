@@ -1,11 +1,12 @@
 package com.goodtech.tq.views;
 
 import android.content.Context;
-import androidx.core.view.ViewPager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewParent;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import org.jetbrains.annotations.Nullable;
 

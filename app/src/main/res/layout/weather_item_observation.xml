@@ -11,7 +11,7 @@
     android:background="@drawable/bg_circle_white_6"
     android:minHeight="543dp">
 
-    <androidx.constraintlayout.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="124dp"
@@ -47,7 +47,7 @@
             android:layout_marginTop="6dp"
             android:text="29"
             android:textColor="#00C4FF"
-            android:textSize="48sp"
+            android:textSize="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView" />
@@ -55,7 +55,7 @@
         <com.goodtech.tq.utils.font.AlternateBoldTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="30dp"
             android:textColor="#00C4FF"
             android:text="℃"
             android:layout_marginBottom="9dp"
@@ -132,7 +132,7 @@
 
         </LinearLayout>
 
-    </androidx.constraintlayout.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:layout_width="match_parent"

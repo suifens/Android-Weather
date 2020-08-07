@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="欢迎您使用"
-                android:textSize="22sp"
+                android:textSize="22dp"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/status"
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text=" 预知天气"
                 android:textColor="@color/black"
-                android:textSize="22sp"
+                android:textSize="22dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/welcome"
                 app:layout_constraintTop_toBottomOf="@+id/status" />
@@ -64,10 +64,10 @@
                 android:id="@+id/tv_spannable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:lineSpacingExtra="2sp"
+                android:lineSpacingExtra="2dp"
                 android:text="@string/permission_title1"
                 android:textColor="@color/color_4a4a4a"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/welcome" />
 
@@ -78,14 +78,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:lineSpacingExtra="2sp"
+            android:lineSpacingExtra="2dp"
             android:text="@string/permission_title2"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="14dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
-        <androidx.constraintlayout.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:text="手机信息权限"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:layout_marginStart="38dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -120,22 +120,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="38dp"
                 android:layout_marginEnd="10dp"
-                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMinTextSize="10dp"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:text="用于正常识别手机设备,保证账号安全"
                 android:textColor="@color/colorSubtitle"
-                android:textSize="13sp"
-                app:autoSizeMinTextSize="10sp"
+                android:textSize="13dp"
+                app:autoSizeMinTextSize="10dp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_phone" />
 
-        </androidx.constraintlayout.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_storage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:text="存储权限"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:layout_marginStart="38dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -170,14 +170,14 @@
                 android:layout_height="wrap_content"
                 android:text="用于存储天气数据缓存"
                 android:textColor="@color/colorSubtitle"
-                android:textSize="13sp"
+                android:textSize="13dp"
                 android:layout_marginStart="38dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_storage" />
 
-        </androidx.constraintlayout.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -201,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:text="位置信息"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:layout_marginStart="38dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -212,20 +212,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="38dp"
                 android:layout_marginEnd="10dp"
-                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMinTextSize="10dp"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:lines="1"
                 android:text="提供精准定位天气及短时预报服务"
                 android:textColor="@color/colorSubtitle"
-                android:textSize="13sp"
-                app:autoSizeMinTextSize="10sp"
+                android:textSize="13dp"
+                app:autoSizeMinTextSize="10dp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_location" />
 
-        </androidx.constraintlayout.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
@@ -238,7 +238,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:text="同意并进入"
-        android:textSize="16sp"
+        android:textSize="16dp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/button_disagree"
         app:layout_constraintStart_toStartOf="parent"
@@ -255,7 +255,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:text="不同意"
-        android:textSize="16sp"
+        android:textSize="16dp"
         android:textColor="@color/colorSubtitle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

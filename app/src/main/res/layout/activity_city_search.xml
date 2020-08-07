@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:section="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <androidx.constraintlayout.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/private_station_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -14,7 +14,7 @@
         section:layout_constraintStart_toStartOf="parent"
         section:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.SearchView
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/search_view"
             android:layout_width="0dp"
             android:layout_height="30dp"
@@ -43,14 +43,14 @@
             android:gravity="center"
             android:text="@string/button_cancel"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="18dp"
             section:layout_constraintBottom_toBottomOf="parent"
             section:layout_constraintEnd_toEndOf="parent"
             section:layout_constraintStart_toEndOf="@+id/search_view"/>
 
-    </androidx.constraintlayout.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         section:layout_constraintTop_toBottomOf="@+id/private_station_bar"
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_recommend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -132,6 +132,6 @@
 
         </LinearLayout>
 
-    </androidx.constraintlayout.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout4"
@@ -22,7 +22,7 @@
         android:text="抱歉，您在同意隐私政策及用户协议条款后，才可继续使用本产品"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
             android:background="@color/color_clear"
             android:text="再想想"
             android:textColor="@color/blue_52e1ff"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
         <View
@@ -66,7 +66,7 @@
             android:background="@color/color_clear"
             android:text="同意并进入"
             android:textColor="@color/blue_52e1ff"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -75,4 +75,4 @@
 
 
 
-</androidx.constraintlayout.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

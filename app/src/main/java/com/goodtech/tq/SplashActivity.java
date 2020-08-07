@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.httpClient.ApiClient;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.utils.Constants;
@@ -219,8 +220,11 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (splashAD != null) {
+            splashAD = null;
+        }
         handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
     /** 开屏页一定要禁止用户对返回按钮的控制，否则将可能导致用户手动退出了App而广告无法正常曝光和计费 */
@@ -241,6 +245,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
 
     private void onStartWeather() {
         this.startActivity(new Intent(this, MainActivity.class));
+//        this.startActivity(new Intent(this, CityListActivity.class));
         this.finish();
     }
 

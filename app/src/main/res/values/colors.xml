@@ -15,6 +15,10 @@
     <!--副标题颜色-->
     <color name="colorSubtitle">#9B9B9B</color>
 
+    <color name="bg_item_normal_state">#fff0f0f0</color>
+    <color name="bg_item_dragging_state">#ffffdddd</color>
+    <color name="bg_item_dragging_active_state">#ffff9999</color>
+
     <color name="color_363636">#FF363636</color>
     <color name="color_d8d8d8">#d8d8d8</color>
     <color name="color_979797">#979797</color>
@@ -23,6 +27,7 @@
     <color name="color_00c4ff">#00C4FF</color>
     <color name="color_d1d1d1">#D1D1D1</color>
     <color name="color_1d1d35">#1D1D35</color>
+    <color name="color_ff4a4a">#FF4A4A</color>
     <color name="color_current_location">#FAFAFA</color>
     <color name="color_line">#ECECEC</color>
 

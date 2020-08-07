@@ -1,15 +1,15 @@
 package com.goodtech.tq.citySearch;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+
 import com.goodtech.tq.citySearch.viewholder.CityRecommendHolder;
-import com.goodtech.tq.citySearch.viewholder.RecommendHeaderHolder;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
 

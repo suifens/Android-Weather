@@ -89,8 +89,6 @@ public class LocationSpHelper {
             locations.add(0, location);
         }
         return locations;
-
-
     }
 
     /**

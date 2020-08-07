@@ -32,6 +32,8 @@ public class CityMode implements Parcelable {
 
     public boolean location = false;
 
+    private int mViewType = 0;
+
     public CityMode() {}
 
     protected CityMode(Parcel in) {
@@ -43,6 +45,14 @@ public class CityMode implements Parcelable {
         pinyin = in.readString();
         listNum = in.readInt();
         location = in.readInt() == 0;
+    }
+
+    public int getId() {
+        return cid;
+    }
+
+    public int getViewType() {
+        return mViewType;
     }
 
     public static final Creator<CityMode> CREATOR = new Creator<CityMode>() {
