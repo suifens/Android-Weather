@@ -69,6 +69,23 @@ public class LocationSpHelper {
         return cityMode;
     }
 
+    public static void setCityList(ArrayList<CityMode> cityList) {
+        ArrayList<CityMode> tempList = new ArrayList<>();
+        tempList.addAll(cityList);
+        for (int i = 0; i < cityList.size(); i++) {
+            CityMode cityMode = tempList.get(i);
+            if (cityMode.location) tempList.remove(cityMode);
+            break;
+        }
+        for (int i = 0; i < tempList.size(); i++) {
+            CityMode cityMode = tempList.get(i);
+            cityMode.listNum = i + 1;
+        }
+        Gson gson = new Gson();
+        String json = gson.toJson(tempList);
+        SpUtils.getInstance().putString(Constants.SP_LOCATION_LIST, json);
+    }
+
     /**
      * 获取定位和城市列表，定位index = 0
      */

@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
-import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
@@ -72,6 +72,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         ctx.overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
     }
 
+    private ImageButton mCloseBtn;
+    private Button mCancelBtn;
     private Button mEditBtn;
     private boolean mEdit = false;
 
@@ -81,6 +83,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     private RecyclerView.Adapter mWrappedAdapter;
     private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
     private ArrayList<CityMode> mCityModes;
+    private CityListProvider mProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
 
+        mCloseBtn = findViewById(R.id.button_back);
+        mCancelBtn = findViewById(R.id.button_city_cancel);
         mEditBtn = findViewById(R.id.button_city_edit);
 
         //noinspection ConstantConditions
@@ -102,7 +107,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 (NinePatchDrawable) ContextCompat.getDrawable(CityListActivity.this, R.drawable.material_shadow_z3));
 
         //adapter
-        mAdapter = new CityListRecyclerAdapter(CityListActivity.this);
+        mProvider = new CityListProvider();
+        mAdapter = new CityListRecyclerAdapter(CityListActivity.this, mProvider);
         mAdapter.setOnItemClickListener(new CityListRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
@@ -144,11 +150,22 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         //  添加城市
         findViewById(R.id.city_add).setOnClickListener(this);
         findViewById(R.id.button_city_edit).setOnClickListener(this);
+        findViewById(R.id.button_city_cancel).setOnClickListener(this);
     }
 
     private void setEdit(boolean edit) {
         mEdit = edit;
-        mEditBtn.setText(getString(edit ? R.string.button_edit : R.string.button_cancel));
+        mAdapter.notifyDataSetChanged(edit);
+
+        if (edit) {
+            mEditBtn.setText(getString(R.string.button_done));
+            mCancelBtn.setVisibility(View.VISIBLE);
+            mCloseBtn.setVisibility(View.GONE);
+        } else {
+            mEditBtn.setText(getString(R.string.button_edit));
+            mCancelBtn.setVisibility(View.GONE);
+            mCloseBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -164,8 +181,15 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 startActivity(intent);
                 break;
             case R.id.button_city_edit:
+                if (mEdit) {
+                    mProvider.saveData();
+                }
                 //  点击编辑/取消按钮
                 setEdit(!mEdit);
+                break;
+            case R.id.button_city_cancel:
+                mProvider.resetData();
+                setEdit(false);
                 break;
         }
     }

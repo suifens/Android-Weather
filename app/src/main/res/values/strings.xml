@@ -17,6 +17,7 @@
     <string name="button_edit">编辑</string>
     <string name="button_cancel">取消</string>
     <string name="button_delete">删除</string>
+    <string name="button_done">完成</string>
 
     <string name="permission_title1">感谢您选择预知天气预报APP\n感谢您使用预知天气！我们深知个人信息对您的重要性,并会尽全力保护您的个人信息安全。在您使用预知天气预报提供的服务前，请仔细阅读《隐私政策》及《用户协议》内容,我们将严格按照前述政策，为您提供更好的服务。若您是14岁以下未成年人，请您务必要求您的监护人仔细阅读本协议，并在征得您的监护人同意的前提下使用我们的产品。如您同意该隐私政策,请点击"同意"并开始使用我们的产品及服务。如您对本政策内容有任何疑问、意见或建议,您可以通过邮箱app@1goodtech.com与我们联系。</string>
     <string name="permission_title2">为了保证您可以正常使用预知天气预报的各项基本工具,我们将根据您使用的不同功能，可能会分别向您申请以下一项或多项权限</string>

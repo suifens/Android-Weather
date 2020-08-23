@@ -62,7 +62,6 @@ public class WeatherFragment extends BaseFragment {
                 totalDy += dy;
                 if (totalDy <= mStateBarBg.getHeight() && totalDy > 10) {
                     float alpha = (totalDy)/(float)(mStateBarBg.getHeight() * 1.0);
-                    Log.d(TAG, "onScrolled: alpha = " + alpha);
                     mStateBarBg.setAlpha(alpha);
                 }
                 else if (totalDy > mStateBarBg.getHeight()) {

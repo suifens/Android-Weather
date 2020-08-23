@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,13 +38,14 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
     private WeatherModel mModel;
     private LayoutInflater mInflater;
     private CityListProvider mProvider;
+    private boolean isEdit;
 
     private SearchCityType mType;
 
-    public CityListRecyclerAdapter(Context context) {
+    public CityListRecyclerAdapter(Context context, CityListProvider provider) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        this.mProvider = new CityListProvider();
+        this.mProvider = provider;
 
         setHasStableIds(true);
     }
@@ -65,15 +66,20 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
         return new CityHolder(section, mOnItemClickListener);
     }
 
+    public void notifyDataSetChanged(boolean isEdit) {
+        this.isEdit = isEdit;
+        super.notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull CityHolder viewHolder, int i) {
 
         final CityMode item = mProvider.getItem(i);
         if (item.cid != 0) {
             WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(item.cid);
-            viewHolder.setCityMode(item, weatherModel);
+            viewHolder.setCityMode(item, weatherModel, isEdit);
         } else {
-            viewHolder.setCityMode(item, null);
+            viewHolder.setCityMode(item, null, isEdit);
         }
 
         // set background resource (target view ID: container)
@@ -159,6 +165,7 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
         notifyDataSetChanged();
     }
 
+
     /**
      * holder
      */
@@ -166,35 +173,55 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
         private OnItemClickListener mListener;
         private TextView mCityNameTv;
         private CityMode mCityMode;
+        private LinearLayout mWeatherLayout;
         private ImageView mWeatherIcon;
         private TextView mTempTv;
         private ImageView mLocationTip;
         public RelativeLayout mContainer;
         public View mDragHandle;
+        public ImageView mDeleteBtn;
+
+        private boolean isEdit;
 
         public CityHolder(View view, OnItemClickListener listener) {
             super(view);
             mContainer = view.findViewById(R.id.container);
             mContainer.setOnClickListener(this);
             mDragHandle = view.findViewById(R.id.img_city_drag);
+            mDeleteBtn = view.findViewById(R.id.img_delete);
             mCityNameTv = view.findViewById(R.id.tv_city_name);
             mLocationTip = view.findViewById(R.id.img_location);
+            mWeatherLayout = view.findViewById(R.id.layout_weather);
             mWeatherIcon = view.findViewById(R.id.img_icon);
             mTempTv = view.findViewById(R.id.tv_temperature);
             mListener = listener;
         }
 
         @SuppressLint("DefaultLocale")
-        public void setCityMode(CityMode mode, WeatherModel weatherModel) {
+        public void setCityMode(CityMode mode, WeatherModel weatherModel, boolean isEdit) {
+            this.isEdit = isEdit;
             this.mCityMode = mode;
 
-            if (mode.location && TextUtils.isEmpty(mode.city)) {
-                mCityNameTv.setText("定位");
+            if (mode.location) {
+                if (TextUtils.isEmpty(mode.city)) {
+                    mCityNameTv.setText("定位");
+                } else {
+                    mCityNameTv.setText(mode.city);
+                }
+                mLocationTip.setVisibility(View.VISIBLE);
             } else {
                 mCityNameTv.setText(mode.city);
+                mLocationTip.setVisibility(View.GONE);
+                if (isEdit) {
+                    mDeleteBtn.setVisibility(View.VISIBLE);
+                    mDragHandle.setVisibility(View.VISIBLE);
+                    mWeatherLayout.setVisibility(View.GONE);
+                } else {
+                    mDeleteBtn.setVisibility(View.GONE);
+                    mDragHandle.setVisibility(View.GONE);
+                    mWeatherLayout.setVisibility(View.VISIBLE);
+                }
             }
-
-            mLocationTip.setVisibility(mode.location ? View.VISIBLE : View.GONE);
 
             if (weatherModel != null && weatherModel.observation != null) {
                 mWeatherIcon.setVisibility(View.VISIBLE);

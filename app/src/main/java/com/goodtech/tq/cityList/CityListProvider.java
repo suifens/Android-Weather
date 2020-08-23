@@ -37,6 +37,14 @@ public class CityListProvider extends AbstractDataProvider {
         return mData.get(index);
     }
 
+    public void saveData() {
+        LocationSpHelper.setCityList(mData);
+    }
+
+    public void resetData() {
+        mData = LocationSpHelper.getCityListAndLocation();
+    }
+
     @Override
     public void removeItem(int position) {
         final CityMode removedItem = mData.remove(position);
