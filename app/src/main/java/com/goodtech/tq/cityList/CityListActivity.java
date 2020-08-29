@@ -84,6 +84,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
     private ArrayList<CityMode> mCityModes;
     private CityListProvider mProvider;
+    private CityListRecyclerAdapter.CityHolder mShowAnimHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
 
-        mCloseBtn = findViewById(R.id.button_back);
+        mCloseBtn = findViewById(R.id.button_close);
         mCancelBtn = findViewById(R.id.button_city_cancel);
         mEditBtn = findViewById(R.id.button_city_edit);
 
@@ -120,6 +121,20 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 } else {
 
                 }
+            }
+
+            @Override
+            public void onShowDelete(CityListRecyclerAdapter.CityHolder holder) {
+                if (mShowAnimHolder != null && mShowAnimHolder != holder) {
+                    mShowAnimHolder.hideDeleteAnim();
+                }
+                mShowAnimHolder = holder;
+            }
+
+            @Override
+            public void onDeleteCity(int position, CityMode cityMode) {
+                mProvider.removeItem(position);
+                mAdapter.notifyDataSetChanged(true);
             }
         });
 

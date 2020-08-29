@@ -7,6 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,7 +35,8 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 
-public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecyclerAdapter.CityHolder> implements DraggableItemAdapter<CityListRecyclerAdapter.CityHolder> {
+public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecyclerAdapter.CityHolder>
+        implements DraggableItemAdapter<CityListRecyclerAdapter.CityHolder> {
 
     private static final String TAG = "CityListRecyclerAdapter";
 
@@ -63,7 +69,7 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
     @Override
     public CityHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View section = getInflater().inflate(R.layout.item_city, parent, false);
-        return new CityHolder(section, mOnItemClickListener);
+        return new CityHolder(mContext, section, mOnItemClickListener);
     }
 
     public void notifyDataSetChanged(boolean isEdit) {
@@ -105,6 +111,8 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position, CityMode cityMode);
+        void onShowDelete(CityHolder holder);
+        void onDeleteCity(int position, CityMode cityMode);
     }
 
     private OnItemClickListener mOnItemClickListener;//声明接口
@@ -170,6 +178,7 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
      * holder
      */
     public static class CityHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener {
+        private Context mContext;
         private OnItemClickListener mListener;
         private TextView mCityNameTv;
         private CityMode mCityMode;
@@ -183,18 +192,22 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
 
         private boolean isEdit;
 
-        public CityHolder(View view, OnItemClickListener listener) {
+        public CityHolder(Context context, View view, OnItemClickListener listener) {
             super(view);
+            mContext = context;
             mContainer = view.findViewById(R.id.container);
             mContainer.setOnClickListener(this);
             mDragHandle = view.findViewById(R.id.img_city_drag);
             mDeleteBtn = view.findViewById(R.id.img_delete);
+            mDeleteBtn.setOnClickListener(this);
             mCityNameTv = view.findViewById(R.id.tv_city_name);
             mLocationTip = view.findViewById(R.id.img_location);
             mWeatherLayout = view.findViewById(R.id.layout_weather);
             mWeatherIcon = view.findViewById(R.id.img_icon);
             mTempTv = view.findViewById(R.id.tv_temperature);
             mListener = listener;
+            view.findViewById(R.id.btn_delete).setOnClickListener(this);
+            setAnimations();
         }
 
         @SuppressLint("DefaultLocale")
@@ -216,10 +229,12 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
                     mDeleteBtn.setVisibility(View.VISIBLE);
                     mDragHandle.setVisibility(View.VISIBLE);
                     mWeatherLayout.setVisibility(View.GONE);
+                    mContainer.setOnClickListener(null);
                 } else {
                     mDeleteBtn.setVisibility(View.GONE);
                     mDragHandle.setVisibility(View.GONE);
                     mWeatherLayout.setVisibility(View.VISIBLE);
+                    mContainer.setOnClickListener(this);
                 }
             }
 
@@ -239,9 +254,74 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityListRecycl
 
         @Override
         public void onClick(View v) {
-            if (mListener != null) {
-                mListener.onItemClick(v, getAdapterPosition(), mCityMode);
+            switch (v.getId()) {
+                case R.id.img_delete:
+                    showDeleteAnim();
+                    mContainer.setOnClickListener(this);
+                    if (mListener != null) {
+                        mListener.onShowDelete(this);
+                    }
+                    break;
+                case R.id.container:
+                    if (isEdit) {
+                        hideDeleteAnim();
+                        mContainer.setOnClickListener(null);
+                        if (mListener != null) {
+                            mListener.onShowDelete(null);
+                        }
+                    } else {
+                        if (mListener != null) {
+                            mListener.onItemClick(v, getAdapterPosition(), mCityMode);
+                        }
+                    }
+                    break;
+                case R.id.btn_delete:
+                    if (mListener != null) {
+                        mListener.onDeleteCity(getAdapterPosition(), mCityMode);
+                    }
+                    break;
             }
+        }
+
+        public void showDeleteAnim() {
+            mContainer.startAnimation(showAnim);
+        }
+        
+        public void hideDeleteAnim() {
+            mContainer.startAnimation(hideAnim);
+        }
+
+        private AnimationSet showAnim;
+        private AnimationSet hideAnim;
+
+        private void setAnimations() {
+            showAnim = getAnimation(R.anim.show_delete, false);
+            hideAnim = getAnimation(R.anim.hide_delete, true);
+        }
+
+        public AnimationSet getAnimation(int animId, final boolean hide) {
+            AnimationSet animationSet = (AnimationSet) AnimationUtils.loadAnimation(mContext, animId);
+            animationSet.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    FrameLayout.LayoutParams ll = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                    int left = hide ? 0 : -10;
+                    int right = hide ? 0 : 210;
+                    ll.setMargins(left, 0, right, 0);
+                    mContainer.setLayoutParams(ll);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            return animationSet;
         }
     }
 }
