@@ -70,13 +70,14 @@ public class LocationSpHelper {
     }
 
     public static void setCityList(ArrayList<CityMode> cityList) {
-        ArrayList<CityMode> tempList = new ArrayList<>();
-        tempList.addAll(cityList);
+        ArrayList<CityMode> tempList = new ArrayList<>(cityList);
         for (int i = 0; i < cityList.size(); i++) {
-            CityMode cityMode = tempList.get(i);
-            if (cityMode.location) tempList.remove(cityMode);
-            break;
+            CityMode cityMode = cityList.get(i);
+            if (cityMode.location) {
+                tempList.remove(cityMode);
+            }
         }
+
         for (int i = 0; i < tempList.size(); i++) {
             CityMode cityMode = tempList.get(i);
             cityMode.listNum = i + 1;

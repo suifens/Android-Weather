@@ -39,6 +39,7 @@ public class CityListProvider extends AbstractDataProvider {
 
     public void saveData() {
         LocationSpHelper.setCityList(mData);
+        resetData();
     }
 
     public void resetData() {

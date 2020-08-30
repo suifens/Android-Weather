@@ -115,12 +115,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
                 if (cityMode.cid != 0) {
-
                     EventBus.getDefault().post(new MessageEvent().setCityIndex(position));
                     finish();
-
-                } else {
-
                 }
             }
 
