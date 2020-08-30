@@ -143,15 +143,15 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     @SuppressLint("DefaultLocale")
     @Override
     public void onNoAD(AdError error) {
-        final String str = String.format("LoadSplashADFail, eCode=%d, errorMsg=%s", error.getErrorCode(),
-                error.getErrorMsg());
-        Log.i("AD_DEMO",str);
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(SplashActivity.this.getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        final String str = String.format("LoadSplashADFail, eCode=%d, errorMsg=%s", error.getErrorCode(),
+//                error.getErrorMsg());
+//        Log.i("AD_DEMO",str);
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                Toast.makeText(SplashActivity.this.getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         //为防止无广告时造成视觉上类似于"闪退"的情况，设定无广告时页面跳转根据需要延迟一定时间，demo
         //给出的延时逻辑是从拉取广告开始算开屏最少持续多久
