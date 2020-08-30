@@ -44,9 +44,9 @@
             android:layout_height="wrap_content"
             android:text="阴转多云"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_14"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="14dp"
+            android:layout_marginEnd="12dp"
             android:alpha="0.8"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -114,9 +114,9 @@
             android:layout_height="wrap_content"
             android:text="阴转多云"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_14"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="14dp"
+            android:layout_marginEnd="12dp"
             android:alpha="0.8"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

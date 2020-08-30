@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
+import com.goodtech.tq.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.models.CityMode;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
@@ -84,7 +85,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
     private ArrayList<CityMode> mCityModes;
     private CityListProvider mProvider;
-    private CityListRecyclerAdapter.CityHolder mShowAnimHolder;
+    private CityHolder mShowAnimHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             }
 
             @Override
-            public void onShowDelete(CityListRecyclerAdapter.CityHolder holder) {
+            public void onShowDelete(CityHolder holder) {
                 if (mShowAnimHolder != null && mShowAnimHolder != holder) {
                     mShowAnimHolder.hideDeleteAnim();
                 }
@@ -180,6 +181,10 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             mEditBtn.setText(getString(R.string.button_edit));
             mCancelBtn.setVisibility(View.GONE);
             mCloseBtn.setVisibility(View.VISIBLE);
+        }
+        if (mShowAnimHolder != null) {
+            mShowAnimHolder.hideDeleteAnim();
+            mShowAnimHolder = null;
         }
     }
 
