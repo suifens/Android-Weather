@@ -24,6 +24,8 @@ import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
+import com.goodtech.tq.models.Hourly;
+import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
@@ -116,7 +118,7 @@ public class MainActivity extends BaseActivity {
 
     protected void backAction(){
         long current = System.currentTimeMillis();
-        if (current - mBackTime < 3 * 1000) {
+        if (current - mBackTime < 2 * 1000) {
             finish();
         } else {
             mBackTime = current;
@@ -271,7 +273,15 @@ public class MainActivity extends BaseActivity {
                     int icon_cd = -1;
                     if (model.observation != null) {
                         icon_cd = model.observation.wxIcon;
+                        if (model.hourlies.size() > 0 && model.hourlies.get(0) != null) {
+                            Hourly hourly = model.hourlies.get(0);
+                            long time = hourly.fcst_valid;
+                            if (System.currentTimeMillis() > time * 1000) {
+                                icon_cd = hourly.icon_cd;
+                            }
+                        }
                     }
+
                     mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
                 }
             }
