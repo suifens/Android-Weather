@@ -83,7 +83,7 @@
                 android:text="多云"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_18"
-                android:textStyle="bold"
+                android:fontFamily="sans-serif-black"
                 android:layout_marginBottom="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tv_current"
@@ -99,8 +99,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
 

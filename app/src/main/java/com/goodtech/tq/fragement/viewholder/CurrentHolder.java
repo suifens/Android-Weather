@@ -48,7 +48,8 @@ public class CurrentHolder extends RecyclerView.ViewHolder {
         if (model != null && model.observation != null) {
             Observation observation = model.observation;
             Metric metric = observation.metric;
-            mNotice.setText(String.format("今天：%s，最高气温 %dºC，最低气温 %dºC", observation.wxPhrase, metric.maxTemp, metric.minTemp));
+            mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                    metric.maxTemp, metric.minTemp));
 
             if (model.hourlies.size() > 0) {
                 Hourly hourly = model.hourlies.get(0);
@@ -58,7 +59,7 @@ public class CurrentHolder extends RecyclerView.ViewHolder {
                         //
                         mIconImgV.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
                         if (hourly.metric != null) {
-                            mWind_rh.setText(String.format("%s %d级｜ 湿度%d%%", hourly.wdir_cardinal,
+                            mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", hourly.wdir_cardinal,
                                     WeatherUtils.windGrade(hourly.metric.wspd), hourly.rh));
                             mTempTv.setText(String.format("%d", hourly.metric.temp));
                         }
@@ -67,7 +68,8 @@ public class CurrentHolder extends RecyclerView.ViewHolder {
                     }
                 }
             }
-            mWind_rh.setText(String.format("%s %d级｜ 湿度%d%%", observation.wdirCardinal, WeatherUtils.windGrade(metric.wspd), observation.rh));
+            mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", observation.wdirCardinal,
+                    WeatherUtils.windGrade(metric.wspd), observation.rh));
             mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
             mTempTv.setText(String.format("%d", metric.temp));
             mPhraseTv.setText(observation.wxPhrase);

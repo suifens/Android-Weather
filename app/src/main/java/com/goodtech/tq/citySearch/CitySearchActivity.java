@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.appcompat.widget.SearchView;
@@ -135,6 +136,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mSearchView.onActionViewExpanded();
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(false);
+        SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
+        if (textView != null) {
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+        }
     }
 
     @Override

@@ -65,6 +65,7 @@ public class ObservationHolder extends RecyclerView.ViewHolder {
             Metric metric = observation.metric;
             long current = System.currentTimeMillis();
             String currentStr = TimeUtils.longToString(current, "yyyy-MM-dd");
+            String tempString = null;
 
             if (model.dailies != null) {
                 Daily daily = null;
@@ -82,11 +83,15 @@ public class ObservationHolder extends RecyclerView.ViewHolder {
                     mSunriseTimeTv.setText(sunrise);
                     mSunsetTimeTv.setText(sunset);
                     mMoonItemView.setValue(daily.moon_phase);
+                    tempString = String.format("%d℃/%d℃", daily.metric.maxTemp, daily.metric.minTemp);
                 }
             }
 
             mTempTv.setText(String.format("%d", metric.temp));
-            mTempItemView.setValue(String.format("%d℃/%d℃", metric.maxTemp, metric.minTemp));
+            if (tempString == null) {
+                tempString = String.format("%d℃/%d℃", metric.maxTemp, metric.minTemp);
+            }
+            mTempItemView.setValue(tempString);
             mWspdItemView.setValue(String.format("%d公里/小时", metric.wspd));
             mRhItemView.setValue(String.format("%d%%", observation.rh));
             mDewptItemView.setValue(String.format("%d℃", metric.dewpt));

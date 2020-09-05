@@ -12,9 +12,13 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_weight="1"
+        android:lines="1"
         android:gravity="center"
         android:textColor="@color/color_4a4a4a"
-        android:textSize="18dp" />
+        android:textSize="14dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12dp"
+        android:autoSizeMaxTextSize="14dp"/>
 
     <View
         android:layout_width="match_parent"
