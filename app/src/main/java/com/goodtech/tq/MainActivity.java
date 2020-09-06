@@ -1,6 +1,9 @@
 package com.goodtech.tq;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -28,6 +31,7 @@ import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.TimeUtils;
 import com.umeng.analytics.MobclickAgent;
 
@@ -41,6 +45,8 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
+
+    private BroadcastReceiver receiver = new IntentReceiver();
 
     protected TextView mAddressTv;
     protected ImageView mLocationTip;
@@ -104,6 +110,9 @@ public class MainActivity extends BaseActivity {
 
         configViewPager();
         mCurrIndex = 0;
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        this.registerReceiver(receiver, filter);
     }
 
     @Override
@@ -149,6 +158,7 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        unregisterReceiver(receiver);
     }
 
     @Override
@@ -282,6 +292,8 @@ public class MainActivity extends BaseActivity {
                     }
 
                     mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
+                } else {
+                    mBgImgView.setImageResource(R.drawable.bg_normal);
                 }
             }
         });
