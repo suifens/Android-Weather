@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
@@ -156,6 +157,22 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         super.onStart();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            backAction();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    protected void backAction(){
+        if (!mEdit) {
+            finish();
+            overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+        }
+    }
+
     private void setClickListener() {
 
         findViewById(R.id.button_close).setOnClickListener(this);
@@ -173,10 +190,12 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             mEditBtn.setText(getString(R.string.button_done));
             mCancelBtn.setVisibility(View.VISIBLE);
             mCloseBtn.setVisibility(View.GONE);
+            findViewById(R.id.city_add).setVisibility(View.GONE);
         } else {
             mEditBtn.setText(getString(R.string.button_edit));
             mCancelBtn.setVisibility(View.GONE);
             mCloseBtn.setVisibility(View.VISIBLE);
+            findViewById(R.id.city_add).setVisibility(View.VISIBLE);
         }
         if (mShowAnimHolder != null) {
             mShowAnimHolder.hideDeleteAnim();
