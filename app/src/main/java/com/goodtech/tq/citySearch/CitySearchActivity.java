@@ -158,7 +158,11 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
      */
     @Override
     public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
 
+    @Override
+    public boolean onQueryTextChange(String s) {
         Log.d(TAG, "onQueryTextSubmit: " + s);
         if (!TextUtils.isEmpty(s)) {
             ArrayList<CityMode> list = DatabaseHelper.getInstance(this).queryCity(s);
@@ -172,12 +176,12 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 mSearchListView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.VISIBLE);
             }
+        } else if (mRecommendView != null) {
+            mSearchListView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
+            mRecommendView.setVisibility(View.VISIBLE);
+            mRecommendHeaderView.setVisibility(View.VISIBLE);
         }
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
         return false;
     }
 
