@@ -1,7 +1,6 @@
 package com.goodtech.tq.fragement;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -10,22 +9,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragement.adapter.WeatherRecyclerAdapter;
+import com.goodtech.tq.httpClient.ApiCallback;
+import com.goodtech.tq.httpClient.ErrorCode;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 /**
  * A fragment representing a list of Items.
  */
-public class WeatherFragment extends BaseFragment {
+public class WeatherFragment extends BaseFragment implements OnRefreshListener {
 
-    private static final String TAG = "WeatherFragment";
-
+    protected SmartRefreshLayout mRefreshLayout;
     protected RecyclerView mRecyclerView;
     protected WeatherRecyclerAdapter mAdapter;
     protected WeatherModel mModel;
 
     protected View mStateBarBg;
 
-    protected String mAddress;
+    protected CityMode mCityMode;
 
     @Override
     protected int getViewLayoutRes() {
@@ -35,7 +40,8 @@ public class WeatherFragment extends BaseFragment {
     @Override
     protected void setupCacheViews() {
         super.setupCacheViews();
-        mRecyclerView = (RecyclerView) mCacheView;
+        mRefreshLayout = (SmartRefreshLayout) mCacheView;
+        mRecyclerView = mCacheView.findViewById(R.id.list);
     }
 
     public void setStateBar(View stateBar) {
@@ -47,8 +53,10 @@ public class WeatherFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mRefreshLayout.setOnRefreshListener(this);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mAddress);
+        mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mCityMode != null ? mCityMode.city : null);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -74,16 +82,34 @@ public class WeatherFragment extends BaseFragment {
         });
     }
 
-    public void changeWeather(WeatherModel model, String address) {
+    public void changeWeather(WeatherModel model, CityMode cityMode) {
 
         if (mModel != null && model.expireTime == mModel.expireTime) {
             return;
         }
 
         this.mModel = model;
-        this.mAddress = address;
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged(model, address);
+        this.mCityMode = cityMode;
+        if (mAdapter != null && cityMode != null) {
+            mAdapter.notifyDataSetChanged(model, cityMode.city);
         }
+    }
+
+    @Override
+    public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+        WeatherHttpHelper.getInstance().getWeather(mCityMode, new ApiCallback() {
+            @Override
+            public void onResponse(boolean success, final WeatherModel weather, ErrorCode errCode) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (weather != null) {
+                            changeWeather(weather, mCityMode);
+                        }
+                        refreshLayout.finishRefresh();
+                    }
+                });
+            }
+        });
     }
 }

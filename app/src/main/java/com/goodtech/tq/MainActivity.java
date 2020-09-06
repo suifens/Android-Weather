@@ -253,7 +253,7 @@ public class MainActivity extends BaseActivity {
                     WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
                     if (mFragmentList.size() > index) {
                         WeatherFragment fragment = (WeatherFragment) mFragmentList.get(index);
-                        fragment.changeWeather(model, cityMode.city);
+                        fragment.changeWeather(model, cityMode);
                     }
                     if (index == mCurrIndex) {
                         changeBg(model);
@@ -347,7 +347,7 @@ public class MainActivity extends BaseActivity {
 
                 if (mFragmentList.size() > position) {
                     WeatherFragment fragment = (WeatherFragment) mFragmentList.get(position);
-                    fragment.changeWeather(weatherModel, cityMode.city);
+                    fragment.changeWeather(weatherModel, cityMode);
                 }
             }
         }
