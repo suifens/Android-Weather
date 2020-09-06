@@ -7,6 +7,8 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.fragement.adapter.HoursRecyclerAdapter;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
+import com.goodtech.tq.models.Metric;
+import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.TimeUtils;
 
@@ -36,9 +38,12 @@ public class HoursHolder extends RecyclerView.ViewHolder {
             ArrayList<Hourly> hourlies = new ArrayList<>();
             hourlies.addAll(model.hourlies);
 
+            checkFirstHourly(model, hourlies);
+
             Daily daily = model.dailies.get(0);
             Daily tomorrow = model.dailies.get(1);
             if (daily != null) {
+
                 long tSunrise = TimeUtils.switchTime(daily.sunRise);
                 long tSunset = TimeUtils.switchTime(daily.sunSet);
                 long mSunrise = TimeUtils.switchTime(tomorrow.sunRise);
@@ -78,6 +83,23 @@ public class HoursHolder extends RecyclerView.ViewHolder {
             }
 
             setHourlies(hourlies);
+        }
+    }
+
+    protected void checkFirstHourly(WeatherModel model, ArrayList<Hourly> hourlies) {
+        if (model != null && hourlies.size() > 0) {
+            Hourly hourly = hourlies.get(0);
+            if (hourly.fcst_valid > System.currentTimeMillis() / 1000) {
+                if (model.observation != null) {
+                    Observation observation = model.observation;
+                    Metric metric = observation.metric;
+                    Hourly curHourly = new Hourly();
+                    curHourly.fcst_valid = System.currentTimeMillis() / 1000;
+                    curHourly.metric = metric;
+                    curHourly.icon_cd = observation.wxIcon;
+                    hourlies.add(0, curHourly);
+                }
+            }
         }
     }
 
