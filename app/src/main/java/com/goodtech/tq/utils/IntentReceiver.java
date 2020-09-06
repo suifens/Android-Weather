@@ -21,16 +21,21 @@ public class IntentReceiver extends BroadcastReceiver {
             NetworkInfo networkInfo = manager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isAvailable()) {
                 Toast.makeText(context, "网络连接成功", Toast.LENGTH_SHORT).show();
+                if (mDialog != null) mDialog.dismiss();
             } else {
                 Dialog(context);
             }
         }
     }
 
+    protected AlertDialog mDialog;
+
     protected void Dialog(final Context context) {
+        if (mDialog != null) mDialog.dismiss();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("提示");
-        builder.setMessage("网络中断");
+        builder.setMessage("当前网络不可用，请检查你的网络设置");
         builder.setCancelable(false);
         builder.setPositiveButton("设置", new DialogInterface.OnClickListener() {
             @Override
@@ -44,7 +49,7 @@ public class IntentReceiver extends BroadcastReceiver {
 
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        mDialog = builder.create();
+        mDialog.show();
     }
 }
