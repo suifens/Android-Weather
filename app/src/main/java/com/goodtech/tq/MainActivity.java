@@ -255,6 +255,9 @@ public class MainActivity extends BaseActivity {
                         WeatherFragment fragment = (WeatherFragment) mFragmentList.get(index);
                         fragment.changeWeather(model, cityMode.city);
                     }
+                    if (index == mCurrIndex) {
+                        changeBg(model);
+                    }
                 }
             }
         });
