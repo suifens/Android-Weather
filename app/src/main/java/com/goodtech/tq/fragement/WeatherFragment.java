@@ -97,7 +97,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener {
 
     @Override
     public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-        WeatherHttpHelper.getInstance().getWeather(mCityMode, new ApiCallback() {
+        boolean fetching = WeatherHttpHelper.getInstance().fetchWeather(mCityMode, new ApiCallback() {
             @Override
             public void onResponse(boolean success, final WeatherModel weather, ErrorCode errCode) {
                 mHandler.post(new Runnable() {
@@ -111,5 +111,15 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener {
                 });
             }
         });
+
+        if (!fetching) {
+            //  无需刷新，则直接消失刷新
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.finishRefresh();
+                }
+            }, 300);
+        }
     }
 }

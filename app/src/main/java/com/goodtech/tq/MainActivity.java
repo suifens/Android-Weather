@@ -1,5 +1,6 @@
 package com.goodtech.tq;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -25,6 +26,7 @@ import com.goodtech.tq.fragement.WeatherFragment;
 import com.goodtech.tq.fragement.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
@@ -50,14 +52,11 @@ public class MainActivity extends BaseActivity {
 
     protected TextView mAddressTv;
     protected ImageView mLocationTip;
-    //  当前城市
-    private CityMode mCurLocation;
 
     private ViewPager mViewPager;
     private ViewPagerAdapter mAdapter;
     private ImageView mBgImgView;
     private RadioGroup mRgIndicator;
-    private List<CityMode> mLocationList;
     private List<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<CityMode> mCityModes = new ArrayList<>();
     private int mCurrIndex;
@@ -81,6 +80,7 @@ public class MainActivity extends BaseActivity {
 
         //  静止底部图片滑动
         findViewById(R.id.scroll_background).setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
@@ -104,8 +104,8 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        mLocationList = LocationSpHelper.getCityListAndLocation();
-        mCurLocation = LocationSpHelper.getLocation();
+        //  当前城市
+        CityMode mCurLocation = LocationSpHelper.getLocation();
         setAddress(mCurLocation);
 
         configViewPager();
@@ -138,6 +138,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        WeatherHttpHelper.getInstance().fetchCitiesWeather();
     }
 
     @Override
@@ -214,7 +215,6 @@ public class MainActivity extends BaseActivity {
         }
         if (event.isAddCity()) {
             mLoadLast = true;
-            Log.d(TAG, "onMessageEvent: load last = " + mLoadLast);
         }
     }
 

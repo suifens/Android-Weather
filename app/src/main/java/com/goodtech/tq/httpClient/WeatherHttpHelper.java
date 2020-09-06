@@ -12,6 +12,7 @@ import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.utils.TimeUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -60,17 +61,33 @@ public class WeatherHttpHelper {
     }
 
     public void fetchWeather(final CityMode cityMode) {
-        if (cityMode != null && !TextUtils.isEmpty(cityMode.lat) && !TextUtils.isEmpty(cityMode.lon)) {
-
-            JSONObject weatherJson = WeatherSpHelper.getWeatherJson(cityMode.cid);
-
-            if (System.currentTimeMillis()/1000 > getExpireTime(weatherJson)) {
-                getWeather(cityMode, null);
-            }
-        }
+        fetchWeather(cityMode, null);
     }
 
-    public void getWeather(final CityMode cityMode, final ApiCallback callback) {
+    public boolean fetchWeather(final CityMode cityMode, final ApiCallback callback) {
+        if (cityMode != null && !TextUtils.isEmpty(cityMode.lat) && !TextUtils.isEmpty(cityMode.lon)) {
+            long current = System.currentTimeMillis();
+            long lastUpdate = WeatherSpHelper.getLastUpdate(cityMode.cid);
+
+            boolean needUpdate = current - lastUpdate > 5 * 60 * 1000;
+            if (!needUpdate) {
+                String curHour = TimeUtils.longToString(current, "HH");
+                String lastHour = TimeUtils.longToString(lastUpdate, "HH");
+                if (!curHour.equals(lastHour)) {
+                    needUpdate = true;
+                }
+            }
+            if (needUpdate) {
+                getWeather(cityMode, callback);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    protected void getWeather(final CityMode cityMode, final ApiCallback callback) {
         if (cityMode == null || cityMode.lat == null || cityMode.lon == null) {
             if (callback != null) {
                 callback.onResponse(false, null, null);
@@ -141,19 +158,6 @@ public class WeatherHttpHelper {
         }
 
         return model;
-    }
-
-    public static long getExpireTime(JSONObject jsonObject) {
-
-        if (jsonObject != null) {
-            //  定位和更新时间
-            JsonObject metadata = new Gson().fromJson(jsonObject.optString(KEY_METADATA), JsonObject.class);
-            if (metadata != null) {
-                return metadata.get("expire_time_gmt").getAsLong();
-            }
-        }
-
-        return 0;
     }
 
 }

@@ -42,18 +42,24 @@ public class WeatherSpHelper {
 
     public static void saveWeather(JSONObject jsonObject, int cid) {
         String key = String.format("weather_%d", cid);
+        String timeKey = String.format("weather_%d_update", cid);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject.toString());
+            SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
 
             EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
         }
+    }
+
+    public static long getLastUpdate(int cid) {
+        String timeKey = String.format("weather_%d_update", cid);
+        return SpUtils.getInstance().getLong(timeKey, (long) 0);
     }
 
     /**
      * 获取当前定位
      */
     public static WeatherModel getWeatherModel(int cid) {
-        String key = String.format("weather_%d", cid);
 
         JSONObject weatherJson = getWeatherJson(cid);
 
