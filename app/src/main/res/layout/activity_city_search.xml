@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/private_station_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:gravity="bottom"
+        android:orientation="horizontal"
         android:background="@drawable/gradient_007bff_00c4ff"
         section:layout_constraintEnd_toEndOf="parent"
         section:layout_constraintStart_toStartOf="parent"
@@ -18,37 +20,37 @@
             android:id="@+id/search_view"
             android:layout_width="0dp"
             android:layout_height="30dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="6dp"
             android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
             android:background="@drawable/bg_circle_white"
             android:imeOptions="actionSearch"
             android:inputType="textCapWords"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
             section:queryHint="@string/hint_search_city"
-            section:searchIcon="@drawable/ic_search"
-            section:layout_constraintBottom_toBottomOf="parent"
-            section:layout_constraintEnd_toStartOf="@+id/search_btn_cancel"
-            section:layout_constraintStart_toStartOf="parent" />
+            section:searchIcon="@drawable/ic_search" />
+
+        <View
+            android:layout_width="6dp"
+            android:layout_height="0dp"
+            />
 
         <Button
             android:id="@+id/search_btn_cancel"
             android:layout_width="60dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="3dp"
             android:background="@color/color_clear"
             android:gravity="center"
             android:text="@string/button_cancel"
             android:textColor="@color/white"
-            android:textSize="18dp"
-            section:layout_constraintBottom_toBottomOf="parent"
-            section:layout_constraintEnd_toEndOf="parent"
-            section:layout_constraintStart_toEndOf="@+id/search_view"/>
+            android:textSize="18dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+            />
+
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

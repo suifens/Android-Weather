@@ -1,12 +1,16 @@
 package com.goodtech.tq.citySearch;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -15,21 +19,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
+import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.utils.Utils;
+import com.goodtech.tq.views.MessageAlert;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
 public class CitySearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
 
     private static final String TAG = "CitySearchActivity";
+    private static final String EXTRA_START = "extra_start";
+
     private SearchView mSearchView;// 输入搜索关键字
     private RecyclerView mRecommendView;
     private RecyclerView mSearchListView;
@@ -38,12 +49,42 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     private CityRecommendHeaderView mRecommendHeaderView;
 
     private View mEmptyView;
+    private Button mCancelBtn;
+    private boolean isStart;
+
+    public static void redirectTo(Context ctx, boolean isStart) {
+        Intent intent = new Intent(ctx, CitySearchActivity.class);
+        intent.putExtra(EXTRA_START, isStart);
+        ctx.startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isStart) {
+            WeatherApp.getInstance().startLocation();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_search);
         initSearchView();
+
+        EventBus.getDefault().register(this);
+
+        mCancelBtn = findViewById(R.id.search_btn_cancel);
+        if (getIntent().getBooleanExtra(EXTRA_START, false)) {
+            mCancelBtn.setVisibility(View.GONE);
+            isStart = true;
+        }
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -56,6 +97,21 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
                 if (cityMode != null && cityMode.cid != 0) {
                     addCity(cityMode);
+                } else {
+                    if (checkLocationPermission()) {
+                        TipHelper.showProgressDialog(CitySearchActivity.this, false);
+                        WeatherApp.getInstance().requestLocation();
+                    } else {
+                        MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestLocationPermissions();
+//                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                                startActivity(intent);
+                            }
+                        });
+                        alert.show();
+                    }
                 }
             }
         });
@@ -104,6 +160,19 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mEmptyView = findViewById(R.id.layout_no_data);
 
         findViewById(R.id.search_btn_cancel).setOnClickListener(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        TipHelper.dismissProgressDialog();
+        if (event.isSuccessLocation()) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mRecommendHeaderView.updateLocation();
+                }
+            });
+        }
     }
 
     private void addCity(CityMode cityMode) {

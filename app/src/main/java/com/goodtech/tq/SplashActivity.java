@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,10 @@ import android.widget.Toast;
 
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.cityList.CityListActivity;
+import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.ApiClient;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
@@ -120,6 +123,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     public void onADTick(long millisUntilFinished) {
         Log.i("AD_DEMO", "SplashADTick " + millisUntilFinished + "ms");
         if (skipView != null) {
+            skipView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             skipView.setText(String.format(SKIP_TEXT, Math.round(millisUntilFinished / 1000f)));
         }
     }
@@ -191,6 +195,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
         String versionName = DeviceUtils.getVersionName(this);
         if (SpUtils.getInstance().getString("version", "0").equals(versionName)) {
 
+            LocationSpHelper.saveWithLocation(null);
             WeatherApp.getInstance().startLocation();
 
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
@@ -245,7 +250,6 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
 
     private void onStartWeather() {
         this.startActivity(new Intent(this, MainActivity.class));
-//        this.startActivity(new Intent(this, CityListActivity.class));
         this.finish();
     }
 

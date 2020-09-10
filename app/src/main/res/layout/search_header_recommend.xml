@@ -18,27 +18,47 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_radius4_00c4ff_10"
-        android:gravity="center_vertical" >
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/layout_location"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_radius4_00c4ff_10"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/color_00c4ff"
+                android:textSize="14dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_location_blue"
+                />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textColor="@color/color_00c4ff"
+            android:id="@+id/tv_location_fail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/color_979797"
+            android:text="可重新设置定位权限"
             android:textSize="14dp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="20dp"
-            android:src="@drawable/ic_location_blue"
-            />
 
     </LinearLayout>
 

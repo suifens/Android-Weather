@@ -28,7 +28,7 @@ public class LocationSpHelper {
     public static void saveWithLocation(BDLocation bdLocation) {
         CityMode cityMode = new CityMode();
         cityMode.location = true;
-        if (TextUtils.isEmpty(bdLocation.getCity())) {
+        if (bdLocation == null || TextUtils.isEmpty(bdLocation.getCity())) {
             if (getLocation().cid != 0) {
                 return;
             }

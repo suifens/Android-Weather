@@ -42,6 +42,10 @@ public class WeatherApp extends Application {
         locationHelper.start();
     }
 
+    public void requestLocation() {
+        locationHelper.requestLocation();
+    }
+
     public void stopLocation() {
         locationHelper.stop();
     }

@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DisagreeAlert;
 import com.goodtech.tq.utils.DisagreeAlert.DisagreeAlertListener;
@@ -203,7 +204,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
 
     private void onStartWeather() {
         SpUtils.getInstance().putString("version", DeviceUtils.getVersionName(this));
-        this.startActivity(new Intent(this, MainActivity.class));
+        CitySearchActivity.redirectTo(this, true);
         this.finish();
     }
 

@@ -13,6 +13,7 @@
     <string name="title_agreement">用户协议</string>
     <string name="title_private">隐私协议</string>
     <string name="title_about">关于我们</string>
+    <string name="title_version">版本更新</string>
 
     <string name="button_edit">编辑</string>
     <string name="button_cancel">取消</string>

@@ -8,11 +8,7 @@ import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
-import com.goodtech.tq.httpClient.ApiCallback;
-import com.goodtech.tq.httpClient.ErrorCode;
-import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.services.LocationService;
-import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 
@@ -37,6 +33,13 @@ public class LocationHelper {
         locationService.stop(); //停止定位服务
     }
 
+    public void requestLocation() {
+        locationService = WeatherApp.getInstance().locationService;
+        locationService.registerListener(mListener);
+        locationService.setLocationOption(locationService.getDefaultLocationClientOption());
+        locationService.requestLocation();
+    }
+
     /*****
      *
      * 定位结果回调，重写onReceiveLocation方法，可以直接拷贝如下代码到自己工程中修改
@@ -52,11 +55,11 @@ public class LocationHelper {
         @Override
         public void onReceiveLocation(BDLocation location) {
 
+            //保存
+            LocationSpHelper.saveWithLocation(location);
+
             // TODO Auto-generated method stub
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
-
-                //保存
-                LocationSpHelper.saveWithLocation(location);
 
                 SpUtils.getInstance().putLong(Constants.TIME_LOCATION, System.currentTimeMillis());
 

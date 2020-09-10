@@ -40,21 +40,12 @@ public class CityRecommendHeaderView extends LinearLayout {
      */
     private void init(Context context, AttributeSet attrs) {
 
-        int imgIcon = 0;
-        String title = "";
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         View view = LayoutInflater.from(context).inflate(R.layout.search_header_recommend, this, true);
-        CityMode location = LocationSpHelper.getLocation();
-        this.mCityMode = location;
 
         mLocationTv = view.findViewById(R.id.tv_location);
-        if (location.cid != 0) {
-            mLocationTv.setText(location.city);
-        } else {
-            mLocationTv.setText("定位失败");
-        }
-        mLocationTv.setOnClickListener(new OnClickListener() {
+        view.findViewById(R.id.layout_location).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
@@ -62,6 +53,18 @@ public class CityRecommendHeaderView extends LinearLayout {
                 }
             }
         });
+
+        updateLocation();
+    }
+
+    public void updateLocation() {
+        CityMode location = LocationSpHelper.getLocation();
+        this.mCityMode = location;
+        if (location.cid != 0) {
+            mLocationTv.setText(location.city);
+        } else {
+            mLocationTv.setText("定位失败");
+        }
     }
 
     public void setListener(CityRecommendAdapter.OnItemClickListener listener) {
