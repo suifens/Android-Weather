@@ -41,7 +41,7 @@ public class DailyHolder extends RecyclerView.ViewHolder {
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel model, Daily daily) {
         if (daily != null) {
-            mDayTv.setText(daily.dow);
+            mDayTv.setText(dayString(daily.fcst_valid * 1000, daily.dow));
             mMaxTempTv.setText(String.format("%d℃", daily.metric.maxTemp));
             mMinTempTv.setText(String.format("%d℃", daily.metric.minTemp));
 
@@ -58,6 +58,21 @@ public class DailyHolder extends RecyclerView.ViewHolder {
             } else {
                 mIconImgV.setImageResource(ImageUtils.weatherImageRes(dayPart.iconCd));
             }
+        }
+    }
+
+    private String dayString(long time, String dow) {
+        int timeDay = Integer.parseInt(TimeUtils.timeToDay(time));
+        int today = Integer.parseInt(TimeUtils.timeToDay(System.currentTimeMillis()));
+        switch (timeDay - today) {
+            case -1:
+                return String.format("%s(昨天)", dow);
+            case 0:
+                return String.format("%s(今天)", dow);
+            case 1:
+                return String.format("%s(明天)", dow);
+            default:
+                return String.format("%s", dow);
         }
     }
 
