@@ -36,7 +36,6 @@ public class HoursHolder extends RecyclerView.ViewHolder {
     public void setHourlies(WeatherModel model) {
         if (model != null && model.hourlies != null) {
             ArrayList<Hourly> hourlies = new ArrayList<>();
-            hourlies.addAll(model.hourlies);
 
             checkFirstHourly(model, hourlies);
 
@@ -58,6 +57,7 @@ public class HoursHolder extends RecyclerView.ViewHolder {
                 long sunset = current > tSunset ? mSunset : tSunset;
 
                 boolean addRise = false;
+                boolean addSet = false;
 
                 for (int i = 0; i < model.hourlies.size(); i++) {
                     Hourly hourly = model.hourlies.get(i);
@@ -68,17 +68,19 @@ public class HoursHolder extends RecyclerView.ViewHolder {
                         riseHourly.fcst_valid = sunrise / 1000;
                         riseHourly.fcst_valid_local = daily.sunRise;
                         riseHourly.sunrise = true;
-                        hourlies.add(i, riseHourly);
-                        continue;
+                        hourlies.add(riseHourly);
                     }
-                    if (currentStr.compareTo(setString) != 0 && sunset < hourly.fcst_valid * 1000) {
+                    if (currentStr.compareTo(setString) != 0
+                            && !addSet
+                            && sunset < hourly.fcst_valid * 1000) {
                         Hourly setHourly = new Hourly();
+                        addSet = true;
                         setHourly.fcst_valid = sunset / 1000;
                         setHourly.fcst_valid_local = daily.sunSet;
                         setHourly.sunset = true;
-                        hourlies.add(i + 1, setHourly);
-                        break;
+                        hourlies.add(setHourly);
                     }
+                    hourlies.add(hourly);
                 }
             }
 

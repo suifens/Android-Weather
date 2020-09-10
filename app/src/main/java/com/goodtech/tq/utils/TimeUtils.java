@@ -1,10 +1,12 @@
 package com.goodtech.tq.utils;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * com.goodtech.tq.utils.Weather
@@ -27,6 +29,13 @@ public class TimeUtils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        if (time.contains("+0600")) {
+            timestamp += 2 * 60 * 60 * 1000;
+        } else if (time.contains("+0700")) {
+            timestamp += 60 * 60 * 1000;
+        }
+
         return timestamp;
     }
 
