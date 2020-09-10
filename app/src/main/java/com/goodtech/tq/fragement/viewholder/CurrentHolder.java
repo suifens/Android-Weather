@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.Metric;
 import com.goodtech.tq.models.Observation;
@@ -48,8 +49,15 @@ public class CurrentHolder extends RecyclerView.ViewHolder {
         if (model != null && model.observation != null) {
             Observation observation = model.observation;
             Metric metric = observation.metric;
-            mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
-                    metric.maxTemp, metric.minTemp));
+
+            Daily today = model.today();
+            if (today != null) {
+                mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                        today.metric.maxTemp, today.metric.minTemp));
+            } else {
+                mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                        metric.maxTemp, metric.minTemp));
+            }
 
             if (model.hourlies.size() > 0) {
                 Hourly hourly = model.hourlies.get(0);

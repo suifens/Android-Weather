@@ -61,10 +61,6 @@ public class RecentHolder extends RecyclerView.ViewHolder {
                     if (tomorrowPart != null) mMPhraseTv.setText(tomorrowPart.phraseChar);
                 }
             }
-
-
-
-
         }
     }
 

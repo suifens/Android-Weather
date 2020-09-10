@@ -89,8 +89,8 @@ public class HoursHolder extends RecyclerView.ViewHolder {
     }
 
     protected void checkFirstHourly(WeatherModel model, ArrayList<Hourly> hourlies) {
-        if (model != null && hourlies.size() > 0) {
-            Hourly hourly = hourlies.get(0);
+        if (model != null && model.hourlies != null && model.hourlies.size() > 0) {
+            Hourly hourly = model.hourlies.get(0);
             if (hourly.fcst_valid > System.currentTimeMillis() / 1000) {
                 if (model.observation != null) {
                     Observation observation = model.observation;
@@ -99,7 +99,7 @@ public class HoursHolder extends RecyclerView.ViewHolder {
                     curHourly.fcst_valid = System.currentTimeMillis() / 1000;
                     curHourly.metric = metric;
                     curHourly.icon_cd = observation.wxIcon;
-                    hourlies.add(0, curHourly);
+                    hourlies.add(curHourly);
                 }
             }
         }
