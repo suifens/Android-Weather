@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="240dp"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_radius8_white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/tv_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="center"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:text="开启定位服务"
+        android:textColor="@color/colorAccent"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/tv_dialog_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:minHeight="40dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:text="便于我们根据您具体位置提供精准天气预报服务"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/btn_dialog_confirm"
+        android:layout_width="240dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/color_3764e1"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="开启定位"
+        android:textColor="@color/white"
+        android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/btn_dialog_cancel"
+        android:layout_width="240dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/color_clear"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="以后再说"
+        android:textColor="@color/color_979797"
+        android:textSize="16dp" />
+
+
+</LinearLayout>
