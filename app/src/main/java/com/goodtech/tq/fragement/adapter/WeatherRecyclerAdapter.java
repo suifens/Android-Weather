@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.goodtech.tq.R;
+import com.goodtech.tq.fragement.viewholder.BottomHolder;
 import com.goodtech.tq.fragement.viewholder.CurrentHolder;
 import com.goodtech.tq.fragement.viewholder.DailyHolder;
 import com.goodtech.tq.fragement.viewholder.HoursHolder;
@@ -25,6 +27,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final int HOURS_VIEW = 3;
     private final int DAILY_VIEW = 4;
     private final int OBSERVANT_VIEW = 5;
+    private final int BOTTOM_VIEW = 6;
 
     private Context mContext;
     private WeatherModel mModel;
@@ -45,7 +48,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
         if (mModel != null) {
-            return 14;
+            return 15; // + bottom
         } else {
             return 0;
         }
@@ -62,6 +65,8 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 return HOURS_VIEW;
             case 13:
                 return OBSERVANT_VIEW;
+            case 14:
+                return BOTTOM_VIEW;
             default:
                 return DAILY_VIEW;
         }
@@ -84,6 +89,9 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             case OBSERVANT_VIEW:
                 View observationView = getInflater().inflate(ObservationHolder.getResource(), parent, false);
                 return new ObservationHolder(observationView);
+            case BOTTOM_VIEW:
+                View bottomView = getInflater().inflate(BottomHolder.getResource(), parent, false);
+                return new BottomHolder(bottomView);
             default:
                 View dailyView = getInflater().inflate(DailyHolder.getResource(), parent, false);
                 return new DailyHolder(dailyView);

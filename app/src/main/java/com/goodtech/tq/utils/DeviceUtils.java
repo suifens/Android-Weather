@@ -7,16 +7,19 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import com.goodtech.tq.app.WeatherApp;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * com.goodtech.tq.utils
  */
 public class DeviceUtils {
+    private static final String TAG = "DeviceUtils";
 
     private static float currentDensity = 0;
 
@@ -34,6 +37,41 @@ public class DeviceUtils {
         if (resourceId > 0) {
             result = resources.getDimensionPixelSize(resourceId);
         }
+
+        int navigationId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        Log.d(TAG, "getStatusBarHeight: " + resources.getDimensionPixelSize(navigationId));
+        return result;
+    }
+
+    public static int getNavigationBarHeight() {
+
+        Resources resources = WeatherApp.getInstance().getResources();
+
+        boolean hasNavigationBar = false;
+        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) {
+            hasNavigationBar = resources.getBoolean(id);
+        }
+        try {
+            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            Method m = systemPropertiesClass.getMethod("get", String.class);
+            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+            if ("1".equals(navBarOverride)) {
+                hasNavigationBar = false;
+            } else if ("0".equals(navBarOverride)) {
+                hasNavigationBar = true;
+            }
+        } catch (Exception e) {
+        }
+
+
+        int result = 0;
+        //获取状态栏高度的资源id
+        int navigationId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (hasNavigationBar && navigationId > 0) {
+            result = resources.getDimensionPixelSize(navigationId);
+        }
+
         return result;
     }
 
