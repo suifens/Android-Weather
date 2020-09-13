@@ -30,6 +30,7 @@ public class LocationSpHelper {
         cityMode.location = true;
         if (bdLocation == null || TextUtils.isEmpty(bdLocation.getCity())) {
             if (getLocation().cid != 0) {
+                EventBus.getDefault().post(new MessageEvent().setLocation(false));
                 return;
             }
             cityMode.cid = 0;

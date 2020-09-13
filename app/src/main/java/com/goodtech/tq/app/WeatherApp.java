@@ -2,6 +2,8 @@ package com.goodtech.tq.app;
 
 import android.app.Application;
 import android.app.Service;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 
 //import com.baidu.mapapi.CoordType;
@@ -12,6 +14,7 @@ import com.goodtech.tq.location.services.LocationService;
 import com.umeng.commonsdk.UMConfigure;
 
 public class WeatherApp extends Application {
+    protected Handler mHandler = new Handler(Looper.getMainLooper());
     public LocationService locationService;
     public Vibrator mVibrator;
     public LocationHelper locationHelper = new LocationHelper();
@@ -43,7 +46,12 @@ public class WeatherApp extends Application {
     }
 
     public void requestLocation() {
-        locationHelper.requestLocation();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                locationHelper.start();
+            }
+        }, 500);
     }
 
     public void stopLocation() {

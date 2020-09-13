@@ -36,6 +36,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.layout_praise).setOnClickListener(this);
         findViewById(R.id.layout_about).setOnClickListener(this);
+        findViewById(R.id.layout_version).setOnClickListener(this);
         findViewById(R.id.layout_permission_phone).setOnClickListener(this);
         findViewById(R.id.layout_permission_storage).setOnClickListener(this);
         findViewById(R.id.layout_permission_location).setOnClickListener(this);
@@ -66,7 +67,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.button_back:
                 finish();
                 break;
-            case R.id.layout_praise: {
+            case R.id.layout_praise:
+            case R.id.layout_version: {
                 //  评论
                 Uri uri = Uri.parse("market://details?id=" + getPackageName());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);

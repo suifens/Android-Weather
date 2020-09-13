@@ -2,6 +2,7 @@ package com.goodtech.tq;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -21,12 +22,14 @@ import android.widget.Toast;
 
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.cityList.CityListActivity;
+import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragement.WeatherFragment;
 import com.goodtech.tq.fragement.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.location.Location;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
@@ -35,6 +38,8 @@ import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.TimeUtils;
+import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.views.MessageAlert;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -197,6 +202,9 @@ public class MainActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
 
+        TipHelper.dismissProgressDialog();
+        removeTicker();
+
         if (event.isSuccessLocation()) {
 
             reloadView();
@@ -335,6 +343,7 @@ public class MainActivity extends BaseActivity {
         setIndicator(mCurrIndex);
     }
 
+
     protected void setIndicator(int position) {
         if (position >= 0 && position < mRgIndicator.getChildCount()) {
             mRgIndicator.check(mRgIndicator.getChildAt(position).getId());
@@ -349,6 +358,18 @@ public class MainActivity extends BaseActivity {
                     WeatherFragment fragment = (WeatherFragment) mFragmentList.get(position);
                     fragment.changeWeather(weatherModel, cityMode);
                 }
+            }
+
+            CityMode location = LocationSpHelper.getLocation();
+            if (mCurrIndex == 0 && location.cid == 0) {
+                MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        requestLocationPermissions();
+                        mHandler.post(mCheckTicker);
+                    }
+                });
+                alert.show();
             }
         }
     }

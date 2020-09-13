@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -101,13 +102,12 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                     if (checkLocationPermission()) {
                         TipHelper.showProgressDialog(CitySearchActivity.this, false);
                         WeatherApp.getInstance().requestLocation();
+                        mHandler.post(mCheckTicker);
                     } else {
                         MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 requestLocationPermissions();
-//                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                                startActivity(intent);
                             }
                         });
                         alert.show();

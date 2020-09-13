@@ -19,6 +19,7 @@ public class CityRecommendHeaderView extends LinearLayout {
     private CityRecommendAdapter.OnItemClickListener mListener;
     private TextView mLocationTv;
     private CityMode mCityMode;
+    private TextView mTipTv;
 
     public CityRecommendHeaderView(Context context) {
         super(context);
@@ -54,6 +55,8 @@ public class CityRecommendHeaderView extends LinearLayout {
             }
         });
 
+        mTipTv = view.findViewById(R.id.tv_location_fail);
+
         updateLocation();
     }
 
@@ -62,8 +65,10 @@ public class CityRecommendHeaderView extends LinearLayout {
         this.mCityMode = location;
         if (location.cid != 0) {
             mLocationTv.setText(location.city);
+            mTipTv.setVisibility(GONE);
         } else {
             mLocationTv.setText("定位失败");
+            mTipTv.setVisibility(VISIBLE);
         }
     }
 
