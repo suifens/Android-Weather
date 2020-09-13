@@ -1,17 +1,12 @@
 package com.goodtech.tq;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -19,14 +14,11 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.goodtech.tq.app.WeatherApp;
-import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.ApiClient;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
@@ -34,12 +26,6 @@ import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
 import com.umeng.commonsdk.UMConfigure;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 这是demo工程的入口Activity，在这里会首次调用广点通的SDK。
@@ -68,6 +54,8 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
         container = this.findViewById(R.id.splash_container);
 
         ApiClient.getInstance();
+
+//        getChannelName(this);
     }
 
     private String getPosId() {
@@ -75,7 +63,31 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
         return TextUtils.isEmpty(posId) ? Constants.SPLASH_POS_ID : posId;
     }
 
-
+//    public static String getChannelName(Context context) {
+//        if (context == null) {
+//            return null;
+//        }
+//        String channelName = null;
+//        try {
+//            PackageManager packageManager = context.getPackageManager();
+//            if (packageManager != null) {
+//                //注意此处为ApplicationInfo，因为友盟设置的meta-data是在application标签中
+//                ApplicationInfo applicationInfo = packageManager.
+//                        getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+//                if (applicationInfo != null) {
+//                    if (applicationInfo.metaData != null) {
+//                        //这里的UMENG_CHANNEL要与manifest中的配置文件标识一致
+//                        channelName = String.valueOf(applicationInfo.metaData.get("UMENG_CHANNEL"));
+//                    }
+//                }
+//
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        Log.e("TAG", "getChannelName: " + channelName );
+//        return channelName;
+//    }
 
     private boolean hasAllPermissionsGranted(int[] grantResults) {
         for (int grantResult : grantResults) {

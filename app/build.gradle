@@ -18,11 +18,50 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 140
+        versionCode 137
         versionName "4.2.0"
         signingConfig signingConfigs.config
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        xiaomi {
+            manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"];
+        }
+        huawei {
+            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"huawei"]
+        }
+        oppo {
+            manifestPlaceholders=[app_name:"天气预报预知天气", umeng_channel:"oppo"]
+        }
+        vivo {
+            manifestPlaceholders=[app_name:"天气十天气预报", umeng_channel:"vivo"]
+        }
+        yyb {
+            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"yyb"]
+        }
+        meizu {
+            manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
+        }
+    }
+
+    def fileArray = []
+    // 自定义APK安装包名
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "${defaultConfig.applicationId}-${getTime()}.apk"
+            }
+    }
+
+    build {
+        //build命令加入这段代码
+        doLast() {
+            //遍历文件数组并进行操作
+            outforEachFile(fileArray)
+        }
     }
 
     buildTypes {
@@ -39,6 +78,10 @@ android {
         }
     }
 
+}
+
+static def getTime() {
+    return new Date().format("yyMMdd", TimeZone.getDefault())
 }
 
 dependencies {
