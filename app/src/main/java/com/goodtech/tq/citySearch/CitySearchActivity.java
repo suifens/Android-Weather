@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -34,6 +32,7 @@ import com.goodtech.tq.views.MessageAlert;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -42,15 +41,12 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     private static final String TAG = "CitySearchActivity";
     private static final String EXTRA_START = "extra_start";
 
-    private SearchView mSearchView;// 输入搜索关键字
     private RecyclerView mRecommendView;
     private RecyclerView mSearchListView;
-    private CityRecommendAdapter mRecommendAdapter;
     private CityRecyclerAdapter mSearchAdapter;
     private CityRecommendHeaderView mRecommendHeaderView;
 
     private View mEmptyView;
-    private Button mCancelBtn;
     private boolean isStart;
 
     public static void redirectTo(Context ctx, boolean isStart) {
@@ -70,6 +66,22 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         super.onResume();
         if (isStart) {
             WeatherApp.getInstance().startLocation();
+
+            if (LocationSpHelper.getLocation().cid != 0) {
+                isStart = false;
+                //  能够获取到定位
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        TipHelper.showProgressDialog(CitySearchActivity.this);
+                        Log.e(TAG, "run: resume activity");
+                        Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 1000);
+            }
         }
     }
 
@@ -81,7 +93,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
         EventBus.getDefault().register(this);
 
-        mCancelBtn = findViewById(R.id.search_btn_cancel);
+        Button mCancelBtn = findViewById(R.id.search_btn_cancel);
         if (getIntent().getBooleanExtra(EXTRA_START, false)) {
             mCancelBtn.setVisibility(View.GONE);
             isStart = true;
@@ -116,13 +128,11 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             }
         });
 
-        /**
-         * 推荐列表
-         */
+        //  推荐列表
         mRecommendView = findViewById(R.id.recycler_recommend);
         mRecommendView.setVisibility(View.VISIBLE);
         final ArrayList<CityMode> recommends = CityHelper.getRecommends(this);
-        mRecommendAdapter = new CityRecommendAdapter(this, recommends);
+        CityRecommendAdapter mRecommendAdapter = new CityRecommendAdapter(this, recommends);
         mRecommendAdapter.setOnItemClickListener(new CityRecommendAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
@@ -139,11 +149,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendView.setLayoutManager(gridLayoutManager);
         int screenWidth = DeviceUtils.getScreenWidth(this); //屏幕宽度
         int itemWidth = Utils.dp2pxInt(100); //每个item的宽度
-        mRecommendView.addItemDecoration(new SpaceItemDecoration((screenWidth - itemWidth* 3)/6));
+        mRecommendView.addItemDecoration(new SpaceItemDecoration((screenWidth - itemWidth * 3) / 6));
 
-        /**
-         * 搜索列表
-         */
+        //  搜索列表
         mSearchListView = findViewById(R.id.recycler_search);
         mSearchListView.setVisibility(View.GONE);
         mSearchAdapter = new CityRecyclerAdapter(this, null);
@@ -164,7 +172,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        TipHelper.dismissProgressDialog();
         if (event.isSuccessLocation()) {
             mHandler.post(new Runnable() {
                 @Override
@@ -172,7 +179,26 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                     mRecommendHeaderView.updateLocation();
                 }
             });
+
+            if (isStart && LocationSpHelper.getLocation().cid != 0) {
+                TipHelper.showProgressDialog(this);
+                isStart = false;
+                //  能够获取到定位
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        TipHelper.dismissProgressDialog();
+                        Log.e(TAG, "message activity");
+                        Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 1000);
+                return;
+            }
         }
+        TipHelper.dismissProgressDialog();
     }
 
     private void addCity(CityMode cityMode) {
@@ -186,6 +212,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             }
         }
 
+        isStart = false;
+
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -198,7 +226,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     private void initSearchView() {
-        mSearchView = (SearchView) findViewById(R.id.search_view);
+        // 输入搜索关键字
+        SearchView mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchView.setOnQueryTextListener(this);
         //设置SearchView默认为展开显示
         mSearchView.setIconified(false);
@@ -216,10 +245,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (view.getId() == R.id.search_btn_cancel) {
             this.finish();
         }
-    }
-
-    public static boolean IsEmptyOrNullString(String s) {
-        return (s == null) || (s.trim().length() == 0);
     }
 
     /**
@@ -254,14 +279,14 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         return false;
     }
 
-    public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
+    public static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
         private int space;  //位移间距
         public SpaceItemDecoration(int space) {
             this.space = space;
         }
 
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        public void getItemOffsets(@NotNull Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             if (parent.getChildAdapterPosition(view) %3 == 0) {
                 outRect.left = 0; //第一列左边贴边
             } else {
