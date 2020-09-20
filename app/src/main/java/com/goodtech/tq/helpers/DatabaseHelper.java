@@ -86,7 +86,11 @@ public class DatabaseHelper {
 
     public ArrayList<CityMode> queryCity(String name) {
 
-        String sql = "select * from city where mergerName like '%" + name + "%'";
+        name = name.replace("'", "");
+        name = name.replace(" ", "");
+        name = name.replace("%", "");
+
+        String sql = String.format("select * from city where mergerName like '%%%s%%'", name);
         Cursor cursor = mDatabase.rawQuery(sql, null);
 
         ArrayList<CityMode> list = new ArrayList<>();
