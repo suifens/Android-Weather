@@ -15,7 +15,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.goodtech.tq.utils.TipHelper;
 import com.umeng.analytics.MobclickAgent;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
@@ -72,7 +74,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 //  评论
                 Uri uri = Uri.parse("market://details?id=" + getPackageName());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    //要调起的应用不存在时的处理
+                    Toast.makeText(this, "未能跳转到应用商店", Toast.LENGTH_SHORT).show();
+                }
+
             }
             break;
             case R.id.layout_about: {
