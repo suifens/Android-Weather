@@ -199,7 +199,8 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     @Override
     protected void onStart() {
         super.onStart();
-        UMConfigure.init(this, Constants.UM_APP_ID, Constants.UM_APP_CHANNEL, UMConfigure.DEVICE_TYPE_PHONE, "");
+        //  配置 UM_APP_ID , 标识
+        UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
 
         SpUtils.getInstance().remove(Constants.TIME_LOCATION);
         SpUtils.getInstance().remove(Constants.TIME_WEATHER);

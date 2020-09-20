@@ -1,14 +1,13 @@
 package com.goodtech.tq.fragement.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.goodtech.tq.R;
 import com.goodtech.tq.fragement.viewholder.BottomHolder;
 import com.goodtech.tq.fragement.viewholder.CurrentHolder;
 import com.goodtech.tq.fragement.viewholder.DailyHolder;
@@ -48,7 +47,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
         if (mModel != null) {
-            return 15; // + bottom
+            return 14;
         } else {
             return 0;
         }
@@ -65,8 +64,6 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 return HOURS_VIEW;
             case 13:
                 return OBSERVANT_VIEW;
-            case 14:
-                return BOTTOM_VIEW;
             default:
                 return DAILY_VIEW;
         }
