@@ -73,12 +73,14 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        TipHelper.showProgressDialog(CitySearchActivity.this);
-                        Log.e(TAG, "run: resume activity");
-                        Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
+                        if (!CitySearchActivity.this.isFinishing()) {
+                            TipHelper.showProgressDialog(CitySearchActivity.this);
+                            Log.e(TAG, "run: resume activity");
+                            Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 }, 1000);
             }
@@ -112,17 +114,21 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                     addCity(cityMode);
                 } else {
                     if (checkLocationPermission()) {
-                        TipHelper.showProgressDialog(CitySearchActivity.this, false);
+                        if (!CitySearchActivity.this.isFinishing()) {
+                            TipHelper.showProgressDialog(CitySearchActivity.this, false);
+                        }
                         WeatherApp.getInstance().requestLocation();
                         mHandler.post(mCheckTicker);
                     } else {
-                        MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                requestLocationPermissions();
-                            }
-                        });
-                        alert.show();
+                        if (!CitySearchActivity.this.isFinishing()) {
+                            MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestLocationPermissions();
+                                }
+                            });
+                            alert.show();
+                        }
                     }
                 }
             }
@@ -181,7 +187,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             });
 
             if (isStart && LocationSpHelper.getLocation().cid != 0) {
-                TipHelper.showProgressDialog(this);
+                if (!CitySearchActivity.this.isFinishing()) {
+                    TipHelper.showProgressDialog(this);
+                }
                 isStart = false;
                 //  能够获取到定位
                 mHandler.postDelayed(new Runnable() {

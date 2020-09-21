@@ -22,14 +22,12 @@ import android.widget.Toast;
 
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.cityList.CityListActivity;
-import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragement.WeatherFragment;
 import com.goodtech.tq.fragement.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.location.Location;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
@@ -362,20 +360,22 @@ public class MainActivity extends BaseActivity {
 
             CityMode location = LocationSpHelper.getLocation();
             if (mCurrIndex == 0 && location.cid == 0) {
-                MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        requestLocationPermissions();
-                        mHandler.post(mCheckTicker);
-                    }
-                });
-                alert.show();
+                if (!this.isFinishing()) {
+                    MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            requestLocationPermissions();
+                            mHandler.post(mCheckTicker);
+                        }
+                    });
+                    alert.show();
+                }
             }
         }
     }
 
     private void setAddress(CityMode cityMode) {
-        if (cityMode != null) {
+        if (cityMode != null && mAddressTv != null) {
             mLocationTip.setVisibility(cityMode.location ? View.VISIBLE : View.GONE);
 
             if (cityMode.location && cityMode.cid == 0) {

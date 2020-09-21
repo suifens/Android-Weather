@@ -65,7 +65,9 @@ public class BaseActivity extends AppCompatActivity {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             } else {
-                TipHelper.showProgressDialog(this, false);
+                if (!this.isFinishing()) { //xActivity即为本界面的Activity
+                    TipHelper.showProgressDialog(this, false);
+                }
             }
             WeatherApp.getInstance().requestLocation();
         }
