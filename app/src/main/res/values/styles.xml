@@ -1,13 +1,22 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-<!--        <item name="android:windowTranslucentStatus">false</item>-->
-<!--        <item name="android:windowTranslucentNavigation">true</item>-->
-<!--        &lt;!&ndash;Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色&ndash;&gt;-->
-<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
         <item name="android:windowAnimationStyle">@style/Left_Right_AnimTheme</item>
         <item name="android:windowBackground">@color/colorBackground</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.FullScreen">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.TransparentStatusBar"/>
+
+    <style name="AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"/>
 
     <!-- 右进左出切换动画  -->
     <style name="Left_Right_AnimTheme" parent="@android:style/Animation.Activity">

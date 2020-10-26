@@ -2,6 +2,7 @@
     <string name="app_name">预知天气</string>
 
     <string name="splash_loading" tools:ignore="TypographyEllipsis">广告加载中...</string>
+    <string name="loading_data">数据正在加载中，请稍候</string>
     <string name="click_to_skip">点击跳过</string>
 
     <string name="title_today">今天</string>

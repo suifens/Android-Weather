@@ -20,7 +20,7 @@
         android:label="${app_name}"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         android:usesCleartextTraffic="true">
         <!-- 声明service组件 -->
         <service

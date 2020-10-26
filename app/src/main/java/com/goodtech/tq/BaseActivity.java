@@ -18,9 +18,12 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.TipHelper;
 
 /**
@@ -37,12 +40,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS); // 確認取消半透明設置。
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE); // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS); // 跟系統表示要渲染 system bar 背景。
-        window.setStatusBarColor(Color.TRANSPARENT);
+
+        StatusBarUtil.setImmerseStatusBarSystemUiVisibility(this);
     }
 
      /**
@@ -82,16 +81,25 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private boolean checkPermission() {
-        return this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+        } else {
+            return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED;
+        }
     }
+
+
 
     /**
      * 判断定位服务是否开启
      * @return true 表示开启
      */
     public boolean isLocationEnabled() {
-        int locationMode = 0;
+        int locationMode;
 //        String locationProviders;
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             try {
@@ -109,8 +117,9 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void requestLocationPermissions() {
         if (checkPermission()) {
-            this.requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
-                            , Manifest.permission.ACCESS_FINE_LOCATION,
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS},
                     PERMISSION_REQUEST_COARSE_LOCATION);
         } else {

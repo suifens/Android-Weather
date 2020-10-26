@@ -1,6 +1,8 @@
 package com.goodtech.tq.citySearch.viewholder;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,7 +27,7 @@ public class RecommendHeaderHolder extends RecyclerView.ViewHolder implements Vi
 
         mLocationTv = view.findViewById(R.id.tv_location);
         if (mLocationTv != null) {
-            if (location.cid != 0) {
+            if (location.cid != 0 && !TextUtils.isEmpty(location.city)) {
                 mLocationTv.setText(location.city);
             } else {
                 mLocationTv.setText("定位失败");

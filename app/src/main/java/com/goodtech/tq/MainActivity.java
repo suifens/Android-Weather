@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -244,6 +245,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void reloadWeathers() {
+        TipHelper.showProgressDialog(this, R.string.loading_data, false);
         for (int i = 0; i < mCityModes.size(); i++) {
             reloadWeather(i);
         }
@@ -278,6 +280,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void run() {
                 if (model != null && model.dailies != null) {
+                    TipHelper.dismissProgressDialog();
+
                     Daily daily = model.dailies.get(0);
                     boolean night = false;
                     if (daily != null) {
@@ -303,6 +307,12 @@ public class MainActivity extends BaseActivity {
                     mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
                 } else {
                     mBgImgView.setImageResource(R.drawable.bg_normal);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            TipHelper.dismissProgressDialog();
+                        }
+                    }, 2000);
                 }
             }
         });
@@ -381,7 +391,11 @@ public class MainActivity extends BaseActivity {
             if (cityMode.location && cityMode.cid == 0) {
                 mAddressTv.setText("定位失败");
             } else {
-                mAddressTv.setText(cityMode.city);
+                if (!TextUtils.isEmpty(cityMode.city)) {
+                    mAddressTv.setText(cityMode.city);
+                } else {
+                    mAddressTv.setText("");
+                }
             }
         }
 

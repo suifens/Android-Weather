@@ -2,6 +2,7 @@ package com.goodtech.tq.citySearch;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,7 @@ public class CityRecommendHeaderView extends LinearLayout {
         CityMode location = LocationSpHelper.getLocation();
         this.mCityMode = location;
         if (location.cid != 0) {
-            if (mLocationTv != null) {
+            if (mLocationTv != null && !TextUtils.isEmpty(location.city)) {
                 mLocationTv.setText(location.city);
             }
             mTipTv.setVisibility(GONE);

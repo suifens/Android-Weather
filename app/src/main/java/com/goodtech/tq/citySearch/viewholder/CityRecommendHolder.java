@@ -1,12 +1,14 @@
 package com.goodtech.tq.citySearch.viewholder;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CityRecommendAdapter;
-import com.goodtech.tq.citySearch.CityRecyclerAdapter;
 import com.goodtech.tq.models.CityMode;
 
 /**
@@ -32,7 +34,9 @@ public class CityRecommendHolder extends RecyclerView.ViewHolder implements View
     public void setCityMode(CityMode mode) {
 
         this.mCityMode = mode;
-        mRecommendTv.setText(mode.city);
+        if (mode != null && !TextUtils.isEmpty(mode.city)) {
+            mRecommendTv.setText(mode.city);
+        }
     }
 
     @Override

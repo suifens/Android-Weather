@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.goodtech.tq.R;
@@ -61,7 +62,7 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
     }
 
     @SuppressLint("DefaultLocale")
-    public void setCityMode(CityMode mode, WeatherModel weatherModel, boolean isEdit) {
+    public void setCityMode(@NonNull CityMode mode, WeatherModel weatherModel, boolean isEdit) {
         this.isEdit = isEdit;
         this.mCityMode = mode;
 

@@ -11,15 +11,14 @@ android {
         }
     }
 
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.goodtech.tq"
-        minSdkVersion 23
-        targetSdkVersion 29
-        versionCode 137
-        versionName "4.2.0"
+        minSdkVersion 19
+        targetSdkVersion 30
+        versionCode 139
+        versionName "4.2.5"
         signingConfig signingConfigs.config
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -28,7 +27,7 @@ android {
     flavorDimensions "default"
     productFlavors {
         xiaomi {
-            manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"];
+            manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"]
         }
         huawei {
             manifestPlaceholders=[app_name:"天气预报", umeng_channel:"huawei"]
@@ -44,6 +43,12 @@ android {
         }
         meizu {
             manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
+        }
+        sougou {
+            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"sougou"]
+        }
+        anzhi {
+            manifestPlaceholders=[app_name:"天气预报十天气", umeng_channel:"anzhi"]
         }
     }
 

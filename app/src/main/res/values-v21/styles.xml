@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyDimdialog" parent="@android:style/Theme.Material.Dialog.Alert">
+
+        <item name="android:windowFrame">@null</item><!-- 边框 -->
+        <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">true</item><!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item><!-- 自己想要的背景 -->
+        <item name="android:backgroundDimEnabled">false</item> <!--activity不变暗-->
+
+    </style>
+
+    <style name="AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar">
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--Android 5.x开始需要把颜色设置透明，否则状态栏是半透明颜色-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+</resources>
