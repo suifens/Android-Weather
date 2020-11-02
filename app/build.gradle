@@ -17,8 +17,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 139
-        versionName "4.2.5"
+        versionCode 140
+        versionName "4.2.6"
         signingConfig signingConfigs.config
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'

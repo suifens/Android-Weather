@@ -107,12 +107,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkPermission() {
         TextView phoneStateTv = findViewById(R.id.tv_state_phone);
-        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            phoneStateTv.setText(grantedStr);
-            phoneStateTv.setTextColor(grantedColor);
-        } else {
+        if (checkPermission(Manifest.permission.READ_PHONE_STATE)) {
             phoneStateTv.setText(deniedStr);
             phoneStateTv.setTextColor(deniedColor);
+        } else {
+            phoneStateTv.setText(grantedStr);
+            phoneStateTv.setTextColor(grantedColor);
         }
 
         TextView locationStateTv = findViewById(R.id.tv_state_location);
@@ -125,13 +125,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
 
         TextView storageStateTv = findViewById(R.id.tv_state_storage);
-        if ((checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-                || (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            storageStateTv.setText(grantedStr);
-            storageStateTv.setTextColor(grantedColor);
-        } else {
+        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                || checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             storageStateTv.setText(deniedStr);
             storageStateTv.setTextColor(deniedColor);
+        } else {
+            storageStateTv.setText(grantedStr);
+            storageStateTv.setTextColor(grantedColor);
         }
 
     }
@@ -151,8 +151,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             isAvailable = !TextUtils.isEmpty(locationProviders);
         }
-        boolean coarsePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-        boolean finePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+        boolean coarsePermissionCheck = !checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+        boolean finePermissionCheck = !checkPermission(Manifest.permission.ACCESS_FINE_LOCATION);
         return isAvailable && (coarsePermissionCheck || finePermissionCheck);
     }
 }

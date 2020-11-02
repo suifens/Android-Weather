@@ -20,6 +20,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DisagreeAlert;
@@ -154,21 +157,21 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     private void checkAndRequestPermission() {
         ArrayList<String> lackedPermissions = new ArrayList<>();
 
-        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+        if (checkPermission(Manifest.permission.READ_PHONE_STATE)) {
             lackedPermissions.add(Manifest.permission.READ_PHONE_STATE);
         }
 
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
             lackedPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
-        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
 
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             lackedPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-        if (checkSelfPermission( Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             lackedPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
@@ -178,7 +181,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         } else {
             String[] requestPermissions = new String[lackedPermissions.size()];
             lackedPermissions.toArray(requestPermissions);
-            requestPermissions(requestPermissions, 1024);
+            ActivityCompat.requestPermissions(this, requestPermissions, 1024);
         }
     }
 

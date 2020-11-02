@@ -92,7 +92,13 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-
+    protected boolean checkPermission(String permission) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED;
+        } else {
+            return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
+        }
+    }
 
     /**
      * 判断定位服务是否开启
