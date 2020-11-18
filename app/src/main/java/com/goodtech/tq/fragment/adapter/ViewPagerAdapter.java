@@ -1,4 +1,4 @@
-package com.goodtech.tq.fragement.adapter;
+package com.goodtech.tq.fragment.adapter;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

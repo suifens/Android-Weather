@@ -1,4 +1,4 @@
-package com.goodtech.tq.fragement.adapter;
+package com.goodtech.tq.fragment.adapter;
 
 import android.annotation.SuppressLint;
 import android.os.Parcelable;

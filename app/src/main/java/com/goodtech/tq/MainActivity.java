@@ -7,11 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,11 +17,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
-import com.goodtech.tq.fragement.WeatherFragment;
-import com.goodtech.tq.fragement.adapter.ViewPagerAdapter;
+import com.goodtech.tq.fragment.WeatherFragment;
+import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
@@ -49,10 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-
-    private static final String TAG = "MainActivity";
-
-    private BroadcastReceiver receiver = new IntentReceiver();
+    
+    private final BroadcastReceiver receiver = new IntentReceiver();
 
     protected TextView mAddressTv;
     protected ImageView mLocationTip;
@@ -61,7 +58,7 @@ public class MainActivity extends BaseActivity {
     private ViewPagerAdapter mAdapter;
     private ImageView mBgImgView;
     private RadioGroup mRgIndicator;
-    private List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<CityMode> mCityModes = new ArrayList<>();
     private int mCurrIndex;
     private long mBackTime;
@@ -155,7 +152,6 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         // TODO Auto-generated method stub
         WeatherApp.getInstance().stopLocation();
-        Log.d(TAG, "onStop: ");
         super.onStop();
     }
 
@@ -180,7 +176,6 @@ public class MainActivity extends BaseActivity {
 
         reloadView();
 
-        Log.d(TAG, "onMessageEvent: load last = " + mLoadLast);
         if (mLoadLast) {
             mViewPager.setCurrentItem(mFragmentList.size() - 1);
             mLoadLast = false;

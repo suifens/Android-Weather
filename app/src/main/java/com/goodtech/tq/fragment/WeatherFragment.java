@@ -1,4 +1,4 @@
-package com.goodtech.tq.fragement;
+package com.goodtech.tq.fragment;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.fragement.adapter.WeatherRecyclerAdapter;
+import com.goodtech.tq.fragment.adapter.WeatherRecyclerAdapter;
 import com.goodtech.tq.httpClient.ApiCallback;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;

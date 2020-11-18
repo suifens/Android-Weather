@@ -1,4 +1,4 @@
-package com.goodtech.tq.fragement;
+package com.goodtech.tq.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;

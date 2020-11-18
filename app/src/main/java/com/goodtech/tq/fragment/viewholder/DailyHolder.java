@@ -1,4 +1,4 @@
-package com.goodtech.tq.fragement.viewholder;
+package com.goodtech.tq.fragment.viewholder;
 
 import android.annotation.SuppressLint;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,12 +9,10 @@ import android.widget.TextView;
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Daypart;
-import com.goodtech.tq.models.Metric;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
-import com.goodtech.tq.utils.WeatherUtils;
 
 /**
  * com.goodtech.tq.fragement.viewholder

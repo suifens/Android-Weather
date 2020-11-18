@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".fragement.WeatherFragment"
+        tools:context=".fragment.WeatherFragment"
         tools:listitem="@layout/fragment_item" />
 
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

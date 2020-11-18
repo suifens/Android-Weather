@@ -53,7 +53,6 @@ public class BaseActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(stationBar.getLayoutParams());
         bars.height = bars.height + DeviceUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
-        Log.d(TAG, "onCreate: bar height = " + bars.height);
     }
 
     @Override

@@ -223,7 +223,6 @@ public class LocationHelper {
                     sb.append("\n" + diagnosticMessage);
                 }
             }
-            Log.d(TAG, "onLocDiagnosticMessage: " + sb.toString());
         }
     };
 
