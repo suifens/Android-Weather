@@ -15,7 +15,7 @@ import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class DailyHolder extends RecyclerView.ViewHolder {
 

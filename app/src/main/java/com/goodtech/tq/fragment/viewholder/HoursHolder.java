@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class HoursHolder extends RecyclerView.ViewHolder {
 

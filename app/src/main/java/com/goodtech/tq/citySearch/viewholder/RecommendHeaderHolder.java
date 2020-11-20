@@ -12,7 +12,7 @@ import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.models.CityMode;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class RecommendHeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private CityRecommendAdapter.OnItemClickListener mListener;

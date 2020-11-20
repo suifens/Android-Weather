@@ -9,7 +9,7 @@ import com.goodtech.tq.citySearch.CityRecyclerAdapter;
 import com.goodtech.tq.models.CityMode;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class CitySearchHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

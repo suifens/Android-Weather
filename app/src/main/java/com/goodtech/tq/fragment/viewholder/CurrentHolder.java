@@ -16,7 +16,7 @@ import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.WeatherUtils;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class CurrentHolder extends RecyclerView.ViewHolder {
 

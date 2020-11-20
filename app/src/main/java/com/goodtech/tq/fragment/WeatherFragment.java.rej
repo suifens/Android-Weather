@@ -1,7 +1,0 @@
-diff a/app/src/main/java/com/goodtech/tq/fragment/WeatherFragment.java b/app/src/main/java/com/goodtech/tq/fragment/WeatherFragment.java	(rejected hunks)
-@@ -1,4 +1,4 @@
--package com.goodtech.tq.fragement;
-+package com.goodtech.tq.fragment;
- 
- import android.os.Bundle;
- import android.view.View;

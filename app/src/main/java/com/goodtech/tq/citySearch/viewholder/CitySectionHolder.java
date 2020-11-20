@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.goodtech.tq.R;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class CitySectionHolder extends RecyclerView.ViewHolder {
 
