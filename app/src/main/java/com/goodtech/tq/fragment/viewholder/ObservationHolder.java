@@ -14,7 +14,7 @@ import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.views.ObservationItemView;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class ObservationHolder extends RecyclerView.ViewHolder {
 

@@ -27,7 +27,7 @@ import com.goodtech.tq.utils.ImageUtils;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class CityHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener {
     private Context mContext;

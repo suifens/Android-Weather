@@ -9,7 +9,7 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.utils.DeviceUtils;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class BottomHolder extends RecyclerView.ViewHolder {
 

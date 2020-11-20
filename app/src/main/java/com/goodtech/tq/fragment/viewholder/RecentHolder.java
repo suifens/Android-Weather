@@ -12,7 +12,7 @@ import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.TimeUtils;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class RecentHolder extends RecyclerView.ViewHolder {
 

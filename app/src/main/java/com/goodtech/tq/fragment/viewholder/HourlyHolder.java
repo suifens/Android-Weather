@@ -10,7 +10,7 @@ import com.goodtech.tq.models.Hourly;
 import java.util.List;
 
 /**
- * com.goodtech.tq.fragement.viewholder
+ * com.goodtech.tq.fragment.viewholder
  */
 public class HourlyHolder extends RecyclerView.ViewHolder {
 
