@@ -1,10 +1,10 @@
-package com.goodtech.tq.fragement.viewholder;
+package com.goodtech.tq.fragment.viewholder;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.fragement.adapter.HoursRecyclerAdapter;
+import com.goodtech.tq.fragment.adapter.HoursRecyclerAdapter;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.Metric;

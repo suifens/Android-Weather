@@ -85,7 +85,6 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Log.d("TAG", "onClick: ");
                 Intent intent = new Intent(PermissionActivity.this, AgreementActivity.class);
                 startActivity(intent);
             }
@@ -95,7 +94,6 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         ClickableSpan privateClickable = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Log.d("TAG", "onClick: private");
                 Intent intent = new Intent(PermissionActivity.this, PrivateActivity.class);
                 startActivity(intent);
             }
@@ -188,7 +186,6 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("TAG", "onRequestPermissionsResult: " + permissions);
 
         if (requestCode == 1024) {
             onStartWeather();

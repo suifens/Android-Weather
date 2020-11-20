@@ -1,4 +1,4 @@
-package com.goodtech.tq.fragement.viewholder;
+package com.goodtech.tq.fragment.viewholder;
 
 import android.view.View;
 import android.widget.LinearLayout;

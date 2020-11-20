@@ -39,7 +39,6 @@ public class DeviceUtils {
         }
 
         int navigationId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        Log.d(TAG, "getStatusBarHeight: " + resources.getDimensionPixelSize(navigationId));
         return result;
     }
 

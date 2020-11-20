@@ -1,4 +1,4 @@
-package com.goodtech.tq.fragement.viewholder;
+package com.goodtech.tq.fragment.viewholder;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;

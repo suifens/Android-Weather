@@ -134,7 +134,6 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityHolder>
 
     @Override
     public void onMoveItem(int fromPosition, int toPosition) {
-        Log.d(TAG, "onMoveItem: ");
 
         mProvider.moveItem(fromPosition, toPosition);
     }
@@ -146,13 +145,11 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityHolder>
 
     @Override
     public void onItemDragStarted(int position) {
-        Log.d(TAG, "onItemDragStarted: ");
         notifyDataSetChanged();
     }
 
     @Override
     public void onItemDragFinished(int fromPosition, int toPosition, boolean result) {
-        Log.d(TAG, "onItemDragFinished: ");
         notifyDataSetChanged();
     }
 }

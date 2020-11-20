@@ -108,7 +108,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendHeaderView.setListener(new CityRecommendAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
-                Log.d(TAG, "recommend onItemClick: view " + view + " position = " + position);
 
                 if (cityMode != null && cityMode.cid != 0) {
                     addCity(cityMode);
@@ -142,7 +141,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendAdapter.setOnItemClickListener(new CityRecommendAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
-                Log.d(TAG, "recommend onItemClick: view " + view + " position = " + position);
 
                 if (cityMode != null && cityMode.cid != 0) {
                     addCity(cityMode);
@@ -164,7 +162,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mSearchAdapter.setOnItemClickListener(new CityRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
-                Log.d(TAG, "recommend onItemClick: view " + view + " position = " + position);
 
                 addCity(cityMode);
             }
@@ -265,7 +262,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
     @Override
     public boolean onQueryTextChange(String s) {
-        Log.d(TAG, "onQueryTextSubmit: " + s);
         if (!TextUtils.isEmpty(s)) {
             ArrayList<CityMode> list = DatabaseHelper.getInstance(this).queryCity(s);
             mRecommendView.setVisibility(View.GONE);

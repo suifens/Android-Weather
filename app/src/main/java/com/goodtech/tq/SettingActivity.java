@@ -1,6 +1,7 @@
 package com.goodtech.tq;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -63,6 +64,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         MobclickAgent.onPause(this);
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

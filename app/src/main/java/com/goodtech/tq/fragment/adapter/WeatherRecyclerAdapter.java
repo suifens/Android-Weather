@@ -1,4 +1,4 @@
-package com.goodtech.tq.fragement.adapter;
+package com.goodtech.tq.fragment.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.goodtech.tq.fragement.viewholder.BottomHolder;
-import com.goodtech.tq.fragement.viewholder.CurrentHolder;
-import com.goodtech.tq.fragement.viewholder.DailyHolder;
-import com.goodtech.tq.fragement.viewholder.HoursHolder;
-import com.goodtech.tq.fragement.viewholder.ObservationHolder;
-import com.goodtech.tq.fragement.viewholder.RecentHolder;
+import com.goodtech.tq.R;
+import com.goodtech.tq.fragment.viewholder.BottomHolder;
+import com.goodtech.tq.fragment.viewholder.CurrentHolder;
+import com.goodtech.tq.fragment.viewholder.DailyHolder;
+import com.goodtech.tq.fragment.viewholder.HeaderHolder;
+import com.goodtech.tq.fragment.viewholder.HoursHolder;
+import com.goodtech.tq.fragment.viewholder.ObservationHolder;
+import com.goodtech.tq.fragment.viewholder.RecentHolder;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
 
@@ -21,6 +23,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private static final String TAG = "WeatherRecyclerAdapter";
 
+    private final int HEADER_VIEW = 0;
     private final int CURRENT_VIEW = 1;
     private final int RECENT_VIEW = 2;
     private final int HOURS_VIEW = 3;
@@ -57,10 +60,12 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemViewType(int position) {
         switch (position) {
             case 0:
-                return CURRENT_VIEW;
+                return HEADER_VIEW;
             case 1:
-                return RECENT_VIEW;
+                return CURRENT_VIEW;
             case 2:
+                return RECENT_VIEW;
+            case 3:
                 return HOURS_VIEW;
             case 13:
                 return OBSERVANT_VIEW;
@@ -73,6 +78,10 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
+            case HEADER_VIEW:
+                View headerView = getInflater().inflate(HeaderHolder.getResource(), parent, false);
+                return new HeaderHolder(headerView);
+
             case CURRENT_VIEW:
                 View current = getInflater().inflate(CurrentHolder.getResource(), parent, false);
                 return new CurrentHolder(current);
