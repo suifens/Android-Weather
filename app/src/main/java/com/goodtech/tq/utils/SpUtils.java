@@ -20,6 +20,9 @@ import java.io.Serializable;
  * @author wangrengshun <wangrengshun@gengee.cn>
  */
 public class SpUtils {
+
+    public static final String VERSION_APP = "version"; //应用版本号
+
     private SharedPreferences sp;
     
     private static SpUtils instance;

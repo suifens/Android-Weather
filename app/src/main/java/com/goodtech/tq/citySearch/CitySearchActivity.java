@@ -23,6 +23,7 @@ import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TipHelper;
@@ -65,7 +66,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     protected void onResume() {
         super.onResume();
         if (isStart) {
-            WeatherApp.getInstance().startLocation();
+            LocationHelper.getInstance().start(this);
 
             if (LocationSpHelper.getLocation().cid != 0) {
                 isStart = false;
@@ -116,7 +117,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                         if (!CitySearchActivity.this.isFinishing()) {
                             TipHelper.showProgressDialog(CitySearchActivity.this, false);
                         }
-                        WeatherApp.getInstance().requestLocation();
+                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
                         mHandler.post(mCheckTicker);
                     } else {
                         if (!CitySearchActivity.this.isFinishing()) {

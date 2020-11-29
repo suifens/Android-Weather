@@ -28,6 +28,7 @@ import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
@@ -151,7 +152,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
-        WeatherApp.getInstance().stopLocation();
+        LocationHelper.getInstance().stop();
         super.onStop();
     }
 
@@ -171,7 +172,7 @@ public class MainActivity extends BaseActivity {
         }
 
         if (TimeUtils.needLocation()) {
-            WeatherApp.getInstance().startLocation();
+            LocationHelper.getInstance().start(this);
         }
 
         reloadView();

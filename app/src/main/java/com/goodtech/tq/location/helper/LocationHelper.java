@@ -1,15 +1,21 @@
 package com.goodtech.tq.location.helper;
 
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
+import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
 
 /**
@@ -20,24 +26,44 @@ public class LocationHelper {
     private static final String TAG = "LocationSpHelper";
     private LocationService locationService;
 
-    public void start() {
+    private static class SingletonHolder {
+        private static final LocationHelper INSTANCE = new LocationHelper();
+    }
+    private LocationHelper (){}
+    public static final LocationHelper getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
+
+    public void startWithDelay(final Context context) {
+
+        stop();
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                start(context);
+            }
+        }, 1000);
+    }
+
+    public void start(Context context) {
+        if (!PermissionUtil.isLocationEnabled(context)) {
+            return;
+        }
         locationService = WeatherApp.getInstance().locationService;
-        locationService.registerListener(mListener);
-        locationService.setLocationOption(locationService.getDefaultLocationClientOption());
-        locationService.start();
+        if (locationService != null) {
+            locationService.registerListener(mListener);
+            LocationService.setLocationOption(locationService.getDefaultLocationClientOption());
+            locationService.start();
+        }
     }
 
     public void stop() {
         locationService = WeatherApp.getInstance().locationService;
-        locationService.unregisterListener(mListener); //注销掉监听
-        locationService.stop(); //停止定位服务
-    }
-
-    public void requestLocation() {
-        locationService = WeatherApp.getInstance().locationService;
-        locationService.registerListener(mListener);
-        locationService.setLocationOption(locationService.getDefaultLocationClientOption());
-        locationService.requestLocation();
+        if (locationService != null) {
+            locationService.unregisterListener(mListener); //注销掉监听
+            locationService.stop(); //停止定位服务
+        }
     }
 
     /*****
@@ -57,6 +83,7 @@ public class LocationHelper {
 
             //保存
             LocationSpHelper.saveWithLocation(location);
+            LocationHelper.getInstance().stop();
 
             // TODO Auto-generated method stub
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {

@@ -3,17 +3,13 @@ package com.goodtech.tq;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.TipHelper;
@@ -32,8 +28,6 @@ import com.goodtech.tq.utils.TipHelper;
 public class BaseActivity extends AppCompatActivity {
 
     protected Handler mHandler = new Handler(Looper.getMainLooper());
-
-    private static final String TAG = "BaseActivity";
 
     protected View mStationBar;
 
@@ -67,7 +61,7 @@ public class BaseActivity extends AppCompatActivity {
                     TipHelper.showProgressDialog(this, false);
                 }
             }
-            WeatherApp.getInstance().requestLocation();
+            LocationHelper.getInstance().startWithDelay(this);
         }
     }
 
@@ -124,13 +118,15 @@ public class BaseActivity extends AppCompatActivity {
         if (checkPermission()) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS},
+                            Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_REQUEST_COARSE_LOCATION);
         } else {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-            WeatherApp.getInstance().requestLocation();
+//            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//            startActivity(intent);
+            if (!this.isFinishing()) { //xActivity即为本界面的Activity
+                TipHelper.showProgressDialog(this, false);
+            }
+            LocationHelper.getInstance().startWithDelay(this);
         }
     }
 
