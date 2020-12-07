@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +21,6 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragment.WeatherFragment;
@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity {
     private ViewPagerAdapter mAdapter;
     private ImageView mBgImgView;
     private RadioGroup mRgIndicator;
-    private final List<Fragment> mFragmentList = new ArrayList<>();
+    private List<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<CityMode> mCityModes = new ArrayList<>();
     private int mCurrIndex;
     private long mBackTime;
@@ -189,6 +189,11 @@ public class MainActivity extends BaseActivity {
     private void reloadView() {
         mCityModes = LocationSpHelper.getCityListAndLocation();
 
+        mCurrIndex = mViewPager.getCurrentItem();
+        if (mCityModes.size() > 0 && mCurrIndex >= mCityModes.size()) {
+            mCurrIndex = mCityModes.size() - 1;
+        }
+
         reloadFragment();
         reloadWeathers();
         configRgIndicator(mCityModes.size());
@@ -224,6 +229,17 @@ public class MainActivity extends BaseActivity {
     private void reloadFragment() {
         if (mFragmentList.size() != mCityModes.size()) {
 
+//            ArrayList<Fragment> tempList = new ArrayList<>();
+//            for (int i = 0; i < mCityModes.size(); i++) {
+//                if (mFragmentList.size() > i) {
+//                    tempList.add(mFragmentList.get(i));
+//                } else {
+//                    tempList.add(newFragment());
+//                }
+//            }
+//            mAdapter.replaceAll(tempList);
+//            mFragmentList = tempList;
+
             while (mFragmentList.size() > mCityModes.size()) {
                 mFragmentList.remove(mFragmentList.size() - 1);
             }
@@ -232,6 +248,12 @@ public class MainActivity extends BaseActivity {
             }
             mAdapter.replaceAll(mFragmentList);
         }
+    }
+
+    private WeatherFragment newFragment() {
+        WeatherFragment fragment = new WeatherFragment();
+        fragment.setStateBar(findViewById(R.id.station_bg_view));
+        return fragment;
     }
 
     private void addFragment() {

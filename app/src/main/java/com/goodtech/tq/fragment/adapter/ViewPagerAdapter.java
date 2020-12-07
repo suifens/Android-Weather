@@ -1,5 +1,6 @@
 package com.goodtech.tq.fragment.adapter;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -30,9 +31,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return mFragments.size();
     }
 
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
+
     public void replaceAll(List<Fragment> fragments){
         this.mFragments = fragments;
         notifyDataSetChanged();
-        
     }
 }
