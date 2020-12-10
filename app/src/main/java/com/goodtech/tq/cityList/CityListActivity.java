@@ -117,7 +117,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             public void onItemClick(View view, int position, CityMode cityMode) {
                 if (cityMode.cid != 0) {
                     EventBus.getDefault().post(new MessageEvent().setCityIndex(position));
-                    finish();
+                    finishToRight();
                 }
             }
 
@@ -168,8 +168,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
     protected void backAction(){
         if (!mEdit) {
-            finish();
-            overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+            finishToRight();
         }
     }
 
@@ -207,8 +206,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_close:
-                finish();
-                overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+                finishToRight();
                 break;
             case R.id.city_add:
                 //  添加城市

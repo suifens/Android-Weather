@@ -130,6 +130,16 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected void finishToRight() {
+        finish();
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+    }
+
+    protected void finishToLeft() {
+        finish();
+        overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
+    }
+
     protected void removeTicker() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (mHandler.hasCallbacks(mCheckTicker)) {

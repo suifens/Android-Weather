@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
-import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -80,7 +79,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                             Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-                            finish();
+                            finishToRight();
                         }
                     }
                 }, 1000);
@@ -198,7 +197,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                         Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-                        finish();
+                        finishToRight();
                     }
                 }, 1000);
                 return;
@@ -226,7 +225,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                finish();
+                finishToRight();
             }
         }, 200);
     }
@@ -249,7 +248,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.search_btn_cancel) {
-            this.finish();
+            finishToRight();
         }
     }
 
