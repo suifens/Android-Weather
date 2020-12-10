@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
@@ -28,6 +28,7 @@ import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.location.Location;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
@@ -49,13 +50,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-    
+
+    private static final String TAG = "MainActivity";
     private final BroadcastReceiver receiver = new IntentReceiver();
 
     protected TextView mAddressTv;
     protected ImageView mLocationTip;
 
-    private ViewPager mViewPager;
+    private ViewPager2 mViewPager;
     private ViewPagerAdapter mAdapter;
     private ImageView mBgImgView;
     private RadioGroup mRgIndicator;
@@ -141,6 +143,7 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         MobclickAgent.onResume(this);
         WeatherHttpHelper.getInstance().fetchCitiesWeather();
+        Log.e(TAG, "onResume: ");
     }
 
     @Override
@@ -163,6 +166,7 @@ public class MainActivity extends BaseActivity {
         unregisterReceiver(receiver);
     }
 
+    boolean isNeedReload = true;
     @Override
     protected void onStart() {
         super.onStart();
@@ -175,39 +179,49 @@ public class MainActivity extends BaseActivity {
             LocationHelper.getInstance().start(this);
         }
 
-        reloadView();
-
-        if (mLoadLast) {
-            mViewPager.setCurrentItem(mFragmentList.size() - 1);
-            mLoadLast = false;
-
-        } else if (mCityModes.size() > mCurrIndex) {
-            mViewPager.setCurrentItem(mCurrIndex);
+        List cityModes = LocationSpHelper.getCityListAndLocation();
+        if (cityModes.size() != mCityModes.size()) {
+            mCityModes = new ArrayList<>(cityModes);
+            isNeedReload = true;
         }
+
+        reloadView();
+        mViewPager.setCurrentItem(mCurrIndex);
+        setIndicator(mCurrIndex);
     }
 
     private void reloadView() {
-        mCityModes = LocationSpHelper.getCityListAndLocation();
 
-        mCurrIndex = mViewPager.getCurrentItem();
-        if (mCityModes.size() > 0 && mCurrIndex >= mCityModes.size()) {
-            mCurrIndex = mCityModes.size() - 1;
+        if (!isNeedReload) {
+            return;
         }
 
-        reloadFragment();
-        reloadWeathers();
+        isNeedReload = false;
         configRgIndicator(mCityModes.size());
+        reloadFragment();
+
+        if (mLoadLast) {
+            mCurrIndex = mFragmentList.size() - 1;
+            mLoadLast = false;
+        } else {
+            mCurrIndex = Math.min(mCurrIndex, mFragmentList.size() - 1);
+        }
+        //  更新天气
+        reloadWeathers();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
 
+        Log.e(TAG, "onMessageEvent: ");
         TipHelper.dismissProgressDialog();
         removeTicker();
 
         if (event.isSuccessLocation()) {
 
-            reloadView();
+            CityMode cityMode = LocationSpHelper.getLocation();
+            mCityModes.set(0, cityMode);
+            reloadWeather(0);
         }
         if (event.getFetchCId() != 0) {
             for (int i = 0; i < mCityModes.size(); i++) {
@@ -223,22 +237,12 @@ public class MainActivity extends BaseActivity {
         }
         if (event.isAddCity()) {
             mLoadLast = true;
+            isNeedReload = true;
         }
     }
 
     private void reloadFragment() {
         if (mFragmentList.size() != mCityModes.size()) {
-
-//            ArrayList<Fragment> tempList = new ArrayList<>();
-//            for (int i = 0; i < mCityModes.size(); i++) {
-//                if (mFragmentList.size() > i) {
-//                    tempList.add(mFragmentList.get(i));
-//                } else {
-//                    tempList.add(newFragment());
-//                }
-//            }
-//            mAdapter.replaceAll(tempList);
-//            mFragmentList = tempList;
 
             while (mFragmentList.size() > mCityModes.size()) {
                 mFragmentList.remove(mFragmentList.size() - 1);
@@ -340,9 +344,29 @@ public class MainActivity extends BaseActivity {
         WeatherFragment fragment = new WeatherFragment();
         fragment.setStateBar(findViewById(R.id.station_bg_view));
         mFragmentList.add(fragment);
-        mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList);
+        mAdapter = new ViewPagerAdapter(this, mFragmentList);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+        mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+
+                if (mCurrIndex != position) {
+                    mCurrIndex = position;
+                    setIndicator(position);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+        });
     }
 
     private void configRgIndicator(int pagerSize) {
@@ -418,22 +442,4 @@ public class MainActivity extends BaseActivity {
         }
 
     }
-
-    protected ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            if (mCurrIndex != position) {
-                mCurrIndex = position;
-                setIndicator(position);
-            }
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-        }
-    };
 }

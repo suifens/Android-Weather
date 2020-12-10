@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.view.ViewParent;
 
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +69,7 @@ public class HorizontalRecyclerView extends RecyclerView {
 
         /*---解决ViewPager嵌套垂直RecyclerView嵌套水平RecyclerView横向滑动到底后不滑动ViewPager start ---*/
         ViewParent parent =this;
-        while(!((parent = parent.getParent()) instanceof ViewPager));// 循环查找viewPager
+        while(!((parent = parent.getParent()) instanceof ViewPager2));// 循环查找viewPager
         parent.requestDisallowInterceptTouchEvent(true);
         /*---解决ViewPager嵌套垂直RecyclerView嵌套水平RecyclerView横向滑动到底后不滑动ViewPager start ---*/
         return super.dispatchTouchEvent(ev);
