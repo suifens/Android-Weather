@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity {
         }
 
         List cityModes = LocationSpHelper.getCityListAndLocation();
-        if (cityModes.size() != mCityModes.size()) {
+        if (cityModes.size() != mCityModes.size() || isNeedReload) {
             mCityModes = new ArrayList<>(cityModes);
             isNeedReload = true;
         }
@@ -237,6 +237,9 @@ public class MainActivity extends BaseActivity {
         }
         if (event.isAddCity()) {
             mLoadLast = true;
+            isNeedReload = true;
+        }
+        if (event.isNeedReload()) {
             isNeedReload = true;
         }
     }
@@ -413,14 +416,20 @@ public class MainActivity extends BaseActivity {
             CityMode location = LocationSpHelper.getLocation();
             if (mCurrIndex == 0 && location.cid == 0) {
                 if (!this.isFinishing()) {
-                    MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            requestLocationPermissions();
-                            mHandler.post(mCheckTicker);
+                    if (checkPermission()) {
+                        MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestLocationPermissions();
+                            }
+                        });
+                        if (!isFinishing()) {
+                            alert.show();
                         }
-                    });
-                    alert.show();
+                    } else {
+                        TipHelper.showProgressDialog(this, false);
+                        LocationHelper.getInstance().startWithDelay(this);
+                    }
                 }
             }
         }

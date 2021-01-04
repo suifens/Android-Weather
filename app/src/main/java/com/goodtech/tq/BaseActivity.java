@@ -73,7 +73,7 @@ public class BaseActivity extends AppCompatActivity {
         return isLocationEnabled();
     }
 
-    private boolean checkPermission() {
+    protected boolean checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     || this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;

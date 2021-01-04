@@ -3,7 +3,6 @@ package com.goodtech.tq;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,7 +10,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -63,41 +61,6 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     private String getPosId() {
         String posId = getIntent().getStringExtra("ad_id");
         return TextUtils.isEmpty(posId) ? Constants.SPLASH_POS_ID : posId;
-    }
-
-//    public static String getChannelName(Context context) {
-//        if (context == null) {
-//            return null;
-//        }
-//        String channelName = null;
-//        try {
-//            PackageManager packageManager = context.getPackageManager();
-//            if (packageManager != null) {
-//                //注意此处为ApplicationInfo，因为友盟设置的meta-data是在application标签中
-//                ApplicationInfo applicationInfo = packageManager.
-//                        getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-//                if (applicationInfo != null) {
-//                    if (applicationInfo.metaData != null) {
-//                        //这里的UMENG_CHANNEL要与manifest中的配置文件标识一致
-//                        channelName = String.valueOf(applicationInfo.metaData.get("UMENG_CHANNEL"));
-//                    }
-//                }
-//
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        Log.e("TAG", "getChannelName: " + channelName );
-//        return channelName;
-//    }
-
-    private boolean hasAllPermissionsGranted(int[] grantResults) {
-        for (int grantResult : grantResults) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**

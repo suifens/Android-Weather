@@ -78,6 +78,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     private Button mCancelBtn;
     private Button mEditBtn;
     private boolean mEdit = false;
+    private boolean mHadEdit = false;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -206,6 +207,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_close:
+                EventBus.getDefault().post(new MessageEvent().needReload(true));
                 finishToRight();
                 break;
             case R.id.city_add:
@@ -215,6 +217,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.button_city_edit:
                 if (mEdit) {
+                    mHadEdit = true;
                     mProvider.saveData();
                 }
                 //  点击编辑/取消按钮

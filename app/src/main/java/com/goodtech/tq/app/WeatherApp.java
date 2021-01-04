@@ -27,6 +27,8 @@ public class WeatherApp extends Application {
     public void onCreate() {
         super.onCreate();
         mApplication = this;
+
+        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
 
     public void startUsingApp() {
@@ -39,7 +41,5 @@ public class WeatherApp extends Application {
 //        SDKInitializer.setCoordType(CoordType.BD09LL);
 
         UMConfigure.init(getApplicationContext(), UMConfigure.DEVICE_TYPE_PHONE, "");
-
-        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
 }

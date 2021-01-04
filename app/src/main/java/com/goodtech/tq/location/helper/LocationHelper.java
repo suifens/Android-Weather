@@ -1,10 +1,13 @@
 package com.goodtech.tq.location.helper;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -17,6 +20,7 @@ import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.TipHelper;
 
 /**
  * com.goodtech.tq.location.service
@@ -47,7 +51,9 @@ public class LocationHelper {
     }
 
     public void start(Context context) {
+        startTicker();
         if (!PermissionUtil.isLocationEnabled(context)) {
+            removeTicker();
             return;
         }
         locationService = WeatherApp.getInstance().locationService;
@@ -55,10 +61,12 @@ public class LocationHelper {
             locationService.registerListener(mListener);
             LocationService.setLocationOption(locationService.getDefaultLocationClientOption());
             locationService.start();
+
         }
     }
 
     public void stop() {
+        removeTicker();
         locationService = WeatherApp.getInstance().locationService;
         if (locationService != null) {
             locationService.unregisterListener(mListener); //注销掉监听
@@ -249,6 +257,37 @@ public class LocationHelper {
                     sb.append("定位失败，请确认您定位的开关打开状态，是否赋予APP定位权限");
                     sb.append("\n" + diagnosticMessage);
                 }
+            }
+        }
+    };
+
+    protected Handler mHandler = new Handler(Looper.getMainLooper());
+    protected void removeTicker() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (mHandler.hasCallbacks(mCheckTicker)) {
+                mHandler.removeCallbacks(mCheckTicker);
+            }
+        } else {
+            mHandler.removeCallbacks(mCheckTicker);
+        }
+        TipHelper.dismissProgressDialog();
+    }
+
+    protected void startTicker() {
+        scanCount = 0;
+        removeTicker();
+        mHandler.post(mCheckTicker);
+    }
+
+    protected int scanCount = 0;
+    protected final Runnable mCheckTicker = new Runnable() {
+        public void run() {
+            long now = SystemClock.uptimeMillis();
+            long next = now + (1000 - now % 1000);
+            if (scanCount++ > 5) {
+                removeTicker();
+            } else {
+                mHandler.postAtTime(mCheckTicker, next);
             }
         }
     };

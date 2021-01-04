@@ -124,7 +124,9 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
                         checkAndRequestPermission();
                     }
                 });
-                alert.show();
+                if (!isFinishing()) {
+                    alert.show();
+                }
             }
             break;
         }

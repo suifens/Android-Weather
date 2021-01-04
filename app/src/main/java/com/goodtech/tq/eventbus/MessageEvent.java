@@ -13,6 +13,8 @@ public class MessageEvent {
 
     protected boolean addCity;
 
+    protected boolean needReload;
+
     public MessageEvent() {
 
     }
@@ -51,5 +53,14 @@ public class MessageEvent {
 
     public boolean isAddCity() {
         return addCity;
+    }
+
+    public MessageEvent needReload(boolean needReload) {
+        this.needReload = needReload;
+        return this;
+    }
+
+    public boolean isNeedReload() {
+        return needReload;
     }
 }

@@ -56,8 +56,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
@@ -111,23 +111,21 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
                 if (cityMode != null && cityMode.cid != 0) {
                     addCity(cityMode);
-                } else {
-                    if (checkLocationPermission()) {
-                        if (!CitySearchActivity.this.isFinishing()) {
-                            TipHelper.showProgressDialog(CitySearchActivity.this, false);
-                        }
-                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
-                        mHandler.post(mCheckTicker);
-                    } else {
-                        if (!CitySearchActivity.this.isFinishing()) {
-                            MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    requestLocationPermissions();
-                                }
-                            });
+                } else if (!CitySearchActivity.this.isFinishing()) {
+
+                    if (checkPermission()) {
+                        MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestLocationPermissions();
+                            }
+                        });
+                        if (!isFinishing()) {
                             alert.show();
                         }
+                    } else {
+                        TipHelper.showProgressDialog(CitySearchActivity.this, false);
+                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
                     }
                 }
             }
