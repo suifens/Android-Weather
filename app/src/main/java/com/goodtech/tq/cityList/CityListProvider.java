@@ -48,9 +48,10 @@ public class CityListProvider extends AbstractDataProvider {
 
     @Override
     public void removeItem(int position) {
-        final CityMode removedItem = mData.remove(position);
-        mLastRemovedData = removedItem;
-        mLastRemovedPosition = position;
+        if (position >= 0 && position < mData.size()) {
+            mLastRemovedData = mData.remove(position);
+            mLastRemovedPosition = position;
+        }
     }
 
     @Override

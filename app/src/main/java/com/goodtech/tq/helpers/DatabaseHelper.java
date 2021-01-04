@@ -12,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.goodtech.tq.models.CityMode;
@@ -85,6 +86,10 @@ public class DatabaseHelper {
     }
 
     public ArrayList<CityMode> queryCity(String name) {
+
+        if (TextUtils.isEmpty(name)) {
+            return null;
+        }
 
         name = name.replace("'", "");
         name = name.replace(" ", "");

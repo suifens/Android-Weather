@@ -169,18 +169,20 @@ public class MessageAlert extends AlertDialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_dialog_cancel:
+            case R.id.btn_dialog_cancel: {
                 if (mCancelListener != null) {
                     mCancelListener.onClick(this, 0);
                 }
                 this.dismiss();
+            }
                 break;
 
-            case R.id.btn_dialog_confirm:
+            case R.id.btn_dialog_confirm: {
                 if (mConfirmListener != null) {
                     mConfirmListener.onClick(this, 1);
                 }
                 this.dismiss();
+            }
                 break;
         }
     }

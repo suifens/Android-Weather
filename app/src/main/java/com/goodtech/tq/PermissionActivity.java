@@ -1,27 +1,24 @@
 package com.goodtech.tq;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.DeviceUtils;
@@ -34,15 +31,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+@SuppressLint("NonConstantResourceId")
 public class PermissionActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String boldStr = "请仔细阅读《隐私政策》及《用户协议》内容,我们将严格按照前述政策，为您提供更好的服务。若您是14岁以下未成年人，请您务必要求您的监护人仔细阅读本协议，并在征得您的监护人同意的前提下使用我们的产品。";
     private static final String agreementStr = "《用户协议》";
     private static final String privateStr = "《隐私政策》";
-    private SpannableString mSpannableString;
-    private TextView mspannableTv;
-
-    protected final static String EXTRA_PERMISSIONS = "EXTRA_PERMISSION";
+    private TextView mSpannableTv;
 
     public static void redirectTo(Context ctx) {
         Intent intent = new Intent(ctx, PermissionActivity.class);
@@ -59,7 +54,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         bars.height = bars.height + DeviceUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
 
-        mspannableTv = findViewById(R.id.tv_spannable);
+        mSpannableTv = findViewById(R.id.tv_spannable);
 
         configSpannable();
 
@@ -68,13 +63,13 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     }
 
     private void configSpannable() {
-        String permissonStr = getString(R.string.permission_title1);
-        SpannableString spannableString = new SpannableString(permissonStr);
-        int agreementStart = permissonStr.indexOf(agreementStr);
+        String permissionStr = getString(R.string.permission_title1);
+        SpannableString spannableString = new SpannableString(permissionStr);
+        int agreementStart = permissionStr.indexOf(agreementStr);
         int agreementEnd = agreementStart + agreementStr.length();
-        int privateStart = permissonStr.indexOf(privateStr);
+        int privateStart = permissionStr.indexOf(privateStr);
         int privateEnd = privateStart + privateStr.length();
-        int boldStart = permissonStr.indexOf(boldStr);
+        int boldStart = permissionStr.indexOf(boldStr);
         int boldEnd = boldStart + boldStr.length();
         ForegroundColorSpan agreementColorSp = new ForegroundColorSpan(Color.parseColor("#00C4FF"));
         spannableString.setSpan(agreementColorSp, agreementStart, agreementEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -100,8 +95,8 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         };
         spannableString.setSpan(privateClickable, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-        mspannableTv.setMovementMethod(LinkMovementMethod.getInstance());
-        mspannableTv.setText(spannableString);
+        mSpannableTv.setMovementMethod(LinkMovementMethod.getInstance());
+        mSpannableTv.setText(spannableString);
     }
 
     @Override
@@ -129,7 +124,9 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
                         checkAndRequestPermission();
                     }
                 });
-                alert.show();
+                if (!isFinishing()) {
+                    alert.show();
+                }
             }
             break;
         }
@@ -203,42 +200,8 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     }
 
     private void onStartWeather() {
-        SpUtils.getInstance().putString("version", DeviceUtils.getVersionName(this));
-        CitySearchActivity.redirectTo(this, true);
+        SpUtils.getInstance().putString(SpUtils.VERSION_APP, "0");
         this.finish();
     }
 
-    private boolean hasAllPermissionsGranted(int[] grantResults) {
-        for (int grantResult : grantResults) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public abstract class TouchableSpan extends ClickableSpan {
-        private boolean mIsPressed;
-        private int mPressedBackgroundColor;
-        private int mNormalTextColor;
-        private int mPressedTextColor;
-
-        public TouchableSpan(int normalTextColor, int pressedTextColor, int pressedBackgroundColor) {
-            mNormalTextColor = normalTextColor;
-            mPressedTextColor = pressedTextColor;
-            mPressedBackgroundColor = pressedBackgroundColor;
-        }
-
-        public void setPressed(boolean isSelected) {
-            mIsPressed = isSelected;
-        }
-
-        @Override
-        public void updateDrawState(TextPaint ds) {
-            super.updateDrawState(ds);
-            ds.setColor(mIsPressed ? mPressedTextColor : mNormalTextColor);
-            ds.bgColor = mIsPressed ? mPressedBackgroundColor : Color.TRANSPARENT;
-            ds.setUnderlineText(false);
-        }
-    }
 }

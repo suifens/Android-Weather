@@ -3,7 +3,6 @@ package com.goodtech.tq;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,9 +15,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
-import com.goodtech.tq.httpClient.ApiClient;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
@@ -45,7 +45,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
      * 记录拉取广告的时间
      */
     private long fetchSplashADTime = 0;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
         setContentView(R.layout.activity_splash);
         container = this.findViewById(R.id.splash_container);
 
-        ApiClient.getInstance();
+//        ApiClient.getInstance();
 
 //        getChannelName(this);
     }
@@ -61,41 +61,6 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     private String getPosId() {
         String posId = getIntent().getStringExtra("ad_id");
         return TextUtils.isEmpty(posId) ? Constants.SPLASH_POS_ID : posId;
-    }
-
-//    public static String getChannelName(Context context) {
-//        if (context == null) {
-//            return null;
-//        }
-//        String channelName = null;
-//        try {
-//            PackageManager packageManager = context.getPackageManager();
-//            if (packageManager != null) {
-//                //注意此处为ApplicationInfo，因为友盟设置的meta-data是在application标签中
-//                ApplicationInfo applicationInfo = packageManager.
-//                        getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-//                if (applicationInfo != null) {
-//                    if (applicationInfo.metaData != null) {
-//                        //这里的UMENG_CHANNEL要与manifest中的配置文件标识一致
-//                        channelName = String.valueOf(applicationInfo.metaData.get("UMENG_CHANNEL"));
-//                    }
-//                }
-//
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        Log.e("TAG", "getChannelName: " + channelName );
-//        return channelName;
-//    }
-
-    private boolean hasAllPermissionsGranted(int[] grantResults) {
-        for (int grantResult : grantResults) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -205,19 +170,24 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
         SpUtils.getInstance().remove(Constants.TIME_LOCATION);
         SpUtils.getInstance().remove(Constants.TIME_WEATHER);
 
-        String versionName = DeviceUtils.getVersionName(this);
-        if (SpUtils.getInstance().getString("version", "0").equals(versionName)) {
+        String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
+        if (!TextUtils.isEmpty(saveVersion)) {
 
-            LocationSpHelper.saveWithLocation(null);
-            WeatherApp.getInstance().startLocation();
+            //  注册
+            WeatherApp.getInstance().startUsingApp();
 
-            WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
-            httpHelper.fetchCitiesWeather();
+            String versionName = DeviceUtils.getVersionName(this);
+            if (!saveVersion.equals("0")) {
+                LocationSpHelper.saveWithLocation(null);
+                LocationHelper.getInstance().start(this);
+
+                WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
+                httpHelper.fetchCitiesWeather();
+            }
             //  获取广告
             fetchSplashAD(this, container, skipView, getPosId(), this);
         } else {
             PermissionActivity.redirectTo(this);
-            this.finish();
         }
     }
 
@@ -262,7 +232,13 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     }
 
     private void onStartWeather() {
-        this.startActivity(new Intent(this, MainActivity.class));
+        String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
+        if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")) {
+            CitySearchActivity.redirectTo(this, true);
+        } else {
+            this.startActivity(new Intent(this, MainActivity.class));
+        }
+        SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
         this.finish();
     }
 

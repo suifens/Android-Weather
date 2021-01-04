@@ -55,7 +55,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        checkPermission();
+        checkPermissions();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void checkPermission() {
+    private void checkPermissions() {
         TextView phoneStateTv = findViewById(R.id.tv_state_phone);
         if (checkPermission(Manifest.permission.READ_PHONE_STATE)) {
             phoneStateTv.setText(deniedStr);

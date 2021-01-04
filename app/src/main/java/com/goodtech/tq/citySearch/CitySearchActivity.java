@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
-import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TipHelper;
@@ -56,8 +56,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
@@ -65,7 +65,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     protected void onResume() {
         super.onResume();
         if (isStart) {
-            WeatherApp.getInstance().startLocation();
+            LocationHelper.getInstance().start(this);
 
             if (LocationSpHelper.getLocation().cid != 0) {
                 isStart = false;
@@ -79,7 +79,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                             Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-                            finish();
+                            finishToRight();
                         }
                     }
                 }, 1000);
@@ -111,23 +111,21 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
                 if (cityMode != null && cityMode.cid != 0) {
                     addCity(cityMode);
-                } else {
-                    if (checkLocationPermission()) {
-                        if (!CitySearchActivity.this.isFinishing()) {
-                            TipHelper.showProgressDialog(CitySearchActivity.this, false);
-                        }
-                        WeatherApp.getInstance().requestLocation();
-                        mHandler.post(mCheckTicker);
-                    } else {
-                        if (!CitySearchActivity.this.isFinishing()) {
-                            MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    requestLocationPermissions();
-                                }
-                            });
+                } else if (!CitySearchActivity.this.isFinishing()) {
+
+                    if (checkPermission()) {
+                        MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestLocationPermissions();
+                            }
+                        });
+                        if (!isFinishing()) {
                             alert.show();
                         }
+                    } else {
+                        TipHelper.showProgressDialog(CitySearchActivity.this, false);
+                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
                     }
                 }
             }
@@ -197,7 +195,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                         Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-                        finish();
+                        finishToRight();
                     }
                 }, 1000);
                 return;
@@ -225,7 +223,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                finish();
+                finishToRight();
             }
         }, 200);
     }
@@ -248,7 +246,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.search_btn_cancel) {
-            this.finish();
+            finishToRight();
         }
     }
 

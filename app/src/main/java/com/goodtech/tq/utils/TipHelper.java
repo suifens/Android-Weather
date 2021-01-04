@@ -1,5 +1,6 @@
 package com.goodtech.tq.utils;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
@@ -39,7 +40,7 @@ public class TipHelper {
         return false;
     }
     
-    public synchronized static void showProgressDialog(final Context context, final int resId, final boolean cancelable) {
+    public synchronized static void showProgressDialog(final Activity context, final int resId, final boolean cancelable) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -50,18 +51,19 @@ public class TipHelper {
                 mProgressDialog.setMessage(context.getString(resId));
                 mProgressDialog.setCancelable(cancelable);
                 try {
-                    mProgressDialog.show();
-                } catch (WindowManager.BadTokenException badTokenException) {
-                    mProgressDialog = null;
+                    if (!context.isFinishing()) {
+                        mProgressDialog.show();
+                    }
                 } catch (Exception e) {
                     mProgressDialog = null;
+                    e.printStackTrace();
                 }
             }
         });
         
     }
 
-    public synchronized static void showProgressDialog(final Context context, final boolean cancelable) {
+    public synchronized static void showProgressDialog(final Activity context, final boolean cancelable) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -70,18 +72,19 @@ public class TipHelper {
                 mProgressDialog = new ProgressDialog(context);
                 mProgressDialog.setCancelable(cancelable);
                 try {
-                    mProgressDialog.show();
-                } catch (WindowManager.BadTokenException badTokenException) {
-                    mProgressDialog = null;
+                    if (!context.isFinishing()) {
+                        mProgressDialog.show();
+                    }
                 } catch (Exception e) {
                     mProgressDialog = null;
+                    e.printStackTrace();
                 }
             }
         });
 
     }
 
-    public synchronized static void showProgressDialog(final Context context) {
+    public synchronized static void showProgressDialog(final Activity context) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -89,11 +92,12 @@ public class TipHelper {
 
                 mProgressDialog = new ProgressDialog(context);
                 try {
-                    mProgressDialog.show();
-                } catch (WindowManager.BadTokenException badTokenException) {
-                    mProgressDialog = null;
+                    if (!context.isFinishing()) {
+                        mProgressDialog.show();
+                    }
                 } catch (Exception e) {
                     mProgressDialog = null;
+                    e.printStackTrace();
                 }
             }
         });

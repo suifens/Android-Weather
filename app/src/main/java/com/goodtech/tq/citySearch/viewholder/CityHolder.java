@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -21,9 +22,11 @@ import androidx.core.content.ContextCompat;
 import com.goodtech.tq.R;
 import com.goodtech.tq.cityList.CityListRecyclerAdapter;
 import com.goodtech.tq.models.CityMode;
+import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.WeatherUtils;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 /**
@@ -95,16 +98,33 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
 
         if (weatherModel != null && weatherModel.observation != null) {
             mWeatherIcon.setVisibility(View.VISIBLE);
-            mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(weatherModel.observation.wxIcon));
+            mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(getIconId(weatherModel)));
             if (weatherModel.observation != null && weatherModel.observation.metric != null) {
                 mTempTv.setText(String.format("%d℃", weatherModel.observation.metric.temp));
             }
+            mTempTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
             mTempTv.setTextColor(ContextCompat.getColor(mTempTv.getContext(), R.color.color_00c4ff));
         } else {
             mWeatherIcon.setVisibility(View.GONE);
             mTempTv.setText("数据更新中");
+            mTempTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             mTempTv.setTextColor(ContextCompat.getColor(mTempTv.getContext(), R.color.color_4a4a4a));
         }
+    }
+
+    //  获取当前天气图标
+    private int getIconId(WeatherModel model) {
+        if (model.hourlies.size() > 0) {
+            Hourly hourly = model.hourlies.get(0);
+            if (hourly != null) {
+                long time = hourly.fcst_valid;
+                if (System.currentTimeMillis() > time * 1000) {
+
+                    return hourly.icon_cd;
+                }
+            }
+        }
+        return model.observation.wxIcon;
     }
 
     @Override

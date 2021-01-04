@@ -49,7 +49,7 @@ body {
   margin-right: 24px;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 22px;
+  line-height: 24px;
   color: #4A4A4A;
   font-size: 14px;
   -webkit-line-clamp: 3;
@@ -60,13 +60,26 @@ body {
   }
 }
 
+.mod .tabTitle {
+  position: relative;
+  margin-left: 10px;
+  margin-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 24px;
+  color: #4A4A4A;
+  font-size: 14px;
+  -webkit-line-clamp: 3;
+  font-family:"PingFangSC-Light";
+}
+
 .mod .submain {
   position: relative;
   margin-left: 24px;
   margin-right: 24px;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 22px;
+  line-height: 24px;
   color: #000000;
   font-size: 14px;
   -webkit-line-clamp: 3;
@@ -94,6 +107,14 @@ body {
 
 .marginBottom {
   margin-bottom: 20px;
+}
+
+.rightAlignment {
+    text-align:right; 
+}
+
+.colorHei {
+    color: 000000;
 }
 
 .colorLine {

@@ -1,16 +1,26 @@
 package com.goodtech.tq.location.helper;
 
+import android.content.Context;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
+import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.TipHelper;
 
 /**
  * com.goodtech.tq.location.service
@@ -20,24 +30,48 @@ public class LocationHelper {
     private static final String TAG = "LocationSpHelper";
     private LocationService locationService;
 
-    public void start() {
+    private static class SingletonHolder {
+        private static final LocationHelper INSTANCE = new LocationHelper();
+    }
+    private LocationHelper (){}
+    public static final LocationHelper getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
+
+    public void startWithDelay(final Context context) {
+
+        stop();
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                start(context);
+            }
+        }, 1000);
+    }
+
+    public void start(Context context) {
+        startTicker();
+        if (!PermissionUtil.isLocationEnabled(context)) {
+            removeTicker();
+            return;
+        }
         locationService = WeatherApp.getInstance().locationService;
-        locationService.registerListener(mListener);
-        locationService.setLocationOption(locationService.getDefaultLocationClientOption());
-        locationService.start();
+        if (locationService != null) {
+            locationService.registerListener(mListener);
+            LocationService.setLocationOption(locationService.getDefaultLocationClientOption());
+            locationService.start();
+
+        }
     }
 
     public void stop() {
+        removeTicker();
         locationService = WeatherApp.getInstance().locationService;
-        locationService.unregisterListener(mListener); //注销掉监听
-        locationService.stop(); //停止定位服务
-    }
-
-    public void requestLocation() {
-        locationService = WeatherApp.getInstance().locationService;
-        locationService.registerListener(mListener);
-        locationService.setLocationOption(locationService.getDefaultLocationClientOption());
-        locationService.requestLocation();
+        if (locationService != null) {
+            locationService.unregisterListener(mListener); //注销掉监听
+            locationService.stop(); //停止定位服务
+        }
     }
 
     /*****
@@ -57,6 +91,7 @@ public class LocationHelper {
 
             //保存
             LocationSpHelper.saveWithLocation(location);
+            LocationHelper.getInstance().stop();
 
             // TODO Auto-generated method stub
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
@@ -222,6 +257,37 @@ public class LocationHelper {
                     sb.append("定位失败，请确认您定位的开关打开状态，是否赋予APP定位权限");
                     sb.append("\n" + diagnosticMessage);
                 }
+            }
+        }
+    };
+
+    protected Handler mHandler = new Handler(Looper.getMainLooper());
+    protected void removeTicker() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (mHandler.hasCallbacks(mCheckTicker)) {
+                mHandler.removeCallbacks(mCheckTicker);
+            }
+        } else {
+            mHandler.removeCallbacks(mCheckTicker);
+        }
+        TipHelper.dismissProgressDialog();
+    }
+
+    protected void startTicker() {
+        scanCount = 0;
+        removeTicker();
+        mHandler.post(mCheckTicker);
+    }
+
+    protected int scanCount = 0;
+    protected final Runnable mCheckTicker = new Runnable() {
+        public void run() {
+            long now = SystemClock.uptimeMillis();
+            long next = now + (1000 - now % 1000);
+            if (scanCount++ > 5) {
+                removeTicker();
+            } else {
+                mHandler.postAtTime(mCheckTicker, next);
             }
         }
     };

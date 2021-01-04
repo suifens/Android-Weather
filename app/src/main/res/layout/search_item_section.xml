@@ -9,6 +9,7 @@
         android:id="@+id/tv_section_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
         android:textColor="@color/color_4a4a4a"
         android:textSize="18dp"
         android:textStyle="bold" />

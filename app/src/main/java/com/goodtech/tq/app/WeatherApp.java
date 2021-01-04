@@ -17,7 +17,6 @@ public class WeatherApp extends Application {
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     public LocationService locationService;
     public Vibrator mVibrator;
-    public LocationHelper locationHelper = new LocationHelper();
     private static WeatherApp mApplication;
 
     public static WeatherApp getInstance() {
@@ -28,33 +27,19 @@ public class WeatherApp extends Application {
     public void onCreate() {
         super.onCreate();
         mApplication = this;
-        /***
-         * 初始化定位sdk，建议在Application中创建
-         */
+
+        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
+    }
+
+    public void startUsingApp() {
+
+        //  初始化定位sdk，建议在Application中创建
         locationService = new LocationService(getApplicationContext());
+
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 //        SDKInitializer.initialize(getApplicationContext());
 //        SDKInitializer.setCoordType(CoordType.BD09LL);
 
         UMConfigure.init(getApplicationContext(), UMConfigure.DEVICE_TYPE_PHONE, "");
-
-        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
-    }
-
-    public void startLocation() {
-        locationHelper.start();
-    }
-
-    public void requestLocation() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                locationHelper.start();
-            }
-        }, 500);
-    }
-
-    public void stopLocation() {
-        locationHelper.stop();
     }
 }
