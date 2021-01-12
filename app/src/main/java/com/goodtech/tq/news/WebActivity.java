@@ -29,7 +29,7 @@ public class WebActivity extends BaseActivity {
     String url,user_phonenumber;
     private boolean flags=true;
     private Dialog mDialog;
-    private List<NewsBean.ResultBean.DataBean> newList = new ArrayList<>();
+    private List<NewsDataBean> newList = new ArrayList<>();
     private ListView listView;
     @SuppressLint("HandlerLeak")
     private Handler searchHandler = new Handler(){
@@ -71,7 +71,7 @@ public class WebActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewsBean.ResultBean.DataBean dataBean = newList.get(position);
+                NewsDataBean dataBean = newList.get(position);
                 String url = dataBean.getUrl();
                 Intent intent = new Intent(getApplicationContext(),WebActivity.class);
                 intent.putExtra("url",url);
@@ -202,7 +202,7 @@ public class WebActivity extends BaseActivity {
 //                                pst =(PreparedStatement) conn.prepareStatement(sql);
 //                                ResultSet rs = pst.executeQuery();
 //                                while (rs.next()){
-//                                    NewsBean.ResultBean.DataBean dataBean = new NewsBean.ResultBean.DataBean();
+//                                    NewsDataBean dataBean = new NewsDataBean();
 //                                    dataBean.setTitle(rs.getString(1));
 //                                    dataBean.setUrl(rs.getString(2));
 //                                    newList.add(dataBean);

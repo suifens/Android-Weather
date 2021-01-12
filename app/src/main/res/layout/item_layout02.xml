@@ -8,16 +8,18 @@
         android:textSize="18sp"
         android:id="@+id/title"
         android:textStyle="bold"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -25,19 +27,22 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:id="@+id/image001"
-            android:layout_height="120dp"   />
+            android:layout_height="wrap_content"
+            android:maxHeight="120dp"/>
 
         <ImageView
             android:layout_weight="1"
             android:layout_width="0dp"
             android:id="@+id/image002"
-            android:layout_height="120dp"
-            android:layout_marginLeft="3dp"/>
+            android:layout_height="wrap_content"
+            android:maxHeight="120dp"
+            android:layout_marginStart="3dp"/>
 
         <ImageView
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="120dp"
             android:layout_marginLeft="3dp"/>
 
     </LinearLayout>

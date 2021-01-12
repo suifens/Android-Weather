@@ -19,6 +19,7 @@ import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
+import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
@@ -236,7 +237,8 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
         if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")) {
             CitySearchActivity.redirectTo(this, true);
         } else {
-            this.startActivity(new Intent(this, MainActivity.class));
+//            this.startActivity(new Intent(this, MainActivity.class));
+            this.startActivity(new Intent(this, NewsActivity.class));
         }
         SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
         this.finish();

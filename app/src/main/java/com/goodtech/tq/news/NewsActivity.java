@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +26,8 @@ public class NewsActivity extends BaseActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private List<String> list = new ArrayList<>();
+    private List<NewsType> list = new ArrayList<>();
+    private boolean isFirstLoad = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,85 +50,51 @@ public class NewsActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
 
-        list = new ArrayList<>();
-        list.add("头条");
-        list.add("社会");
-        list.add("国内");
-        list.add("国际");
-        list.add("娱乐");
-        list.add("体育");
-        list.add("军事");
-        list.add("科技");
-        list.add("财经");
+        if (isFirstLoad) {
+            isFirstLoad = false;
 
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
-            //得到当前页的标题，也就是设置当前页面显示的标题是tabLayout对应标题
+            list = Arrays.asList(NewsType.values());
 
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return list.get(position);
-            }
+            viewPager.setOffscreenPageLimit(list.size());
+            viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+                //得到当前页的标题，也就是设置当前页面显示的标题是tabLayout对应标题
 
-            @NotNull
-            @Override
-            public Fragment getItem(int position) {
-                NewsFragment newsFragment = new NewsFragment();
-                //判断所选的标题，进行传值显示
-                Bundle bundle = new Bundle();
-                switch (list.get(position)) {
-                    case "头条":
-                        bundle.putString("name", "top");
-                        break;
-                    case "社会":
-                        bundle.putString("name", "shehui");
-                        break;
-                    case "国内":
-                        bundle.putString("name", "guonei");
-                        break;
-                    case "国际":
-                        bundle.putString("name", "guoji");
-                        break;
-                    case "娱乐":
-                        bundle.putString("name", "yule");
-                        break;
-                    case "体育":
-                        bundle.putString("name", "tiyu");
-                        break;
-                    case "军事":
-                        bundle.putString("name", "junshi");
-                        break;
-                    case "科技":
-                        bundle.putString("name", "keji");
-                        break;
-                    case "财经":
-                        bundle.putString("name", "caijing");
-                        break;
-                    case "时尚":
-                        bundle.putString("name", "shishang");
-                        break;
+                @Override
+                public CharSequence getPageTitle(int position) {
+                    return list.get(position).cnKey;
                 }
-                newsFragment.setArguments(bundle);
-                return newsFragment;
-            }
 
-            @NonNull
-            @Override
-            public Object instantiateItem(@NonNull ViewGroup container, int position) {
+                @NotNull
+                @Override
+                public Fragment getItem(int position) {
+                    NewsFragment newsFragment = new NewsFragment();
+                    //判断所选的标题，进行传值显示
+                    Bundle bundle = new Bundle();
+                    bundle.putString("type", list.get(position).toString());
+                    newsFragment.setArguments(bundle);
+                    return newsFragment;
+                }
 
-                return super.instantiateItem(container, position);
-            }
+                @NonNull
+                @Override
+                public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
-            @Override
-            public int getItemPosition(@NonNull Object object) {
-                return FragmentStatePagerAdapter.POSITION_NONE;
-            }
+                    return super.instantiateItem(container, position);
+                }
 
-            @Override
-            public int getCount() {
-                return list.size();
-            }
-        });
-        //TabLayout要与ViewPager关联显示
-        tabLayout.setupWithViewPager(viewPager);
+                @Override
+                public int getItemPosition(@NonNull Object object) {
+                    return POSITION_NONE;
+                }
+
+                @Override
+                public int getCount() {
+                    return list.size();
+                }
+            });
+
+            //TabLayout要与ViewPager关联显示
+            tabLayout.setupWithViewPager(viewPager);
+        }
     }
 }

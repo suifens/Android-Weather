@@ -11,23 +11,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.goodtech.tq.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
 public class NewsTabAdapter extends BaseAdapter {
-    private List<NewsBean.ResultBean.DataBean> list;
-    private Context context;
-    private int IMAGE_01 =0;
-    private int IMAGE_02 = 1;
-    private int IMAGE_03 = 2;
-    public NewsTabAdapter(Context context, List<NewsBean.ResultBean.DataBean> list){
+    private final List<NewsDataBean> list;
+    private final Context context;
+    private final int IMAGE_01 =0;
+    private final int IMAGE_02 = 1;
+    private final int IMAGE_03 = 2;
+    public NewsTabAdapter(Context context, List<NewsDataBean> list){
         this.context = context;
         this.list = list;
-        //配置lmageloader类
-        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(context));
-
     }
 
     @Override

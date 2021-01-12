@@ -21,6 +21,8 @@ android {
         versionName "4.2.8"
         signingConfig signingConfigs.config
 
+        multiDexEnabled true
+
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
@@ -122,4 +124,7 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
 
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+//    implementation 'com.tencent.wcdb:wcdb-android:1.0.2'
+    implementation 'androidx.multidex:multidex:2.0.1'
 }

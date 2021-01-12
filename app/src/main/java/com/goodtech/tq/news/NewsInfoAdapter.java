@@ -11,9 +11,9 @@ import com.goodtech.tq.R;
 
 import java.util.List;
 
-public class NewsInfoAdapter extends ArrayAdapter<NewsBean.ResultBean.DataBean> {
+public class NewsInfoAdapter extends ArrayAdapter<NewsDataBean> {
     private int resourceId;
-    public NewsInfoAdapter(Context context, int textViewResourceId, List<NewsBean.ResultBean.DataBean> objects){
+    public NewsInfoAdapter(Context context, int textViewResourceId, List<NewsDataBean> objects){
         super(context, textViewResourceId, objects);
         resourceId = textViewResourceId;
     }
@@ -21,7 +21,7 @@ public class NewsInfoAdapter extends ArrayAdapter<NewsBean.ResultBean.DataBean> 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        NewsBean.ResultBean.DataBean dataBean = getItem(position);
+        NewsDataBean dataBean = getItem(position);
         View view =null;
         if (convertView == null){
             view = LayoutInflater.from(getContext()).inflate(resourceId, parent,false);

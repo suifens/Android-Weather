@@ -1,5 +1,6 @@
 package com.goodtech.tq.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -7,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.adapter.WeatherRecyclerAdapter;
 import com.goodtech.tq.httpClient.ApiCallback;
@@ -14,9 +16,13 @@ import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.news.NewsActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.Objects;
 
 /**
  * A fragment representing a list of Items.
@@ -54,6 +60,14 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener {
         super.onActivityCreated(savedInstanceState);
 
         mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore();
+                Intent intent = new Intent(getActivity(), NewsActivity.class);
+                Objects.requireNonNull(getActivity()).startActivity(intent);
+            }
+        });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mCityMode != null ? mCityMode.city : null);
