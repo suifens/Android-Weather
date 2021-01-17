@@ -165,17 +165,16 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
     @Override
     protected void onStart() {
         super.onStart();
-        //  配置 UM_APP_ID , 标识
-        UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
 
         SpUtils.getInstance().remove(Constants.TIME_LOCATION);
         SpUtils.getInstance().remove(Constants.TIME_WEATHER);
 
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
-
             //  注册
             WeatherApp.getInstance().startUsingApp();
+            //  配置 UM_APP_ID , 标识
+            UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
 
             String versionName = DeviceUtils.getVersionName(this);
             if (!saveVersion.equals("0")) {
@@ -188,7 +187,12 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
             //  获取广告
             fetchSplashAD(this, container, skipView, getPosId(), this);
         } else {
-            PermissionActivity.redirectTo(this);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PermissionActivity.redirectTo(SplashActivity.this);
+                }
+            }, 1500);
         }
     }
 
