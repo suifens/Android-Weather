@@ -48,7 +48,7 @@ public class PrivateActivity extends BaseActivity {
             }
         });
         //  设置url
-        String guideUrl = Constants.URL_PRIVACY;
+        String guideUrl = String.format(Constants.URL_PRIVACY, BuildConfig.FLAVOR);
         mWebView.loadUrl(guideUrl);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override

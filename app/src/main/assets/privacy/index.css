@@ -9,7 +9,6 @@ body {
 
 .mod .box {
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
   background-color: #FFFFFF;
   width: 100%;
@@ -32,14 +31,15 @@ body {
 }
 
 .mod .tag {
-  opacity: 1;
+  position: relative;
   margin-top: 28px;
-  margin-left: 28px;
+  text-align:center; 
   margin-bottom: 15px;
   line-height: 28px;
   color: #000000;
   font-size: 18px;
   font-weight: 500;
+  -webkit-line-clamp: 3;
   font-family:"PingFangSC-Medium";
 }
 

@@ -1,7 +1,6 @@
 package com.goodtech.tq.news;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +26,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,18 +37,17 @@ public class NewsFragment extends BaseFragment {
     private SmartRefreshLayout refreshLayout;
     private List<NewsDataBean> list;
     private static final int UPNEWS_INSERT = 0;
-    private int page = 0, row = 10;
+    private int page = 0;
+    private final int row = 10;
     private static final int SELECT_REFLSH = 1;
     private NewsDbHelper dbHelper;
     private NewsType newsType;
 
     String responseDate;
-    Dialog mDialog;
     @SuppressLint("HandlerLeak")
-    private Handler newsHandler = new Handler() {
+    private final Handler newsHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            String uniquekey, title, date, category, author_name, url, thumbnail_pic_s, thumbnail_pic_s02, thumbnail_pic_s03;
             switch (msg.what) {
                 case UPNEWS_INSERT:
                     list = ((NewsBean) msg.obj).getResult().getData();
@@ -92,7 +91,11 @@ public class NewsFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         //获取传递的值
         Bundle bundle = getArguments();
-        final String typeString = bundle.getString("type", NewsType.TOP.toString());
+        String typeString = NewsType.TOP.toString();
+        if (bundle != null) {
+            typeString = bundle.getString("type", NewsType.TOP.toString());
+        }
+
         newsType = NewsType.getType(typeString);
         //置顶功能
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +172,7 @@ public class NewsFragment extends BaseFragment {
                         .build();
                 try {
                     Response response = okHttpClient.newCall(request).execute();
-                    responseDate = response.body().string();
+                    responseDate = Objects.requireNonNull(response.body()).string();
                     NewsBean newsBean = new Gson().fromJson(responseDate, NewsBean.class);
 
                     if ("10012".equals("" + newsBean.getError_code())) {
