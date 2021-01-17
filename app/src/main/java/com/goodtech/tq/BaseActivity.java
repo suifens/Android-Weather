@@ -1,6 +1,7 @@
 package com.goodtech.tq;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -115,11 +117,12 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void requestLocationPermissions() {
-        if (checkPermission()) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSION_REQUEST_COARSE_LOCATION);
+        if (!isLocationEnabled()) {
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+//                            Manifest.permission.ACCESS_FINE_LOCATION},
+//                    PERMISSION_REQUEST_COARSE_LOCATION);
+            startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), PERMISSION_REQUEST_COARSE_LOCATION);
         } else {
 //            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //            startActivity(intent);
@@ -128,6 +131,26 @@ public class BaseActivity extends AppCompatActivity {
             }
             LocationHelper.getInstance().startWithDelay(this);
         }
+    }
+
+    protected boolean isLocationServicesAvailable(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+        boolean isAvailable = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+            isAvailable = (locationMode != Settings.Secure.LOCATION_MODE_OFF);
+        } else {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            isAvailable = !TextUtils.isEmpty(locationProviders);
+        }
+        boolean coarsePermissionCheck = !checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+        boolean finePermissionCheck = !checkPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+        return isAvailable && (coarsePermissionCheck || finePermissionCheck);
     }
 
     protected void finishToRight() {

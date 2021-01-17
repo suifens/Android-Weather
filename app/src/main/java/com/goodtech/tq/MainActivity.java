@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -53,6 +54,7 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
+    private static final int REQUEST_CODE_LOCATION = 1001;
     private final BroadcastReceiver receiver = new IntentReceiver();
 
     protected TextView mAddressTv;
@@ -417,7 +419,7 @@ public class MainActivity extends BaseActivity {
             CityMode location = LocationSpHelper.getLocation();
             if (mCurrIndex == 0 && location.cid == 0) {
                 if (!this.isFinishing()) {
-                    if (checkPermission()) {
+                    if (!isLocationServicesAvailable(this)) {
                         MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -427,7 +429,8 @@ public class MainActivity extends BaseActivity {
                         if (!isFinishing()) {
                             alert.show();
                         }
-                    } else {
+                    }
+                    else {
                         TipHelper.showProgressDialog(this, false);
                         LocationHelper.getInstance().startWithDelay(this);
                     }
