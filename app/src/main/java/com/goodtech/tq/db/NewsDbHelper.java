@@ -60,11 +60,10 @@ public class NewsDbHelper extends BaseDbHelper {
         }
     }
 
-    public long insert(NewsDataBean news) {
+    public void insert(NewsDataBean news) {
         if (update(news) == 0) {
-            return mdbHelper.insert(TABLE_NAME, makeContentValues(news));
+            mdbHelper.insert(TABLE_NAME, makeContentValues(news));
         }
-        return 0;
     }
 
     public int update(NewsDataBean newsDataBean) {

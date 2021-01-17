@@ -175,7 +175,7 @@ public class NewsFragment extends BaseFragment {
                     responseDate = Objects.requireNonNull(response.body()).string();
                     NewsBean newsBean = new Gson().fromJson(responseDate, NewsBean.class);
 
-                    if ("10012".equals("" + newsBean.getError_code())) {
+                    if (!"10012".equals("" + newsBean.getError_code())) {
                         dbHelper.insertDataBeans(newsBean.getResult().getData());
                     }
 
