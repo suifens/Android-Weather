@@ -43,6 +43,10 @@ public class Metric implements Parcelable {
         wspd = in.readInt();
     }
 
+    Metric() {
+
+    }
+
     public static final Creator<Metric> CREATOR = new Creator<Metric>() {
         @Override
         public Metric createFromParcel(Parcel in) {

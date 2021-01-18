@@ -22,7 +22,7 @@ public class Daily implements Parcelable {
     public String fcst_valid_local;
 
     @SerializedName("metric")
-    public Metric metric;
+    public Metric metric = new Metric();
 
     @SerializedName("moonrise")
     public String moonRise;
@@ -39,7 +39,7 @@ public class Daily implements Parcelable {
     public String sunSet;
 
     @SerializedName("day")
-    public Daypart dayPart;
+    public Daypart dayPart = new Daypart();
     @SerializedName("night")
     public Daypart nightPart;
 

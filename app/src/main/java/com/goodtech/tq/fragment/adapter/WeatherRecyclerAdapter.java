@@ -12,6 +12,7 @@ import com.goodtech.tq.fragment.viewholder.BottomHolder;
 import com.goodtech.tq.fragment.viewholder.CurrentHolder;
 import com.goodtech.tq.fragment.viewholder.DailyHolder;
 import com.goodtech.tq.fragment.viewholder.HoursHolder;
+import com.goodtech.tq.fragment.viewholder.LineTempHolder;
 import com.goodtech.tq.fragment.viewholder.ObservationHolder;
 import com.goodtech.tq.fragment.viewholder.RecentHolder;
 import com.goodtech.tq.models.Daily;
@@ -23,8 +24,9 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final int RECENT_VIEW = 1;
     private final int HOURS_VIEW = 2;
     private final int DAILY_VIEW = 3;
-    private final int OBSERVANT_VIEW = 4;
-    private final int BOTTOM_VIEW = 5;
+    private final int LINE_VIEW = 4;
+    private final int OBSERVANT_VIEW = 5;
+    private final int BOTTOM_VIEW = 6;
 
     private WeatherModel mModel;
     private final LayoutInflater mInflater;
@@ -43,7 +45,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
         if (mModel != null) {
-            return 13;
+            return 14;
         } else {
             return 0;
         }
@@ -59,6 +61,8 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             case 2:
                 return HOURS_VIEW;
             case 12:
+                return LINE_VIEW;
+            case 13:
                 return OBSERVANT_VIEW;
             default:
                 return DAILY_VIEW;
@@ -79,6 +83,9 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             case HOURS_VIEW:
                 View hoursView = getInflater().inflate(HoursHolder.getResource(), parent, false);
                 return new HoursHolder(hoursView);
+            case LINE_VIEW:
+                View lineView = getInflater().inflate(LineTempHolder.getResource(), parent, false);
+                return new LineTempHolder(lineView);
             case OBSERVANT_VIEW:
                 View observationView = getInflater().inflate(ObservationHolder.getResource(), parent, false);
                 return new ObservationHolder(observationView);
@@ -105,6 +112,10 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     ((HoursHolder) viewHolder).setHourlies(mModel);
                 }
 
+            } else if (viewHolder instanceof LineTempHolder) {
+                if (mModel.dailies != null) {
+                    ((LineTempHolder) viewHolder).setData(mModel);
+                }
             } else if (viewHolder instanceof DailyHolder && i >= 3) {
                 int index = i - 3;
                 if (mModel.dailies != null && mModel.dailies.size() > index) {

@@ -80,6 +80,10 @@ public class Daypart implements Parcelable {
         wspd = in.readInt();
     }
 
+    Daypart() {
+
+    }
+
     public static final Creator<Daypart> CREATOR = new Creator<Daypart>() {
         @Override
         public Daypart createFromParcel(Parcel in) {
