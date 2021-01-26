@@ -15,19 +15,22 @@ import com.goodtech.tq.R;
 import java.util.List;
 
 public class NewsTabAdapter extends BaseAdapter {
-    private final List<NewsDataBean> list;
+    private final List<NewsBean.ResultBean.DataBean> list;
     private final Context context;
     private final int IMAGE_01 =0;
     private final int IMAGE_02 = 1;
     private final int IMAGE_03 = 2;
-    public NewsTabAdapter(Context context, List<NewsDataBean> list){
+    public NewsTabAdapter(Context context, List<NewsBean.ResultBean.DataBean> list){
         this.context = context;
         this.list = list;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        if (list != null) {
+            return list.size();
+        }
+        return 0;
     }
 
     @Override

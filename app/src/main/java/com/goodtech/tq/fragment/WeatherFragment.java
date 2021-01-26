@@ -60,14 +60,14 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener {
         super.onActivityCreated(savedInstanceState);
 
         mRefreshLayout.setOnRefreshListener(this);
-        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                refreshLayout.finishLoadMore();
-                Intent intent = new Intent(getActivity(), NewsActivity.class);
-                Objects.requireNonNull(getActivity()).startActivity(intent);
-            }
-        });
+//        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+//                refreshLayout.finishLoadMore();
+//                Intent intent = new Intent(getActivity(), NewsActivity.class);
+//                Objects.requireNonNull(getActivity()).startActivity(intent);
+//            }
+//        });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mCityMode != null ? mCityMode.city : null);

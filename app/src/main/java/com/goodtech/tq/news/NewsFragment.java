@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.db.NewsDbHelper;
+import com.goodtech.tq.news.NewsBean.ResultBean.DataBean;
 import com.goodtech.tq.fragment.BaseFragment;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -35,7 +37,7 @@ import okhttp3.Response;
 public class NewsFragment extends BaseFragment {
     private ListView listView;
     private SmartRefreshLayout refreshLayout;
-    private List<NewsDataBean> list;
+    private List<DataBean> list;
     private static final int UPNEWS_INSERT = 0;
     private int page = 0;
     private final int row = 10;
@@ -73,6 +75,13 @@ public class NewsFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbHelper = new NewsDbHelper(WeatherApp.getInstance());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //  首次获取数据
+        getDataFromNet(newsType.enKey);
     }
 
     @Nullable
@@ -124,7 +133,7 @@ public class NewsFragment extends BaseFragment {
                     public void run() {
 
 //                        int pages = (page - 1) * row;
-                        List<NewsDataBean> newsBeanList = dbHelper.queryNewsList(newsType.cnKey, page, row);
+                        List<DataBean> newsBeanList = dbHelper.queryNewsList(newsType.cnKey, page, row);
                         list.addAll(newsBeanList);
                         mHandler.post(new Runnable() {
                             @Override
@@ -142,9 +151,6 @@ public class NewsFragment extends BaseFragment {
                 }).start();
             }
         });
-
-        //  首次获取数据
-        getDataFromNet(newsType.enKey);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -172,21 +178,28 @@ public class NewsFragment extends BaseFragment {
                         .build();
                 try {
                     Response response = okHttpClient.newCall(request).execute();
-                    responseDate = Objects.requireNonNull(response.body()).string();
-                    NewsBean newsBean = new Gson().fromJson(responseDate, NewsBean.class);
+                    if (response.body() != null) {
+                        responseDate = Objects.requireNonNull(response.body()).string();
+                        Log.e("newsFragment", "run: responseData " + responseDate);
+                        NewsBean newsBean = new Gson().fromJson(responseDate, NewsBean.class);
 
-                    if (!"10012".equals("" + newsBean.getError_code())) {
-                        dbHelper.insertDataBeans(newsBean.getResult().getData());
+                        if (!"10012".equals("" + newsBean.getError_code())) {
+                            dbHelper.insertDataBeans(newsBean.getResult().getData());
+                        }
+
+                        Message msg = newsHandler.obtainMessage();
+                        msg.what = UPNEWS_INSERT;
+                        msg.obj = newsBean;
+                        newsHandler.sendMessage(msg);
                     }
-
-                    Message msg = newsHandler.obtainMessage();
-                    msg.what = UPNEWS_INSERT;
-                    msg.obj = newsBean;
-                    newsHandler.sendMessage(msg);
                     
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+//                catch (IOException e) {
+//                    Log.e("newsFragment exception", "" + e);
+//                    e.printStackTrace();
+//                }
 
             }
 

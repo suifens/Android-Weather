@@ -2,6 +2,8 @@ package com.goodtech.tq.fragment.viewholder;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,9 +32,9 @@ public class LineTempHolder extends RecyclerView.ViewHolder {
         weatherView = view.findViewById(R.id.weather_view);
 
         //画折线
-        weatherView.setLineType(WeatherView.LINE_TYPE_DISCOUNT);
+//        weatherView.setLineType(WeatherView.LINE_TYPE_DISCOUNT);
         //画曲线(已修复不圆滑问题)
-//        weatherView.setLineType(WeatherView.LINE_TYPE_CURVE);
+        weatherView.setLineType(WeatherView.LINE_TYPE_CURVE);
 
         //设置线宽
         weatherView.setLineWidth(2f);
@@ -53,10 +55,18 @@ public class LineTempHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("DefaultLocale")
-    public void setData(WeatherModel model) {
+    public void setData(final WeatherModel model) {
         if (model != null && model.dailies != null) {
+
             //填充天气数据
             weatherView.setList(model.dailies);
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    weatherView.invalidate();
+                }
+            }, 100);
         }
     }
 

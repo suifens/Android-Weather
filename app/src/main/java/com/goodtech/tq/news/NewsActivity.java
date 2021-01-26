@@ -55,7 +55,7 @@ public class NewsActivity extends BaseActivity {
 
             list = Arrays.asList(NewsType.values());
 
-            viewPager.setOffscreenPageLimit(list.size());
+            viewPager.setOffscreenPageLimit(2);
             viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
                 //得到当前页的标题，也就是设置当前页面显示的标题是tabLayout对应标题
 

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.goodtech.tq.news.NewsDataBean;
+import com.goodtech.tq.news.NewsBean.ResultBean.DataBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +49,10 @@ public class NewsDbHelper extends BaseDbHelper {
         db.execSQL(makeCreateTableSql(TABLE_NAME, columnClause));
     }
 
-    public void insertDataBeans(List<NewsDataBean> dataBeans) {
-        if (dataBeans != null && !dataBeans.isEmpty()) {
+    public void insertDataBeans(List<DataBean> dataBeans) {
+        if (dataBeans != null && dataBeans.size() > 0) {
             mdbHelper.beginTransaction();
-            for (NewsDataBean dataBean : dataBeans) {
+            for (DataBean dataBean : dataBeans) {
                 insert(dataBean);
             }
             mdbHelper.setTransactionSuccessful();
@@ -60,33 +60,33 @@ public class NewsDbHelper extends BaseDbHelper {
         }
     }
 
-    public void insert(NewsDataBean news) {
+    public void insert(DataBean news) {
         if (update(news) == 0) {
             mdbHelper.insert(TABLE_NAME, makeContentValues(news));
         }
     }
 
-    public int update(NewsDataBean newsDataBean) {
-        ContentValues values = makeContentValues(newsDataBean);
+    public int update(DataBean DataBean) {
+        ContentValues values = makeContentValues(DataBean);
         String whereClause = COL_NEWS_KEY + "=?";
-        String[] whereArgs = new String[]{newsDataBean.getUniquekey()};
+        String[] whereArgs = new String[]{DataBean.getUniquekey()};
         return mdbHelper.update(TABLE_NAME, values, whereClause, whereArgs);
     }
 
-    public List<NewsDataBean> queryNewsList(String category, int page, int row) {
+    public List<DataBean> queryNewsList(String category, int page, int row) {
         String sqlSb = "select * from " + getTableName() +
                 " where " + COL_NEWS_CATEGORY + " = '" + category +
                 "' order by " + COL_NEWS_DATE + " desc " +
                 "limit " + page + "," + row;
         Cursor cursor = mdbHelper.rawQuery(sqlSb, null);
-        List<NewsDataBean> results = new ArrayList<>();
+        List<DataBean> results = new ArrayList<>();
         if (cursor == null) {
             return results;
         }
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    NewsDataBean model = new NewsDataBean();
+                    DataBean model = new DataBean();
                     model.resolveCour(cursor);
                     results.add(model);
                 } while (cursor.moveToNext());
@@ -97,7 +97,7 @@ public class NewsDbHelper extends BaseDbHelper {
         return results;
     }
 
-    protected ContentValues makeContentValues(NewsDataBean model) {
+    protected ContentValues makeContentValues(DataBean model) {
         ContentValues values = new ContentValues();
         values.put(COL_NEWS_KEY, model.getUniquekey());
         values.put(COL_NEWS_TITLE, model.getTitle());

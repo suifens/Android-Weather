@@ -242,7 +242,7 @@ public class SplashActivity extends Activity implements SplashADListener, View.O
             CitySearchActivity.redirectTo(this, true);
         } else {
             this.startActivity(new Intent(this, MainActivity.class));
-//            this.startActivity(new Intent(this, NewsActivity.class));
+//            this.startActivity(new Intent(this, NativeExpressDemoActivity.class));
         }
         SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
         this.finish();

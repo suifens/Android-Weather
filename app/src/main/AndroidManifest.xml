@@ -92,7 +92,11 @@
         <activity android:name=".news.WebActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        
+
+        <activity android:name=".NativeExpressDemoActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+
     </application>
 
 </manifest>

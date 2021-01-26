@@ -72,6 +72,9 @@ public class WeatherView extends HorizontalScrollView {
 
         pathDay = new Path();
         pathNight = new Path();
+
+        this.setHorizontalScrollBarEnabled(false);
+        this.setVerticalScrollBarEnabled(false);
     }
 
     @Override

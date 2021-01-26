@@ -2,12 +2,20 @@ package com.goodtech.tq.cityList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,18 +27,25 @@ import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.models.CityMode;
+import com.goodtech.tq.utils.Constants;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
+import com.qq.e.ads.banner2.UnifiedBannerADListener;
+import com.qq.e.ads.banner2.UnifiedBannerView;
+import com.qq.e.comm.util.AdError;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class CityListActivity extends BaseActivity implements View.OnClickListener {
+public class CityListActivity extends BaseActivity implements View.OnClickListener, UnifiedBannerADListener {
+
+    private static final String TAG = "CityListActivity";
 
     @Override
     protected void onResume() {
@@ -64,6 +79,10 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         }
         mAdapter = null;
         mLayoutManager = null;
+
+        if (bv != null) {
+            bv.destroy();
+        }
 
         super.onDestroy();
     }
@@ -149,6 +168,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
         mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
 
+        //  banner
+//        configBanner();
 
         setClickListener();
     }
@@ -156,6 +177,12 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+//        this.getBanner().loadAD();
     }
 
     @Override
@@ -229,4 +256,88 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 break;
         }
     }
+
+    ViewGroup bannerContainer;
+    UnifiedBannerView bv;
+    String posId;
+
+    private void configBanner() {
+        bannerContainer = (ViewGroup) this.findViewById(R.id.bannerContainer);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (bv != null) {
+            bv.setLayoutParams(getUnifiedBannerLayoutParams());
+        }
+    }
+
+    private UnifiedBannerView getBanner() {
+        if(this.bv != null){
+            bannerContainer.removeView(bv);
+            bv.destroy();
+        }
+        String posId = Constants.BANNER_ID;
+        this.posId = posId;
+        this.bv = new UnifiedBannerView(this, posId, this);
+        // 不需要传递tags使用下面构造函数
+        // this.bv = new UnifiedBannerView(this, Constants.APPID, posId, this);
+        bannerContainer.addView(bv, getUnifiedBannerLayoutParams());
+        return this.bv;
+    }
+
+    /**
+     * banner2.0规定banner宽高比应该为6.4:1 , 开发者可自行设置符合规定宽高比的具体宽度和高度值
+     *
+     * @return
+     */
+    private FrameLayout.LayoutParams getUnifiedBannerLayoutParams() {
+        Point screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        return new FrameLayout.LayoutParams(screenSize.x,  Math.round(screenSize.x / 6.4F));
+    }
+
+    @Override
+    public void onNoAD(AdError adError) {
+        String msg = String.format(Locale.getDefault(), "onNoAD, error code: %d, error msg: %s",
+                adError.getErrorCode(), adError.getErrorMsg());
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onADReceive() {
+        Log.i(TAG, "onADReceive");
+    }
+
+    @Override
+    public void onADExposure() {
+        Log.i(TAG, "onADExposure");
+    }
+
+    @Override
+    public void onADClosed() {
+        Log.i(TAG, "onADClosed");
+    }
+
+    @Override
+    public void onADClicked() {
+        Log.i(TAG, "onADClicked : " + (bv.getExt() != null? bv.getExt().get("clickUrl") : ""));
+    }
+
+    @Override
+    public void onADLeftApplication() {
+        Log.i(TAG, "onADLeftApplication");
+    }
+
+    @Override
+    public void onADOpenOverlay() {
+        Log.i(TAG, "onADOpenOverlay");
+    }
+
+    @Override
+    public void onADCloseOverlay() {
+        Log.i(TAG, "onADCloseOverlay");
+    }
+
 }
