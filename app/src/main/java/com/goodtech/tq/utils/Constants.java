@@ -4,7 +4,8 @@ public class Constants {
     //tencentAds
     public static final String APP_ID = "1106354620"; //应用ID
     public static final String SPLASH_POS_ID = "9000928561858848";  //广告id
-    public static final String BANNER_ID = "9041319103770347";
+    public static final String BANNER_POS_ID = "9001366014022230";  //banner id
+
 
     public static final String UM_APP_ID = "595a3b236e27a468630021e8";
     public static final String UM_APP_CHANNEL = "jinli";

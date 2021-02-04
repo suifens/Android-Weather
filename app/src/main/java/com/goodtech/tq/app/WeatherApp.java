@@ -73,7 +73,10 @@ public class WeatherApp extends Application {
 
             @Override
             public void onActivityResumed(@NonNull Activity activity) {
-                if (mCount == 1 && !(activity instanceof SplashActivity)) {
+                if (mCount == 1
+                        && !(activity instanceof SplashActivity)
+                        && !(activity instanceof SplashADActivity))
+                {
                     Log.e("TAG", "onActivityStarted: 进入到前台");
                     SplashADActivity.redirectToFront(activity);
                 }

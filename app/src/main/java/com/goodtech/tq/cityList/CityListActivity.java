@@ -169,7 +169,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
 
         //  banner
-//        configBanner();
+        configBanner();
 
         setClickListener();
     }
@@ -182,7 +182,6 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-//        this.getBanner().loadAD();
     }
 
     @Override
@@ -257,12 +256,16 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    ViewGroup bannerContainer;
-    UnifiedBannerView bv;
-    String posId;
+    /**
+     * banner
+     */
+
+    private ViewGroup bannerContainer;
+    private UnifiedBannerView bv;
 
     private void configBanner() {
         bannerContainer = (ViewGroup) this.findViewById(R.id.bannerContainer);
+        this.getBanner().loadAD();
     }
 
     @Override
@@ -278,9 +281,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             bannerContainer.removeView(bv);
             bv.destroy();
         }
-        String posId = Constants.BANNER_ID;
-        this.posId = posId;
-        this.bv = new UnifiedBannerView(this, posId, this);
+        this.bv = new UnifiedBannerView(this, Constants.BANNER_POS_ID, this);
         // 不需要传递tags使用下面构造函数
         // this.bv = new UnifiedBannerView(this, Constants.APPID, posId, this);
         bannerContainer.addView(bv, getUnifiedBannerLayoutParams());
@@ -290,7 +291,6 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     /**
      * banner2.0规定banner宽高比应该为6.4:1 , 开发者可自行设置符合规定宽高比的具体宽度和高度值
      *
-     * @return
      */
     private FrameLayout.LayoutParams getUnifiedBannerLayoutParams() {
         Point screenSize = new Point();
@@ -302,7 +302,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     public void onNoAD(AdError adError) {
         String msg = String.format(Locale.getDefault(), "onNoAD, error code: %d, error msg: %s",
                 adError.getErrorCode(), adError.getErrorMsg());
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        Log.e(TAG, "onNoAD: " + msg );
     }
 
     @Override
