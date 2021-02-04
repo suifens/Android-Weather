@@ -39,6 +39,7 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     private ViewGroup container;
     private TextView skipView;
     private static final String SKIP_TEXT = "点击跳过 %d";
+    private static final String EXTRA_BACK = "EXTRA_BACK";
 
     public boolean canJump = false;
 
@@ -50,6 +51,12 @@ public class SplashADActivity extends Activity implements SplashADListener, View
 
     public static void redirectTo(Activity ctx) {
         Intent intent = new Intent(ctx, SplashADActivity.class);
+        ctx.startActivity(intent);
+    }
+
+    public static void redirectToFront(Activity ctx) {
+        Intent intent = new Intent(ctx, SplashADActivity.class);
+        intent.putExtra(EXTRA_BACK, true);
         ctx.startActivity(intent);
     }
 
@@ -169,6 +176,12 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     protected void onStart() {
         super.onStart();
 
+        if (getIntent().getBooleanExtra(EXTRA_BACK, false)) {
+            //  获取广告
+            fetchSplashAD(this, container, skipView, getPosId(), this);
+            return;
+        }
+
         SpUtils.getInstance().remove(Constants.TIME_LOCATION);
         SpUtils.getInstance().remove(Constants.TIME_WEATHER);
 
@@ -240,12 +253,14 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     }
 
     private void onStartWeather() {
-        String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
-        if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")) {
-            CitySearchActivity.redirectTo(this, true);
-        } else {
-            this.startActivity(new Intent(this, MainActivity.class));
-//            this.startActivity(new Intent(this, NativeExpressDemoActivity.class));
+
+        if (!getIntent().getBooleanExtra(EXTRA_BACK, false)) {
+            String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
+            if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")) {
+                CitySearchActivity.redirectTo(this, true);
+            } else {
+                this.startActivity(new Intent(this, MainActivity.class));
+            }
         }
         SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
         this.finish();
