@@ -18,6 +18,7 @@ import com.goodtech.tq.fragment.viewholder.ObservationHolder;
 import com.goodtech.tq.fragment.viewholder.RecentHolder;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.ads.nativ.express2.NativeExpressADData2;
 
 public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder > {
@@ -35,7 +36,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final LayoutInflater mInflater;
     private String mAddress;
     private Context mContext;
-    private NativeExpressADData2 mAdData2;
+    private NativeExpressADView mAdView;
 
     public WeatherRecyclerAdapter(Context context, WeatherModel model, String address) {
         mContext = context;
@@ -44,12 +45,12 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.mAddress = address;
     }
 
-    public WeatherRecyclerAdapter(Context context, WeatherModel model, String address, NativeExpressADData2 adData2) {
+    public WeatherRecyclerAdapter(Context context, WeatherModel model, String address, NativeExpressADView adView) {
         mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.mModel = model;
         this.mAddress = address;
-        this.mAdData2 = adData2;
+        this.mAdView = adView;
     }
 
     public LayoutInflater getInflater() {
@@ -142,7 +143,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     ((DailyHolder) viewHolder).setData(mModel, daily);
                 }
             } else if (viewHolder instanceof NativeExpressAD2Holder) {
-                ((NativeExpressAD2Holder) viewHolder).setData(mAdData2);
+                ((NativeExpressAD2Holder) viewHolder).setAdView(mAdView);
             }
             else if (viewHolder instanceof ObservationHolder) {
                 ((ObservationHolder) viewHolder).setData(mModel, mAddress);
@@ -156,9 +157,8 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         super.notifyDataSetChanged();
     }
 
-    // 把返回的 NativeExpressAD2Data 添加到数据集里面去
-    public void changeAD(NativeExpressADData2 nativeExpressADData2) {
-        mAdData2 = nativeExpressADData2;
+    public void changeAdView(NativeExpressADView adView) {
+        mAdView = adView;
         super.notifyItemChanged(13);
     }
 }

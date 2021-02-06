@@ -18,10 +18,9 @@ import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.utils.Constants;
-import com.qq.e.ads.nativ.express2.AdEventListener;
-import com.qq.e.ads.nativ.express2.MediaEventListener;
-import com.qq.e.ads.nativ.express2.NativeExpressAD2;
-import com.qq.e.ads.nativ.express2.NativeExpressADData2;
+import com.qq.e.ads.nativ.ADSize;
+import com.qq.e.ads.nativ.NativeExpressAD;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.comm.util.AdError;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -34,7 +33,7 @@ import java.util.Objects;
 /**
  * A fragment representing a list of Items.
  */
-public class WeatherFragment extends BaseFragment implements OnRefreshListener, NativeExpressAD2.AdLoadListener {
+public class WeatherFragment extends BaseFragment implements OnRefreshListener, NativeExpressAD.NativeExpressADListener {
 
     private static final String TAG = "WeatherFragment";
     protected SmartRefreshLayout mRefreshLayout;
@@ -103,14 +102,14 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
             }
         });
 
-        initNativeExpressAD2();
+        initNativeExpressAD();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mNativeExpressADData2 != null) {
-            mNativeExpressADData2.destroy();
+        if (mAdView != null) {
+            mAdView.destroy();
         }
     }
 
@@ -162,93 +161,65 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
      */
 
     private int mReloadCount = 1;
-    private NativeExpressAD2 mADManager;
-    private NativeExpressADData2 mNativeExpressADData2;
+    private NativeExpressAD mADManager;
+    private NativeExpressADView mAdView;
 
-    private void initNativeExpressAD2() {
-        mADManager = new NativeExpressAD2(getContext(), Constants.EXPRESS_POS_ID, this);
-        mADManager.loadAd(1);
+    private void initNativeExpressAD() {
+        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT); // 消息流中用AUTO_HEIGHT
+        mADManager = new NativeExpressAD(getContext(), adSize, Constants.EXPRESS_POS_ID, this);
+        mADManager.loadAD(1);
     }
 
     @Override
-    public void onLoadSuccess(List<NativeExpressADData2> adDataList) {
-        Log.i(TAG, "onLoadSuccess: dataSize = " + adDataList.size());
-        processAdData(adDataList);
+    public void onADLoaded(List<NativeExpressADView> adList) {
+        Log.i(TAG, "onADLoaded: " + adList.size());
+        if (adList.size() > 0) {
+            mAdView = adList.get(0);
+            mAdapter.changeAdView(mAdView);
+        }
     }
 
-    /**
-     * 因为模板2.0 的广告是渲染成功后，才有广告的 View，进而添加到UI中显示。
-     * 如果多条广告同时开始渲染，渲染成功的回调顺序是不确定的，有可能第 2 条先渲染成功，然后第 1 条才渲染成功，
-     * 这样导致的结果可能就是列表被滚动到第 2 条广告第位置，但其实用户并没有滑动。
-     * 所以这里采用一条一条的渲染广告的方式，当前广告渲染成功或失败后再去渲染下一条广告。
-     */
-    private void processAdData(List<NativeExpressADData2> adDataList) {
-        if (adDataList.size() > 0) {
-            mNativeExpressADData2 = adDataList.get(0);
-            mNativeExpressADData2.setAdEventListener(new AdEventListener() {
-                @Override
-                public void onClick() {
-                    Log.i(TAG, "onClick: " + mNativeExpressADData2);
-                }
+    @Override
+    public void onRenderFail(NativeExpressADView adView) {
+        Log.i(TAG, "onRenderFail: " + adView.toString());
+    }
 
-                @Override
-                public void onExposed() {
-                    Log.i(TAG, "onImpression: " + mNativeExpressADData2);
-                }
+    @Override
+    public void onRenderSuccess(NativeExpressADView adView) {
+        Log.i(TAG, "onRenderSuccess: " + adView.toString());
+    }
 
-                @Override
-                public void onRenderSuccess() {
-                    Log.i(TAG, "onRenderSuccess: " + mNativeExpressADData2);
-                    mAdapter.changeAD(mNativeExpressADData2);
-                }
+    @Override
+    public void onADExposure(NativeExpressADView adView) {
+        Log.i(TAG, "onADExposure: " + adView.toString());
+    }
 
-                @Override
-                public void onRenderFail() {
-                    Log.i(TAG, "onRenderFail: " + mNativeExpressADData2);
-                }
+    @Override
+    public void onADClicked(NativeExpressADView adView) {
+        Log.i(TAG, "onADClicked: " + adView.toString());
+    }
 
-                @Override
-                public void onAdClosed() {
-                    Log.i(TAG, "onAdClosed: " + mNativeExpressADData2);
-                    mAdapter.changeAD(mNativeExpressADData2);
-                    mNativeExpressADData2.destroy();
-                }
-            });
-
-            mNativeExpressADData2.setMediaListener(new MediaEventListener() {
-                @Override
-                public void onVideoCache() {
-                    Log.i(TAG, "onVideoCache: " + mNativeExpressADData2);
-                }
-
-                @Override
-                public void onVideoStart() {
-                    Log.i(TAG, "onVideoStart: " + mNativeExpressADData2);
-                }
-
-                @Override
-                public void onVideoResume() {
-                    Log.i(TAG, "onVideoResume: " + mNativeExpressADData2);
-                }
-
-                @Override
-                public void onVideoPause() {
-                    Log.i(TAG, "onVideoPause: " + mNativeExpressADData2);
-                }
-
-                @Override
-                public void onVideoComplete() {
-                    Log.i(TAG, "onVideoComplete: " + mNativeExpressADData2);
-                }
-
-                @Override
-                public void onVideoError() {
-                    Log.i(TAG, "onVideoError: " + mNativeExpressADData2);
-                }
-            });
-
-            mNativeExpressADData2.render();
+    @Override
+    public void onADClosed(NativeExpressADView adView) {
+        Log.i(TAG, "onADClosed: " + adView.toString());
+        if (mAdapter != null) {
+            mAdapter.changeAdView(adView);
         }
+    }
+
+    @Override
+    public void onADLeftApplication(NativeExpressADView adView) {
+        Log.i(TAG, "onADLeftApplication: " + adView.toString());
+    }
+
+    @Override
+    public void onADOpenOverlay(NativeExpressADView adView) {
+        Log.i(TAG, "onADOpenOverlay: " + adView.toString());
+    }
+
+    @Override
+    public void onADCloseOverlay(NativeExpressADView adView) {
+        Log.i(TAG, "onADCloseOverlay");
     }
 
     @Override
@@ -257,7 +228,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
                 error.getErrorMsg()));
         if (mReloadCount <= 3) {
             mReloadCount++;
-            mADManager.loadAd(1);
+            mADManager.loadAD(1);
         }
     }
 }

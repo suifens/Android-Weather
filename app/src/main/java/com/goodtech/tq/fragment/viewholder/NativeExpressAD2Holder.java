@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.ads.nativ.express2.NativeExpressADData2;
 
 /**
@@ -41,6 +42,29 @@ public class NativeExpressAD2Holder extends RecyclerView.ViewHolder {
             ((ViewGroup) adView.getParent()).removeView(adView);
         }
         mAdContainer.addView(adView);
+    }
+    
+    public void setAdView(NativeExpressADView adView) {
+        
+        if (adView == null) {
+            return;
+        }
+        
+        if (mAdContainer.getChildCount() > 0
+                && mAdContainer.getChildAt(0) == adView) {
+            return;
+        }
+
+        if (mAdContainer.getChildCount() > 0) {
+            mAdContainer.removeAllViews();
+        }
+
+        if (adView.getParent() != null) {
+            ((ViewGroup) adView.getParent()).removeView(adView);
+        }
+
+        mAdContainer.addView(adView);
+        adView.render(); // 调用render方法后sdk才会开始展示广告
     }
 
 }
