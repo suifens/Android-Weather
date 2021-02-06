@@ -18,13 +18,23 @@ import androidx.annotation.Nullable;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.db.NewsDbHelper;
-import com.goodtech.tq.news.NewsBean.ResultBean.DataBean;
+import com.goodtech.tq.helpers.WeatherSpHelper;
+import com.goodtech.tq.httpClient.ApiClient;
+import com.goodtech.tq.httpClient.ApiResponseHandler;
+import com.goodtech.tq.httpClient.ErrorCode;
+import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.news.NewsDataBean;
 import com.goodtech.tq.fragment.BaseFragment;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,13 +47,14 @@ import okhttp3.Response;
 public class NewsFragment extends BaseFragment {
     private ListView listView;
     private SmartRefreshLayout refreshLayout;
-    private List<DataBean> list;
+    private List<NewsDataBean> list;
     private static final int UPNEWS_INSERT = 0;
     private int page = 0;
     private final int row = 10;
     private static final int SELECT_REFLSH = 1;
     private NewsDbHelper dbHelper;
     private NewsType newsType;
+    private static final String TAG = "NewsFragment";
 
     String responseDate;
     @SuppressLint("HandlerLeak")
@@ -52,7 +63,8 @@ public class NewsFragment extends BaseFragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case UPNEWS_INSERT:
-                    list = ((NewsBean) msg.obj).getResult().getData();
+//                    list = ((NewsBean) msg.obj).getResult().getData();
+                    list = (List<NewsDataBean>) msg.obj;
                     if (listView.getAdapter() == null) {
                         NewsTabAdapter adapter = new NewsTabAdapter(getActivity(), list);
                         listView.setAdapter(adapter);
@@ -61,7 +73,7 @@ public class NewsFragment extends BaseFragment {
                     refreshLayout.finishRefresh();
                     break;
                 case SELECT_REFLSH:
-                    list = ((NewsBean) msg.obj).getResult().getData();
+                    list = (List<NewsDataBean>) msg.obj;
                     NewsTabAdapter NewsTabAdapter = new NewsTabAdapter(getActivity(), list);
                     listView.setAdapter(NewsTabAdapter);
                     NewsTabAdapter.notifyDataSetChanged();
@@ -132,8 +144,8 @@ public class NewsFragment extends BaseFragment {
                     @Override
                     public void run() {
 
-//                        int pages = (page - 1) * row;
-                        List<DataBean> newsBeanList = dbHelper.queryNewsList(newsType.cnKey, page, row);
+                        int offset = page * row;
+                        List<NewsDataBean> newsBeanList = dbHelper.queryNewsList(newsType.cnKey, offset, row);
                         list.addAll(newsBeanList);
                         mHandler.post(new Runnable() {
                             @Override
@@ -168,42 +180,72 @@ public class NewsFragment extends BaseFragment {
     }
 
     private void getDataFromNet(final String data) {
+
         final String path = "http://v.juhe.cn/toutiao/index?type=" + data + "&key=927352c7b578ec641b4bac8799b5d40b";
-        new Thread(new Runnable() {
+        ApiClient.getInstance().get(path, null, new ApiResponseHandler(getContext()) {
             @Override
-            public void run() {
-                OkHttpClient okHttpClient = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(path)
-                        .build();
+            public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
+                Log.e(TAG, "onResponse: " + jsonObject.toString());
                 try {
-                    Response response = okHttpClient.newCall(request).execute();
-                    if (response.body() != null) {
-                        responseDate = Objects.requireNonNull(response.body()).string();
-                        Log.e("newsFragment", "run: responseData " + responseDate);
-                        NewsBean newsBean = new Gson().fromJson(responseDate, NewsBean.class);
-
-                        if (!"10012".equals("" + newsBean.getError_code())) {
-                            dbHelper.insertDataBeans(newsBean.getResult().getData());
+                    if (success) {
+                        Gson gson = new Gson();
+                        String error = jsonObject.getString("error_code");
+                        JsonObject result = new Gson().fromJson(jsonObject.optString("result"), JsonObject.class);
+                        if (result != null) {
+                            JsonArray data = new Gson().fromJson(result.get("data"), JsonArray.class);
+                            List<NewsDataBean> dataBeans = gson.fromJson(data, new TypeToken<List<NewsDataBean>>() {}.getType());
+                            if (!"10012".equals(error)) {
+                                dbHelper.insertDataBeans(dataBeans);
+                            }
+                            Message msg = newsHandler.obtainMessage();
+                            msg.what = UPNEWS_INSERT;
+                            msg.obj = dataBeans;
+                            newsHandler.sendMessage(msg);
                         }
-
-                        Message msg = newsHandler.obtainMessage();
-                        msg.what = UPNEWS_INSERT;
-                        msg.obj = newsBean;
-                        newsHandler.sendMessage(msg);
                     }
-                    
                 } catch (Exception e) {
+                    Log.e(TAG, "onResponse: exception " + e );
                     e.printStackTrace();
                 }
-//                catch (IOException e) {
-//                    Log.e("newsFragment exception", "" + e);
+            }
+        });
+
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                OkHttpClient okHttpClient = new OkHttpClient();
+//                Request request = new Request.Builder()
+//                        .url(path)
+//                        .build();
+//                try {
+//                    Response response = okHttpClient.newCall(request).execute();
+//                    if (response.body() != null) {
+//                        responseDate = Objects.requireNonNull(response.body()).string();
+//                        Log.e("newsFragment", "run: responseData " + responseDate);
+//                        NewsBean newsBean = new Gson().fromJson(responseDate, NewsBean.class);
+//
+//                        if (!"10012".equals("" + newsBean.getError_code())) {
+//                            dbHelper.insertDataBeans(newsBean.getResult().getData());
+//                        }
+//
+//                        Message msg = newsHandler.obtainMessage();
+//                        msg.what = UPNEWS_INSERT;
+//                        msg.obj = newsBean;
+//                        newsHandler.sendMessage(msg);
+//                    }
+//
+//                } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
-
-            }
-
-        }).start();
+////                catch (IOException e) {
+////                    Log.e("newsFragment exception", "" + e);
+////                    e.printStackTrace();
+////                }
+//
+//            }
+//
+//        }).start();
     }
 
 }
