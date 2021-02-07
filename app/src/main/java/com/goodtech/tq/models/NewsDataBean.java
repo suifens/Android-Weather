@@ -1,4 +1,4 @@
-package com.goodtech.tq.news;
+package com.goodtech.tq.models;
 
 import android.database.Cursor;
 

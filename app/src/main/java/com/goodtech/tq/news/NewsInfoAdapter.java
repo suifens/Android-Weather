@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.models.NewsDataBean;
 
 import java.util.List;
 

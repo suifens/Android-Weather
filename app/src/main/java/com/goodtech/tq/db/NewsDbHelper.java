@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.goodtech.tq.news.NewsDataBean;
+import com.goodtech.tq.models.NewsDataBean;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -19,6 +19,7 @@ import android.widget.ListView;
 
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
+import com.goodtech.tq.models.NewsDataBean;
 
 import java.util.ArrayList;
 import java.util.List;
