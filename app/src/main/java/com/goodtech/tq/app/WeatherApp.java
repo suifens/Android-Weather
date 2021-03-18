@@ -17,6 +17,8 @@ import com.goodtech.tq.SplashADActivity;
 import com.goodtech.tq.SplashActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.location.services.LocationService;
+import com.goodtech.tq.utils.Constants;
+import com.qq.e.comm.managers.GDTADManager;
 import com.umeng.commonsdk.UMConfigure;
 
 public class WeatherApp extends Application {
@@ -49,6 +51,9 @@ public class WeatherApp extends Application {
 //        SDKInitializer.setCoordType(CoordType.BD09LL);
 
         UMConfigure.init(getApplicationContext(), UMConfigure.DEVICE_TYPE_PHONE, "");
+
+        // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
+        GDTADManager.getInstance().initWith(getApplicationContext(), Constants.APP_ID);
     }
 
     public int mCount = 0;

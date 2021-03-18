@@ -18,17 +18,20 @@ import androidx.annotation.Nullable;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.db.NewsDbHelper;
-import com.goodtech.tq.helpers.WeatherSpHelper;
+import com.goodtech.tq.fragment.BaseFragment;
 import com.goodtech.tq.httpClient.ApiClient;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;
-import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.fragment.BaseFragment;
 import com.goodtech.tq.models.NewsDataBean;
+import com.goodtech.tq.utils.Constants;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.qq.e.ads.nativ.ADSize;
+import com.qq.e.ads.nativ.NativeExpressAD;
+import com.qq.e.ads.nativ.NativeExpressADView;
+import com.qq.e.comm.util.AdError;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -36,25 +39,23 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-public class NewsFragment extends BaseFragment {
+public class NewsFragment extends BaseFragment implements NativeExpressAD.NativeExpressADListener {
     private ListView listView;
     private SmartRefreshLayout refreshLayout;
-    private List<NewsDataBean> list;
+    private List<Object> list;
     private static final int UPNEWS_INSERT = 0;
     private int page = 0;
-    private final int row = 10;
+    private final int row = 30;
     private static final int SELECT_REFLSH = 1;
     private NewsDbHelper dbHelper;
     private NewsType newsType;
     private static final String TAG = "NewsFragment";
+
+    private NewsTabAdapter mAdapter;
 
     String responseDate;
     @SuppressLint("HandlerLeak")
@@ -64,19 +65,21 @@ public class NewsFragment extends BaseFragment {
             switch (msg.what) {
                 case UPNEWS_INSERT:
 //                    list = ((NewsBean) msg.obj).getResult().getData();
-                    list = (List<NewsDataBean>) msg.obj;
+                    list = (List<Object>) msg.obj;
                     if (listView.getAdapter() == null) {
-                        NewsTabAdapter adapter = new NewsTabAdapter(getActivity(), list);
-                        listView.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
+                        mAdapter = new NewsTabAdapter(getActivity(), list);
+                        listView.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                        initNativeExpressAD();
                     }
                     refreshLayout.finishRefresh();
                     break;
                 case SELECT_REFLSH:
-                    list = (List<NewsDataBean>) msg.obj;
-                    NewsTabAdapter NewsTabAdapter = new NewsTabAdapter(getActivity(), list);
-                    listView.setAdapter(NewsTabAdapter);
-                    NewsTabAdapter.notifyDataSetChanged();
+                    list = (List<Object>) msg.obj;
+                    mAdapter = new NewsTabAdapter(getActivity(), list);
+                    listView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                    initNativeExpressAD();
                     break;
                 default:
             }
@@ -146,7 +149,9 @@ public class NewsFragment extends BaseFragment {
 
                         int offset = page * row;
                         List<NewsDataBean> newsBeanList = dbHelper.queryNewsList(newsType.cnKey, offset, row);
-                        list.addAll(newsBeanList);
+                        if (newsBeanList != null) {
+                            list.addAll(newsBeanList);
+                        }
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -168,8 +173,8 @@ public class NewsFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //获取点击条目的路径，传值显示webview页面
-                String url = list.get(position).getUrl();
-                String uniquekey = list.get(position).getUniquekey();
+                String url = ((NewsDataBean)list.get(position)).getUrl();
+                String uniquekey = ((NewsDataBean)list.get(position)).getUniquekey();
                 Intent intent = new Intent(getActivity(), WebActivity.class);
                 intent.putExtra("url", url);
                 intent.putExtra("uniquekey", uniquekey);
@@ -209,43 +214,114 @@ public class NewsFragment extends BaseFragment {
                 }
             }
         });
+    }
 
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                OkHttpClient okHttpClient = new OkHttpClient();
-//                Request request = new Request.Builder()
-//                        .url(path)
-//                        .build();
-//                try {
-//                    Response response = okHttpClient.newCall(request).execute();
-//                    if (response.body() != null) {
-//                        responseDate = Objects.requireNonNull(response.body()).string();
-//                        Log.e("newsFragment", "run: responseData " + responseDate);
-//                        NewsBean newsBean = new Gson().fromJson(responseDate, NewsBean.class);
-//
-//                        if (!"10012".equals("" + newsBean.getError_code())) {
-//                            dbHelper.insertDataBeans(newsBean.getResult().getData());
-//                        }
-//
-//                        Message msg = newsHandler.obtainMessage();
-//                        msg.what = UPNEWS_INSERT;
-//                        msg.obj = newsBean;
-//                        newsHandler.sendMessage(msg);
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-////                catch (IOException e) {
-////                    Log.e("newsFragment exception", "" + e);
-////                    e.printStackTrace();
-////                }
-//
-//            }
-//
-//        }).start();
+    // mark: --
+
+    private NativeExpressAD mADManager;
+    private List<NativeExpressADView> mAdViewList = new ArrayList<>();
+    private HashMap<NativeExpressADView, Integer> mAdViewPositionMap = new HashMap<NativeExpressADView, Integer>();
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // 使用完了每一个NativeExpressADView之后都要释放掉资源。
+        if (mAdViewList != null) {
+            for (NativeExpressADView view : mAdViewList) {
+                view.destroy();
+            }
+        }
+    }
+
+//    private void initData() {
+//        mAdapter = new CustomAdapter(mNormalDataList);
+//        mRecyclerView.setAdapter(mAdapter);
+//        initNativeExpressAD();
+//    }
+
+    /**
+     */
+    private void initNativeExpressAD() {
+        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT); // 消息流中用AUTO_HEIGHT
+        mADManager = new NativeExpressAD(getContext(), adSize, Constants.NEWS_POS_ID, this);
+        mADManager.loadAD(mAdapter.getCount() / 10);
+    }
+
+    @Override
+    public void onNoAD(AdError adError) {
+        Log.i(
+                TAG,
+                String.format("onNoAD, error code: %d, error msg: %s", adError.getErrorCode(),
+                        adError.getErrorMsg()));
+    }
+
+    @Override
+    public void onADLoaded(List<NativeExpressADView> adList) {
+        Log.i(TAG, "onADLoaded: " + adList.size());
+
+        int count = mAdapter.getCount();
+        int adCount = mAdViewList.size();
+
+        for (int i = 0; i < adList.size(); i++) {
+            int position = 10 * i + 3;
+            if (position < list.size()) {
+                NativeExpressADView view = adList.get(i);
+                mAdViewPositionMap.put(view, position); // 把每个广告在列表中位置记录下来
+                mAdapter.addADViewToPosition(position, adList.get(i));
+                mAdapter.notifyDataSetChanged();
+                Log.d(TAG,
+                        i + ": eCPMLevel = " + view.getBoundData().getECPMLevel() + " , videoDuration = " + view.getBoundData().getVideoDuration());
+            }
+        }
+        mAdViewList.addAll(adList);
+        //mAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onRenderFail(NativeExpressADView adView) {
+        Log.i(TAG, "onRenderFail: " + adView.toString());
+    }
+
+    @Override
+    public void onRenderSuccess(NativeExpressADView adView) {
+        Log.i(TAG, "onRenderSuccess: " + adView.toString());
+    }
+
+    @Override
+    public void onADExposure(NativeExpressADView adView) {
+        Log.i(TAG, "onADExposure: " + adView.toString());
+    }
+
+    @Override
+    public void onADClicked(NativeExpressADView adView) {
+        Log.i(TAG, "onADClicked: " + adView.toString());
+    }
+
+    @Override
+    public void onADClosed(NativeExpressADView adView) {
+        Log.i(TAG, "onADClosed: " + adView.toString());
+        if (mAdapter != null) {
+            int removedPosition = mAdViewPositionMap.get(adView);
+            mAdapter.removeADView(removedPosition, adView);
+        }
+    }
+
+    @Override
+    public void onADLeftApplication(NativeExpressADView adView) {
+        Log.i(TAG, "onADLeftApplication: " + adView.toString());
+    }
+
+    @Override
+    public void onADOpenOverlay(NativeExpressADView adView) {
+        Log.i(TAG, "onADOpenOverlay: " + adView.toString());
+    }
+
+    @Override
+    public void onADCloseOverlay(NativeExpressADView adView) {
+        Log.i(TAG, "onADCloseOverlay");
     }
 
 }

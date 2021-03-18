@@ -62,15 +62,16 @@ public class DailyHolder extends RecyclerView.ViewHolder {
     private String dayString(long time, String dow) {
         int timeDay = Integer.parseInt(TimeUtils.timeToDay(time));
         int today = Integer.parseInt(TimeUtils.timeToDay(System.currentTimeMillis()));
+        String timeString = TimeUtils.longToString(time, "MM月dd日");
         switch (timeDay - today) {
             case -1:
-                return String.format("%s(昨天)", dow);
+                return String.format("昨天 (%s)", timeString);
             case 0:
-                return String.format("%s(今天)", dow);
+                return String.format("今天 (%s)", timeString);
             case 1:
-                return String.format("%s(明天)", dow);
+                return String.format("明天 (%s)", timeString);
             default:
-                return String.format("%s", dow);
+                return String.format("%s (%s)", dow, timeString);
         }
     }
 

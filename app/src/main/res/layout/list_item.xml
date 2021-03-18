@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@color/color_4a4a4a"
-            android:dividerHeight="0.5dp"
+            android:dividerHeight="1px"
             android:scrollbars="none">
         </ListView>
 
