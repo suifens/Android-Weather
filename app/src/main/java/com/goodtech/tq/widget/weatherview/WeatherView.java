@@ -558,11 +558,11 @@ public class WeatherView extends HorizontalScrollView {
         int today = Integer.parseInt(TimeUtils.timeToDay(System.currentTimeMillis()));
         switch (timeDay - today) {
             case -1:
-                return "昨天";
+                return "昨    天";
             case 0:
-                return "今天";
+                return "今    天";
             case 1:
-                return "明天";
+                return "明    天";
             default:
                 return String.format("%s", dow);
         }

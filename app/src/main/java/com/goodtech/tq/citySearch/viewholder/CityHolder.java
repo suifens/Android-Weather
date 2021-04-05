@@ -40,6 +40,7 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
     private LinearLayout mWeatherLayout;
     private ImageView mWeatherIcon;
     private TextView mTempTv;
+    private TextView mTipTv;
     private ImageView mLocationTip;
     public RelativeLayout mContainer;
     public View mDragHandle;
@@ -60,6 +61,7 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
         mWeatherLayout = view.findViewById(R.id.layout_weather);
         mWeatherIcon = view.findViewById(R.id.img_icon);
         mTempTv = view.findViewById(R.id.tv_temperature);
+        mTipTv = view.findViewById(R.id.tv_tip_date);
         mListener = listener;
         view.findViewById(R.id.btn_delete).setOnClickListener(this);
     }
@@ -98,17 +100,16 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
 
         if (weatherModel != null && weatherModel.observation != null) {
             mWeatherIcon.setVisibility(View.VISIBLE);
+            mWeatherLayout.setVisibility(View.VISIBLE);
+            mTipTv.setVisibility(View.GONE);
             mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(getIconId(weatherModel)));
             if (weatherModel.observation != null && weatherModel.observation.metric != null) {
                 mTempTv.setText(String.format("%d℃", weatherModel.observation.metric.temp));
             }
-            mTempTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-            mTempTv.setTextColor(ContextCompat.getColor(mTempTv.getContext(), R.color.color_00c4ff));
         } else {
             mWeatherIcon.setVisibility(View.GONE);
-            mTempTv.setText("数据更新中");
-            mTempTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
-            mTempTv.setTextColor(ContextCompat.getColor(mTempTv.getContext(), R.color.color_4a4a4a));
+            mWeatherLayout.setVisibility(View.GONE);
+            mTipTv.setVisibility(View.VISIBLE);
         }
     }
 

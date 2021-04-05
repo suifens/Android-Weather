@@ -65,11 +65,11 @@ public class DailyHolder extends RecyclerView.ViewHolder {
         String timeString = TimeUtils.longToString(time, "MM月dd日");
         switch (timeDay - today) {
             case -1:
-                return String.format("昨天 (%s)", timeString);
+                return String.format("昨    天 (%s)", timeString);
             case 0:
-                return String.format("今天 (%s)", timeString);
+                return String.format("今    天 (%s)", timeString);
             case 1:
-                return String.format("明天 (%s)", timeString);
+                return String.format("明    天 (%s)", timeString);
             default:
                 return String.format("%s (%s)", dow, timeString);
         }

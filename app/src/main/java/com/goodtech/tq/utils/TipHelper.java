@@ -1,6 +1,7 @@
 package com.goodtech.tq.utils;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
@@ -8,6 +9,8 @@ import android.os.Looper;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.goodtech.tq.views.LoadingDialog;
 
 /**
  * @author wangrengshun <wangrengshun@gengee.cn>
@@ -31,7 +34,7 @@ public class TipHelper {
         Toast.makeText(ctx, cs, Toast.LENGTH_LONG).show();
     }
     
-    private static ProgressDialog mProgressDialog;
+    private static Dialog mProgressDialog;
 
     public synchronized static boolean isShowing() {
         if (mProgressDialog != null) {
@@ -46,9 +49,7 @@ public class TipHelper {
             public void run() {
                 dismissDialog();
     
-                mProgressDialog = new ProgressDialog(context);
-    
-                mProgressDialog.setMessage(context.getString(resId));
+                mProgressDialog = LoadingDialog.createLoadingDialog(context, context.getString(resId));
                 mProgressDialog.setCancelable(cancelable);
                 try {
                     if (!context.isFinishing()) {
@@ -69,7 +70,7 @@ public class TipHelper {
             public void run() {
                 dismissDialog();
 
-                mProgressDialog = new ProgressDialog(context);
+                mProgressDialog = LoadingDialog.createLoadingDialog(context);
                 mProgressDialog.setCancelable(cancelable);
                 try {
                     if (!context.isFinishing()) {
@@ -90,7 +91,7 @@ public class TipHelper {
             public void run() {
                 dismissDialog();
 
-                mProgressDialog = new ProgressDialog(context);
+                mProgressDialog = LoadingDialog.createLoadingDialog(context);
                 try {
                     if (!context.isFinishing()) {
                         mProgressDialog.show();

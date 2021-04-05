@@ -17,8 +17,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 144
-        versionName "4.2.10"
+        versionCode 145
+        versionName "4.3.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -50,6 +50,9 @@ android {
         }
         anzhi {
             manifestPlaceholders=[app_name:"天气预报十天气", umeng_channel:"anzhi"]
+        }
+        wdj {
+            manifestPlaceholders=[app_name:"天气", umeng_channel:"wandoujia"]
         }
     }
 
