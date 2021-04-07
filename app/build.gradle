@@ -31,28 +31,31 @@ android {
             manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"]
         }
         huawei {
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"huawei"]
+            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"huawei"]
         }
         oppo {
-            manifestPlaceholders=[app_name:"天气预报预知天气", umeng_channel:"oppo"]
+            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"oppo"]
         }
         vivo {
-            manifestPlaceholders=[app_name:"天气十天气预报", umeng_channel:"vivo"]
+            manifestPlaceholders=[app_name:"天气-苹果天气预报", umeng_channel:"vivo"]
         }
         yyb {
-            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"yyb"]
+            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
         }
         meizu {
             manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
         }
         sougou {
-            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"sougou"]
+            manifestPlaceholders=[app_name:"天气预报-日历天气", umeng_channel:"sougou"]
         }
         anzhi {
-            manifestPlaceholders=[app_name:"天气预报十天气", umeng_channel:"anzhi"]
+            manifestPlaceholders=[app_name:"苹果天气预报", umeng_channel:"anzhi"]
         }
         wdj {
-            manifestPlaceholders=[app_name:"天气", umeng_channel:"wandoujia"]
+            manifestPlaceholders=[app_name:"日历天气", umeng_channel:"wandoujia"]
+        }
+        baidu {
+            manifestPlaceholders=[app_name:"日历天气预报", umeng_channel:"baidu"]
         }
     }
 
