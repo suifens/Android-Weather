@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.goodtech.tq.fragment.viewholder.BottomHolder;
 import com.goodtech.tq.fragment.viewholder.CurrentHolder;
 import com.goodtech.tq.fragment.viewholder.DailyHolder;
+import com.goodtech.tq.fragment.viewholder.HeaderHolder;
 import com.goodtech.tq.fragment.viewholder.HoursHolder;
 import com.goodtech.tq.fragment.viewholder.LineTempHolder;
 import com.goodtech.tq.fragment.viewholder.NativeExpressAD2Holder;
 import com.goodtech.tq.fragment.viewholder.ObservationHolder;
 import com.goodtech.tq.fragment.viewholder.RecentHolder;
+import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
 import com.qq.e.ads.nativ.NativeExpressADView;
-import com.qq.e.ads.nativ.express2.NativeExpressADData2;
 
 public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder > {
 
@@ -31,12 +32,14 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final int AD_VIEW = 5;
     private final int OBSERVANT_VIEW = 6;
     private final int BOTTOM_VIEW = 7;
+    private final int TOP_VIEW = 8;
 
     private WeatherModel mModel;
     private final LayoutInflater mInflater;
     private String mAddress;
-    private Context mContext;
+    private final Context mContext;
     private NativeExpressADView mAdView;
+    private WeatherHeaderListener mHeaderListener;
 
     public WeatherRecyclerAdapter(Context context, WeatherModel model, String address) {
         mContext = context;
@@ -45,12 +48,16 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.mAddress = address;
     }
 
-    public WeatherRecyclerAdapter(Context context, WeatherModel model, String address, NativeExpressADView adView) {
-        mContext = context;
-        this.mInflater = LayoutInflater.from(context);
-        this.mModel = model;
-        this.mAddress = address;
-        this.mAdView = adView;
+//    public WeatherRecyclerAdapter(Context context, WeatherModel model, String address, NativeExpressADView adView) {
+//        mContext = context;
+//        this.mInflater = LayoutInflater.from(context);
+//        this.mModel = model;
+//        this.mAddress = address;
+//        this.mAdView = adView;
+//    }
+
+    public void setHeaderListener(WeatherHeaderListener listener) {
+        this.mHeaderListener = listener;
     }
 
     public LayoutInflater getInflater() {
@@ -60,7 +67,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
         if (mModel != null) {
-            return 15;
+            return 16;
         } else {
             return 0;
         }
@@ -70,16 +77,18 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemViewType(int position) {
         switch (position) {
             case 0:
-                return CURRENT_VIEW;
+                return TOP_VIEW;
             case 1:
-                return RECENT_VIEW;
+                return CURRENT_VIEW;
             case 2:
+                return RECENT_VIEW;
+            case 3:
                 return HOURS_VIEW;
-            case 12:
-                return LINE_VIEW;
             case 13:
-                return AD_VIEW;
+                return LINE_VIEW;
             case 14:
+                return AD_VIEW;
+            case 15:
                 return OBSERVANT_VIEW;
             default:
                 return DAILY_VIEW;
@@ -90,6 +99,10 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
+            case TOP_VIEW:
+                View header = getInflater().inflate(HeaderHolder.getResource(), parent, false);
+                return new HeaderHolder(header, mHeaderListener);
+
             case CURRENT_VIEW:
                 View current = getInflater().inflate(CurrentHolder.getResource(), parent, false);
                 return new CurrentHolder(current);
@@ -136,8 +149,8 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 if (mModel.dailies != null) {
                     ((LineTempHolder) viewHolder).setData(mModel);
                 }
-            } else if (viewHolder instanceof DailyHolder && i >= 3) {
-                int index = i - 3;
+            } else if (viewHolder instanceof DailyHolder && i >= 4) {
+                int index = i - 4;
                 if (mModel.dailies != null && mModel.dailies.size() > index) {
                     Daily daily = mModel.dailies.get(index);
                     ((DailyHolder) viewHolder).setData(mModel, daily);
@@ -159,6 +172,6 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void changeAdView(NativeExpressADView adView) {
         mAdView = adView;
-        super.notifyItemChanged(13);
+        super.notifyItemChanged(14);
     }
 }

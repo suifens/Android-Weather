@@ -4,4 +4,11 @@
         <attr name="img_icon" format="reference"/>
         <attr name="tv_title" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="ConstellationItemView">
+        <attr name="icon" format="reference"/>
+        <attr name="constellation" format="string"/>
+        <attr name="date" format="string"/>
+    </declare-styleable>
+
 </resources>

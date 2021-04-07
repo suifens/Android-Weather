@@ -13,6 +13,7 @@ import com.goodtech.tq.fragment.adapter.WeatherRecyclerAdapter;
 import com.goodtech.tq.httpClient.ApiCallback;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.Constants;
@@ -74,6 +75,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mCityMode != null ? mCityMode.city : null);
+        mAdapter.setHeaderListener(mHeaderListener);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -108,6 +110,28 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
             mAdView.destroy();
         }
     }
+
+    private final WeatherHeaderListener mHeaderListener = new WeatherHeaderListener() {
+        @Override
+        public void onWeekendWeather() {
+
+        }
+
+        @Override
+        public void onAirQuality() {
+
+        }
+
+        @Override
+        public void onCalendar() {
+
+        }
+
+        @Override
+        public void onFortune() {
+
+        }
+    };
 
     public void changeWeather(WeatherModel model, CityMode cityMode) {
 

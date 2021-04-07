@@ -4,14 +4,7 @@
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="400dp">
-
-    <include layout="@layout/weather_item_header"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+    android:minHeight="320dp">
 
     <LinearLayout
         android:layout_width="match_parent"
