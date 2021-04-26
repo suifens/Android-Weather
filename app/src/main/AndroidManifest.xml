@@ -22,8 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         tools:replace="android:label,android:icon, android:theme">
-        <activity android:name=".others.constellation.ConstellationActivity"></activity>
-        <!-- 声明service组件 -->
+        <activity android:name=".others.constellation.ConstellationDetailActivity"></activity>
+        <activity android:name=".others.constellation.ConstellationActivity" /> <!-- 声明service组件 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

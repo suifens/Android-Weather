@@ -30,4 +30,12 @@ public enum ConstellationEnum {
         this.date = date;
     }
 
+    public static ConstellationEnum getConstellationEnum(String enumString) {
+        for (ConstellationEnum temp : ConstellationEnum.values()) {
+            if (temp.toString().equals(enumString))
+                return temp;
+        }
+        return BAIYAN;
+    }
+
 }

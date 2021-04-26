@@ -1,5 +1,6 @@
 package com.goodtech.tq.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.utils.Constants;
 import com.qq.e.ads.nativ.ADSize;
 import com.qq.e.ads.nativ.NativeExpressAD;
@@ -23,9 +25,11 @@ import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.comm.util.AdError;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A fragment representing a list of Items.
@@ -64,14 +68,14 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
         super.onActivityCreated(savedInstanceState);
 
         mRefreshLayout.setOnRefreshListener(this);
-//        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-//            @Override
-//            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-//                refreshLayout.finishLoadMore();
-//                Intent intent = new Intent(getActivity(), NewsActivity.class);
-//                Objects.requireNonNull(getActivity()).startActivity(intent);
-//            }
-//        });
+        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore();
+                Intent intent = new Intent(getActivity(), NewsActivity.class);
+                Objects.requireNonNull(getActivity()).startActivity(intent);
+            }
+        });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mCityMode != null ? mCityMode.city : null);

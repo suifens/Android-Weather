@@ -1,0 +1,174 @@
+package com.goodtech.tq.others.constellation;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.goodtech.tq.R;
+import com.goodtech.tq.fragment.BaseFragment;
+import com.goodtech.tq.others.constellation.mode.ConsDayMode;
+import com.goodtech.tq.others.constellation.mode.ConsMonthMode;
+import com.goodtech.tq.others.constellation.mode.ConsWeekMode;
+import com.goodtech.tq.others.constellation.mode.ConsYearMode;
+
+public class ConsOtherFragment extends BaseFragment {
+
+    private LinearLayout mContainerLayout;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_cons_other, container, false);
+        mContainerLayout = view.findViewById(R.id.linear_layout);
+        return view;
+    }
+
+    @SuppressLint("HandlerLeak")
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    public void clear() {
+        mHandler.post(() -> {
+            if (mContainerLayout != null) {
+                mContainerLayout.removeAllViewsInLayout();
+            }
+        });
+    }
+
+    public void setConsWeekModel(ConsWeekMode model) {
+        mHandler.post(() -> {
+            mContainerLayout.removeAllViewsInLayout();
+            if (model != null) {
+                if (!TextUtils.isEmpty(model.health)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData("健康运势", model.health);
+                    mContainerLayout.addView(itemView);
+                }
+                if (!TextUtils.isEmpty(model.work)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData("工作运势", model.work);
+                    mContainerLayout.addView(itemView);
+                }
+                if (!TextUtils.isEmpty(model.love)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData("爱情运势", model.love);
+                    mContainerLayout.addView(itemView);
+                }
+                if (!TextUtils.isEmpty(model.money)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData("理财运势", model.money);
+                    mContainerLayout.addView(itemView);
+                }
+            }
+
+        });
+    }
+
+    public void setConsMonthModel(ConsMonthMode model) {
+        mHandler.post(() -> {
+            mContainerLayout.removeAllViewsInLayout();
+            if (model != null) {
+                if (!TextUtils.isEmpty(model.all)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData(null, model.all);
+                    mContainerLayout.addView(itemView);
+                }
+                if (!TextUtils.isEmpty(model.health)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData("健康运势", model.health);
+                    mContainerLayout.addView(itemView);
+                }
+                if (!TextUtils.isEmpty(model.work)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData("工作运势", model.work);
+                    mContainerLayout.addView(itemView);
+                }
+                if (!TextUtils.isEmpty(model.love)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData("爱情运势", model.love);
+                    mContainerLayout.addView(itemView);
+                }
+                if (!TextUtils.isEmpty(model.money)) {
+                    ConsItemView itemView = new ConsItemView(getContext());
+                    itemView.setData("理财运势", model.money);
+                    mContainerLayout.addView(itemView);
+                }
+            }
+
+        });
+    }
+
+    public void setConsYearModel(ConsYearMode model) {
+        mHandler.post(() -> {
+            mContainerLayout.removeAllViewsInLayout();
+            if (model != null) {
+                if (model.career != null) {
+                    for (int i = 0; i < model.career.length; i++) {
+                        String career = model.career[i];
+                        if (!TextUtils.isEmpty(career)) {
+                            ConsItemView itemView = new ConsItemView(getContext());
+                            if (i == 0) {
+                                itemView.setData("职业运势", career);
+                            } else {
+                                itemView.setData(null, career);
+                            }
+                            mContainerLayout.addView(itemView);
+                        }
+                    }
+                }
+
+                if (model.love != null) {
+                    for (int i = 0; i < model.love.length; i++) {
+                        String love = model.love[i];
+                        if (!TextUtils.isEmpty(love)) {
+                            ConsItemView itemView = new ConsItemView(getContext());
+                            if (i == 0) {
+                                itemView.setData("爱情运势", love);
+                            } else {
+                                itemView.setData(null, love);
+                            }
+                            mContainerLayout.addView(itemView);
+                        }
+                    }
+                }
+
+                if (model.finance != null) {
+                    for (int i = 0; i < model.finance.length; i++) {
+                        String finance = model.finance[i];
+                        if (!TextUtils.isEmpty(finance)) {
+                            ConsItemView itemView = new ConsItemView(getContext());
+                            if (i == 0) {
+                                itemView.setData("理财运势", finance);
+                            } else {
+                                itemView.setData(null, finance);
+                            }
+                            mContainerLayout.addView(itemView);
+                        }
+                    }
+                }
+            }
+
+        });
+    }
+}
