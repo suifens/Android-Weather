@@ -3,16 +3,11 @@ package com.goodtech.tq.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Base64;
+import android.util.Log;
 
 import com.goodtech.tq.app.WeatherApp;
+import com.tencent.mmkv.MMKV;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 /**
  * SharedPreferences工具类
@@ -22,135 +17,99 @@ import java.io.Serializable;
 public class SpUtils {
 
     public static final String VERSION_APP = "version"; //应用版本号
+    private static final String TAG = "SpUtils";
+    private MMKV preferences;
 
-    private SharedPreferences sp;
-    
     private static SpUtils instance;
-    
+
     private SpUtils(Context context) {
-        sp = context.getSharedPreferences("matches_sp", Context.MODE_PRIVATE);
+        preferences = MMKV.defaultMMKV();
     }
-    
+
     public static synchronized SpUtils getInstance() {
         if (instance == null) {
             instance = new SpUtils(WeatherApp.getInstance());
         }
         return instance;
     }
-    
-    public SpUtils putInt(String key, int value) {
-        sp.edit().putInt(key, value).apply();
-        return this;
-    }
-    
-    public int getInt(String key, int dValue) {
-        return sp.getInt(key, dValue);
-    }
-    
-    public SpUtils putLong(String key, long value) {
-        sp.edit().putLong(key, value).apply();
-        return this;
-    }
-    
-    public long getLong(String key, Long dValue) {
-        return sp.getLong(key, dValue);
-    }
-    
-    public SpUtils putFloat(String key, float value) {
-        sp.edit().putFloat(key, value).apply();
-        return this;
-    }
-    
-    public Float getFloat(String key, Float dValue) {
-        return sp.getFloat(key, dValue);
-    }
-    
-    public SpUtils putBoolean(String key, boolean value) {
-        sp.edit().putBoolean(key, value).apply();
-        return this;
-    }
-    
-    public Boolean getBoolean(String key, boolean dValue) {
-        return sp.getBoolean(key, dValue);
-    }
-    
-    public SpUtils putString(String key, String value) {
-        sp.edit().putString(key, value).apply();
-        return this;
-    }
-    
-    public String getString(String key, String dValue) {
-        return sp.getString(key, dValue);
-    }
 
-    //保存序列话对象
-    public synchronized boolean saveSerializableObject(String key, Object object) {
-        if (object instanceof Serializable) {
-            SharedPreferences.Editor editor = sp.edit();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(baos);
-                oos.writeObject(object);//把对象写到流里
-                String temp = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
-                editor.putString(key, temp);
-                return editor.commit();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
+    public void updateWithUserId(String userId) {
+        preferences = null;
+        preferences = MMKV.mmkvWithID(userId);
+
+        //  4.5.2中将 SharedPreferences 迁移到 MMKV 中
+        if (DeviceUtils.getVersionCode(WeatherApp.getInstance()) >= 151) {
+
+            SharedPreferences old_man = WeatherApp.getInstance().getSharedPreferences("matches_sp", Context.MODE_PRIVATE);
+            if (old_man.getAll().size() > 0) {
+                //  迁移旧数据
+                preferences.importFromSharedPreferences(old_man);
+                //  清除数据
+                old_man.edit().clear().apply();
             }
-        } else {
-            return false;
         }
+
+        Log.e(TAG, "updateWithUserId: " + preferences.allKeys().length);
     }
 
-    /**
-     * 使用案例
-     * private TextView textView1;
-     * textView1 = findView(R.id.textView1);
-     *
-     * @param key
-     * @param <T>
-     * @return
-     */
-    public synchronized <T> T getSerializableObject(String key) {
-
-        String temp = sp.getString(key, "");
-        ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(temp.getBytes(), Base64.DEFAULT));
-        T o = null;
-        try {
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            o = (T) ois.readObject();
-        } catch (IOException | ClassNotFoundException ignored) {
-
-        }
-        return o;
+    public SpUtils putInt(String key, int value) {
+        preferences.encode(key, value);
+        return this;
     }
-    
+
+    public int getInt(String key, int dValue) {
+        return preferences.decodeInt(key, dValue);
+    }
+
+    public SpUtils putLong(String key, long value) {
+        preferences.encode(key, value);
+        return this;
+    }
+
+    public long getLong(String key, Long dValue) {
+        return preferences.decodeLong(key, dValue);
+    }
+
+    public SpUtils putFloat(String key, float value) {
+        preferences.encode(key, value);
+        return this;
+    }
+
+    public Float getFloat(String key, Float dValue) {
+        return preferences.decodeFloat(key, dValue);
+    }
+
+    public SpUtils putBoolean(String key, boolean value) {
+        preferences.encode(key, value);
+        return this;
+    }
+
+    public Boolean getBoolean(String key, boolean dValue) {
+        return preferences.decodeBool(key, dValue);
+    }
+
+    public SpUtils putString(String key, String value) {
+        preferences.encode(key, value);
+        return this;
+    }
+
+    public String getString(String key, String dValue) {
+        return preferences.decodeString(key, dValue);
+    }
+
     public void remove(String key) {
-        if (isExist(key)) {
-            SharedPreferences.Editor editor = sp.edit();
-            editor.remove(key);
-            editor.apply();
-        }
+        preferences.removeValueForKey(key);
     }
-    
-    public void clearAllData() {
-        sp.edit().clear();
-        sp.edit().apply();
-    }
-    
-    public boolean isExist(String key) {
-        return sp.contains(key);
-    }
-    
+
+//    public void clearAllData() {
+//        sp.edit().clear();
+//        sp.edit().apply();
+//    }
+
     public static boolean isExistValue(String key) {
         return !TextUtils.isEmpty(getInstance().getString(key, ""));
     }
-    
-    public void clearData() {
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        editor.commit();
-    }
-    
+
+
+
 }

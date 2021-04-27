@@ -9,8 +9,12 @@
     <color name="color_clear">#00000000</color>
     <color name="blue_52e1ff">#52E1FF</color>
 
+    <color name="content_background">#f2f2f2</color>
+
     <color name="black">#000000</color>
     <color name="black_alpha10">#1A000000</color>
+    <color name="black_alpha50">#80000000</color>
+    <color name="black_alpha80">#CC000000</color>
 
     <!--副标题颜色-->
     <color name="colorSubtitle">#9B9B9B</color>
@@ -29,6 +33,8 @@
     <color name="color_1d1d35">#1D1D35</color>
     <color name="color_ff4a4a">#FF4A4A</color>
     <color name="color_3764e1">#3764e1</color>
+    <color name="color_48c7a1">#48C7A1</color>
+
     <color name="color_current_location">#FAFAFA</color>
     <color name="color_line">#ECECEC</color>
 

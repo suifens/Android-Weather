@@ -24,6 +24,21 @@ public class DeviceUtils {
     private static float currentDensity = 0;
 
     /**
+     * 返回版本号
+     * 对应build.gradle中的versionCode
+     */
+    public static int getVersionCode(Context context) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return packInfo.versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
      * 利用反射获取状态栏高度
      * @return
      */

@@ -1,0 +1,121 @@
+package com.goodtech.tq.others.calendar;
+
+import android.annotation.SuppressLint;
+
+import com.goodtech.tq.httpClient.ApiResponseHandler;
+import com.goodtech.tq.httpClient.ErrorCode;
+import com.goodtech.tq.httpClient.JuHeHelper;
+import com.goodtech.tq.listener.CompletionListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class CalendarPresenter {
+
+    public DayDetail mDayDetail;
+
+    public List<Holiday> mHolidayList;
+
+    private Map<String, DayDetail> mDayDetails = new HashMap<>();
+
+    private Map<String, List<Holiday>> mHolidayMap = new HashMap<>();
+
+    private static final String TAG = "CalendarPresenter";
+    public void getDayDetails(String day, CompletionListener callback) {
+
+        if (mDayDetails.containsKey(day)) {
+            mDayDetail = mDayDetails.get(day);
+            if (callback != null) {
+                callback.onCompletion();
+            }
+            return;
+        }
+
+        JuHeHelper.getInstance().fetchDayDetails(day, new ApiResponseHandler() {
+            @Override
+            public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
+                try {
+                    if (success) {
+                        if (!jsonObject.isNull("result")) {
+                            JSONObject data = jsonObject.getJSONObject("result").getJSONObject("data");
+                            DayDetail model = new Gson().fromJson(String.valueOf(data), new TypeToken<DayDetail>() {
+                            }.getType());
+                            if (model != null) {
+                                mDayDetail = model;
+                                mDayDetails.put(day, model);
+                            }
+                            if (callback != null) {
+                                callback.onCompletion();
+                            }
+                            return;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (callback != null) {
+                    callback.onCompletion();
+                }
+            }
+        });
+    }
+
+    public void getHolidays(String year, CompletionListener callback) {
+
+        if (mHolidayMap.containsKey(year)) {
+            mHolidayList = mHolidayMap.get(year);
+            if (callback != null) {
+                callback.onCompletion();
+            }
+            return;
+        }
+
+        List<Holiday> holidayList = new ArrayList<>();
+        final int[] count = {0};
+        for (int i = 1; i <= 12; i++) {
+            @SuppressLint("DefaultLocale") String yearMonth = String.format("%s-%d", year, i);
+            JuHeHelper.getInstance().fetchMonthHoliday(yearMonth, new ApiResponseHandler() {
+                @Override
+                public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
+                    count[0]++;
+                    try {
+                        if (success) {
+                            if (!jsonObject.isNull("result")) {
+                                JSONObject data = jsonObject.getJSONObject("result").getJSONObject("data");
+                                if (data != null) {
+                                    JSONArray array = data.getJSONArray("holiday_array");
+                                    List<Holiday> dataList = new Gson().fromJson(String.valueOf(array), new TypeToken<List<Holiday>>() {
+                                    }.getType());
+                                    if (dataList != null) {
+                                        holidayList.addAll(dataList);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (count[0] == 12) {
+                        if (holidayList.size() > 0) {
+                            mHolidayList = holidayList;
+                            mHolidayMap.put(year, holidayList);
+                        }
+                        if (callback != null) {
+                            callback.onCompletion();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+
+}

@@ -142,4 +142,8 @@ dependencies {
     implementation 'com.blankj:utilcodex:1.30.6'
     //  flex css布局
     implementation 'com.google.android:flexbox:2.0.1'
+    //  日历
+    implementation 'com.haibin:calendarview:3.7.1'
+    //  mmkv存储
+    implementation 'com.tencent:mmkv-static:1.2.7'
 }

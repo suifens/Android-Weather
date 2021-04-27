@@ -1,0 +1,174 @@
+package com.goodtech.tq.others.calendar;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.R;
+import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.TimeUtils;
+import com.haibin.calendarview.Calendar;
+import com.haibin.calendarview.CalendarLayout;
+import com.haibin.calendarview.CalendarView;
+
+import java.util.List;
+
+public class CalendarActivity extends BaseActivity implements
+        CalendarView.OnCalendarSelectListener,
+        CalendarView.OnYearChangeListener {
+
+    TextView mTextYearMonth;
+    CalendarView mCalendarView;
+    CalendarLayout mCalendarLayout;
+
+    private View mDayDetailView;
+    private CalendarPresenter mPresenter = new CalendarPresenter();
+
+    private int mYear;
+
+    public static void show(Context context) {
+        context.startActivity(new Intent(context, CalendarActivity.class));
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calendar);
+
+        View topBar = findViewById(R.id.layout_top_bar);
+        configStationBar(topBar);
+        topBar.findViewById(R.id.button_back).setOnClickListener(v -> finish());
+
+        mTextYearMonth = topBar.findViewById(R.id.tv_bar_title);
+
+        initView();
+    }
+
+    private boolean firstLoad = true;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (firstLoad) {
+            firstLoad = false;
+            mHandler.postDelayed(() -> {
+                ((ViewStub) mDayDetailView).inflate();
+
+                getDetails(TimeUtils.longToString(System.currentTimeMillis(), "yyyy-M-d"));
+                getHolidays(TimeUtils.longToString(System.currentTimeMillis(), "yyyy"));
+
+            }, 200);
+        }
+    }
+
+    /**
+     * 配置station bar
+     */
+    @Override
+    public void configStationBar(View stationBar) {
+        LinearLayout.LayoutParams bars = new LinearLayout.LayoutParams(stationBar.getLayoutParams());
+        bars.height = bars.height + DeviceUtils.getStatusBarHeight();
+        stationBar.setLayoutParams(bars);
+    }
+
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    protected void initView() {
+        mCalendarView =  findViewById(R.id.calendarView);
+        mDayDetailView = findViewById(R.id.viewStub_detail);
+        mTextYearMonth.setOnClickListener(v -> {
+            if (!mCalendarLayout.isExpand()) {
+                mCalendarLayout.expand();
+                return;
+            }
+            mCalendarView.showYearSelectLayout(mYear);
+            mTextYearMonth.setText(String.format("%d年", mYear));
+        });
+        mCalendarLayout = findViewById(R.id.calendarLayout);
+        mCalendarView.setOnCalendarSelectListener(this);
+        mCalendarView.setOnYearChangeListener(this);
+        mYear = mCalendarView.getCurYear();
+        mTextYearMonth.setText(mCalendarView.getCurYear() + "年" + mCalendarView.getCurMonth() + "月");
+    }
+
+    @Override
+    public void onCalendarOutOfRange(Calendar calendar) {
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onCalendarSelect(Calendar calendar, boolean isClick) {
+        mTextYearMonth.setVisibility(View.VISIBLE);
+        mTextYearMonth.setText(calendar.getYear() + "年" + calendar.getMonth() + "月");
+        if (mYear != calendar.getYear()) {
+            getHolidays("" + calendar.getYear());
+            mHandler.post(() -> {
+                LinearLayout linearLayout = findViewById(R.id.linear_holidays);
+                linearLayout.removeAllViewsInLayout();
+            });
+            ((TextView) findViewById(R.id.tv_year)).setText(String.valueOf(calendar.getYear()));
+        }
+        mYear = calendar.getYear();
+
+        getDetails(TimeUtils.longToString(calendar.getTimeInMillis(), "yyyy-M-d"));
+
+        Log.e("onDateSelected", "  -- " + calendar.getYear() +
+                "  --  " + calendar.getMonth() +
+                "  -- " + calendar.getDay() +
+                "  --  " + isClick + "  --   " + calendar.getScheme());
+    }
+
+    @Override
+    public void onYearChange(int year) {
+        mTextYearMonth.setText(year + "年");
+    }
+
+    private void getDetails(String day) {
+        mPresenter.getDayDetails(day, () -> configDayDetail(mPresenter.mDayDetail));
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void configDayDetail(DayDetail dayDetail) {
+
+        mHandler.post(() -> {
+            ((TextView) findViewById(R.id.tv_detail_week)).setText(dayDetail.getDate() + " " + dayDetail.getWeekday());
+            ((TextView) findViewById(R.id.tv_detail_lunar)).setText(dayDetail.getLunar());
+            ((TextView) findViewById(R.id.tv_detail_suit)).setText(dayDetail.getSuit());
+            ((TextView) findViewById(R.id.tv_detail_avoid)).setText(dayDetail.getAvoid());
+        });
+    }
+
+    private void getHolidays(String year) {
+        mPresenter.getHolidays(year, this::configHolidays);
+    }
+
+    private void configHolidays() {
+
+        mHandler.post(() -> {
+            LinearLayout linearLayout = findViewById(R.id.linear_holidays);
+            linearLayout.removeAllViewsInLayout();
+
+            List<Holiday> list = mPresenter.mHolidayList;
+            if (list != null) {
+                for (int i = 0; i < list.size(); i++) {
+
+                    Holiday data = list.get(i);
+                    if (data != null) {
+                        HolidayItemView view = new HolidayItemView(this);
+                        view.setData(data);
+                        linearLayout.addView(view);
+                    }
+                }
+            }
+        });
+    }
+
+
+}

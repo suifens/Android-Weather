@@ -19,6 +19,7 @@ import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
 import com.qq.e.comm.managers.GDTADManager;
+import com.tencent.mmkv.MMKV;
 import com.umeng.commonsdk.UMConfigure;
 
 public class WeatherApp extends Application {
@@ -39,6 +40,9 @@ public class WeatherApp extends Application {
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
 
         registerLifecycle();
+
+        //  MMKV 存储配置
+        MMKV.initialize(this);
     }
 
     public void startUsingApp() {

@@ -17,6 +17,10 @@ public class JuHeHelper {
     //  运势
     public final static String JUHE_FORTUNE = "http://web.juhe.cn:8080/constellation/getAll?consName=%s&type=%s&key=a31e488d8a2cf98b0ad401625bbe7892";
 
+    public final static String JUHE_DAY_DETAIL = "http://v.juhe.cn/calendar/day?date=%s&key=3fb26fed72acf7a7e4154d3a55f196c7";
+
+    public final static String JUHE_MONTH_HOLIDAY = "http://v.juhe.cn/calendar/month?year-month=%s&key=3fb26fed72acf7a7e4154d3a55f196c7";
+
     private Context mContext;
 
     @SuppressLint("StaticFieldLeak")
@@ -45,6 +49,18 @@ public class JuHeHelper {
 
     public void fetchFortune(String consName, String type, ApiResponseHandler handler) {
         String url = String.format(JUHE_FORTUNE, consName, type);
+        ApiClient client = ApiClient.getInstance();
+        client.get(url, null, handler);
+    }
+
+    public void fetchDayDetails(String day, ApiResponseHandler handler) {
+        String url = String.format(JUHE_DAY_DETAIL, day);
+        ApiClient client = ApiClient.getInstance();
+        client.get(url, null, handler);
+    }
+
+    public void fetchMonthHoliday(String yearMonth, ApiResponseHandler handler) {
+        String url = String.format(JUHE_MONTH_HOLIDAY, yearMonth);
         ApiClient client = ApiClient.getInstance();
         client.get(url, null, handler);
     }
