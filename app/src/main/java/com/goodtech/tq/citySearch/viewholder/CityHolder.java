@@ -100,7 +100,6 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
 
         if (weatherModel != null && weatherModel.observation != null) {
             mWeatherIcon.setVisibility(View.VISIBLE);
-            mWeatherLayout.setVisibility(View.VISIBLE);
             mTipTv.setVisibility(View.GONE);
             mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(getIconId(weatherModel)));
             if (weatherModel.observation != null && weatherModel.observation.metric != null) {
@@ -108,7 +107,6 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
             }
         } else {
             mWeatherIcon.setVisibility(View.GONE);
-            mWeatherLayout.setVisibility(View.GONE);
             mTipTv.setVisibility(View.VISIBLE);
         }
     }

@@ -28,6 +28,7 @@ import com.goodtech.tq.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
@@ -282,6 +283,9 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             bv.destroy();
         }
         this.bv = new UnifiedBannerView(this, Constants.BANNER_POS_ID, this);
+        if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
+            bv.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
+        }
         // 不需要传递tags使用下面构造函数
         // this.bv = new UnifiedBannerView(this, Constants.APPID, posId, this);
         bannerContainer.addView(bv, getUnifiedBannerLayoutParams());

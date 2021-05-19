@@ -21,6 +21,7 @@ import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.qq.e.ads.splash.SplashAD;
@@ -87,6 +88,9 @@ public class SplashADActivity extends Activity implements SplashADListener, View
         fetchSplashADTime = System.currentTimeMillis();
         splashAD = new SplashAD(activity, skipContainer, Constants.APP_ID, posId, adListener, 0);
         splashAD.fetchAndShowIn(adContainer);
+        if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
+            splashAD.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
+        }
     }
 
     @Override

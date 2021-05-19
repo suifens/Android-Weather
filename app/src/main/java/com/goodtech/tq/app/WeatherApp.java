@@ -3,7 +3,6 @@ package com.goodtech.tq.app;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,12 +12,14 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.SplashADActivity;
 import com.goodtech.tq.SplashActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
 import com.qq.e.comm.managers.GDTADManager;
+import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.umeng.commonsdk.UMConfigure;
 
 public class WeatherApp extends Application {
@@ -35,13 +36,13 @@ public class WeatherApp extends Application {
     public void onCreate() {
         super.onCreate();
         mApplication = this;
+    }
+
+    public void startUsingApp() {
 
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
 
         registerLifecycle();
-    }
-
-    public void startUsingApp() {
 
         //  初始化定位sdk，建议在Application中创建
         locationService = new LocationService(getApplicationContext());
@@ -54,6 +55,7 @@ public class WeatherApp extends Application {
 
         // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
         GDTADManager.getInstance().initWith(getApplicationContext(), Constants.APP_ID);
+        GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
     }
 
     public int mCount = 0;
