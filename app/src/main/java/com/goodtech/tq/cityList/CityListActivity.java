@@ -1,6 +1,7 @@
 package com.goodtech.tq.cityList;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -22,13 +23,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.eventbus.MessageEvent;
+import com.goodtech.tq.helpers.LocationSpHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DownloadConfirmHelper;
+import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.views.MessageAlert;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
@@ -40,10 +46,15 @@ import com.qq.e.comm.util.AdError;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ *
+ */
 public class CityListActivity extends BaseActivity implements View.OnClickListener, UnifiedBannerADListener {
 
     private static final String TAG = "CityListActivity";
@@ -85,6 +96,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             bv.destroy();
         }
 
+        EventBus.getDefault().unregister(this);
+
         super.onDestroy();
     }
 
@@ -113,6 +126,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_list);
+        EventBus.getDefault().register(this);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -139,6 +153,17 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 if (cityMode.cid != 0) {
                     EventBus.getDefault().post(new MessageEvent().setCityIndex(position));
                     finishToRight();
+                } else {
+                    if (checkPermission()) {
+                        MessageAlert alert = new MessageAlert(CityListActivity.this,
+                                (dialog, which) -> openLocationPermission());
+                        if (!isFinishing()) {
+                            alert.show();
+                        }
+                    } else {
+                        TipHelper.showProgressDialog(CityListActivity.this, false);
+                        LocationHelper.getInstance().startWithDelay(CityListActivity.this);
+                    }
                 }
             }
 
@@ -178,6 +203,17 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        if (event.isSuccessLocation()) {
+            mHandler.postDelayed(() -> {
+                mProvider.getData();
+                mAdapter.notifyDataSetChanged(false);
+            }, 100);
+        }
+        TipHelper.dismissProgressDialog();
     }
 
     @Override

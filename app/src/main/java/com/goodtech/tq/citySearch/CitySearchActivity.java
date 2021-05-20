@@ -67,7 +67,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (isStart) {
             LocationHelper.getInstance().start(this);
 
-            if (LocationSpHelper.getLocation().cid != 0) {
+            if (LocationSpHelper.getLocation() != null) {
                 isStart = false;
                 //  能够获取到定位
                 mHandler.postDelayed(new Runnable() {
@@ -105,28 +105,21 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         configStationBar(findViewById(R.id.private_station_bar));
 
         mRecommendHeaderView = findViewById(R.id.header_recommend);
-        mRecommendHeaderView.setListener(new CityRecommendAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, CityMode cityMode) {
+        mRecommendHeaderView.setListener((view, position, cityMode) -> {
 
-                if (cityMode != null && cityMode.cid != 0) {
-                    addCity(cityMode);
-                } else if (!CitySearchActivity.this.isFinishing()) {
+            if (cityMode != null && cityMode.cid != 0) {
+                addCity(cityMode);
+            } else if (!CitySearchActivity.this.isFinishing()) {
 
-                    if (checkPermission()) {
-                        MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                requestLocationPermissions();
-                            }
-                        });
-                        if (!isFinishing()) {
-                            alert.show();
-                        }
-                    } else {
-                        TipHelper.showProgressDialog(CitySearchActivity.this, false);
-                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
+                if (checkPermission()) {
+                    MessageAlert alert = new MessageAlert(CitySearchActivity.this,
+                            (dialog, which) -> openLocationPermission());
+                    if (!isFinishing()) {
+                        alert.show();
                     }
+                } else {
+                    TipHelper.showProgressDialog(CitySearchActivity.this, false);
+                    LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
                 }
             }
         });
@@ -181,7 +174,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 }
             });
 
-            if (isStart && LocationSpHelper.getLocation().cid != 0) {
+            if (isStart && LocationSpHelper.getLocation() != null) {
                 if (!CitySearchActivity.this.isFinishing()) {
                     TipHelper.showProgressDialog(this);
                 }

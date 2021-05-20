@@ -18,9 +18,19 @@ public class CityListProvider extends AbstractDataProvider {
     private int mLastRemovedPosition = -1;
 
     public CityListProvider() {
+        getData();
+    }
 
+    public void getData() {
         mData = LocationSpHelper.getCityListAndLocation();
-
+        if (mData.size() > 0) {
+            CityMode firstMode = mData.get(0);
+            if (!firstMode.location) {
+                CityMode tempMode = new CityMode();
+                tempMode.location = true;
+                mData.add(0, tempMode);
+            }
+        }
     }
 
     @Override

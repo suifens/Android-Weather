@@ -1,6 +1,7 @@
 package com.goodtech.tq;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +24,10 @@ import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.TipHelper;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 /**
  * com.goodtech.tq
@@ -49,6 +54,25 @@ public class BaseActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(stationBar.getLayoutParams());
         bars.height = bars.height + DeviceUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    protected void openLocationPermission() {
+        ArrayList<String> lackedPermissions = new ArrayList<>();
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            lackedPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        // 如果需要的权限都已经有了，那么直接调用SDK
+        if (lackedPermissions.size() == 0) {
+            requestLocationPermissions();
+        } else {
+            String[] requestPermissions = new String[lackedPermissions.size()];
+            lackedPermissions.toArray(requestPermissions);
+            ActivityCompat.requestPermissions(this, requestPermissions, PERMISSION_REQUEST_COARSE_LOCATION);
+        }
     }
 
     @Override
@@ -118,14 +142,8 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void requestLocationPermissions() {
         if (!isLocationEnabled()) {
-//            ActivityCompat.requestPermissions(this,
-//                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-//                            Manifest.permission.ACCESS_FINE_LOCATION},
-//                    PERMISSION_REQUEST_COARSE_LOCATION);
             startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), PERMISSION_REQUEST_COARSE_LOCATION);
         } else {
-//            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//            startActivity(intent);
             if (!this.isFinishing()) { //xActivity即为本界面的Activity
                 TipHelper.showProgressDialog(this, false);
             }
