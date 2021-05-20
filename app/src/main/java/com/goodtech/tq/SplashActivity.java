@@ -40,8 +40,6 @@ public class SplashActivity extends Activity {
         if (!TextUtils.isEmpty(saveVersion)) {
             //  注册
             WeatherApp.getInstance().startUsingApp();
-            //  配置 UM_APP_ID , 标识
-            UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
 
             String versionName = DeviceUtils.getVersionName(this);
             if (!saveVersion.equals("0")) {

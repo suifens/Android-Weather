@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 
+import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DisagreeAlert;
@@ -153,9 +154,9 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     private void checkAndRequestPermission() {
         ArrayList<String> lackedPermissions = new ArrayList<>();
 
-        if (checkPermission(Manifest.permission.READ_PHONE_STATE)) {
-            lackedPermissions.add(Manifest.permission.READ_PHONE_STATE);
-        }
+//        if (checkPermission(Manifest.permission.READ_PHONE_STATE)) {
+//            lackedPermissions.add(Manifest.permission.READ_PHONE_STATE);
+//        }
 
         if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
             lackedPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -164,12 +165,12 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
             lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
 
-        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            lackedPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            lackedPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
+//        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+//            lackedPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+//        }
+//        if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//            lackedPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        }
 
         // 如果需要的权限都已经有了，那么直接调用SDK
         if (lackedPermissions.size() == 0) {
@@ -201,7 +202,9 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     }
 
     private void onStartWeather() {
+        WeatherApp.getInstance().startUsingApp();
         SpUtils.getInstance().putString(SpUtils.VERSION_APP, "0");
+        CitySearchActivity.redirectTo(this, true);
         this.finish();
     }
 

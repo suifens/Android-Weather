@@ -260,7 +260,8 @@ public class SplashADActivity extends Activity implements SplashADListener, View
 
         if (!getIntent().getBooleanExtra(EXTRA_BACK, false)) {
             String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
-            if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")) {
+            if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")
+                    || LocationSpHelper.getCityListAndLocation().size() == 0) {
                 CitySearchActivity.redirectTo(this, true);
             } else {
                 this.startActivity(new Intent(this, MainActivity.class));

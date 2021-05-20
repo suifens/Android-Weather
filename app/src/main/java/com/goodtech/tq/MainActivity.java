@@ -111,10 +111,6 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        //  当前城市
-        CityMode mCurLocation = LocationSpHelper.getLocation();
-        setAddress(mCurLocation);
-
         configViewPager();
         mCurrIndex = 0;
 
@@ -174,15 +170,11 @@ public class MainActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
 
-        if (mViewPager.getCurrentItem() == 0) {
-            setAddress(LocationSpHelper.getLocation());
-        }
-
         if (TimeUtils.needLocation()) {
             LocationHelper.getInstance().start(this);
         }
 
-        List cityModes = LocationSpHelper.getCityListAndLocation();
+        ArrayList<CityMode> cityModes = LocationSpHelper.getCityListAndLocation();
         if (cityModes.size() != mCityModes.size() || isNeedReload) {
             mCityModes = new ArrayList<>(cityModes);
             isNeedReload = true;
@@ -416,26 +408,28 @@ public class MainActivity extends BaseActivity {
                 }
             }
 
-            CityMode location = LocationSpHelper.getLocation();
-            if (mCurrIndex == 0 && location.cid == 0) {
-                if (!this.isFinishing()) {
-                    if (!isLocationServicesAvailable(this)) {
-                        MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                requestLocationPermissions();
-                            }
-                        });
-                        if (!isFinishing()) {
-                            alert.show();
-                        }
-                    }
-                    else {
-                        TipHelper.showProgressDialog(this, false);
-                        LocationHelper.getInstance().startWithDelay(this);
-                    }
-                }
-            }
+//            CityMode location = LocationSpHelper.getLocation();
+//            if (mCurrIndex == 0) {
+//                assert location != null;
+//                if (location.cid == 0) {
+//                    if (!this.isFinishing()) {
+//                        if (!isLocationServicesAvailable(this)) {
+//                            MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    requestLocationPermissions();
+//                                }
+//                            });
+//                            if (!isFinishing()) {
+//                                alert.show();
+//                            }
+//                        } else {
+//                            TipHelper.showProgressDialog(this, false);
+//                            LocationHelper.getInstance().startWithDelay(this);
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -443,14 +437,10 @@ public class MainActivity extends BaseActivity {
         if (cityMode != null && mAddressTv != null) {
             mLocationTip.setVisibility(cityMode.location ? View.VISIBLE : View.GONE);
 
-            if (cityMode.location && cityMode.cid == 0) {
-                mAddressTv.setText("定位失败");
+            if (!TextUtils.isEmpty(cityMode.city)) {
+                mAddressTv.setText(cityMode.city);
             } else {
-                if (!TextUtils.isEmpty(cityMode.city)) {
-                    mAddressTv.setText(cityMode.city);
-                } else {
-                    mAddressTv.setText("");
-                }
+                mAddressTv.setText("");
             }
         }
 

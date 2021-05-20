@@ -13,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.goodtech.tq.BuildConfig;
+import com.goodtech.tq.MyActivityManager;
 import com.goodtech.tq.SplashADActivity;
 import com.goodtech.tq.SplashActivity;
+import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
@@ -52,6 +54,8 @@ public class WeatherApp extends Application {
 //        SDKInitializer.setCoordType(CoordType.BD09LL);
 
         UMConfigure.init(getApplicationContext(), UMConfigure.DEVICE_TYPE_PHONE, "");
+        //  配置 UM_APP_ID , 标识
+        UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
 
         // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
         GDTADManager.getInstance().initWith(getApplicationContext(), Constants.APP_ID);
@@ -80,12 +84,13 @@ public class WeatherApp extends Application {
 
             @Override
             public void onActivityResumed(@NonNull Activity activity) {
-                if (mCount == 1
-                        && !(activity instanceof SplashActivity)
-                        && !(activity instanceof SplashADActivity))
-                {
-                    Log.e("TAG", "onActivityStarted: 进入到前台");
-                    SplashADActivity.redirectToFront(activity);
+                Log.e("TAG", "onActivityResumed: " + mCount);
+                MyActivityManager.getInstance().setCurrentActivity(activity);
+                if (MyActivityManager.getInstance().getBaseActivityName().contentEquals("com.goodtech.tq.MainActivity")) {
+                    if (mCount == 1) {
+                        Log.e("TAG", "onActivityStarted: 进入到前台");
+                        SplashADActivity.redirectToFront(activity);
+                    }
                 }
             }
 
