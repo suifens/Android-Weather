@@ -14,6 +14,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -27,6 +28,7 @@ import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DisagreeAlert;
 import com.goodtech.tq.utils.DisagreeAlert.DisagreeAlertListener;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.TipHelper;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jetbrains.annotations.NotNull;
@@ -196,15 +198,18 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == 1024) {
+            TipHelper.showProgressDialog(this);
             onStartWeather();
         }
     }
 
+    private static final String TAG = "PermissionActivity";
     private void onStartWeather() {
-        WeatherApp.getInstance().startUsingApp();
-        SpUtils.getInstance().putString(SpUtils.VERSION_APP, "0");
-        CitySearchActivity.redirectTo(this, true);
-        this.finish();
+        mHandler.post(() -> {
+            SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
+            CitySearchActivity.redirectTo(this, true);
+            this.finish();
+        });
     }
 
     @Override

@@ -55,12 +55,10 @@ public class SplashActivity extends Activity {
             this.finish();
 
         } else {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    PermissionActivity.redirectTo(SplashActivity.this);
-                }
-            }, 1500);
+            handler.postDelayed(() -> {
+                PermissionActivity.redirectTo(SplashActivity.this);
+                this.finish();
+            }, 500);
         }
     }
 }

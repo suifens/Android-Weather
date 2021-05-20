@@ -12,10 +12,6 @@ import android.widget.Toast;
 
 import com.goodtech.tq.views.LoadingDialog;
 
-/**
- * @author wangrengshun <wangrengshun@gengee.cn>
- */
-
 public class TipHelper {
     private static final String TAG = "TipHelper";
     protected static Handler mHandler = new Handler(Looper.getMainLooper());
@@ -44,62 +40,62 @@ public class TipHelper {
     }
     
     public synchronized static void showProgressDialog(final Activity context, final int resId, final boolean cancelable) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dismissDialog();
-    
-                mProgressDialog = LoadingDialog.createLoadingDialog(context, context.getString(resId));
-                mProgressDialog.setCancelable(cancelable);
-                try {
-                    if (!context.isFinishing()) {
-                        mProgressDialog.show();
-                    }
-                } catch (Exception e) {
-                    mProgressDialog = null;
-                    e.printStackTrace();
+        if (context == null || context.isFinishing()) {
+            return;
+        }
+        mHandler.post(() -> {
+            dismissDialog();
+
+            mProgressDialog = LoadingDialog.createLoadingDialog(context, context.getString(resId));
+            mProgressDialog.setCancelable(cancelable);
+            try {
+                if (!context.isFinishing()) {
+                    mProgressDialog.show();
                 }
+            } catch (Exception e) {
+                mProgressDialog = null;
+                e.printStackTrace();
             }
         });
         
     }
 
     public synchronized static void showProgressDialog(final Activity context, final boolean cancelable) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dismissDialog();
+        if (context == null || context.isFinishing()) {
+            return;
+        }
+        mHandler.post(() -> {
+            dismissDialog();
 
-                mProgressDialog = LoadingDialog.createLoadingDialog(context);
-                mProgressDialog.setCancelable(cancelable);
-                try {
-                    if (!context.isFinishing()) {
-                        mProgressDialog.show();
-                    }
-                } catch (Exception e) {
-                    mProgressDialog = null;
-                    e.printStackTrace();
+            mProgressDialog = LoadingDialog.createLoadingDialog(context);
+            mProgressDialog.setCancelable(cancelable);
+            try {
+                if (!context.isFinishing()) {
+                    mProgressDialog.show();
                 }
+            } catch (Exception e) {
+                mProgressDialog = null;
+                e.printStackTrace();
             }
         });
 
     }
 
     public synchronized static void showProgressDialog(final Activity context) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dismissDialog();
+        if (context == null || context.isFinishing()) {
+            return;
+        }
+        mHandler.post(() -> {
+            dismissDialog();
 
-                mProgressDialog = LoadingDialog.createLoadingDialog(context);
-                try {
-                    if (!context.isFinishing()) {
-                        mProgressDialog.show();
-                    }
-                } catch (Exception e) {
-                    mProgressDialog = null;
-                    e.printStackTrace();
+            mProgressDialog = LoadingDialog.createLoadingDialog(context);
+            try {
+                if (!context.isFinishing()) {
+                    mProgressDialog.show();
                 }
+            } catch (Exception e) {
+                mProgressDialog = null;
+                e.printStackTrace();
             }
         });
 
@@ -107,12 +103,7 @@ public class TipHelper {
     
     
     public static void dismissProgressDialog() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dismissDialog();
-            }
-        });
+        mHandler.post(TipHelper::dismissDialog);
         
     }
     

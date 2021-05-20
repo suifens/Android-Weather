@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
+import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -48,8 +49,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
     private View mEmptyView;
     private boolean isStart;
+    private boolean mFirstLoad = true;
 
     public static void redirectTo(Context ctx, boolean isStart) {
+        Log.e(TAG, "onStartWeather: " + System.currentTimeMillis());
         Intent intent = new Intent(ctx, CitySearchActivity.class);
         intent.putExtra(EXTRA_START, isStart);
         ctx.startActivity(intent);
@@ -64,25 +67,14 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     @Override
     protected void onResume() {
         super.onResume();
-        if (isStart) {
-            LocationHelper.getInstance().start(this);
-
-            if (LocationSpHelper.getLocation() != null) {
-                isStart = false;
-                //  能够获取到定位
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!CitySearchActivity.this.isFinishing()) {
-                            TipHelper.showProgressDialog(CitySearchActivity.this);
-                            Log.e(TAG, "run: resume activity");
-                            Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finishToRight();
-                        }
-                    }
-                }, 1000);
+        Log.e(TAG, "onResume: " + System.currentTimeMillis());
+        if (mFirstLoad) {
+            mFirstLoad = false;
+            if (isStart) {
+                if (checkLocationPermission()) {
+                    TipHelper.showProgressDialog(this);
+                    LocationHelper.getInstance().start(this);
+                }
             }
         }
     }
@@ -91,15 +83,16 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_search);
-        initSearchView();
-
-        EventBus.getDefault().register(this);
-
         Button mCancelBtn = findViewById(R.id.search_btn_cancel);
         if (getIntent().getBooleanExtra(EXTRA_START, false)) {
             mCancelBtn.setVisibility(View.GONE);
             isStart = true;
+            WeatherApp.getInstance().startUsingApp();
         }
+
+        initSearchView();
+
+        EventBus.getDefault().register(this);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -162,6 +155,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mEmptyView = findViewById(R.id.layout_no_data);
 
         findViewById(R.id.search_btn_cancel).setOnClickListener(this);
+
+        Log.e(TAG, "onCreate: " + System.currentTimeMillis());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

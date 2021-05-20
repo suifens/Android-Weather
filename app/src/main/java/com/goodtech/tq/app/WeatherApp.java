@@ -44,7 +44,7 @@ public class WeatherApp extends Application {
 
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
 
-        registerLifecycle();
+//        registerLifecycle();
 
         //  初始化定位sdk，建议在Application中创建
         locationService = new LocationService(getApplicationContext());
@@ -75,11 +75,6 @@ public class WeatherApp extends Application {
             @Override
             public void onActivityStarted(@NonNull Activity activity) {
                 mCount++;
-
-//                if (mCount == 1 && !(activity instanceof SplashActivity)) {
-//                    Log.e("TAG", "onActivityStarted: 进入到前台");
-//                    SplashADActivity.redirectTo(activity);
-//                }
             }
 
             @Override
