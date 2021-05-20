@@ -40,6 +40,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     private static final String agreementStr = "《用户协议》";
     private static final String privateStr = "《隐私政策》";
     private TextView mSpannableTv;
+    private int mCancelTimes;
 
     public static void redirectTo(Context ctx) {
         Intent intent = new Intent(ctx, PermissionActivity.class);
@@ -120,12 +121,20 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
                 checkAndRequestPermission();
                 break;
             case R.id.button_disagree: {
-                DisagreeAlert alert = new DisagreeAlert(PermissionActivity.this, new DisagreeAlertListener() {
-                    @Override
-                    public void onConfirmClick(View view) {
-                        checkAndRequestPermission();
-                    }
-                });
+                DisagreeAlert alert = new DisagreeAlert(PermissionActivity.this,
+                        new DisagreeAlertListener() {
+                            @Override
+                            public void onConfirmClick(View view) {
+                                checkAndRequestPermission();
+                            }
+
+                            @Override
+                            public void onCancelClick(View view) {
+                                if (++mCancelTimes == 2) {
+                                    finish();
+                                }
+                            }
+                        });
                 if (!isFinishing()) {
                     alert.show();
                 }
@@ -189,16 +198,6 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         if (requestCode == 1024) {
             onStartWeather();
         }
-
-//        if (requestCode == 1024 && hasAllPermissionsGranted(grantResults)) {
-//            onStartWeather();
-//        } else {
-//            Toast.makeText(this, "应用缺少必要的权限！请点击\"权限\"，打开所需要的权限。", Toast.LENGTH_LONG).show();
-//            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//            intent.setData(Uri.parse("package:" + getPackageName()));
-//            startActivity(intent);
-//            finish();
-//        }
     }
 
     private void onStartWeather() {
