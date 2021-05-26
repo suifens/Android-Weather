@@ -120,21 +120,24 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_agree:
-                checkAndRequestPermission();
+//                checkAndRequestPermission();
+                onStartWeather();
                 break;
             case R.id.button_disagree: {
+                if (mCancelTimes > 0) {
+                    finish();
+                    return;
+                }
                 DisagreeAlert alert = new DisagreeAlert(PermissionActivity.this,
                         new DisagreeAlertListener() {
                             @Override
                             public void onConfirmClick(View view) {
-                                checkAndRequestPermission();
+                                onStartWeather();
                             }
 
                             @Override
                             public void onCancelClick(View view) {
-                                if (++mCancelTimes == 2) {
-                                    finish();
-                                }
+                                mCancelTimes += 1;
                             }
                         });
                 if (!isFinishing()) {
@@ -198,7 +201,6 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == 1024) {
-            TipHelper.showProgressDialog(this);
             onStartWeather();
         }
     }

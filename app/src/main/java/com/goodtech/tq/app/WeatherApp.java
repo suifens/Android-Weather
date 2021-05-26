@@ -38,13 +38,12 @@ public class WeatherApp extends Application {
     public void onCreate() {
         super.onCreate();
         mApplication = this;
+        registerLifecycle();
     }
 
     public void startUsingApp() {
 
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
-
-//        registerLifecycle();
 
         //  初始化定位sdk，建议在Application中创建
         locationService = new LocationService(getApplicationContext());
@@ -63,6 +62,7 @@ public class WeatherApp extends Application {
     }
 
     public int mCount = 0;
+    public boolean onBackground = false;
     public void registerLifecycle() {
 
         //  监听生命周期状态
@@ -75,17 +75,24 @@ public class WeatherApp extends Application {
             @Override
             public void onActivityStarted(@NonNull Activity activity) {
                 mCount++;
+                Log.e("TAG", "onActivityStarted: " + mCount);
             }
 
             @Override
             public void onActivityResumed(@NonNull Activity activity) {
                 Log.e("TAG", "onActivityResumed: " + mCount);
-                MyActivityManager.getInstance().setCurrentActivity(activity);
-                if (MyActivityManager.getInstance().getBaseActivityName().contentEquals("com.goodtech.tq.MainActivity")) {
-                    if (mCount == 1) {
-                        Log.e("TAG", "onActivityStarted: 进入到前台");
-                        SplashADActivity.redirectToFront(activity);
-                    }
+//                MyActivityManager.getInstance().setCurrentActivity(activity);
+//                if (MyActivityManager.getInstance().getBaseActivityName().contentEquals("com.goodtech.tq.MainActivity")) {
+//                    if (mCount == 1) {
+//                        Log.e("TAG", "onActivityStarted: 进入到前台");
+//                        SplashADActivity.redirectToFront(activity);
+//                    }
+//                }
+//            }
+                if (mCount == 1 && onBackground) {
+                    onBackground = false;
+                    Log.e("TAG", "onActivityStarted: 进入到前台");
+                    SplashADActivity.redirectToFront(activity);
                 }
             }
 
@@ -97,9 +104,12 @@ public class WeatherApp extends Application {
             @Override
             public void onActivityStopped(@NonNull Activity activity) {
                 mCount = Math.max(mCount - 1, 0);
+                MyActivityManager.getInstance().setCurrentActivity(activity);
                 if (mCount == 0) {
+                    onBackground = true;
                     Log.e("TAG", "onActivityStopped: 退出到后台");
                 }
+                Log.e("TAG", "onActivityResumed: " + mCount);
             }
 
             @Override

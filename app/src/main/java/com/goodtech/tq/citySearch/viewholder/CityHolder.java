@@ -85,6 +85,7 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
                 }
             }
             mLocationTip.setVisibility(View.VISIBLE);
+            mWeatherLayout.setVisibility(View.VISIBLE);
         } else {
             if (mCityNameTv != null) {
                 mCityNameTv.setText(mode.city);
