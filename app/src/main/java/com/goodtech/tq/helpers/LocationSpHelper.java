@@ -3,7 +3,7 @@ package com.goodtech.tq.helpers;
 import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
@@ -40,7 +40,7 @@ public class LocationSpHelper {
             cityMode.lon = String.valueOf(bdLocation.getLongitude());
             cityMode.city = String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet());
             //  获取天气信息
-            WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
+            WeatherHttpHelper httpHelper = new WeatherHttpHelper(BaseApp.getInstance());
             httpHelper.fetchWeather(cityMode);
         }
         Gson gson = new Gson();

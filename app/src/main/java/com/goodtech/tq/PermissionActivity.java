@@ -14,7 +14,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -22,13 +21,11 @@ import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 
-import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DisagreeAlert;
 import com.goodtech.tq.utils.DisagreeAlert.DisagreeAlertListener;
 import com.goodtech.tq.utils.SpUtils;
-import com.goodtech.tq.utils.TipHelper;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jetbrains.annotations.NotNull;

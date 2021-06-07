@@ -1,7 +1,6 @@
 package com.goodtech.tq.citySearch;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -19,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -98,7 +97,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (getIntent().getBooleanExtra(EXTRA_START, false)) {
             mCancelBtn.setVisibility(View.GONE);
             isStart = true;
-            WeatherApp.getInstance().startUsingApp();
+            BaseApp.getInstance().startUsingApp();
         }
 
         initSearchView();

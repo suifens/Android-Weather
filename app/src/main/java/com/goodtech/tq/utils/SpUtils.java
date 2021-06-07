@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,7 +33,7 @@ public class SpUtils {
     
     public static synchronized SpUtils getInstance() {
         if (instance == null) {
-            instance = new SpUtils(WeatherApp.getInstance());
+            instance = new SpUtils(BaseApp.getInstance());
         }
         return instance;
     }

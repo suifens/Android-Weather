@@ -14,11 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
-import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DownloadConfirmHelper;

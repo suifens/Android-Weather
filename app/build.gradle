@@ -125,7 +125,9 @@ dependencies {
     //网络加载图片工具
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     // umeng
-    implementation 'com.umeng.umsdk:common:2.2.5'
+    //集成示例
+    implementation 'com.umeng.umsdk:common:9.3.8'//必选
+    implementation 'com.umeng.umsdk:asms:1.2.2'//必选
     implementation 'com.umeng.umsdk:analytics:8.1.6'
     implementation 'com.umeng.umsdk:utdid:1.1.5.3'
     //网络请求

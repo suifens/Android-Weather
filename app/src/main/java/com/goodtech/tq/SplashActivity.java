@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
@@ -14,7 +14,6 @@ import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
-import com.umeng.commonsdk.UMConfigure;
 
 
 public class SplashActivity extends Activity {
@@ -39,7 +38,7 @@ public class SplashActivity extends Activity {
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
             //  注册
-            WeatherApp.getInstance().startUsingApp();
+            BaseApp.getInstance().startUsingApp();
 
             String versionName = DeviceUtils.getVersionName(this);
             if (!saveVersion.equals("0")) {

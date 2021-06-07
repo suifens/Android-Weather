@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.utils.Constants;
 
 /**
@@ -19,7 +19,7 @@ public class JuHeHelper {
 
     public static synchronized JuHeHelper getInstance() {
         if (instance == null) {
-            instance = new JuHeHelper(WeatherApp.getInstance());
+            instance = new JuHeHelper(BaseApp.getInstance());
         }
         return instance;
     }

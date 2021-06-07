@@ -76,7 +76,7 @@ public abstract class ApiResponseHandler implements Callback {
 
             if (errCode == ErrorCode.ERR401) {
                 //  用户信息过时
-//                WeatherApp.getInstance().logoutRepeat();
+//                BaseApp.getInstance().logoutRepeat();
             }
             onResponse(false, jsonRsp, errCode);
 
@@ -111,7 +111,7 @@ public abstract class ApiResponseHandler implements Callback {
 
             if (errCode == ErrorCode.ERR401) {
                 //  用户信息过时
-//                WeatherApp.getInstance().logoutRepeat();
+//                BaseApp.getInstance().logoutRepeat();
             }
 
             onResponse(success, jsonObject, errCode);

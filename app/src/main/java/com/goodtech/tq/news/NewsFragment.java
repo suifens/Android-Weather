@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.db.NewsDbHelper;
 import com.goodtech.tq.fragment.BaseFragment;
 import com.goodtech.tq.httpClient.ApiClient;
@@ -89,7 +89,7 @@ public class NewsFragment extends BaseFragment implements NativeExpressAD.Native
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbHelper = new NewsDbHelper(WeatherApp.getInstance());
+        dbHelper = new NewsDbHelper(BaseApp.getInstance());
     }
 
     @Override

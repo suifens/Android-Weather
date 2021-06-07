@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.MyActivityManager;
 import com.goodtech.tq.SplashADActivity;
-import com.goodtech.tq.SplashActivity;
-import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
@@ -24,13 +22,13 @@ import com.qq.e.comm.managers.GDTADManager;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.umeng.commonsdk.UMConfigure;
 
-public class WeatherApp extends Application {
+public class BaseApp extends Application {
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     public LocationService locationService;
     public Vibrator mVibrator;
-    private static WeatherApp mApplication;
+    private static BaseApp mApplication;
 
-    public static WeatherApp getInstance() {
+    public static BaseApp getInstance() {
         return mApplication;
     }
 
@@ -39,6 +37,7 @@ public class WeatherApp extends Application {
         super.onCreate();
         mApplication = this;
         registerLifecycle();
+        UMConfigure.preInit(this, Constants.UM_APP_ID, BuildConfig.FLAVOR);
     }
 
     public void startUsingApp() {
