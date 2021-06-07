@@ -23,6 +23,8 @@ public class Constants {
 
     public final static String TIME_LOCATION = "location_time";
     public final static String TIME_WEATHER = "weather_fetch_time";
+    //  个性化广告
+    public static final String PERSONALIZED_AD = "personalized advertising";
 
     //  新闻头条
     public final static String JUHE_TOUTIAO = "http://v.juhe.cn/toutiao/index?key=927352c7b578ec641b4bac8799b5d40b";
