@@ -128,8 +128,8 @@ dependencies {
     //集成示例
     implementation 'com.umeng.umsdk:common:9.3.8'//必选
     implementation 'com.umeng.umsdk:asms:1.2.2'//必选
-    implementation 'com.umeng.umsdk:analytics:8.1.6'
-    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
+//    implementation 'com.umeng.umsdk:analytics:8.1.6'
+//    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
     //网络请求
     implementation("com.squareup.okhttp3:okhttp:4.7.2")
     implementation("com.squareup.okio:okio:2.6.0")

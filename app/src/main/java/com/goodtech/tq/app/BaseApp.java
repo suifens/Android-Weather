@@ -60,66 +60,117 @@ public class BaseApp extends Application {
         GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
     }
 
-    public int mCount = 0;
-    public boolean onBackground = false;
+    public int appCount = 0;
+    public boolean isRunInBackground = false;
     public void registerLifecycle() {
 
-        //  监听生命周期状态
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
-            public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
             }
 
             @Override
-            public void onActivityStarted(@NonNull Activity activity) {
-                mCount++;
-                Log.e("TAG", "onActivityStarted: " + mCount);
-            }
-
-            @Override
-            public void onActivityResumed(@NonNull Activity activity) {
-                Log.e("TAG", "onActivityResumed: " + mCount);
-//                MyActivityManager.getInstance().setCurrentActivity(activity);
-//                if (MyActivityManager.getInstance().getBaseActivityName().contentEquals("com.goodtech.tq.MainActivity")) {
-//                    if (mCount == 1) {
-//                        Log.e("TAG", "onActivityStarted: 进入到前台");
-//                        SplashADActivity.redirectToFront(activity);
-//                    }
-//                }
-//            }
-                if (mCount == 1 && onBackground) {
-                    onBackground = false;
-                    Log.e("TAG", "onActivityStarted: 进入到前台");
-                    SplashADActivity.redirectToFront(activity);
-                }
-            }
-
-            @Override
-            public void onActivityPaused(@NonNull Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityStopped(@NonNull Activity activity) {
-                mCount = Math.max(mCount - 1, 0);
+            public void onActivityStarted(Activity activity) {
+                appCount++;
                 MyActivityManager.getInstance().setCurrentActivity(activity);
-                if (mCount == 0) {
-                    onBackground = true;
-                    Log.e("TAG", "onActivityStopped: 退出到后台");
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                if (isRunInBackground) {
+                    //应用从后台回到前台 需要做的操作
+                    mHandler.postDelayed(() -> back2App(activity), 300);
+//                    back2App(activity);
                 }
-                Log.e("TAG", "onActivityResumed: " + mCount);
             }
 
             @Override
-            public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-
+            public void onActivityPaused(Activity activity) {
             }
 
             @Override
-            public void onActivityDestroyed(@NonNull Activity activity) {
+            public void onActivityStopped(Activity activity) {
+                appCount--;
+                if (appCount == 0) {
+                    //应用进入后台 需要做的操作
+                    leaveApp(activity);
+                }
+            }
 
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
             }
         });
     }
+
+    /**
+     * 从后台回到前台需要执行的逻辑
+     */
+    private void back2App(Activity activity) {
+        isRunInBackground = false;
+        SplashADActivity.redirectToFront(activity);
+    }
+
+    /**
+     * 离开应用 压入后台或者退出应用
+     */
+    private void leaveApp(Activity activity) {
+        isRunInBackground = true;
+    }
+
+
+//        //  监听生命周期状态
+//        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+//            @Override
+//            public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+//
+//            }
+//
+//            @Override
+//            public void onActivityStarted(@NonNull Activity activity) {
+//                mCount++;
+//                Log.e("TAG", "onActivityStarted: " + mCount);
+//            }
+//
+//            @Override
+//            public void onActivityResumed(@NonNull Activity activity) {
+//                Log.e("TAG", "onActivityResumed: " + mCount);
+//                if (mCount == 1 && onBackground) {
+//                    onBackground = false;
+//                    Log.e("TAG", "onActivityStarted: 进入到前台");
+//                    SplashADActivity.redirectToFront(activity);
+//                }
+//                MyActivityManager.getInstance().setCurrentActivity(activity);
+//            }
+//
+//            @Override
+//            public void onActivityPaused(@NonNull Activity activity) {
+//
+//            }
+//
+//            @Override
+//            public void onActivityStopped(@NonNull Activity activity) {
+//            }
+//
+//            @Override
+//            public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+//
+//            }
+//
+//            @Override
+//            public void onActivityDestroyed(@NonNull Activity activity) {
+//                Log.e("TAG", "onActivityDestroyed: ");
+//                mCount = Math.max(mCount - 1, 0);
+//                MyActivityManager.getInstance().setCurrentActivity(activity);
+//                if (mCount == 0) {
+////                    onBackground = true;
+//                    Log.e("TAG", "onActivityStopped: 退出到后台");
+//                }
+//                Log.e("TAG", "onActivityResumed: " + mCount);
+//            }
+//        });
 }
