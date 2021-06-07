@@ -71,7 +71,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (mFirstLoad) {
             mFirstLoad = false;
             if (isStart) {
-                mHandler.postDelayed(this::openLocationPermission, 100);
+                mHandler.postDelayed(() -> openLocationPermission(true), 100);
             }
         }
     }
@@ -79,7 +79,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     private void toGetLocation() {
         if (checkPermission()) {
             MessageAlert alert = new MessageAlert(CitySearchActivity.this,
-                    (dialog, which) -> openLocationPermission());
+                    (dialog, which) -> openLocationPermission(false));
             if (!isFinishing()) {
                 alert.show();
             }
@@ -129,13 +129,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendView.setVisibility(View.VISIBLE);
         final ArrayList<CityMode> recommends = CityHelper.getRecommends(this);
         CityRecommendAdapter mRecommendAdapter = new CityRecommendAdapter(this, recommends);
-        mRecommendAdapter.setOnItemClickListener(new CityRecommendAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, CityMode cityMode) {
+        mRecommendAdapter.setOnItemClickListener((view, position, cityMode) -> {
 
-                if (cityMode != null && cityMode.cid != 0) {
-                    addCity(cityMode);
-                }
+            if (cityMode != null && cityMode.cid != 0) {
+                addCity(cityMode);
             }
         });
         mRecommendView.setAdapter(mRecommendAdapter);
@@ -150,13 +147,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mSearchListView = findViewById(R.id.recycler_search);
         mSearchListView.setVisibility(View.GONE);
         mSearchAdapter = new CityRecyclerAdapter(this, null);
-        mSearchAdapter.setOnItemClickListener(new CityRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, CityMode cityMode) {
-
-                addCity(cityMode);
-            }
-        });
+        mSearchAdapter.setOnItemClickListener((view, position, cityMode) -> addCity(cityMode));
         mSearchListView.setAdapter(mSearchAdapter);
 
         mEmptyView = findViewById(R.id.layout_no_data);
@@ -167,12 +158,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         if (event.isSuccessLocation()) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mRecommendHeaderView.updateLocation();
-                }
-            });
+            mHandler.post(() -> mRecommendHeaderView.updateLocation());
 
             if (isStart && LocationSpHelper.getLocation() != null) {
                 if (!CitySearchActivity.this.isFinishing()) {
@@ -210,20 +196,17 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
         isStart = false;
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finishToRight();
-            }
+        mHandler.postDelayed(() -> {
+            Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finishToRight();
         }, 200);
     }
 
     private void initSearchView() {
         // 输入搜索关键字
-        SearchView mSearchView = (SearchView) findViewById(R.id.search_view);
+        SearchView mSearchView = findViewById(R.id.search_view);
         mSearchView.setOnQueryTextListener(this);
         //设置SearchView默认为展开显示
         mSearchView.setIconified(false);

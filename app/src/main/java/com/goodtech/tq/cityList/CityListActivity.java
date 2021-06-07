@@ -156,7 +156,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 } else {
                     if (checkPermission()) {
                         MessageAlert alert = new MessageAlert(CityListActivity.this,
-                                (dialog, which) -> openLocationPermission());
+                                (dialog, which) -> openLocationPermission(false));
                         if (!isFinishing()) {
                             alert.show();
                         }

@@ -57,13 +57,16 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    protected void openLocationPermission() {
+    protected void openLocationPermission(boolean phoneState) {
         ArrayList<String> lackedPermissions = new ArrayList<>();
         if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
             lackedPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
         if (checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        if (phoneState && checkPermission(Manifest.permission.READ_PHONE_STATE)) {
+            lackedPermissions.add(Manifest.permission.READ_PHONE_STATE);
         }
         // 如果需要的权限都已经有了，那么直接调用SDK
         if (lackedPermissions.size() == 0) {
