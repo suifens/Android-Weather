@@ -49,12 +49,14 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     public static void redirectTo(Activity ctx) {
         Intent intent = new Intent(ctx, SplashADActivity.class);
         ctx.startActivity(intent);
+        ctx.overridePendingTransition(0, 0);
     }
 
     public static void redirectToFront(Activity ctx) {
         Intent intent = new Intent(ctx, SplashADActivity.class);
         intent.putExtra(EXTRA_BACK, true);
         ctx.startActivity(intent);
+        ctx.overridePendingTransition(0, 0);
     }
 
     @Override
