@@ -1,12 +1,9 @@
 package com.goodtech.tq;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -19,18 +16,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.app.ActivityCompat;
-
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DisagreeAlert;
 import com.goodtech.tq.utils.DisagreeAlert.DisagreeAlertListener;
 import com.goodtech.tq.utils.SpUtils;
 import com.umeng.analytics.MobclickAgent;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 
 @SuppressLint("NonConstantResourceId")
 public class PermissionActivity extends BaseActivity implements View.OnClickListener {
@@ -129,12 +120,12 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
                         new DisagreeAlertListener() {
                             @Override
                             public void onConfirmClick(View view) {
-                                onStartWeather();
+                                mCancelTimes += 1;
                             }
 
                             @Override
                             public void onCancelClick(View view) {
-                                mCancelTimes += 1;
+                                finish();
                             }
                         });
                 if (!isFinishing()) {
@@ -142,63 +133,6 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
                 }
             }
             break;
-        }
-    }
-
-    /**
-     *
-     * ----------非常重要----------
-     *
-     * Android6.0以上的权限适配简单示例：
-     *
-     * 如果targetSDKVersion >= 23，那么建议动态申请相关权限，再调用广点通SDK
-     *
-     * SDK不强制校验下列权限（即:无下面权限sdk也可正常工作），但建议开发者申请下面权限，尤其是READ_PHONE_STATE权限
-     *
-     * READ_PHONE_STATE权限用于允许SDK获取用户标识,
-     * 针对单媒体的用户，允许获取权限的，投放定向广告；不允许获取权限的用户，投放通投广告，媒体可以选择是否把用户标识数据提供给优量汇，并承担相应广告填充和eCPM单价下降损失的结果。
-     *
-     * Demo代码里是一个基本的权限申请示例，请开发者根据自己的场景合理地编写这部分代码来实现权限申请。
-     * 注意：下面的`checkSelfPermission`和`requestPermissions`方法都是在Android6.0的SDK中增加的API，如果您的App还没有适配到Android6.0以上，则不需要调用这些方法，直接调用广点通SDK即可。
-     */
-    @TargetApi(Build.VERSION_CODES.M)
-    private void checkAndRequestPermission() {
-        ArrayList<String> lackedPermissions = new ArrayList<>();
-
-//        if (checkPermission(Manifest.permission.READ_PHONE_STATE)) {
-//            lackedPermissions.add(Manifest.permission.READ_PHONE_STATE);
-//        }
-
-        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            lackedPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-
-//        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//            lackedPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-//        }
-//        if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-//            lackedPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        }
-
-        // 如果需要的权限都已经有了，那么直接调用SDK
-        if (lackedPermissions.size() == 0) {
-            onStartWeather();
-        } else {
-            String[] requestPermissions = new String[lackedPermissions.size()];
-            lackedPermissions.toArray(requestPermissions);
-            ActivityCompat.requestPermissions(this, requestPermissions, 1024);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == 1024) {
-            onStartWeather();
         }
     }
 

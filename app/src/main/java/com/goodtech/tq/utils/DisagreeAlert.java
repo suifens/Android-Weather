@@ -40,7 +40,6 @@ public class DisagreeAlert extends AlertDialog implements View.OnClickListener {
         mConfirmBtn.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

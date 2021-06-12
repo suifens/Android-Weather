@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/color_clear"
-            android:text="再想想"
+            android:text="仍不同意"
             android:textColor="@color/blue_52e1ff"
             android:textSize="16dp"
             android:textStyle="bold" />
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/color_clear"
-            android:text="同意并进入"
+            android:text="再想想"
             android:textColor="@color/blue_52e1ff"
             android:textSize="16dp"
             android:textStyle="bold" />

@@ -71,8 +71,12 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (mFirstLoad) {
             mFirstLoad = false;
             if (isStart) {
-                mHandler.postDelayed(() -> openLocationPermission(true), 100);
+                mHandler.postDelayed(() -> {
+                    BaseApp.getInstance().startUsingApp(this);
+                }, 100);
             }
+        } else {
+            openLocationPermission(true);
         }
     }
 
@@ -97,7 +101,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (getIntent().getBooleanExtra(EXTRA_START, false)) {
             mCancelBtn.setVisibility(View.GONE);
             isStart = true;
-            BaseApp.getInstance().startUsingApp();
         }
 
         initSearchView();
@@ -166,16 +169,13 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 }
                 isStart = false;
                 //  能够获取到定位
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        TipHelper.dismissProgressDialog();
-                        Log.e(TAG, "message activity");
-                        Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finishToRight();
-                    }
+                mHandler.postDelayed(() -> {
+                    TipHelper.dismissProgressDialog();
+                    Log.e(TAG, "message activity");
+                    Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finishToRight();
                 }, 1000);
                 return;
             }
@@ -258,13 +258,15 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     public static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
-        private int space;  //位移间距
+        private final int space;  //位移间距
         public SpaceItemDecoration(int space) {
             this.space = space;
         }
 
         @Override
-        public void getItemOffsets(@NotNull Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        public void getItemOffsets(@NotNull Rect outRect, @NotNull View view,
+                                   RecyclerView parent, @NotNull RecyclerView.State state)
+        {
             if (parent.getChildAdapterPosition(view) %3 == 0) {
                 outRect.left = 0; //第一列左边贴边
             } else {

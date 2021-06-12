@@ -17,8 +17,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 163
-        versionName "4.6.3"
+        versionCode 170
+        versionName "4.7.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -128,8 +128,6 @@ dependencies {
     //集成示例
     implementation 'com.umeng.umsdk:common:9.3.8'//必选
     implementation 'com.umeng.umsdk:asms:1.2.2'//必选
-//    implementation 'com.umeng.umsdk:analytics:8.1.6'
-//    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
     //网络请求
     implementation("com.squareup.okhttp3:okhttp:4.7.2")
     implementation("com.squareup.okio:okio:2.6.0")
@@ -144,4 +142,8 @@ dependencies {
 
 //    implementation 'com.tencent.wcdb:wcdb-android:1.0.2'
     implementation 'androidx.multidex:multidex:2.0.1'
+    //  权限请求
+//    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 }

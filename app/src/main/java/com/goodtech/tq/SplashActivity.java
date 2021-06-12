@@ -38,7 +38,7 @@ public class SplashActivity extends Activity {
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
             //  注册
-            BaseApp.getInstance().startUsingApp();
+            BaseApp.getInstance().startUsingApp(this);
 
             String versionName = DeviceUtils.getVersionName(this);
             if (!saveVersion.equals("0")) {

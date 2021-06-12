@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
@@ -82,6 +83,7 @@ public class BaseActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_COARSE_LOCATION) {
+            BaseApp.getInstance().configLocation();
             if (!isLocationEnabled()) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
