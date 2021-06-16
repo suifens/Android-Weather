@@ -113,7 +113,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
     public void changeWeather(WeatherModel model, CityMode cityMode) {
 
         if (mModel != null
-                && cityMode != null
+                && model != null
                 && model.expireTime == mModel.expireTime) {
             return;
         }
@@ -133,7 +133,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (weather != null) {
+                        if (weather != null && mCityMode != null) {
                             changeWeather(weather, mCityMode);
                         }
                         refreshLayout.finishRefresh();

@@ -66,9 +66,6 @@ public class BaseActivity extends AppCompatActivity {
         if (checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
-        if (phoneState && checkPermission(Manifest.permission.READ_PHONE_STATE)) {
-            lackedPermissions.add(Manifest.permission.READ_PHONE_STATE);
-        }
         // 如果需要的权限都已经有了，那么直接调用SDK
         if (lackedPermissions.size() == 0) {
             requestLocationPermissions();
@@ -83,17 +80,21 @@ public class BaseActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_COARSE_LOCATION) {
-            BaseApp.getInstance().configLocation();
-            if (!isLocationEnabled()) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            } else {
-                if (!this.isFinishing()) { //xActivity即为本界面的Activity
-                    TipHelper.showProgressDialog(this, false);
-                }
-            }
-            LocationHelper.getInstance().startWithDelay(this);
+            checkOrStartLocation();
         }
+    }
+
+    protected void checkOrStartLocation() {
+        BaseApp.getInstance().configLocation();
+        if (!isLocationEnabled()) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        } else {
+            if (!this.isFinishing()) { //xActivity即为本界面的Activity
+                mHandler.postDelayed(() -> TipHelper.showProgressDialog(this, false), 100);
+            }
+        }
+        LocationHelper.getInstance().startWithDelay(this);
     }
 
     protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 10100;

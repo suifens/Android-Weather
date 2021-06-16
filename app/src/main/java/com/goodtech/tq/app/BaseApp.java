@@ -11,27 +11,35 @@ import android.os.Looper;
 import android.os.Vibrator;
 
 import com.goodtech.tq.BuildConfig;
-import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.MyActivityManager;
+import com.goodtech.tq.SettingActivity;
 import com.goodtech.tq.SplashADActivity;
+import com.goodtech.tq.SplashActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.SpUtils;
 import com.qq.e.comm.managers.GDTADManager;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.tbruyelle.rxpermissions2.RxPermissionsFragment;
 import com.umeng.commonsdk.UMConfigure;
 
 public class BaseApp extends Application {
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     public LocationService locationService;
     public Vibrator mVibrator;
+    //  需要获取phone state权限
+    public boolean needStatePerm = true;
+    //  定位权限，
+    public boolean needLocationPerm = true;
+
     private static BaseApp mApplication;
 
     public static BaseApp getInstance() {
         return mApplication;
     }
+    //  首次请求权限
+    public static final String FIRST_CHECK = "FIRST_CHECK";
 
     @Override
     public void onCreate() {
@@ -59,25 +67,41 @@ public class BaseApp extends Application {
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
 
         RxPermissions rxPermissions = new RxPermissions(activity);
-        rxPermissions.requestEach(Manifest.permission.ACCESS_FINE_LOCATION
-                , Manifest.permission.ACCESS_COARSE_LOCATION
-                , Manifest.permission.READ_PHONE_STATE
-                , Manifest.permission.ACCESS_WIFI_STATE).subscribe(permission ->
-        {
-            if (permission.granted) {
-                switch (permission.name) {
-                    case Manifest.permission.ACCESS_FINE_LOCATION:
-                    case Manifest.permission.ACCESS_COARSE_LOCATION:
-                        configLocation();
-                        break;
-                    case Manifest.permission.READ_PHONE_STATE:
-                    case Manifest.permission.ACCESS_WIFI_STATE:
-                        //  配置 UM_APP_ID , 标识
-                        UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
-                        break;
+        if (SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
+            rxPermissions.requestEach(Manifest.permission.READ_PHONE_STATE
+                    , Manifest.permission.ACCESS_WIFI_STATE
+                    , Manifest.permission.ACCESS_FINE_LOCATION
+                    , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
+            {
+                SpUtils.getInstance().putBoolean(FIRST_CHECK, false);
+                if (permission.granted) {
+                    switch (permission.name) {
+                        case Manifest.permission.READ_PHONE_STATE:
+                        case Manifest.permission.ACCESS_WIFI_STATE: {
+                            //  配置 UM_APP_ID , 标识
+                            UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
+                        }
+                            break;
+                        case Manifest.permission.ACCESS_FINE_LOCATION:
+                        case Manifest.permission.ACCESS_COARSE_LOCATION:
+                            configLocation();
+                            break;
+                    }
+                } else {
+                    switch (permission.name) {
+                        case Manifest.permission.ACCESS_FINE_LOCATION:
+                        case Manifest.permission.ACCESS_COARSE_LOCATION:
+                            needLocationPerm = false;
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            //  配置 UM_APP_ID , 标识
+            UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
+            //  定位
+            configLocation();
+        }
 
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
@@ -103,8 +127,7 @@ public class BaseApp extends Application {
 
             @Override
             public void onActivityResumed(Activity activity) {
-                if (isRunInBackground
-                        && MainActivity.class.toString().contains(MyActivityManager.getInstance().getBaseActivityName())) {
+                if (isRunInBackground) {
                     //应用从后台回到前台 需要做的操作
                     mHandler.postDelayed(() -> back2App(activity), 300);
                 }
@@ -117,7 +140,7 @@ public class BaseApp extends Application {
             @Override
             public void onActivityStopped(Activity activity) {
                 appCount--;
-                if (appCount == 0 && MainActivity.class.toString().contains(MyActivityManager.getInstance().getBaseActivityName())) {
+                if (appCount == 0 && !(activity instanceof SplashActivity || activity instanceof SplashADActivity || activity instanceof SettingActivity)) {
                     //应用进入后台 需要做的操作
                     leaveApp(activity);
                 }
@@ -129,6 +152,7 @@ public class BaseApp extends Application {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
+
             }
         });
     }

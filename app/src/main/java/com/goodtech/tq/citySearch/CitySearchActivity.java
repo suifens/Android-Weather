@@ -1,5 +1,6 @@
 package com.goodtech.tq.citySearch;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -68,15 +69,19 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "onResume: " + System.currentTimeMillis());
-        if (mFirstLoad) {
-            mFirstLoad = false;
-            if (isStart) {
+        if (isStart) {
+            if (mFirstLoad) {
+                mFirstLoad = false;
                 mHandler.postDelayed(() -> {
-                    BaseApp.getInstance().startUsingApp(this);
+                    BaseApp.getInstance().startUsingApp(CitySearchActivity.this);
                 }, 100);
+            } else {
+                if (!checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        && !checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    //  同意定位
+                    checkOrStartLocation();
+                }
             }
-        } else {
-            openLocationPermission(true);
         }
     }
 
@@ -259,18 +264,18 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
     public static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
         private final int space;  //位移间距
+
         public SpaceItemDecoration(int space) {
             this.space = space;
         }
 
         @Override
         public void getItemOffsets(@NotNull Rect outRect, @NotNull View view,
-                                   RecyclerView parent, @NotNull RecyclerView.State state)
-        {
-            if (parent.getChildAdapterPosition(view) %3 == 0) {
+                                   RecyclerView parent, @NotNull RecyclerView.State state) {
+            if (parent.getChildAdapterPosition(view) % 3 == 0) {
                 outRect.left = 0; //第一列左边贴边
             } else {
-                if (parent.getChildAdapterPosition(view) %3 == 1) {
+                if (parent.getChildAdapterPosition(view) % 3 == 1) {
                     outRect.left = space;//第二列移动一个位移间距
                 } else {
                     outRect.left = space * 2;//由于第二列已经移动了一个间距，所以第三列要移动两个位移间距就能右边贴边，且item间距相等
