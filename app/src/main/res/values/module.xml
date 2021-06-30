@@ -5,6 +5,10 @@
         <attr name="tv_title" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="IArcView">
+        <attr name="arcColor" format="color"/>
+    </declare-styleable>
+
     <declare-styleable name="ConstellationItemView">
         <attr name="icon" format="reference"/>
         <attr name="constellation" format="string"/>
