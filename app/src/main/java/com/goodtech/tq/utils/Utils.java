@@ -5,29 +5,19 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.TypedValue;
 
-import com.goodtech.tq.R;
 import com.goodtech.tq.httpClient.ErrorCode;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
  * com.goodtech.tq.utils
- *
- * @author: mac
- * @date: 2020/5/23
  */
 public class Utils {
 
     /**
      * 获取ErrorCode类型
-     * @param errorCodeStr
-     * @return
      */
     public static ErrorCode resolveErrorCode(String errorCodeStr) {
         ErrorCode err= ErrorCode.UNKNOWN;
@@ -41,9 +31,6 @@ public class Utils {
 
     /**
      * 获取json文件字符串
-     * @param fileName
-     * @param context
-     * @return
      */
     public static String getJson(String fileName, Context context) {
         StringBuilder stringBuilder = new StringBuilder();

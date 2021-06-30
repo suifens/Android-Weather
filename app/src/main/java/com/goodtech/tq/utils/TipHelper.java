@@ -2,37 +2,13 @@ package com.goodtech.tq.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.Gravity;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.goodtech.tq.views.LoadingDialog;
 
-/**
- * @author wangrengshun <wangrengshun@gengee.cn>
- */
-
 public class TipHelper {
-    private static final String TAG = "TipHelper";
     protected static Handler mHandler = new Handler(Looper.getMainLooper());
-    
-    public static void makeShortToast(Context ctx, int cs) {
-        Toast.makeText(ctx, cs, Toast.LENGTH_SHORT).show();
-    }
-    
-    public static void makeTopShortToast(Context ctx, int cs) {
-        Toast toast = Toast.makeText(ctx, cs, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.TOP, 0, 0);
-        toast.show();
-    }
-    
-    public static void makeLongToast(Context ctx, int cs) {
-        Toast.makeText(ctx, cs, Toast.LENGTH_LONG).show();
-    }
     
     private static Dialog mProgressDialog;
 
@@ -44,62 +20,62 @@ public class TipHelper {
     }
     
     public synchronized static void showProgressDialog(final Activity context, final int resId, final boolean cancelable) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dismissDialog();
-    
-                mProgressDialog = LoadingDialog.createLoadingDialog(context, context.getString(resId));
-                mProgressDialog.setCancelable(cancelable);
-                try {
-                    if (!context.isFinishing()) {
-                        mProgressDialog.show();
-                    }
-                } catch (Exception e) {
-                    mProgressDialog = null;
-                    e.printStackTrace();
+        if (context == null || context.isFinishing()) {
+            return;
+        }
+        mHandler.post(() -> {
+            dismissDialog();
+
+            mProgressDialog = new LoadingDialog(context, context.getString(resId));
+            mProgressDialog.setCancelable(cancelable);
+            try {
+                if (!context.isFinishing()) {
+                    mProgressDialog.show();
                 }
+            } catch (Exception e) {
+                mProgressDialog = null;
+                e.printStackTrace();
             }
         });
         
     }
 
     public synchronized static void showProgressDialog(final Activity context, final boolean cancelable) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dismissDialog();
+        if (context == null || context.isFinishing()) {
+            return;
+        }
+        mHandler.post(() -> {
+            dismissDialog();
 
-                mProgressDialog = LoadingDialog.createLoadingDialog(context);
-                mProgressDialog.setCancelable(cancelable);
-                try {
-                    if (!context.isFinishing()) {
-                        mProgressDialog.show();
-                    }
-                } catch (Exception e) {
-                    mProgressDialog = null;
-                    e.printStackTrace();
+            mProgressDialog = new LoadingDialog(context);
+            mProgressDialog.setCancelable(cancelable);
+            try {
+                if (!context.isFinishing()) {
+                    mProgressDialog.show();
                 }
+            } catch (Exception e) {
+                mProgressDialog = null;
+                e.printStackTrace();
             }
         });
 
     }
 
     public synchronized static void showProgressDialog(final Activity context) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dismissDialog();
+        if (context == null || context.isFinishing()) {
+            return;
+        }
+        mHandler.post(() -> {
+            dismissDialog();
 
-                mProgressDialog = LoadingDialog.createLoadingDialog(context);
-                try {
-                    if (!context.isFinishing()) {
-                        mProgressDialog.show();
-                    }
-                } catch (Exception e) {
-                    mProgressDialog = null;
-                    e.printStackTrace();
+            mProgressDialog = new LoadingDialog(context);
+            try {
+                if (!context.isFinishing()) {
+                    mProgressDialog.show();
                 }
+            } catch (Exception e) {
+                mProgressDialog = null;
+                e.printStackTrace();
             }
         });
 
@@ -107,13 +83,11 @@ public class TipHelper {
     
     
     public static void dismissProgressDialog() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                dismissDialog();
-            }
-        });
-        
+        mHandler.post(TipHelper::dismissDialog);
+    }
+
+    public static void dismissProgressDialog(long delayMillis) {
+        mHandler.postDelayed(TipHelper::dismissDialog, delayMillis);
     }
     
     protected static void dismissDialog(){

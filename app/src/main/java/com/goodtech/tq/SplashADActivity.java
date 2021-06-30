@@ -14,19 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.goodtech.tq.app.WeatherApp;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
-import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
-import com.umeng.commonsdk.UMConfigure;
 
 /**
  * 这是demo工程的入口Activity，在这里会首次调用广点通的SDK。
@@ -52,12 +49,14 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     public static void redirectTo(Activity ctx) {
         Intent intent = new Intent(ctx, SplashADActivity.class);
         ctx.startActivity(intent);
+        ctx.overridePendingTransition(0, 0);
     }
 
     public static void redirectToFront(Activity ctx) {
         Intent intent = new Intent(ctx, SplashADActivity.class);
         intent.putExtra(EXTRA_BACK, true);
         ctx.startActivity(intent);
+        ctx.overridePendingTransition(0, 0);
     }
 
     @Override
@@ -67,6 +66,9 @@ public class SplashADActivity extends Activity implements SplashADListener, View
         container = this.findViewById(R.id.splash_container);
 
         StatusBarUtil.setImmerseStatusBarSystemUiVisibility(this);
+
+        //  获取广告
+        fetchSplashAD(this, container, skipView, getPosId(), this);
     }
 
     private String getPosId() {
@@ -87,6 +89,9 @@ public class SplashADActivity extends Activity implements SplashADListener, View
         fetchSplashADTime = System.currentTimeMillis();
         splashAD = new SplashAD(activity, skipContainer, Constants.APP_ID, posId, adListener, 0);
         splashAD.fetchAndShowIn(adContainer);
+        if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
+            splashAD.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
+        }
     }
 
     @Override
@@ -152,12 +157,7 @@ public class SplashADActivity extends Activity implements SplashADListener, View
         long shouldDelayMills = alreadyDelayMills > minSplashTimeWhenNoAD ? 0 : minSplashTimeWhenNoAD
                 - alreadyDelayMills;//为防止加载广告失败后立刻跳离开屏可能造成的视觉上类似于"闪退"的情况，根据设置的minSplashTimeWhenNoAD
         // 计算出还需要延时多久
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SplashADActivity.this.onStartWeather();
-            }
-        }, shouldDelayMills);
+        handler.postDelayed(SplashADActivity.this::onStartWeather, shouldDelayMills);
     }
 
     /**
@@ -169,46 +169,6 @@ public class SplashADActivity extends Activity implements SplashADListener, View
             this.onStartWeather();
         } else {
             canJump = true;
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (getIntent().getBooleanExtra(EXTRA_BACK, false)) {
-            //  获取广告
-            fetchSplashAD(this, container, skipView, getPosId(), this);
-            return;
-        }
-
-        SpUtils.getInstance().remove(Constants.TIME_LOCATION);
-        SpUtils.getInstance().remove(Constants.TIME_WEATHER);
-
-        String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
-        if (!TextUtils.isEmpty(saveVersion)) {
-            //  注册
-            WeatherApp.getInstance().startUsingApp();
-            //  配置 UM_APP_ID , 标识
-            UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
-
-            String versionName = DeviceUtils.getVersionName(this);
-            if (!saveVersion.equals("0")) {
-                LocationSpHelper.saveWithLocation(null);
-                LocationHelper.getInstance().start(this);
-
-                WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
-                httpHelper.fetchCitiesWeather();
-            }
-            //  获取广告
-            fetchSplashAD(this, container, skipView, getPosId(), this);
-        } else {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    PermissionActivity.redirectTo(SplashADActivity.this);
-                }
-            }, 1500);
         }
     }
 
@@ -256,7 +216,8 @@ public class SplashADActivity extends Activity implements SplashADListener, View
 
         if (!getIntent().getBooleanExtra(EXTRA_BACK, false)) {
             String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
-            if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")) {
+            if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")
+                    || LocationSpHelper.getCityListAndLocation().size() == 0) {
                 CitySearchActivity.redirectTo(this, true);
             } else {
                 this.startActivity(new Intent(this, MainActivity.class));

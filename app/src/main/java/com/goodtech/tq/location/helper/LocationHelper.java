@@ -5,16 +5,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
-import com.goodtech.tq.MainActivity;
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
@@ -56,7 +53,7 @@ public class LocationHelper {
             removeTicker();
             return;
         }
-        locationService = WeatherApp.getInstance().locationService;
+        locationService = BaseApp.getInstance().locationService;
         if (locationService != null) {
             locationService.registerListener(mListener);
             LocationService.setLocationOption(locationService.getDefaultLocationClientOption());
@@ -67,7 +64,7 @@ public class LocationHelper {
 
     public void stop() {
         removeTicker();
-        locationService = WeatherApp.getInstance().locationService;
+        locationService = BaseApp.getInstance().locationService;
         if (locationService != null) {
             locationService.unregisterListener(mListener); //注销掉监听
             locationService.stop(); //停止定位服务

@@ -3,7 +3,6 @@ package com.goodtech.tq;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -40,13 +39,13 @@ public class PrivateActivity extends BaseActivity {
 
         mWebView = findViewById(R.id.web_agreement);
         mWebView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
-        mWebView.setLongClickable(true);
-        mWebView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
+//        mWebView.setLongClickable(true);
+//        mWebView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                return true;
+//            }
+//        });
         //  设置url
         String guideUrl = String.format(Constants.URL_PRIVACY, BuildConfig.FLAVOR);
         mWebView.loadUrl(guideUrl);
@@ -72,19 +71,14 @@ public class PrivateActivity extends BaseActivity {
                 super.onPageFinished(view, url);
             }
 
-            //  屏蔽超链接，使其不可跳转
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return true;
-            }
+//            //  屏蔽超链接，使其不可跳转
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//                return true;
+//            }
         });
 
-        findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        findViewById(R.id.button_back).setOnClickListener(v -> finish());
     }
 
     @Override

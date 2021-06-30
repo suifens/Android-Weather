@@ -23,6 +23,8 @@ public class Constants {
 
     public final static String TIME_LOCATION = "location_time";
     public final static String TIME_WEATHER = "weather_fetch_time";
+    //  个性化广告
+    public static final String PERSONALIZED_AD = "personalized advertising";
 
 
 }

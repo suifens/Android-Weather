@@ -17,8 +17,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 150
-        versionName "4.5.0"
+        versionCode 180
+        versionName "4.8.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -27,35 +27,45 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-        xiaomi {
-            manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"]
-        }
-        huawei {
-            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"huawei"]
-        }
-        oppo {
-            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"oppo"]
-        }
-        vivo {
-            manifestPlaceholders=[app_name:"天气-苹果天气预报", umeng_channel:"vivo"]
-        }
-        yyb {
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
-        }
-        meizu {
-            manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
-        }
-        sougou {
-            manifestPlaceholders=[app_name:"天气预报-日历天气", umeng_channel:"sougou"]
-        }
         anzhi {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
             manifestPlaceholders=[app_name:"苹果天气预报", umeng_channel:"anzhi"]
         }
+        baidu {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+            manifestPlaceholders=[app_name:"日历天气预报", umeng_channel:"baidu"]
+        }
+        huawei {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"huawei"]
+        }
+        meizu {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+            manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
+        }
+        oppo {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"oppo"]
+        }
+        sougou {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
+            manifestPlaceholders=[app_name:"天气预报-日历天气", umeng_channel:"sougou"]
+        }
+        vivo {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
+            manifestPlaceholders=[app_name:"天气-苹果天气预报", umeng_channel:"vivo"]
+        }
         wdj {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
             manifestPlaceholders=[app_name:"日历天气", umeng_channel:"wandoujia"]
         }
-        baidu {
-            manifestPlaceholders=[app_name:"日历天气预报", umeng_channel:"baidu"]
+        xiaomi {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+            manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"]
+        }
+        yyb {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
         }
     }
 
@@ -120,9 +130,9 @@ dependencies {
     //网络加载图片工具
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     // umeng
-    implementation 'com.umeng.umsdk:common:2.2.5'
-    implementation 'com.umeng.umsdk:analytics:8.1.6'
-    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
+    //集成示例
+    implementation 'com.umeng.umsdk:common:9.3.8'//必选
+    implementation 'com.umeng.umsdk:asms:1.2.2'//必选
     //网络请求
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'com.squareup.okio:okio:2.9.0'
@@ -146,4 +156,12 @@ dependencies {
     implementation 'com.haibin:calendarview:3.7.1'
     //  mmkv存储
     implementation 'com.tencent:mmkv-static:1.2.7'
+    //  权限请求
+//    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+//    //  广告
+//    implementation 'com.qq.e.union:union:4.370.1240'
+//    implementation 'com.qq.e.union:tbs:4.370.1240'
 }

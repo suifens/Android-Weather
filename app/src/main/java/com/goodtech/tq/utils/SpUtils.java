@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.goodtech.tq.app.WeatherApp;
 import com.tencent.mmkv.MMKV;
+import com.goodtech.tq.app.BaseApp;
 
 
 /**
@@ -28,7 +28,7 @@ public class SpUtils {
 
     public static synchronized SpUtils getInstance() {
         if (instance == null) {
-            instance = new SpUtils(WeatherApp.getInstance());
+            instance = new SpUtils(BaseApp.getInstance());
         }
         return instance;
     }
@@ -38,9 +38,9 @@ public class SpUtils {
         preferences = MMKV.mmkvWithID(userId);
 
         //  4.5.2中将 SharedPreferences 迁移到 MMKV 中
-        if (DeviceUtils.getVersionCode(WeatherApp.getInstance()) >= 151) {
+        if (DeviceUtils.getVersionCode(BaseApp.getInstance()) >= 151) {
 
-            SharedPreferences old_man = WeatherApp.getInstance().getSharedPreferences("matches_sp", Context.MODE_PRIVATE);
+            SharedPreferences old_man = BaseApp.getInstance().getSharedPreferences("matches_sp", Context.MODE_PRIVATE);
             if (old_man.getAll().size() > 0) {
                 //  迁移旧数据
                 preferences.importFromSharedPreferences(old_man);

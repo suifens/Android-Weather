@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.models.CityMode;
@@ -44,7 +44,7 @@ public class WeatherHttpHelper {
 
     public static synchronized WeatherHttpHelper getInstance() {
         if (instance == null) {
-            instance = new WeatherHttpHelper(WeatherApp.getInstance());
+            instance = new WeatherHttpHelper(BaseApp.getInstance());
         }
         return instance;
     }

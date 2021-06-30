@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -17,31 +15,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.cityList.CityListRecyclerAdapter;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
-import com.goodtech.tq.utils.WeatherUtils;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 /**
  * com.goodtech.tq.fragment.viewholder
  */
 public class CityHolder extends AbstractDraggableItemViewHolder implements View.OnClickListener {
-    private Context mContext;
-    private CityListRecyclerAdapter.OnItemClickListener mListener;
-    private TextView mCityNameTv;
+    private final CityListRecyclerAdapter.OnItemClickListener mListener;
+    private final TextView mCityNameTv;
     private CityMode mCityMode;
-    private LinearLayout mWeatherLayout;
-    private ImageView mWeatherIcon;
-    private TextView mTempTv;
-    private TextView mTipTv;
-    private ImageView mLocationTip;
+    private final LinearLayout mWeatherLayout;
+    private final ImageView mWeatherIcon;
+    private final TextView mTempTv;
+    private final TextView mTipTv;
+    private final ImageView mLocationTip;
     public RelativeLayout mContainer;
     public View mDragHandle;
     public ImageView mDeleteBtn;
@@ -50,7 +44,6 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
 
     public CityHolder(Context context, View view, CityListRecyclerAdapter.OnItemClickListener listener) {
         super(view);
-        mContext = context;
         mContainer = view.findViewById(R.id.container);
         mContainer.setOnClickListener(this);
         mDragHandle = view.findViewById(R.id.img_city_drag);
@@ -70,16 +63,29 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
     public void setCityMode(@NonNull CityMode mode, WeatherModel weatherModel, boolean isEdit) {
         this.isEdit = isEdit;
         this.mCityMode = mode;
+        if (weatherModel != null && weatherModel.observation != null) {
+            mWeatherIcon.setVisibility(View.VISIBLE);
+            mTipTv.setVisibility(View.GONE);
+            mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(getIconId(weatherModel)));
+            if (weatherModel.observation != null && weatherModel.observation.metric != null) {
+                mTempTv.setText(String.format("%d℃", weatherModel.observation.metric.temp));
+            }
+        } else {
+            mWeatherIcon.setVisibility(View.GONE);
+            mTipTv.setVisibility(View.VISIBLE);
+        }
 
         if (mode.location) {
             if (TextUtils.isEmpty(mode.city)) {
-                mCityNameTv.setText("定位");
+                mCityNameTv.setText("立即定位");
+                mTipTv.setVisibility(View.GONE);
             } else {
                 if (mCityNameTv != null) {
                     mCityNameTv.setText(mode.city);
                 }
             }
             mLocationTip.setVisibility(View.VISIBLE);
+            mWeatherLayout.setVisibility(View.VISIBLE);
         } else {
             if (mCityNameTv != null) {
                 mCityNameTv.setText(mode.city);
@@ -96,20 +102,6 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
                 mWeatherLayout.setVisibility(View.VISIBLE);
                 mContainer.setOnClickListener(this);
             }
-        }
-
-        if (weatherModel != null && weatherModel.observation != null) {
-            mWeatherIcon.setVisibility(View.VISIBLE);
-            mWeatherLayout.setVisibility(View.VISIBLE);
-            mTipTv.setVisibility(View.GONE);
-            mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(getIconId(weatherModel)));
-            if (weatherModel.observation != null && weatherModel.observation.metric != null) {
-                mTempTv.setText(String.format("%d℃", weatherModel.observation.metric.temp));
-            }
-        } else {
-            mWeatherIcon.setVisibility(View.GONE);
-            mWeatherLayout.setVisibility(View.GONE);
-            mTipTv.setVisibility(View.VISIBLE);
         }
     }
 
@@ -128,6 +120,7 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
         return model.observation.wxIcon;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -190,7 +183,7 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
                 view.clearAnimation();
                 //动画结束后更新view到终点位置
                 FrameLayout.LayoutParams ll = new FrameLayout.LayoutParams(view.getLayoutParams());
-                ll.setMargins(dpToPx(toMargin), 0, dpToPx(fromMargin - toMargin), 0);
+                ll.setMargins(dpToPx(toMargin), 0, dpToPx(0 - toMargin), 0);
                 view.setLayoutParams(ll);
             }
 

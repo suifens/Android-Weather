@@ -19,6 +19,7 @@ import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.qq.e.ads.nativ.ADSize;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
@@ -140,7 +141,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
     public void changeWeather(WeatherModel model, CityMode cityMode) {
 
         if (mModel != null
-                && cityMode != null
+                && model != null
                 && model.expireTime == mModel.expireTime) {
             return;
         }
@@ -160,7 +161,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (weather != null) {
+                        if (weather != null && mCityMode != null) {
                             changeWeather(weather, mCityMode);
                         }
                         refreshLayout.finishRefresh();
@@ -192,6 +193,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
         ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT); // 消息流中用AUTO_HEIGHT
         mADManager = new NativeExpressAD(getContext(), adSize, Constants.EXPRESS_POS_ID, this);
         mADManager.loadAD(1);
+
     }
 
     @Override
@@ -199,6 +201,9 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
         Log.i(TAG, "onADLoaded: " + adList.size());
         if (adList.size() > 0) {
             mAdView = adList.get(0);
+            if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
+                mAdView.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
+            }
             mAdapter.changeAdView(mAdView);
         }
     }

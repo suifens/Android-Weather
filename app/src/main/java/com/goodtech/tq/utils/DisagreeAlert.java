@@ -21,6 +21,7 @@ public class DisagreeAlert extends AlertDialog implements View.OnClickListener {
 
     public interface DisagreeAlertListener {
         void onConfirmClick(View view);
+        void onCancelClick(View view);
     }
 
     public DisagreeAlert(Context context, DisagreeAlertListener listener) {
@@ -39,11 +40,13 @@ public class DisagreeAlert extends AlertDialog implements View.OnClickListener {
         mConfirmBtn.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_dialog_cancel:
+                if (mListener != null) {
+                    mListener.onCancelClick(v);
+                }
                 this.dismiss();
                 break;
             case R.id.btn_dialog_confirm:

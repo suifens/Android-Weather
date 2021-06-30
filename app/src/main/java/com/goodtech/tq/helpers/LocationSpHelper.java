@@ -3,7 +3,7 @@ package com.goodtech.tq.helpers;
 import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
@@ -29,11 +29,10 @@ public class LocationSpHelper {
         CityMode cityMode = new CityMode();
         cityMode.location = true;
         if (bdLocation == null || TextUtils.isEmpty(bdLocation.getCity())) {
-            if (getLocation().cid != 0) {
+            if (getLocation() != null) {
                 EventBus.getDefault().post(new MessageEvent().setLocation(false));
-                return;
             }
-            cityMode.cid = 0;
+            return;
         } else {
             cityMode.listNum = 0;
             cityMode.cid = 1000;
@@ -41,7 +40,7 @@ public class LocationSpHelper {
             cityMode.lon = String.valueOf(bdLocation.getLongitude());
             cityMode.city = String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet());
             //  获取天气信息
-            WeatherHttpHelper httpHelper = new WeatherHttpHelper(WeatherApp.getInstance());
+            WeatherHttpHelper httpHelper = new WeatherHttpHelper(BaseApp.getInstance());
             httpHelper.fetchWeather(cityMode);
         }
         Gson gson = new Gson();
@@ -58,16 +57,15 @@ public class LocationSpHelper {
         String json = SpUtils.getInstance().getString(Constants.SP_LOCATION, "");
         if (!json.isEmpty()) {
             Gson gson = new Gson();
-            CityMode mode = gson.fromJson(json, new TypeToken<CityMode>(){}.getType());
-            if (mode != null) {
-                return mode;
-            }
+            return gson.fromJson(json, new TypeToken<CityMode>(){}.getType());
         }
 
-        CityMode cityMode = new CityMode();
-        cityMode.location = true;
-        cityMode.cid = 0;
-        return cityMode;
+        return null;
+//
+//        CityMode cityMode = new CityMode();
+//        cityMode.location = true;
+//        cityMode.cid = 0;
+//        return cityMode;
     }
 
     public static void setCityList(ArrayList<CityMode> cityList) {
@@ -79,10 +77,10 @@ public class LocationSpHelper {
             }
         }
 
-        for (int i = 0; i < tempList.size(); i++) {
-            CityMode cityMode = tempList.get(i);
-            cityMode.listNum = i + 1;
-        }
+//        for (int i = 0; i < tempList.size(); i++) {
+//            CityMode cityMode = tempList.get(i);
+//            cityMode.listNum = i + 1;
+//        }
         Gson gson = new Gson();
         String json = gson.toJson(tempList);
         SpUtils.getInstance().putString(Constants.SP_LOCATION_LIST, json);
@@ -135,7 +133,6 @@ public class LocationSpHelper {
             return false;
         }
         List<CityMode> locations = getCityList();
-        city.listNum = locations.size() + 1;
         locations.add(city);
         Gson gson = new Gson();
         String json = gson.toJson(locations);

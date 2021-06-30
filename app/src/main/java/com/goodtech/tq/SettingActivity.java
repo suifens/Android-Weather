@@ -18,7 +18,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.views.SwitchView;
+import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.umeng.analytics.MobclickAgent;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
@@ -28,10 +32,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private static final int grantedColor = Color.parseColor("#9B9B9B");
     private static final int deniedColor = Color.parseColor("#00C4FF");
 
+    private SwitchView mSwitchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        mSwitchView = findViewById(R.id.switchBtn_setting_m);
+        updateAdType(SpUtils.getInstance().getBoolean(Constants.PERSONALIZED_AD, true));
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -43,6 +52,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.layout_permission_phone).setOnClickListener(this);
         findViewById(R.id.layout_permission_storage).setOnClickListener(this);
         findViewById(R.id.layout_permission_location).setOnClickListener(this);
+        findViewById(R.id.switchBtn_setting_m).setOnClickListener(this);
     }
 
     @Override
@@ -103,6 +113,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
+            break;
+            case R.id.switchBtn_setting_m: {
+                //  个性化设置
+                boolean show = SpUtils.getInstance().getBoolean(Constants.PERSONALIZED_AD, true);
+                SpUtils.getInstance().putBoolean(Constants.PERSONALIZED_AD, !show);
+                updateAdType(!show);
+                GlobalSetting.setAgreePrivacyStrategy(!show);
+            }
+            break;
+        }
+    }
+
+    private void updateAdType(boolean show) {
+        if (mSwitchView != null) {
+            mSwitchView.toggleSwitch(show);
         }
     }
 

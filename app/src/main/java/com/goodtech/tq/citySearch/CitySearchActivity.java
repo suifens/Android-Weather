@@ -1,7 +1,7 @@
 package com.goodtech.tq.citySearch;
 
+import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
 
 import androidx.appcompat.widget.SearchView;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -48,8 +50,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
     private View mEmptyView;
     private boolean isStart;
+    private boolean mFirstLoad = true;
 
     public static void redirectTo(Context ctx, boolean isStart) {
+        Log.e(TAG, "onStartWeather: " + System.currentTimeMillis());
         Intent intent = new Intent(ctx, CitySearchActivity.class);
         intent.putExtra(EXTRA_START, isStart);
         ctx.startActivity(intent);
@@ -64,26 +68,33 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e(TAG, "onResume: " + System.currentTimeMillis());
         if (isStart) {
-            LocationHelper.getInstance().start(this);
-
-            if (LocationSpHelper.getLocation().cid != 0) {
-                isStart = false;
-                //  能够获取到定位
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!CitySearchActivity.this.isFinishing()) {
-                            TipHelper.showProgressDialog(CitySearchActivity.this);
-                            Log.e(TAG, "run: resume activity");
-                            Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finishToRight();
-                        }
-                    }
-                }, 1000);
+            if (mFirstLoad) {
+                mFirstLoad = false;
+                mHandler.postDelayed(() -> {
+                    BaseApp.getInstance().startUsingApp(CitySearchActivity.this);
+                }, 100);
+            } else {
+                if (!checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        && !checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    //  同意定位
+                    checkOrStartLocation();
+                }
             }
+        }
+    }
+
+    private void toGetLocation() {
+        if (checkPermission()) {
+            MessageAlert alert = new MessageAlert(CitySearchActivity.this,
+                    (dialog, which) -> openLocationPermission(false));
+            if (!isFinishing()) {
+                alert.show();
+            }
+        } else {
+            TipHelper.showProgressDialog(CitySearchActivity.this, false);
+            LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
         }
     }
 
@@ -91,43 +102,33 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_search);
-        initSearchView();
-
-        EventBus.getDefault().register(this);
-
         Button mCancelBtn = findViewById(R.id.search_btn_cancel);
         if (getIntent().getBooleanExtra(EXTRA_START, false)) {
             mCancelBtn.setVisibility(View.GONE);
             isStart = true;
         }
 
+        initSearchView();
+
+        EventBus.getDefault().register(this);
+
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
 
+        init();
+    }
+
+    private void init() {
+
+        ((ViewStub) findViewById(R.id.stub_view)).inflate();
+
         mRecommendHeaderView = findViewById(R.id.header_recommend);
-        mRecommendHeaderView.setListener(new CityRecommendAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, CityMode cityMode) {
+        mRecommendHeaderView.setListener((view, position, cityMode) -> {
 
-                if (cityMode != null && cityMode.cid != 0) {
-                    addCity(cityMode);
-                } else if (!CitySearchActivity.this.isFinishing()) {
-
-                    if (checkPermission()) {
-                        MessageAlert alert = new MessageAlert(CitySearchActivity.this, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                requestLocationPermissions();
-                            }
-                        });
-                        if (!isFinishing()) {
-                            alert.show();
-                        }
-                    } else {
-                        TipHelper.showProgressDialog(CitySearchActivity.this, false);
-                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
-                    }
-                }
+            if (cityMode != null && cityMode.cid != 0) {
+                addCity(cityMode);
+            } else if (!CitySearchActivity.this.isFinishing()) {
+                toGetLocation();
             }
         });
 
@@ -136,13 +137,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendView.setVisibility(View.VISIBLE);
         final ArrayList<CityMode> recommends = CityHelper.getRecommends(this);
         CityRecommendAdapter mRecommendAdapter = new CityRecommendAdapter(this, recommends);
-        mRecommendAdapter.setOnItemClickListener(new CityRecommendAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, CityMode cityMode) {
+        mRecommendAdapter.setOnItemClickListener((view, position, cityMode) -> {
 
-                if (cityMode != null && cityMode.cid != 0) {
-                    addCity(cityMode);
-                }
+            if (cityMode != null && cityMode.cid != 0) {
+                addCity(cityMode);
             }
         });
         mRecommendView.setAdapter(mRecommendAdapter);
@@ -157,13 +155,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mSearchListView = findViewById(R.id.recycler_search);
         mSearchListView.setVisibility(View.GONE);
         mSearchAdapter = new CityRecyclerAdapter(this, null);
-        mSearchAdapter.setOnItemClickListener(new CityRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, CityMode cityMode) {
-
-                addCity(cityMode);
-            }
-        });
+        mSearchAdapter.setOnItemClickListener((view, position, cityMode) -> addCity(cityMode));
         mSearchListView.setAdapter(mSearchAdapter);
 
         mEmptyView = findViewById(R.id.layout_no_data);
@@ -174,29 +166,21 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         if (event.isSuccessLocation()) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mRecommendHeaderView.updateLocation();
-                }
-            });
+            mHandler.post(() -> mRecommendHeaderView.updateLocation());
 
-            if (isStart && LocationSpHelper.getLocation().cid != 0) {
+            if (isStart && LocationSpHelper.getLocation() != null) {
                 if (!CitySearchActivity.this.isFinishing()) {
                     TipHelper.showProgressDialog(this);
                 }
                 isStart = false;
                 //  能够获取到定位
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        TipHelper.dismissProgressDialog();
-                        Log.e(TAG, "message activity");
-                        Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finishToRight();
-                    }
+                mHandler.postDelayed(() -> {
+                    TipHelper.dismissProgressDialog();
+                    Log.e(TAG, "message activity");
+                    Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finishToRight();
                 }, 1000);
                 return;
             }
@@ -217,20 +201,17 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
         isStart = false;
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finishToRight();
-            }
+        mHandler.postDelayed(() -> {
+            Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finishToRight();
         }, 200);
     }
 
     private void initSearchView() {
         // 输入搜索关键字
-        SearchView mSearchView = (SearchView) findViewById(R.id.search_view);
+        SearchView mSearchView = findViewById(R.id.search_view);
         mSearchView.setOnQueryTextListener(this);
         //设置SearchView默认为展开显示
         mSearchView.setIconified(false);
@@ -282,17 +263,19 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     public static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
-        private int space;  //位移间距
+        private final int space;  //位移间距
+
         public SpaceItemDecoration(int space) {
             this.space = space;
         }
 
         @Override
-        public void getItemOffsets(@NotNull Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            if (parent.getChildAdapterPosition(view) %3 == 0) {
+        public void getItemOffsets(@NotNull Rect outRect, @NotNull View view,
+                                   RecyclerView parent, @NotNull RecyclerView.State state) {
+            if (parent.getChildAdapterPosition(view) % 3 == 0) {
                 outRect.left = 0; //第一列左边贴边
             } else {
-                if (parent.getChildAdapterPosition(view) %3 == 1) {
+                if (parent.getChildAdapterPosition(view) % 3 == 1) {
                     outRect.left = space;//第二列移动一个位移间距
                 } else {
                     outRect.left = space * 2;//由于第二列已经移动了一个间距，所以第三列要移动两个位移间距就能右边贴边，且item间距相等

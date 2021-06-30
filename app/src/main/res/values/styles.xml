@@ -1,5 +1,10 @@
 <resources>
 
+    <style name="SplashActivityTheme" parent="android:Theme.NoTitleBar.Fullscreen">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/Left_Right_AnimTheme</item>
         <item name="android:windowBackground">@color/colorBackground</item>
@@ -12,6 +17,16 @@
 
     <style name="AppTheme.NoActionBar.FullScreen">
         <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="DownloadConfirmDialogFullScreen" parent="android:Theme.Dialog">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="DownloadConfirmDialogAnimationUp">
+        <item name="android:windowEnterAnimation">@anim/download_confirm_dialog_slide_up</item>
+    </style>
+    <style name="DownloadConfirmDialogAnimationRight">
+        <item name="android:windowEnterAnimation">@anim/download_confirm_dialog_slide_right_in</item>
     </style>
 
     <style name="AppTheme.NoActionBar.TransparentStatusBar"/>
@@ -30,7 +45,8 @@
     <style name="loading_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/dialog_load_bg</item>
+<!--        <item name="android:windowBackground">@drawable/dialog_load_bg</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>

@@ -7,10 +7,9 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 
-import com.goodtech.tq.app.WeatherApp;
+import com.goodtech.tq.app.BaseApp;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -44,7 +43,7 @@ public class DeviceUtils {
      */
     public static int getStatusBarHeight() {
 
-        Resources resources = WeatherApp.getInstance().getResources();
+        Resources resources = BaseApp.getInstance().getResources();
 
         int result = 0;
         //获取状态栏高度的资源id
@@ -59,7 +58,7 @@ public class DeviceUtils {
 
     public static int getNavigationBarHeight() {
 
-        Resources resources = WeatherApp.getInstance().getResources();
+        Resources resources = BaseApp.getInstance().getResources();
 
         boolean hasNavigationBar = false;
         int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
@@ -96,8 +95,8 @@ public class DeviceUtils {
     public static String getVersionName(Context context) {
         String versionName = "";
         try {
-            PackageManager packageManager = WeatherApp.getInstance().getPackageManager();
-            PackageInfo packInfo = packageManager.getPackageInfo(WeatherApp.getInstance().getPackageName(), 0);
+            PackageManager packageManager = BaseApp.getInstance().getPackageManager();
+            PackageInfo packInfo = packageManager.getPackageInfo(BaseApp.getInstance().getPackageName(), 0);
             versionName = packInfo.versionName;
         } catch (Exception e) {
             e.printStackTrace();

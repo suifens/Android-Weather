@@ -4,9 +4,6 @@ import com.goodtech.tq.httpClient.ErrorCode;
 
 /**
  * com.goodtech.tq.utils
- *
- * @author: mac
- * @date: 2020/5/23
  */
 public class WeatherUtils {
 

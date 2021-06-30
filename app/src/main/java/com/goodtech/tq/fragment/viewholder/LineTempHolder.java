@@ -41,7 +41,7 @@ public class LineTempHolder extends RecyclerView.ViewHolder {
 
         //设置一屏幕显示几列(最少3列)
         try {
-            weatherView.setColumnNumber(6);
+            weatherView.setColumnNumber(5);
         } catch (Exception e) {
             e.printStackTrace();
         }
