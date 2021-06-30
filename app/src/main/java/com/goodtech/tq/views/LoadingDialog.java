@@ -1,7 +1,10 @@
 package com.goodtech.tq.views;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -15,45 +18,54 @@ import com.goodtech.tq.R;
 /**
  * 公用的弹出框
  */
-public class LoadingDialog {
+public class LoadingDialog extends ProgressDialog {
 
-    public static Dialog createLoadingDialog(Context context) {
-        return LoadingDialog.createLoadingDialog(context, "加载中...");
+    private AnimationDrawable mAnimation;
+    private Context mContext;
+    private ImageView mImageView;
+    private String mLoadingTitle;
+    private TextView mLoadingTv;
+
+    public LoadingDialog(Context context) {
+        super(context, R.style.loading_dialog);
+        initView(context, "加载中...");
     }
 
-    /**
-     * 得到自定义的progressDialog
-     */
-    public static Dialog createLoadingDialog(Context context, String msg) {
+    public LoadingDialog(Context context, String content) {
+        super(context, R.style.loading_dialog);
+        initView(context, content);
+    }
 
-        // 首先得到整个View
-        View view = LayoutInflater.from(context).inflate(
-                R.layout.view_dialog_loading, null);
-        // 获取整个布局
-        LinearLayout layout = (LinearLayout) view
-                .findViewById(R.id.dialog_view);
-        // 页面中的Img
-        ImageView img = (ImageView) view.findViewById(R.id.img_dialog);
-        // 页面中显示文本
-        TextView tipText = (TextView) view.findViewById(R.id.tv_tip);
+    private void initView(Context context, String content) {
+        this.mContext = context;
+        this.mLoadingTitle = content;
+        setCanceledOnTouchOutside(true);
+    }
 
-        // 加载动画，动画用户使img图片不停的旋转
-        Animation animation = AnimationUtils.loadAnimation(context,
-                R.anim.dialog_load_animation);
-        // 显示动画
-        img.startAnimation(animation);
-        // 显示文本
-        tipText.setText(msg);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
 
-        // 创建自定义样式的Dialog
-        Dialog loadingDialog = new Dialog(context, R.style.loading_dialog);
-        // 设置返回键无效
-        loadingDialog.setCancelable(false);
-        loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));
+    private void initData() {
 
-        return loadingDialog;
+        mImageView.setBackgroundResource(R.drawable.anim_loading);
+        mAnimation = (AnimationDrawable) mImageView.getBackground();
+        mImageView.post(() -> mAnimation.start());
+        mLoadingTv.setText(mLoadingTitle);
+
+    }
+
+    public void setContent(String str) {
+        mLoadingTv.setText(str);
+    }
+
+    private void initView() {
+        setContentView(R.layout.progress_dialog_loading);
+        mLoadingTv = (TextView) findViewById(R.id.loadingTv);
+        mImageView = (ImageView) findViewById(R.id.loadingIv);
     }
 
 }

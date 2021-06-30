@@ -2,33 +2,13 @@ package com.goodtech.tq.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.Gravity;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.goodtech.tq.views.LoadingDialog;
 
 public class TipHelper {
-    private static final String TAG = "TipHelper";
     protected static Handler mHandler = new Handler(Looper.getMainLooper());
-    
-    public static void makeShortToast(Context ctx, int cs) {
-        Toast.makeText(ctx, cs, Toast.LENGTH_SHORT).show();
-    }
-    
-    public static void makeTopShortToast(Context ctx, int cs) {
-        Toast toast = Toast.makeText(ctx, cs, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.TOP, 0, 0);
-        toast.show();
-    }
-    
-    public static void makeLongToast(Context ctx, int cs) {
-        Toast.makeText(ctx, cs, Toast.LENGTH_LONG).show();
-    }
     
     private static Dialog mProgressDialog;
 
@@ -46,7 +26,7 @@ public class TipHelper {
         mHandler.post(() -> {
             dismissDialog();
 
-            mProgressDialog = LoadingDialog.createLoadingDialog(context, context.getString(resId));
+            mProgressDialog = new LoadingDialog(context, context.getString(resId));
             mProgressDialog.setCancelable(cancelable);
             try {
                 if (!context.isFinishing()) {
@@ -67,7 +47,7 @@ public class TipHelper {
         mHandler.post(() -> {
             dismissDialog();
 
-            mProgressDialog = LoadingDialog.createLoadingDialog(context);
+            mProgressDialog = new LoadingDialog(context);
             mProgressDialog.setCancelable(cancelable);
             try {
                 if (!context.isFinishing()) {
@@ -88,7 +68,7 @@ public class TipHelper {
         mHandler.post(() -> {
             dismissDialog();
 
-            mProgressDialog = LoadingDialog.createLoadingDialog(context);
+            mProgressDialog = new LoadingDialog(context);
             try {
                 if (!context.isFinishing()) {
                     mProgressDialog.show();
@@ -104,7 +84,10 @@ public class TipHelper {
     
     public static void dismissProgressDialog() {
         mHandler.post(TipHelper::dismissDialog);
-        
+    }
+
+    public static void dismissProgressDialog(long delayMillis) {
+        mHandler.postDelayed(TipHelper::dismissDialog, delayMillis);
     }
     
     protected static void dismissDialog(){

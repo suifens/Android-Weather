@@ -297,7 +297,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void run() {
                 if (model != null && model.dailies != null) {
-                    TipHelper.dismissProgressDialog();
+                    TipHelper.dismissProgressDialog(1000);
 
                     Daily daily = model.dailies.get(0);
                     boolean night = false;
