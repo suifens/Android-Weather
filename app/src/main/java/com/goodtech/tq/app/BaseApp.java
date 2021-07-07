@@ -22,6 +22,7 @@ import com.goodtech.tq.utils.SpUtils;
 import com.qq.e.comm.managers.GDTADManager;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tencent.mmkv.MMKV;
 import com.umeng.commonsdk.UMConfigure;
 
 public class BaseApp extends Application {
@@ -50,6 +51,8 @@ public class BaseApp extends Application {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+        //  MMKV 存储配置
+        MMKV.initialize(this);
         //  Activity生命周期监听
         registerLifecycle();
     }

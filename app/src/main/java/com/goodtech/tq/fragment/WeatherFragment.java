@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.adapter.WeatherRecyclerAdapter;
-import com.goodtech.tq.httpClient.ApiCallback;
-import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.news.NewsActivity;
+import com.goodtech.tq.others.airQuality.AirQualityActivity;
+import com.goodtech.tq.others.calendar.CalendarActivity;
+import com.goodtech.tq.others.constellation.ConstellationActivity;
+import com.goodtech.tq.others.taifeng.TyphoonActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.qq.e.ads.nativ.ADSize;
@@ -26,11 +27,9 @@ import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.comm.util.AdError;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A fragment representing a list of Items.
@@ -64,19 +63,17 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
     }
 
     private int totalDy = 0;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         mRefreshLayout.setOnRefreshListener(this);
-        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                refreshLayout.finishLoadMore();
-                Intent intent = new Intent(getActivity(), NewsActivity.class);
-                Objects.requireNonNull(getActivity()).startActivity(intent);
-            }
-        });
+//        mRefreshLayout.setOnLoadMoreListener(refreshLayout -> {
+//            refreshLayout.finishLoadMore();
+//            Intent intent = new Intent(getActivity(), NewsActivity.class);
+//            requireActivity().startActivity(intent);
+//        });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mCityMode != null ? mCityMode.city : null);
@@ -93,13 +90,11 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
                 super.onScrolled(recyclerView, dx, dy);
                 totalDy += dy;
                 if (totalDy <= mStateBarBg.getHeight() && totalDy > 10) {
-                    float alpha = (totalDy)/(float)(mStateBarBg.getHeight() * 1.0);
+                    float alpha = (totalDy) / (float) (mStateBarBg.getHeight() * 1.0);
                     mStateBarBg.setAlpha(alpha);
-                }
-                else if (totalDy > mStateBarBg.getHeight()) {
+                } else if (totalDy > mStateBarBg.getHeight()) {
                     mStateBarBg.setAlpha(1);
-                }
-                else {
+                } else {
                     mStateBarBg.setAlpha(0);
                 }
             }
@@ -118,23 +113,27 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
 
     private final WeatherHeaderListener mHeaderListener = new WeatherHeaderListener() {
         @Override
-        public void onWeekendWeather() {
-
+        public void onTyphoon() {
+            Intent intent = new Intent(getActivity(), TyphoonActivity.class);
+            requireActivity().startActivity(intent);
         }
 
         @Override
         public void onAirQuality() {
-
+            Intent intent = new Intent(getActivity(), AirQualityActivity.class);
+            requireActivity().startActivity(intent);
         }
 
         @Override
         public void onCalendar() {
-
+            Intent intent = new Intent(getActivity(), CalendarActivity.class);
+            requireActivity().startActivity(intent);
         }
 
         @Override
         public void onFortune() {
-
+            Intent intent = new Intent(getActivity(), ConstellationActivity.class);
+            requireActivity().startActivity(intent);
         }
     };
 
@@ -155,29 +154,18 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
 
     @Override
     public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-        boolean fetching = WeatherHttpHelper.getInstance().fetchWeather(mCityMode, new ApiCallback() {
-            @Override
-            public void onResponse(boolean success, final WeatherModel weather, ErrorCode errCode) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (weather != null && mCityMode != null) {
-                            changeWeather(weather, mCityMode);
-                        }
-                        refreshLayout.finishRefresh();
-                    }
-                });
-            }
-        });
+        boolean fetching = WeatherHttpHelper.getInstance().fetchWeather(mCityMode,
+                (success, weather, errCode) ->
+                        mHandler.post(() -> {
+                            if (weather != null && mCityMode != null) {
+                                changeWeather(weather, mCityMode);
+                            }
+                            refreshLayout.finishRefresh();
+                        }));
 
         if (!fetching) {
             //  无需刷新，则直接消失刷新
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    refreshLayout.finishRefresh();
-                }
-            }, 300);
+            mHandler.postDelayed(refreshLayout::finishRefresh, 300);
         }
     }
 

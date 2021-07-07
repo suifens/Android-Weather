@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="240dp"
+    android:layout_width="278dp"
+    android:layout_height="350dp"
     android:layout_gravity="center"
     android:background="@drawable/bg_radius8_white"
     android:gravity="center_horizontal"
@@ -9,17 +9,23 @@
     android:paddingTop="20dp"
     android:paddingBottom="10dp" >
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pic_location" />
+
+
     <TextView
         android:id="@+id/tv_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="15dp"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
         android:text="开启定位服务"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/color_00A2ff"
         android:textSize="18dp" />
 
     <TextView
@@ -31,9 +37,9 @@
         android:minHeight="40dp"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
-        android:text="便于我们根据您具体位置提供精准天气预报服务"
-        android:textColor="@color/black"
-        android:textSize="16dp" />
+        android:text="若您不进行授权，我们将无法提供\n精准定位下的天气服务"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="14dp" />
 
     <View
         android:layout_width="0dp"
@@ -45,7 +51,7 @@
         android:layout_width="240dp"
         android:layout_height="36dp"
         android:layout_marginTop="30dp"
-        android:background="@color/color_3764e1"
+        android:background="@drawable/bg_circle_00a2ff"
         android:fontFamily="sans-serif-condensed-medium"
         android:text="开启定位"
         android:textColor="@color/white"
@@ -58,7 +64,7 @@
         android:layout_marginTop="10dp"
         android:background="@color/color_clear"
         android:fontFamily="sans-serif-condensed-medium"
-        android:text="以后再说"
+        android:text="@string/underline_later"
         android:textColor="@color/color_979797"
         android:textSize="16dp" />
 

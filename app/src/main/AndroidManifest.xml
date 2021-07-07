@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" /> <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -23,6 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         tools:replace="android:label,android:icon, android:theme">
+        <activity android:name=".others.taifeng.TyphoonActivity" />
+        <activity android:name=".others.airQuality.AirQualityActivity" />
         <activity android:name=".others.calendar.CalendarActivity" />
         <activity android:name=".others.constellation.ConstellationDetailActivity" />
         <activity android:name=".others.constellation.ConstellationActivity" /> <!-- 声明service组件 -->
@@ -38,19 +41,17 @@
             android:value="595a3b236e27a468630021e8" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="${umeng_channel}" />
-
+            android:value="${umeng_channel}" /> <!-- <activity -->
         <activity
             android:name=".SplashActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/SplashActivityTheme"
             android:windowSoftInputMode="stateHidden"
-            tools:ignore="LockedOrientationActivity"
+            tools:ignore="DuplicateActivity,LockedOrientationActivity"
             tools:targetApi="cupcake">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

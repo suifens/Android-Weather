@@ -9,6 +9,7 @@
     <string name="title_air_quality">空气质量</string>
     <string name="title_calendar">万年历</string>
     <string name="title_constellation">星座运势</string>
+    <string name="title_typhoon">台风路径</string>
 
     <string name="title_today">今天</string>
     <string name="title_tomorrow">明天</string>
@@ -68,4 +69,7 @@
         <item>周六</item>
     </string-array>
 
+    <string name="title_aqi">全市平均AQI</string>
+
+    <string name="underline_later"><u>以后再说</u></string>
 </resources>

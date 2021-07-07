@@ -1,8 +1,8 @@
 package com.goodtech.tq.listener;
 
 public interface WeatherHeaderListener {
-    //  周末天气
-    void onWeekendWeather();
+    //  台风路径
+    void onTyphoon();
     //  空气质量
     void onAirQuality();
     //  万年历

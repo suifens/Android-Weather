@@ -85,9 +85,9 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             case 3:
                 return HOURS_VIEW;
             case 13:
-                return LINE_VIEW;
-            case 14:
                 return AD_VIEW;
+            case 14:
+                return LINE_VIEW;
             case 15:
                 return OBSERVANT_VIEW;
             default:
@@ -101,11 +101,11 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         switch (viewType) {
             case TOP_VIEW:
                 View header = getInflater().inflate(HeaderHolder.getResource(), parent, false);
-                return new HeaderHolder(header, mHeaderListener);
+                return new HeaderHolder(header);
 
             case CURRENT_VIEW:
                 View current = getInflater().inflate(CurrentHolder.getResource(), parent, false);
-                return new CurrentHolder(current);
+                return new CurrentHolder(current, mHeaderListener);
 
             case RECENT_VIEW:
                 View recentView = getInflater().inflate(RecentHolder.gerResource(), parent, false);

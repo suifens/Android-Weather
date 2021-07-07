@@ -21,6 +21,8 @@ public class JuHeHelper {
 
     public final static String JUHE_MONTH_HOLIDAY = "http://v.juhe.cn/calendar/month?year-month=%s&key=3fb26fed72acf7a7e4154d3a55f196c7";
 
+    public final static String JUHE_AIR_PM = "http://web.juhe.cn:8080/environment/air/pm?city=%s&key=a23dce468957d0748adf7969a42ff219";
+
     private Context mContext;
 
     @SuppressLint("StaticFieldLeak")
@@ -61,6 +63,12 @@ public class JuHeHelper {
 
     public void fetchMonthHoliday(String yearMonth, ApiResponseHandler handler) {
         String url = String.format(JUHE_MONTH_HOLIDAY, yearMonth);
+        ApiClient client = ApiClient.getInstance();
+        client.get(url, null, handler);
+    }
+
+    public void fetchAirPM(String city, ApiResponseHandler handler) {
+        String url = String.format(JUHE_AIR_PM, city);
         ApiClient client = ApiClient.getInstance();
         client.get(url, null, handler);
     }

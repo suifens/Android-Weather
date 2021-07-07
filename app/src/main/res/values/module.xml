@@ -38,4 +38,10 @@
         <attr name="isOpened" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="AirStateItemView">
+        <attr name="img_item" format="reference"/>
+        <attr name="tv_item_title" format="string"/>
+        <attr name="tv_state" format="string"/>
+    </declare-styleable>
+
 </resources>

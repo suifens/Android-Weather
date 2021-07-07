@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
+import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DownloadConfirmHelper;
@@ -33,7 +34,6 @@ import com.qq.e.comm.util.AdError;
 public class SplashADActivity extends Activity implements SplashADListener, View.OnClickListener {
 
     private SplashAD splashAD;
-    private ViewGroup container;
     private TextView skipView;
     private static final String SKIP_TEXT = "点击跳过 %d";
     private static final String EXTRA_BACK = "EXTRA_BACK";
@@ -63,7 +63,7 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_ad);
-        container = this.findViewById(R.id.splash_container);
+        ViewGroup container = this.findViewById(R.id.splash_container);
 
         StatusBarUtil.setImmerseStatusBarSystemUiVisibility(this);
 

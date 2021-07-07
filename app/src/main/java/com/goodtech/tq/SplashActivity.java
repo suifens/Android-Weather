@@ -32,15 +32,13 @@ public class SplashActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
-        SpUtils.getInstance().remove(Constants.TIME_LOCATION);
-        SpUtils.getInstance().remove(Constants.TIME_WEATHER);
-
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
             //  注册
             BaseApp.getInstance().startUsingApp(this);
 
-            String versionName = DeviceUtils.getVersionName(this);
+            SpUtils.getInstance().remove(Constants.TIME_LOCATION);
+            SpUtils.getInstance().remove(Constants.TIME_WEATHER);
             if (!saveVersion.equals("0")) {
                 LocationSpHelper.saveWithLocation(null);
                 LocationHelper.getInstance().start(this);

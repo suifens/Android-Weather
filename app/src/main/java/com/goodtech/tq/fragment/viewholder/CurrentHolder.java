@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.Metric;
@@ -31,13 +32,20 @@ public class CurrentHolder extends RecyclerView.ViewHolder {
     //提醒
     public TextView mNotice;
 
-    public CurrentHolder(View view) {
+    public HeaderItemsView mItemsView;
+
+    public CurrentHolder(View view, final WeatherHeaderListener listener) {
         super(view);
+
         mIconImgV = view.findViewById(R.id.img_icon);
         mWind_rh = view.findViewById(R.id.tv_rh_wrap);
         mTempTv = view.findViewById(R.id.tv_temperature);
         mPhraseTv = view.findViewById(R.id.tv_wx_phrase);
         mNotice = view.findViewById(R.id.tv_notice);
+        mItemsView = view.findViewById(R.id.view_items);
+        if (mItemsView != null) {
+            mItemsView.setListener(listener);
+        }
     }
 
     public static int getResource() {

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_line"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="花粉详细预报信息"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_item_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
+
+        <com.goodtech.tq.others.airQuality.view.AirStateItemView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:img_item="@drawable/ic_tip1"
+            app:tv_item_title="户外活动后及时洗澡"
+            app:tv_state="要清除您在室外沾到的花粉，请洗澡并更换衣物。" />
+
+        <com.goodtech.tq.others.airQuality.view.AirStateItemView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:img_item="@drawable/ic_tip2"
+            app:tv_item_title="尽量减少室内花粉量"
+            app:tv_state="请关闭窗户，并使用空调或 HEPA 净化器过滤过敏原。" />
+
+        <com.goodtech.tq.others.airQuality.view.AirStateItemView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:img_item="@drawable/ic_tip3"
+            app:tv_item_title="查询天气情况"
+            app:tv_state="了解风况等天气条件何时会增加花粉含量，以便做好准备。" />
+
+        <com.goodtech.tq.others.airQuality.view.AirStateItemView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginBottom="20dp"
+            app:img_item="@drawable/ic_tip4"
+            app:tv_item_title="了解适合您的过敏缓解方法"
+            app:tv_state="从服用药物到鼻腔冲洗，与您的医生讨论适合您的选择。" />
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_air_pm_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_b2b2b2"
+        android:textSize="12dp" />
+
+    <TextView
+        android:id="@+id/tv_air_pm_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="22dp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/line_air_pm"
+        android:layout_width="24dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="4dp" />
+
+</LinearLayout>
