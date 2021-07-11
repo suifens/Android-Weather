@@ -24,6 +24,7 @@ import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.listener.CompletionListener;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.DeviceUtils;
@@ -73,7 +74,13 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             if (mFirstLoad) {
                 mFirstLoad = false;
                 mHandler.postDelayed(() -> {
-                    BaseApp.getInstance().startUsingApp(CitySearchActivity.this);
+
+                    MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
+                                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true));
+                    alert.setCancelListener(((dialog, which)
+                            -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false)));
+                    alert.show();
+
                 }, 100);
             } else {
                 if (!checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -193,7 +200,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             boolean success = LocationSpHelper.addCity(cityMode);
             if (success) {
                 WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
-                helper.fetchWeather(cityMode);
+                helper.getBaseUrl(() -> helper.fetchWeather(cityMode));
 
                 EventBus.getDefault().post(new MessageEvent().addCity(true));
             }

@@ -65,45 +65,47 @@ public class BaseApp extends Application {
     }
 
     @SuppressLint("CheckResult")
-    public void startUsingApp(Activity activity) {
+    public void startUsingApp(Activity activity, boolean needPermission) {
 
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
 
-        RxPermissions rxPermissions = new RxPermissions(activity);
-        if (SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
-            rxPermissions.requestEach(Manifest.permission.READ_PHONE_STATE
-                    , Manifest.permission.ACCESS_WIFI_STATE
-                    , Manifest.permission.ACCESS_FINE_LOCATION
-                    , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
-            {
-                SpUtils.getInstance().putBoolean(FIRST_CHECK, false);
-                if (permission.granted) {
-                    switch (permission.name) {
-                        case Manifest.permission.READ_PHONE_STATE:
-                        case Manifest.permission.ACCESS_WIFI_STATE: {
-                            //  配置 UM_APP_ID , 标识
-                            UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
+        if (needPermission) {
+            RxPermissions rxPermissions = new RxPermissions(activity);
+            if (SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
+                rxPermissions.requestEach(Manifest.permission.READ_PHONE_STATE
+                        , Manifest.permission.ACCESS_WIFI_STATE
+                        , Manifest.permission.ACCESS_FINE_LOCATION
+                        , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
+                {
+                    SpUtils.getInstance().putBoolean(FIRST_CHECK, false);
+                    if (permission.granted) {
+                        switch (permission.name) {
+                            case Manifest.permission.READ_PHONE_STATE:
+                            case Manifest.permission.ACCESS_WIFI_STATE: {
+                                //  配置 UM_APP_ID , 标识
+                                UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
+                            }
+                            break;
+                            case Manifest.permission.ACCESS_FINE_LOCATION:
+                            case Manifest.permission.ACCESS_COARSE_LOCATION:
+                                configLocation();
+                                break;
                         }
-                            break;
-                        case Manifest.permission.ACCESS_FINE_LOCATION:
-                        case Manifest.permission.ACCESS_COARSE_LOCATION:
-                            configLocation();
-                            break;
+                    } else {
+                        switch (permission.name) {
+                            case Manifest.permission.ACCESS_FINE_LOCATION:
+                            case Manifest.permission.ACCESS_COARSE_LOCATION:
+                                needLocationPerm = false;
+                                break;
+                        }
                     }
-                } else {
-                    switch (permission.name) {
-                        case Manifest.permission.ACCESS_FINE_LOCATION:
-                        case Manifest.permission.ACCESS_COARSE_LOCATION:
-                            needLocationPerm = false;
-                            break;
-                    }
-                }
-            });
-        } else {
-            //  配置 UM_APP_ID , 标识
-            UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
-            //  定位
-            configLocation();
+                });
+            } else {
+                //  配置 UM_APP_ID , 标识
+                UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
+                //  定位
+                configLocation();
+            }
         }
 
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);

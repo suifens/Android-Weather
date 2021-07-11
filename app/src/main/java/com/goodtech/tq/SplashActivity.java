@@ -11,7 +11,6 @@ import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 
@@ -35,7 +34,7 @@ public class SplashActivity extends Activity {
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
             //  注册
-            BaseApp.getInstance().startUsingApp(this);
+            BaseApp.getInstance().startUsingApp(this, true);
 
             SpUtils.getInstance().remove(Constants.TIME_LOCATION);
             SpUtils.getInstance().remove(Constants.TIME_WEATHER);
@@ -44,7 +43,7 @@ public class SplashActivity extends Activity {
                 LocationHelper.getInstance().start(this);
 
                 WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
-                httpHelper.fetchCitiesWeather();
+                httpHelper.getBaseUrl(httpHelper::fetchCitiesWeather);
             }
 
             SplashADActivity.redirectTo(this);

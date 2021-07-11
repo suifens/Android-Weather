@@ -4,7 +4,7 @@
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="320dp">
+    android:minHeight="400dp">
 
     <com.goodtech.tq.fragment.viewholder.HeaderItemsView
         android:id="@+id/view_items"
@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:minHeight="140dp"
         android:gravity="center"
-        android:layout_marginBottom="70dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
+import com.goodtech.tq.listener.CompletionListener;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
@@ -35,9 +36,11 @@ public class WeatherHttpHelper {
     private static final String KEY_FORECASTS = "forecasts";
     private static final String KEY_OBSERVATION = "observation";
 
-    private static final String WEATHER_API = "https://api.weather.com/v1/geocode/%s/%s/aggregate.json?language=zh-CN&apiKey=e45ff1b7c7bda231216c7ab7c33509b8&products=conditionsshort,fcstdaily10short,fcsthourly24short,nowlinks";
+    private static final String WEATHER_API = "%s/v1/geocode/%s/%s/aggregate.json?language=zh-CN&apiKey=e45ff1b7c7bda231216c7ab7c33509b8&products=conditionsshort,fcstdaily10short,fcsthourly24short,nowlinks";
 
     private Context mContext;
+
+    private String mBaseUrl;
 
     @SuppressLint("StaticFieldLeak")
     private static WeatherHttpHelper instance;
@@ -51,6 +54,37 @@ public class WeatherHttpHelper {
 
     public WeatherHttpHelper(Context context) {
         this.mContext = context;
+    }
+
+    public void getBaseUrl(CompletionListener callback) {
+        if (!TextUtils.isEmpty(mBaseUrl)) {
+            if (callback != null) {
+                callback.onCompletion();
+            }
+            return;
+        }
+        String url = "http://www.yiguxm.com/weather_conf.json";
+        ApiClient client = ApiClient.getInstance();
+        client.get(url, null, new ApiResponseHandler() {
+            @Override
+            public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
+                try {
+                    if (success) {
+                        if (!jsonObject.isNull("api")) {
+                            mBaseUrl = jsonObject.getString("api");
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (TextUtils.isEmpty(mBaseUrl)) {
+                    mBaseUrl = "https://api.weather.com";
+                }
+                if (callback != null) {
+                    callback.onCompletion();
+                }
+            }
+        });
     }
 
     public void fetchCitiesWeather() {
@@ -96,7 +130,7 @@ public class WeatherHttpHelper {
         }
 
         ApiClient client = ApiClient.getInstance();
-        String url = String.format(WEATHER_API, cityMode.lat, cityMode.lon);
+        String url = String.format(WEATHER_API, mBaseUrl, cityMode.lat, cityMode.lon);
 
         client.get(url, null, new ApiResponseHandler(mContext) {
             @Override

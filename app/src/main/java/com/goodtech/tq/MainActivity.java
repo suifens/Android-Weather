@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        WeatherHttpHelper.getInstance().fetchCitiesWeather();
+        WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
         Log.e(TAG, "onResume: ");
     }
 

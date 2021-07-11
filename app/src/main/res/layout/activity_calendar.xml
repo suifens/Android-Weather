@@ -11,11 +11,7 @@
         android:id="@+id/layout_top_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/gradient_007bff_00c4ff"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@drawable/gradient_007bff_00c4ff">
 
         <ImageButton
             android:id="@+id/button_back"

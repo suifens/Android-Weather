@@ -41,7 +41,7 @@ public class LocationSpHelper {
             cityMode.city = String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet());
             //  获取天气信息
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(BaseApp.getInstance());
-            httpHelper.fetchWeather(cityMode);
+            httpHelper.getBaseUrl(() -> httpHelper.fetchWeather(cityMode));
         }
         Gson gson = new Gson();
         String json = gson.toJson(cityMode);

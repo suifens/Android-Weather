@@ -114,26 +114,34 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
     private final WeatherHeaderListener mHeaderListener = new WeatherHeaderListener() {
         @Override
         public void onTyphoon() {
-            Intent intent = new Intent(getActivity(), TyphoonActivity.class);
-            requireActivity().startActivity(intent);
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), TyphoonActivity.class);
+                getActivity().startActivity(intent);
+            }
         }
 
         @Override
         public void onAirQuality() {
-            Intent intent = new Intent(getActivity(), AirQualityActivity.class);
-            requireActivity().startActivity(intent);
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), AirQualityActivity.class);
+                getActivity().startActivity(intent);
+            }
         }
 
         @Override
         public void onCalendar() {
-            Intent intent = new Intent(getActivity(), CalendarActivity.class);
-            requireActivity().startActivity(intent);
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), CalendarActivity.class);
+                getActivity().startActivity(intent);
+            }
         }
 
         @Override
         public void onFortune() {
-            Intent intent = new Intent(getActivity(), ConstellationActivity.class);
-            requireActivity().startActivity(intent);
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), ConstellationActivity.class);
+                getActivity().startActivity(intent);
+            }
         }
     };
 
