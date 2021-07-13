@@ -194,7 +194,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
 
     @Override
     public void onADLoaded(List<NativeExpressADView> adList) {
-        Log.i(TAG, "onADLoaded: " + adList.size());
+        Log.e(TAG, "onADLoaded: " + adList.size());
         if (adList.size() > 0) {
             mAdView = adList.get(0);
             if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {

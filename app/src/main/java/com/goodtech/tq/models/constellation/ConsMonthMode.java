@@ -1,4 +1,4 @@
-package com.goodtech.tq.others.constellation.mode;
+package com.goodtech.tq.models.constellation;
 
 import android.os.Parcel;
 import android.os.Parcelable;

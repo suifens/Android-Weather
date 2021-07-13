@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.BaseFragment;
-import com.goodtech.tq.others.constellation.mode.ConsDayMode;
+import com.goodtech.tq.models.constellation.ConsDayMode;
 
 public class ConsDetailFragment extends BaseFragment {
 

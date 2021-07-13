@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
-
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
@@ -17,23 +15,13 @@ import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.JuHeHelper;
 import com.goodtech.tq.listener.CompletionListener;
 import com.goodtech.tq.models.AirPmModel;
-import com.goodtech.tq.models.Hourly;
-import com.goodtech.tq.others.constellation.ConsDetailFragment;
-import com.goodtech.tq.others.constellation.ConsOtherFragment;
-import com.goodtech.tq.others.constellation.mode.ConsDayMode;
-import com.goodtech.tq.others.constellation.mode.ConsMonthMode;
-import com.goodtech.tq.others.constellation.mode.ConsWeekMode;
-import com.goodtech.tq.others.constellation.mode.ConsYearMode;
 import com.goodtech.tq.views.CircleProgressView;
 import com.goodtech.tq.views.IArcView;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
-
-import java.util.List;
 
 public class AirQualityActivity extends BaseActivity {
 

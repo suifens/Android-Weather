@@ -1,4 +1,6 @@
-package com.goodtech.tq.others.calendar;
+package com.goodtech.tq.models.calendar;
+
+import com.goodtech.tq.utils.TimeUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -36,13 +38,17 @@ public class Holiday implements Serializable {
                 if (firstYear.equals(lastYear)) {
                     return getMonthDay(first) + "-" + getMonthDay(last);
                 } else {
-                    return getData(first) + "-" + getData(last);
+                    return getDate(first) + "-" + getDate(last);
                 }
             } else {
                 return getMonthDay(list.get(0).getDate());
             }
         }
         return "";
+    }
+
+    public long getDate() {
+        return TimeUtils.longWithDate(festival, "yyyy-MM-dd");
     }
 
     public String getDay() {
@@ -65,7 +71,7 @@ public class Holiday implements Serializable {
         return "";
     }
 
-    private String getData(String time) {
+    private String getDate(String time) {
         String[] strings = time.split("-");
         if (strings.length > 0) {
             return strings[0] + "年" + strings[1] + "月" + strings[2] + "日";

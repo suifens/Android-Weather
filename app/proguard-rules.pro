@@ -51,3 +51,5 @@
   -keep class com.heytap.**{*;}
   -keep class a.**{*;}
   -keep class com.vivo.**{*;}
+
+  -keep class com.haibin.calendarview.** { *; }

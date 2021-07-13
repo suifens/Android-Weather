@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.goodtech.tq.R;
 import com.goodtech.tq.common.group.GroupRecyclerAdapter;
+import com.goodtech.tq.models.calendar.Article;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

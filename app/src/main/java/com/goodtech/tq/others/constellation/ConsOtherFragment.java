@@ -7,17 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.BaseFragment;
-import com.goodtech.tq.others.constellation.mode.ConsDayMode;
-import com.goodtech.tq.others.constellation.mode.ConsMonthMode;
-import com.goodtech.tq.others.constellation.mode.ConsWeekMode;
-import com.goodtech.tq.others.constellation.mode.ConsYearMode;
+import com.goodtech.tq.models.constellation.ConsMonthMode;
+import com.goodtech.tq.models.constellation.ConsWeekMode;
+import com.goodtech.tq.models.constellation.ConsYearMode;
 
 public class ConsOtherFragment extends BaseFragment {
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
+import android.util.Log;
 
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.MyActivityManager;
@@ -26,6 +27,7 @@ import com.tencent.mmkv.MMKV;
 import com.umeng.commonsdk.UMConfigure;
 
 public class BaseApp extends Application {
+    private static final String TAG = "BaseApp";
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     public LocationService locationService;
     public Vibrator mVibrator;
@@ -69,6 +71,14 @@ public class BaseApp extends Application {
 
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
 
+        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+
+        // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
+        GDTADManager.getInstance().initWith(getApplicationContext(), Constants.APP_ID);
+        GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
+
+        Log.e(TAG, "startUsingApp: ");
+
         if (needPermission) {
             RxPermissions rxPermissions = new RxPermissions(activity);
             if (SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
@@ -107,12 +117,6 @@ public class BaseApp extends Application {
                 configLocation();
             }
         }
-
-        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
-
-        // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
-        GDTADManager.getInstance().initWith(getApplicationContext(), Constants.APP_ID);
-        GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
     }
 
     public int appCount = 0;

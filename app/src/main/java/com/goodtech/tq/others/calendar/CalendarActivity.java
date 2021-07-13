@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
+import com.goodtech.tq.models.calendar.DayDetail;
+import com.goodtech.tq.models.calendar.Holiday;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.haibin.calendarview.Calendar;
@@ -29,7 +31,7 @@ public class CalendarActivity extends BaseActivity implements
     CalendarLayout mCalendarLayout;
 
     private View mDayDetailView;
-    private CalendarPresenter mPresenter = new CalendarPresenter();
+    private CalendarPresenter mPresenter = CalendarPresenter.getInstance();
 
     private int mYear;
 

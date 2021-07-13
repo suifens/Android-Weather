@@ -30,46 +30,46 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-        anzhi {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"苹果天气预报", umeng_channel:"anzhi"]
-        }
-        baidu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
-            manifestPlaceholders=[app_name:"日历天气预报", umeng_channel:"baidu"]
-        }
-        huawei {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
-            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"huawei"]
-        }
-        meizu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
-            manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
-        }
-        oppo {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"oppo"]
-        }
-        sougou {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
-            manifestPlaceholders=[app_name:"天气预报-日历天气", umeng_channel:"sougou"]
-        }
-        vivo {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
-            manifestPlaceholders=[app_name:"天气-苹果天气预报", umeng_channel:"vivo"]
-        }
-        wdj {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"日历天气", umeng_channel:"wandoujia"]
-        }
+//        anzhi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            manifestPlaceholders=[app_name:"苹果天气预报", umeng_channel:"anzhi"]
+//        }
+//        baidu {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+//            manifestPlaceholders=[app_name:"日历天气预报", umeng_channel:"baidu"]
+//        }
+//        huawei {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+//            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"huawei"]
+//        }
+//        meizu {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+//            manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
+//        }
+//        oppo {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+//            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"oppo"]
+//        }
+//        sougou {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
+//            manifestPlaceholders=[app_name:"天气预报-日历天气", umeng_channel:"sougou"]
+//        }
+//        vivo {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
+//            manifestPlaceholders=[app_name:"天气-苹果天气预报", umeng_channel:"vivo"]
+//        }
+//        wdj {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            manifestPlaceholders=[app_name:"日历天气", umeng_channel:"wandoujia"]
+//        }
         xiaomi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '10'
             manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"]
         }
-        yyb {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
-        }
+//        yyb {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
+//        }
     }
 
     def fileArray = []
@@ -165,6 +165,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     //  广告
-//    implementation 'com.qq.e.union:union:4.370.1240'
-//    implementation 'com.qq.e.union:tbs:4.370.1240'
+//    implementation 'com.qq.e.union:union:4.373.1243'
+//    implementation 'com.qq.e.union:tbs:4.373.1243'
 }

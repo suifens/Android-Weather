@@ -1,4 +1,4 @@
-package com.goodtech.tq.others.calendar;
+package com.goodtech.tq.models.calendar;
 
 import java.io.Serializable;
 

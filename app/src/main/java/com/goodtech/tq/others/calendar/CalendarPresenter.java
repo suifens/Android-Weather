@@ -6,6 +6,8 @@ import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.JuHeHelper;
 import com.goodtech.tq.listener.CompletionListener;
+import com.goodtech.tq.models.calendar.DayDetail;
+import com.goodtech.tq.models.calendar.Holiday;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -13,11 +15,23 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CalendarPresenter {
+
+    private static CalendarPresenter singleton;
+
+    private CalendarPresenter() {}
+
+    public static CalendarPresenter getInstance() {
+        if (singleton == null) {
+            singleton = new CalendarPresenter();
+        }
+        return singleton;
+    }
 
     public DayDetail mDayDetail;
 
@@ -94,7 +108,19 @@ public class CalendarPresenter {
                                     List<Holiday> dataList = new Gson().fromJson(String.valueOf(array), new TypeToken<List<Holiday>>() {
                                     }.getType());
                                     if (dataList != null) {
-                                        holidayList.addAll(dataList);
+                                        for (Holiday holiday : dataList) {
+                                            boolean isContain = false;
+                                            for (int j = holidayList.size() - 1; j >= 0 ; j--) {
+                                                Holiday lastDay = holidayList.get(j);
+                                                if (lastDay.getName().equals(holiday.getName())) {
+                                                    isContain = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!isContain) {
+                                                holidayList.add(holiday);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -102,7 +128,11 @@ public class CalendarPresenter {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                     if (count[0] == 12) {
+
+                        Collections.sort(holidayList, (o1, o2) -> Long.compare(o1.getDate(), o2.getDate()));
+
                         if (holidayList.size() > 0) {
                             mHolidayList = holidayList;
                             mHolidayMap.put(year, holidayList);
@@ -115,7 +145,5 @@ public class CalendarPresenter {
             });
         }
     }
-
-
 
 }

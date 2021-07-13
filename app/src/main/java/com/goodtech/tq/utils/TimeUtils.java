@@ -43,6 +43,31 @@ public class TimeUtils {
         return timestamp;
     }
 
+    /**
+     * @param strTime    要转换的string类型的时间，
+     * @param formatType 要转换的格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
+     * @return Date
+     */
+    public static Date stringToDate(String strTime, String formatType) {
+        SimpleDateFormat formatter = new SimpleDateFormat(formatType);
+        Date date = null;
+        try {
+            date = formatter.parse(strTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static long longWithDate(String strTime, String formatType) {
+        Date date = stringToDate(strTime, formatType);
+        if (date != null) {
+            return date.getTime();
+        } else {
+            return 0;
+        }
+    }
+
     public static long dateToLong(Date date) {
         return date.getTime();
     }
