@@ -270,19 +270,16 @@ public class MainActivity extends BaseActivity {
 
     private void reloadWeather(final int index) {
 
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                CityMode cityMode = mCityModes.get(index);
-                if (cityMode.cid != 0) {
-                    WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
-                    if (mFragmentList.size() > index) {
-                        WeatherFragment fragment = (WeatherFragment) mFragmentList.get(index);
-                        fragment.changeWeather(model, cityMode);
-                    }
-                    if (index == mCurrIndex) {
-                        changeBg(model);
-                    }
+        mHandler.post(() -> {
+            CityMode cityMode = mCityModes.get(index);
+            if (cityMode.cid != 0) {
+                WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
+                if (mFragmentList.size() > index) {
+                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(index);
+                    fragment.changeWeather(model, cityMode);
+                }
+                if (index == mCurrIndex) {
+                    changeBg(model);
                 }
             }
         });
