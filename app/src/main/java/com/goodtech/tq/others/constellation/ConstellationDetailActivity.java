@@ -83,8 +83,7 @@ public class ConstellationDetailActivity extends BaseActivity implements View.On
                 finish();
                 break;
             case R.id.button_other:
-                Intent intent = new Intent(this, ConstellationActivity.class);
-                this.startActivity(intent);
+                finishToRight();
                 break;
         }
     }
