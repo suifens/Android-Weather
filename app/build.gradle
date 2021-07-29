@@ -70,6 +70,14 @@ android {
             buildConfigField 'int', 'BAIDU_CHANNEL', '9'
             manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
         }
+        tuiguang1 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"tuiguang1"]
+        }
+        tuiguang2 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"tuiguang2"]
+        }
     }
 
     def fileArray = []
