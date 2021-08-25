@@ -2,25 +2,20 @@ package com.goodtech.tq;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
-
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
-import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.SwitchView;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.umeng.analytics.MobclickAgent;
@@ -48,6 +43,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.layout_praise).setOnClickListener(this);
         findViewById(R.id.layout_about).setOnClickListener(this);
+        findViewById(R.id.layout_contact).setOnClickListener(this);
         findViewById(R.id.layout_version).setOnClickListener(this);
         findViewById(R.id.layout_permission_phone).setOnClickListener(this);
         findViewById(R.id.layout_permission_storage).setOnClickListener(this);
@@ -97,6 +93,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             break;
             case R.id.layout_about: {
                 Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+            }
+            break;
+            case R.id.layout_contact: {
+                Intent intent = new Intent(this, ContactActivity.class);
                 startActivity(intent);
             }
             break;
