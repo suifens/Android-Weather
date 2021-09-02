@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/activity_about.xml" value="0.17844202898550723" />
+        <entry key="app/src/main/res/layout/activity_contact.xml" value="0.3307291666666667" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.19630192502532928" />
+        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_typhoon.xml" value="0.19630192502532928" />
+        <entry key="app/src/main/res/layout/bottom_list.xml" value="0.35054347826086957" />
+        <entry key="app/src/main/res/layout/constraint_item_hourly.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_item.xml" value="0.189209726443769" />
+        <entry key="app/src/main/res/layout/fragment_item_list.xml" value="0.35054347826086957" />
+        <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_weather_data.xml" value="0.1894630192502533" />
+        <entry key="app/src/main/res/layout/stub_weather_data.xml" value="0.189209726443769" />
+        <entry key="app/src/main/res/layout/view_cons_item.xml" value="0.3546195652173913" />
+        <entry key="app/src/main/res/layout/weather_item.xml" value="0.1828774062816616" />
+        <entry key="app/src/main/res/layout/weather_item_ad.xml" value="0.3546195652173913" />
+        <entry key="app/src/main/res/layout/weather_item_current.xml" value="0.19630192502532928" />
+        <entry key="app/src/main/res/layout/weather_item_daily.xml" value="0.19630192502532928" />
+        <entry key="app/src/main/res/layout/weather_item_header.xml" value="0.19630192502532928" />
+        <entry key="app/src/main/res/layout/weather_item_hours.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/weather_item_line.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/weather_item_observation.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/weather_item_recent.xml" value="0.35054347826086957" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

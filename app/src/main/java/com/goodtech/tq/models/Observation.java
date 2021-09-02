@@ -43,6 +43,24 @@ public class Observation implements Parcelable {
     @SerializedName("wx_phrase")
     public String wxPhrase;
 
+    @Override
+    public String toString() {
+        return "Observation {" + "\n" +
+                "metric = " + metric.toString() + "\n" +
+                "obsId = " + obsId + "\n" +
+                "obsName = " + obsName + "\n" +
+                "pressureDesc = " + pressureDesc + "\n" +
+                "pressureTend = " + pressureTend + "\n" +
+                "rh = " + rh + "\n" +
+                "uvDesc = " + uvDesc + "\n" +
+                "uvIndex = " + uvIndex + "\n" +
+                "wdir = " + wdir + "\n" +
+                "wdirCardinal = " + wdirCardinal + "\n" +
+                "wxIcon = " + wxIcon + "\n" +
+                "wxPhrase = " + wxPhrase + "\n" +
+                '}';
+    }
+
     protected Observation(Parcel in) {
         validTime = in.readLong();
         metric = in.readParcelable(Metric.class.getClassLoader());

@@ -61,6 +61,28 @@ public class Daypart implements Parcelable {
     @SerializedName("metric.wspd")
     public int wspd;
 
+    @Override
+    public String toString() {
+        return "Daypart {" + "\n" +
+                "num = " + num + "\n" +
+                "name = " + name + "\n" +
+                "longName = " + longName + "\n" +
+                "fcst_valid = " + fcst_valid + "\n" +
+                "iconCd = " + iconCd + "\n" +
+                "rh = " + rh + "\n" +
+                "uvDesc = " + uvDesc + "\n" +
+                "iconExtd = " + iconExtd + "\n" +
+                "wdir = " + wdir + "\n" +
+                "wdirCardinal = " + wdirCardinal + "\n" +
+                "phraseChar = " + phraseChar + "\n" +
+                "precipType = " + precipType + "\n" +
+                "pop = " + pop + "\n" +
+                "uvInde = " + uvInde + "\n" +
+                "wspd = " + wspd + "\n" +
+                '}';
+    }
+
+
 
     protected Daypart(Parcel in) {
         num = in.readInt();

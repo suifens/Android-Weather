@@ -81,7 +81,6 @@ public class WeatherView extends HorizontalScrollView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (getChildCount() > 0) {
-            Log.e("xxx", ">0");
             ViewGroup root = (ViewGroup) getChildAt(0);
 
             if (root.getChildCount() > 0) {

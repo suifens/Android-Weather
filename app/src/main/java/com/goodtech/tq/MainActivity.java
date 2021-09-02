@@ -2,16 +2,13 @@ package com.goodtech.tq;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -24,24 +21,21 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
-import com.goodtech.tq.fragment.WeatherFragment;
+import com.goodtech.tq.fragment.WeatherFragment2;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.location.Location;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
-import com.goodtech.tq.views.MessageAlert;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -54,7 +48,6 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
-    private static final int REQUEST_CODE_LOCATION = 1001;
     private final BroadcastReceiver receiver = new IntentReceiver();
 
     protected TextView mAddressTv;
@@ -64,13 +57,14 @@ public class MainActivity extends BaseActivity {
     private ViewPagerAdapter mAdapter;
     private ImageView mBgImgView;
     private RadioGroup mRgIndicator;
-    private List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<CityMode> mCityModes = new ArrayList<>();
     private int mCurrIndex;
     private long mBackTime;
     private boolean mLoadLast;
 
     @Override
+    @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -86,21 +80,10 @@ public class MainActivity extends BaseActivity {
         configStationBar(findViewById(R.id.private_station_bar));
 
         //  静止底部图片滑动
-        findViewById(R.id.scroll_background).setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        findViewById(R.id.scroll_background).setOnTouchListener((v, event) -> true);
 
         //  点击地址，跳转到城市列表
-        findViewById(R.id.layout_address).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CityListActivity.redirectTo(MainActivity.this);
-            }
-        });
+        findViewById(R.id.layout_address).setOnClickListener(v -> CityListActivity.redirectTo(MainActivity.this));
 
         //  跳转到设置页面
         findViewById(R.id.img_setting).setOnClickListener(v -> {
@@ -249,14 +232,8 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private WeatherFragment newFragment() {
-        WeatherFragment fragment = new WeatherFragment();
-        fragment.setStateBar(findViewById(R.id.station_bg_view));
-        return fragment;
-    }
-
     private void addFragment() {
-        WeatherFragment fragment = new WeatherFragment();
+        WeatherFragment2 fragment = new WeatherFragment2();
         fragment.setStateBar(findViewById(R.id.station_bg_view));
         mFragmentList.add(fragment);
     }
@@ -275,7 +252,7 @@ public class MainActivity extends BaseActivity {
             if (cityMode.cid != 0) {
                 WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
                 if (mFragmentList.size() > index) {
-                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(index);
+                    WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(index);
                     fragment.changeWeather(model, cityMode);
                 }
                 if (index == mCurrIndex) {
@@ -290,50 +267,42 @@ public class MainActivity extends BaseActivity {
      */
     private void changeBg(final WeatherModel model) {
 
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (model != null && model.dailies != null) {
-                    TipHelper.dismissProgressDialog(1000);
+        mHandler.post(() -> {
+            if (model != null && model.dailies != null) {
+                TipHelper.dismissProgressDialog(1000);
 
-                    Daily daily = model.dailies.get(0);
-                    boolean night = false;
-                    if (daily != null) {
-                        long tSunrise = TimeUtils.switchTime(daily.sunRise);
-                        long tSunset = TimeUtils.switchTime(daily.sunSet);
-                        long current = System.currentTimeMillis();
+                Daily daily = model.dailies.get(0);
+                boolean night = false;
+                if (daily != null) {
+                    long tSunrise = TimeUtils.switchTime(daily.sunRise);
+                    long tSunset = TimeUtils.switchTime(daily.sunSet);
+                    long current = System.currentTimeMillis();
 
-                        night = current < tSunrise || current > tSunset;
-                    }
-                    //  天气图标
-                    int icon_cd = -1;
-                    if (model.observation != null) {
-                        icon_cd = model.observation.wxIcon;
-                        if (model.hourlies.size() > 0 && model.hourlies.get(0) != null) {
-                            Hourly hourly = model.hourlies.get(0);
-                            long time = hourly.fcst_valid;
-                            if (System.currentTimeMillis() > time * 1000) {
-                                icon_cd = hourly.icon_cd;
-                            }
-                        }
-                    }
-
-                    mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
-                } else {
-                    mBgImgView.setImageResource(R.drawable.bg_normal);
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            TipHelper.dismissProgressDialog();
-                        }
-                    }, 2000);
+                    night = current < tSunrise || current > tSunset;
                 }
+                //  天气图标
+                int icon_cd = -1;
+                if (model.observation != null) {
+                    icon_cd = model.observation.wxIcon;
+                    if (model.hourlies.size() > 0 && model.hourlies.get(0) != null) {
+                        Hourly hourly = model.hourlies.get(0);
+                        long time = hourly.fcst_valid;
+                        if (System.currentTimeMillis() > time * 1000) {
+                            icon_cd = hourly.icon_cd;
+                        }
+                    }
+                }
+
+                mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
+            } else {
+                mBgImgView.setImageResource(R.drawable.bg_normal);
+                mHandler.postDelayed(TipHelper::dismissProgressDialog, 2000);
             }
         });
     }
 
     private void configViewPager() {
-        WeatherFragment fragment = new WeatherFragment();
+        WeatherFragment2 fragment = new WeatherFragment2();
         fragment.setStateBar(findViewById(R.id.station_bg_view));
         mFragmentList.add(fragment);
         mAdapter = new ViewPagerAdapter(this, mFragmentList);
@@ -397,33 +366,10 @@ public class MainActivity extends BaseActivity {
                 changeBg(weatherModel);
 
                 if (mFragmentList.size() > position) {
-                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(position);
+                    WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(position);
                     fragment.changeWeather(weatherModel, cityMode);
                 }
             }
-
-//            CityMode location = LocationSpHelper.getLocation();
-//            if (mCurrIndex == 0) {
-//                assert location != null;
-//                if (location.cid == 0) {
-//                    if (!this.isFinishing()) {
-//                        if (!isLocationServicesAvailable(this)) {
-//                            MessageAlert alert = new MessageAlert(this, new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    requestLocationPermissions();
-//                                }
-//                            });
-//                            if (!isFinishing()) {
-//                                alert.show();
-//                            }
-//                        } else {
-//                            TipHelper.showProgressDialog(this, false);
-//                            LocationHelper.getInstance().startWithDelay(this);
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 

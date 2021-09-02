@@ -43,6 +43,24 @@ public class Daily implements Parcelable {
     @SerializedName("night")
     public Daypart nightPart;
 
+    @Override
+    public String toString() {
+        return "Daily {" + "\n" +
+                "metric = " + metric.toString() + "\n" +
+                "num = " + num + "\n" +
+                "dow = " + dow + "\n" +
+                "fcst_valid = " + fcst_valid + "\n" +
+                "fcst_valid_local = " + fcst_valid_local + "\n" +
+                "moonRise = " + moonRise + "\n" +
+                "moonSet = " + moonSet + "\n" +
+                "moon_phase = " + moon_phase + "\n" +
+                "moon_phase_code = " + moon_phase_code + "\n" +
+                "sunRise = " + sunRise + "\n" +
+                "sunSet = " + sunSet + "\n" +
+                '}';
+    }
+
+
     protected Daily(Parcel in) {
         num = in.readInt();
         dow = in.readString();

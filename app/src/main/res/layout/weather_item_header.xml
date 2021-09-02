@@ -40,33 +40,33 @@
         android:layout_height="1dp"
         android:layout_weight="1" />
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/item_air_quality"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:gravity="center_horizontal"-->
-<!--        android:orientation="vertical">-->
+    <LinearLayout
+        android:id="@+id/item_air_quality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-<!--        <ImageView-->
-<!--            android:layout_width="36dp"-->
-<!--            android:layout_height="36dp"-->
-<!--            android:src="@drawable/ic_air_quality" />-->
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_air_quality" />
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="2dp"-->
-<!--            android:text="@string/title_air_quality"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="12dp" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/title_air_quality"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
 
-<!--    </LinearLayout>-->
+    </LinearLayout>
 
-<!--    <View-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="1dp"-->
-<!--        android:layout_weight="1" />-->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:id="@+id/item_calendar"

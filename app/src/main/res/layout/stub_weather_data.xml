@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.goodtech.tq.fragment.view.CurrentItemView
+        android:id="@+id/item_current"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="80dp"/>
+
+    <com.goodtech.tq.fragment.view.RecentItemView
+        android:id="@+id/item_recent"
+        android:layout_width="match_parent"
+        android:layout_height="74dp" />
+
+    <com.goodtech.tq.fragment.view.HoursItemView
+        android:id="@+id/item_hours"
+        android:layout_width="match_parent"
+        android:layout_height="114dp" />
+
+    <com.goodtech.tq.fragment.view.DailyItemView
+        android:id="@+id/item_daily_1"
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
+
+    <com.goodtech.tq.fragment.view.DailyItemView
+        android:id="@+id/item_daily_2"
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
+
+    <com.goodtech.tq.fragment.view.DailyItemView
+        android:id="@+id/item_daily_3"
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
+
+    <com.goodtech.tq.fragment.view.DailyItemView
+        android:id="@+id/item_daily_4"
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
+
+    <com.goodtech.tq.fragment.view.DailyItemView
+        android:id="@+id/item_daily_5"
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
+
+    <com.goodtech.tq.fragment.view.DailyItemView
+        android:id="@+id/item_daily_6"
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
+
+    <com.goodtech.tq.fragment.view.DailyItemView
+        android:id="@+id/item_daily_7"
+        android:layout_width="match_parent"
+        android:layout_height="42dp" />
+
+    <com.goodtech.tq.fragment.view.NativeExpressAD2View
+        android:id="@+id/item_ad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <com.goodtech.tq.fragment.view.LineTempItemView
+        android:id="@+id/item_line_temp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
+    <com.goodtech.tq.fragment.view.ObservationItemView
+        android:id="@+id/item_observation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
+</LinearLayout>

@@ -46,6 +46,29 @@ public class Hourly implements Parcelable {
     public boolean sunrise;
     public boolean sunset;
 
+    @Override
+    public String toString() {
+        return "Hourly {" + "\n" +
+                "num = " + num + "\n" +
+                "dayInd = " + dayInd + "\n" +
+                "dow = " + dow + "\n" +
+                "metric = " + metric.toString() + "\n" +
+                "fcst_valid = " + fcst_valid + "\n" +
+                "fcst_valid_local = " + fcst_valid_local + "\n" +
+                "icon_cd = " + icon_cd + "\n" +
+                "icon_extd = " + icon_extd + "\n" +
+                "wdir = " + wdir + "\n" +
+                "phraseChar = " + phraseChar + "\n" +
+                "pop = " + pop + "\n" +
+                "precip_type = " + precip_type + "\n" +
+                "rh = " + rh + "\n" +
+                "uv_desc = " + uv_desc + "\n" +
+                "uv_index = " + uv_index + "\n" +
+                "wdir_cardinal = " + wdir_cardinal + "\n" +
+                '}';
+    }
+
+
     public Hourly() {
 
     }

@@ -20,8 +20,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 200
-        versionName "5.0.0"
+        versionCode 201
+        versionName "5.0.1"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -132,7 +132,7 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     //noinspection GradleCompatible
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -171,8 +171,4 @@ dependencies {
 //    implementation 'com.github.tbruyelle:rxpermissions:0.12'
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-
-    //  广告
-//    implementation 'com.qq.e.union:union:4.373.1243'
-//    implementation 'com.qq.e.union:tbs:4.373.1243'
 }

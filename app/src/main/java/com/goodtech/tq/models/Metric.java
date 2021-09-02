@@ -30,6 +30,23 @@ public class Metric implements Parcelable {
     @SerializedName("wspd")
     public int wspd;    //  风速 km/h
 
+    @Override
+    public String toString() {
+        return "Metric {" + "\n" +
+                "gust = " + gust + "\n" +
+                "dewpt = " + dewpt + "\n" +
+                "feelsLike = " + feelsLike + "\n" +
+                "maxTemp = " + maxTemp + "\n" +
+                "minTemp = " + minTemp + "\n" +
+                "precipTotal = " + precipTotal + "\n" +
+                "pressure = " + pressure + "\n" +
+                "temp = " + temp + "\n" +
+                "vis = " + vis + "\n" +
+                "wspd = " + wspd + "\n" +
+                '}';
+    }
+
+
     protected Metric(Parcel in) {
         gust = in.readInt();
         dewpt = in.readInt();

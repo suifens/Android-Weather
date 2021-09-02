@@ -35,6 +35,19 @@ public class WeatherModel {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "WeatherModel {" + "\n" +
+                "cid = " + cid + "\n" +
+                "latitude = " + latitude + "\n" +
+                "longitude = " + longitude + "\n" +
+                "expireTime = " + expireTime + "\n" +
+                "observation = " + observation.toString() + "\n" +
+                "hourlies = " + hourlies.toString() + "\n" +
+                "dailies = " + dailies.toString() + "\n" +
+                '}';
+    }
+
     public Daily today() {
         if (dailies != null && dailies.size() > 0) {
             long currentTime = System.currentTimeMillis();

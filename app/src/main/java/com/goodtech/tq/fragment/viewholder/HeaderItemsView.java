@@ -34,11 +34,11 @@ public class HeaderItemsView extends ConstraintLayout {
             }
         });
 
-//        findViewById(R.id.item_air_quality).setOnClickListener(v -> {
-//            if (listener != null) {
-//                listener.onAirQuality();
-//            }
-//        });
+        findViewById(R.id.item_air_quality).setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onAirQuality();
+            }
+        });
 
         findViewById(R.id.item_calendar).setOnClickListener(v -> {
             if (listener != null) {
