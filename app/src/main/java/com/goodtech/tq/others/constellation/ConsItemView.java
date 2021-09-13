@@ -16,6 +16,7 @@ import com.goodtech.tq.R;
  */
 public class ConsItemView extends LinearLayout {
 
+    private ImageView mIconImgV;
     private TextView mTitleTv;
     private TextView mDescriptionTv;
 
@@ -27,15 +28,17 @@ public class ConsItemView extends LinearLayout {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_cons_item, this);
 
+        mIconImgV = findViewById(R.id.img_item_icon);
         mTitleTv = findViewById(R.id.tv_item_title);
         mDescriptionTv = findViewById(R.id.tv_item_detail);
     }
 
-    public void setData(String title, String description) {
-        if (TextUtils.isEmpty(title)) {
-            mTitleTv.setVisibility(View.GONE);
-        } else {
-            mTitleTv.setText(String.format("[%s]", title));
+    public void setData(int iconRes, String title, String description) {
+        if (iconRes > 0) {
+            mIconImgV.setImageResource(iconRes);
+        }
+        if (!TextUtils.isEmpty(title)) {
+            mTitleTv.setText(String.format("%s", title));
         }
         mDescriptionTv.setText(description);
     }

@@ -60,22 +60,22 @@ public class ConsOtherFragment extends BaseFragment {
             if (model != null) {
                 if (!TextUtils.isEmpty(model.health)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData("健康运势", model.health);
+                    itemView.setData(R.drawable.ic_heart, "健康运势", model.health);
                     mContainerLayout.addView(itemView);
                 }
                 if (!TextUtils.isEmpty(model.work)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData("工作运势", model.work);
+                    itemView.setData(R.drawable.ic_work, "工作运势", model.work);
                     mContainerLayout.addView(itemView);
                 }
                 if (!TextUtils.isEmpty(model.love)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData("爱情运势", model.love);
+                    itemView.setData(R.drawable.ic_love, "爱情运势", model.love);
                     mContainerLayout.addView(itemView);
                 }
                 if (!TextUtils.isEmpty(model.money)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData("理财运势", model.money);
+                    itemView.setData(R.drawable.ic_financial, "理财运势", model.money);
                     mContainerLayout.addView(itemView);
                 }
             }
@@ -89,27 +89,27 @@ public class ConsOtherFragment extends BaseFragment {
             if (model != null) {
                 if (!TextUtils.isEmpty(model.all)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData(null, model.all);
+                    itemView.setData(0, null, model.all);
                     mContainerLayout.addView(itemView);
                 }
                 if (!TextUtils.isEmpty(model.health)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData("健康运势", model.health);
+                    itemView.setData(R.drawable.ic_heart, "健康运势", model.health);
                     mContainerLayout.addView(itemView);
                 }
                 if (!TextUtils.isEmpty(model.work)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData("工作运势", model.work);
+                    itemView.setData(R.drawable.ic_work, "工作运势", model.work);
                     mContainerLayout.addView(itemView);
                 }
                 if (!TextUtils.isEmpty(model.love)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData("爱情运势", model.love);
+                    itemView.setData(R.drawable.ic_love, "爱情运势", model.love);
                     mContainerLayout.addView(itemView);
                 }
                 if (!TextUtils.isEmpty(model.money)) {
                     ConsItemView itemView = new ConsItemView(getContext());
-                    itemView.setData("理财运势", model.money);
+                    itemView.setData(R.drawable.ic_financial, "理财运势", model.money);
                     mContainerLayout.addView(itemView);
                 }
             }
@@ -127,9 +127,9 @@ public class ConsOtherFragment extends BaseFragment {
                         if (!TextUtils.isEmpty(career)) {
                             ConsItemView itemView = new ConsItemView(getContext());
                             if (i == 0) {
-                                itemView.setData("职业运势", career);
+                                itemView.setData(R.drawable.ic_work, "工作运势", career);
                             } else {
-                                itemView.setData(null, career);
+                                itemView.setData(0, null, career);
                             }
                             mContainerLayout.addView(itemView);
                         }
@@ -142,9 +142,9 @@ public class ConsOtherFragment extends BaseFragment {
                         if (!TextUtils.isEmpty(love)) {
                             ConsItemView itemView = new ConsItemView(getContext());
                             if (i == 0) {
-                                itemView.setData("爱情运势", love);
+                                itemView.setData(R.drawable.ic_love, "爱情运势", love);
                             } else {
-                                itemView.setData(null, love);
+                                itemView.setData(0, null, love);
                             }
                             mContainerLayout.addView(itemView);
                         }
@@ -157,9 +157,9 @@ public class ConsOtherFragment extends BaseFragment {
                         if (!TextUtils.isEmpty(finance)) {
                             ConsItemView itemView = new ConsItemView(getContext());
                             if (i == 0) {
-                                itemView.setData("理财运势", finance);
+                                itemView.setData(R.drawable.ic_financial, "理财运势", finance);
                             } else {
-                                itemView.setData(null, finance);
+                                itemView.setData(0, null, finance);
                             }
                             mContainerLayout.addView(itemView);
                         }

@@ -86,14 +86,14 @@
             app:week_start_with="sun"
             app:week_text_color="#e1e1e1"
             app:year_view_day_text_color="#333333"
-            app:year_view_day_text_size="7sp"
+            app:year_view_day_text_size="10dp"
             app:year_view_month_text_color="#ff0000"
-            app:year_view_month_text_size="20sp"
+            app:year_view_month_text_size="20dp"
             app:year_view_scheme_color="#f17706"
             app:year_view_select_text_color="#fff"
             app:year_view_week_height="12dp"
             app:year_view_week_text_color="#e1e1e1"
-            app:year_view_week_text_size="6sp" />
+            app:year_view_week_text_size="8dp" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
