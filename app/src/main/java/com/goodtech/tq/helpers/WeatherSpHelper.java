@@ -3,23 +3,14 @@ package com.goodtech.tq.helpers;
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
-import com.baidu.location.BDLocation;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * com.goodtech.tq.helpers

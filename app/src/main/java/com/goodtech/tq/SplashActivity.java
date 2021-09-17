@@ -1,6 +1,7 @@
 package com.goodtech.tq;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +11,7 @@ import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
+import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
@@ -45,6 +47,10 @@ public class SplashActivity extends Activity {
                 WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
                 httpHelper.getBaseUrl(httpHelper::fetchCitiesWeather);
             }
+
+
+            Intent intent = new Intent(this, AirQualityActivity.class);
+            startActivity(intent);
 
             SplashADActivity.redirectTo(this);
             overridePendingTransition(0, 0);

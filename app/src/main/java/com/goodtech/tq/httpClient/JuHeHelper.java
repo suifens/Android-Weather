@@ -15,13 +15,15 @@ public class JuHeHelper {
     //  新闻头条
     public final static String JUHE_TOUTIAO = "http://v.juhe.cn/toutiao/index?key=927352c7b578ec641b4bac8799b5d40b";
     //  运势
-    public final static String JUHE_FORTUNE = "http://web.juhe.cn:8080/constellation/getAll?consName=%s&type=%s&key=a31e488d8a2cf98b0ad401625bbe7892";
+    public final static String JUHE_FORTUNE = "http://web.juhe.cn/constellation/getAll?consName=%s&type=%s&key=a31e488d8a2cf98b0ad401625bbe7892";
 
     public final static String JUHE_DAY_DETAIL = "http://v.juhe.cn/calendar/day?date=%s&key=3fb26fed72acf7a7e4154d3a55f196c7";
 
     public final static String JUHE_MONTH_HOLIDAY = "http://v.juhe.cn/calendar/month?year-month=%s&key=3fb26fed72acf7a7e4154d3a55f196c7";
-
-    public final static String JUHE_AIR_PM = "http://web.juhe.cn:8080/environment/air/pm?city=%s&key=a23dce468957d0748adf7969a42ff219";
+    //  城市空气质量
+    public final static String JUHE_AIR_QUALITY = "http://web.juhe.cn/environment/air/cityair?city=%s&key=a23dce468957d0748adf7969a42ff219";
+    //  城市空气PM2.5指数
+    public final static String JUHE_AIR_PM = "http://web.juhe.cn/environment/air/pm?city=%s&key=a23dce468957d0748adf7969a42ff219";
 
     private Context mContext;
 
@@ -67,6 +69,14 @@ public class JuHeHelper {
         client.get(url, null, handler);
     }
 
+    //  城市空气质量
+    public void fetchAirQuality(String city, ApiResponseHandler handler) {
+        String url = String.format(JUHE_AIR_QUALITY, city);
+        ApiClient client = ApiClient.getInstance();
+        client.get(url, null, handler);
+    }
+
+    //  城市空气PM2.5指数
     public void fetchAirPM(String city, ApiResponseHandler handler) {
         String url = String.format(JUHE_AIR_PM, city);
         ApiClient client = ApiClient.getInstance();

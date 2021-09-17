@@ -67,12 +67,15 @@
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:background="#fff"
             app:calendar_padding="10dp"
+            app:day_text_size="24sp"
+            app:lunar_text_size="10sp"
             app:current_month_lunar_text_color="#CFCFCF"
             app:current_month_text_color="#333333"
-            app:max_year="2020"
-            app:min_year="2004"
+            app:max_year="2050"
+            app:min_year="1949"
             app:month_view_show_mode="mode_fix"
             app:other_month_lunar_text_color="#e1e1e1"
             app:other_month_text_color="#e1e1e1"
@@ -81,19 +84,19 @@
             app:scheme_theme_color="#128c4b"
             app:selected_lunar_text_color="#fff"
             app:selected_text_color="#fff"
-            app:selected_theme_color="#046cea"
+            app:selected_theme_color="#1592F3"
             app:week_background="#fff"
             app:week_start_with="sun"
-            app:week_text_color="#e1e1e1"
+            app:week_text_color="#333333"
             app:year_view_day_text_color="#333333"
-            app:year_view_day_text_size="10dp"
+            app:year_view_day_text_size="10sp"
             app:year_view_month_text_color="#ff0000"
             app:year_view_month_text_size="20dp"
             app:year_view_scheme_color="#f17706"
-            app:year_view_select_text_color="#fff"
-            app:year_view_week_height="12dp"
+            app:year_view_select_text_color="#ff0000"
+            app:year_view_week_height="12sp"
             app:year_view_week_text_color="#e1e1e1"
-            app:year_view_week_text_size="8dp" />
+            app:year_view_week_text_size="8sp" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
@@ -113,7 +116,8 @@
                 <ViewStub
                     android:id="@+id/viewStub_detail"
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="1dp"
                     android:layout="@layout/stub_calendar_day_detail" />
 
                 <LinearLayout

@@ -30,6 +30,7 @@ public class CalendarActivity extends BaseActivity implements
     CalendarView mCalendarView;
     CalendarLayout mCalendarLayout;
 
+    private View mYearMonthView;
     private View mDayDetailView;
     private CalendarPresenter mPresenter = CalendarPresenter.getInstance();
 
@@ -49,6 +50,7 @@ public class CalendarActivity extends BaseActivity implements
         topBar.findViewById(R.id.button_back).setOnClickListener(v -> finish());
 
         mTextYearMonth = topBar.findViewById(R.id.tv_bar_title);
+        mYearMonthView = topBar.findViewById(R.id.layout_time);
 
         initView();
     }
@@ -83,7 +85,19 @@ public class CalendarActivity extends BaseActivity implements
     protected void initView() {
         mCalendarView =  findViewById(R.id.calendarView);
         mDayDetailView = findViewById(R.id.viewStub_detail);
-        mTextYearMonth.setOnClickListener(v -> {
+        mCalendarLayout = findViewById(R.id.calendarLayout);
+        mCalendarView.setOnCalendarSelectListener(this);
+        mCalendarView.setOnYearChangeListener(this);
+        mYear = mCalendarView.getCurYear();
+        mTextYearMonth.setText(mCalendarView.getCurYear() + "年" + mCalendarView.getCurMonth() + "月");
+
+        mYearMonthView.setOnClickListener(v -> {
+
+            if (mCalendarView.isYearSelectLayoutVisible()) {
+                mCalendarView.closeYearSelectLayout();
+                return;
+            }
+
             if (!mCalendarLayout.isExpand()) {
                 mCalendarLayout.expand();
                 return;
@@ -91,11 +105,6 @@ public class CalendarActivity extends BaseActivity implements
             mCalendarView.showYearSelectLayout(mYear);
             mTextYearMonth.setText(String.format("%d年", mYear));
         });
-        mCalendarLayout = findViewById(R.id.calendarLayout);
-        mCalendarView.setOnCalendarSelectListener(this);
-        mCalendarView.setOnYearChangeListener(this);
-        mYear = mCalendarView.getCurYear();
-        mTextYearMonth.setText(mCalendarView.getCurYear() + "年" + mCalendarView.getCurMonth() + "月");
     }
 
     @Override

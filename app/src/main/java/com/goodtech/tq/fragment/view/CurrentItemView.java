@@ -89,7 +89,6 @@ public class CurrentItemView extends ConstraintLayout {
                             mTempTv.setText(String.format("%d", hourly.metric.temp));
                         }
                         mPhraseTv.setText(hourly.phraseChar);
-                        return;
                     }
                 }
             }

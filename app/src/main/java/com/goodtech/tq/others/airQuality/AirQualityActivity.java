@@ -91,11 +91,10 @@ public class AirQualityActivity extends BaseActivity {
                             }.getType());
                         }
                     }
-                    if (listener != null) listener.onCompletion();
                 } catch (Exception e) {
-                    if (listener != null) listener.onCompletion();
                     e.printStackTrace();
                 }
+                if (listener != null) listener.onCompletion();
             }
         });
     }

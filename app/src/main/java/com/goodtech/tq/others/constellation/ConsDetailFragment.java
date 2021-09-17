@@ -24,7 +24,7 @@ public class ConsDetailFragment extends BaseFragment {
     private TextView mFriendTv;
     private TextView mColorTv;
     private TextView mNumberTv;
-    private TextView mSummaryTv;
+    private ConsItemView mConsItemView;
 
     private ConsDayMode mConsModel;
 
@@ -50,7 +50,7 @@ public class ConsDetailFragment extends BaseFragment {
         mFriendTv = view.findViewById(R.id.tv_friend);
         mColorTv = view.findViewById(R.id.tv_color);
         mNumberTv = view.findViewById(R.id.tv_number);
-        mSummaryTv = view.findViewById(R.id.tv_summary);
+        mConsItemView = view.findViewById(R.id.view_cons);
         return view;
     }
 
@@ -60,6 +60,7 @@ public class ConsDetailFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     public void setConsDetailModel(ConsDayMode consDayModel) {
         this.mConsModel = consDayModel;
         mHandler.post(() -> {
@@ -72,7 +73,7 @@ public class ConsDetailFragment extends BaseFragment {
                 mFriendTv.setText(mConsModel.QFriend);
                 mColorTv.setText(mConsModel.color);
                 mNumberTv.setText("" + mConsModel.number);
-                mSummaryTv.setText(mConsModel.summary);
+                mConsItemView.setData(R.drawable.ic_all, "整体运势", mConsModel.summary);
             }
         });
     }
