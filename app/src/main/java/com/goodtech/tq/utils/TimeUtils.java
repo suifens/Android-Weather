@@ -122,25 +122,25 @@ public class TimeUtils {
         int wek=c.get(Calendar.DAY_OF_WEEK);
 
         if (wek == 1) {
-            Week += "星期日";
+            Week += "周日";
         }
         if (wek == 2) {
-            Week += "星期一";
+            Week += "周一";
         }
         if (wek == 3) {
-            Week += "星期二";
+            Week += "周二";
         }
         if (wek == 4) {
-            Week += "星期三";
+            Week += "周三";
         }
         if (wek == 5) {
-            Week += "星期四";
+            Week += "周四";
         }
         if (wek == 6) {
-            Week += "星期五";
+            Week += "周五";
         }
         if (wek == 7) {
-            Week += "星期六";
+            Week += "周六";
         }
         return Week;
     }

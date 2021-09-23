@@ -27,8 +27,9 @@
             android:id="@+id/tv_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="宜"
+            android:fontFamily="sans-serif-black"
             android:gravity="center"
+            android:text="宜"
             android:textColor="@color/color_e05353"
             android:textSize="10dp" />
 
@@ -36,8 +37,9 @@
             android:id="@+id/tv_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="宜"
+            android:fontFamily="sans-serif-black"
             android:gravity="center"
+            android:text="宜"
             android:textColor="@color/color_e05353"
             android:textSize="14dp" />
 
@@ -68,8 +70,9 @@
                 android:id="@+id/tv_holiday_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="宜"
+                android:fontFamily="sans-serif-black"
                 android:gravity="center"
+                android:text="宜"
                 android:textColor="@color/color_e05353"
                 android:textSize="18dp" />
 
@@ -77,25 +80,26 @@
                 android:id="@+id/tv_holiday_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:text="宜"
                 android:gravity="left"
+                android:text="宜"
                 android:textColor="@color/black_alpha80"
-                android:textSize="14dp"
-                android:layout_marginStart="6dp"/>
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/tv_holiday_length"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_radius_48c7a1"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:background="@drawable/bg_radius_48c7a1"
                 android:text="共3天"
-                android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="14dp"
-                android:layout_marginStart="4dp" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 

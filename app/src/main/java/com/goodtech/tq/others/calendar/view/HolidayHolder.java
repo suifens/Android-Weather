@@ -43,16 +43,20 @@ public class HolidayHolder extends RecyclerView.ViewHolder {
         return R.layout.view_calendar_holiday;
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public void setData(Holiday data) {
         mDayTv.setText(data.getDay());
         mWeekTv.setText(TimeUtils.getWeek(data.getFestival()));
         mNameTv.setText(data.getName());
-        mHolidayTimeTv.setText(data.getTimeSpan());
+        mHolidayTimeTv.setText("假期:" + data.getTimeSpan());
         mLengthTv.setText(String.format("共%d天", data.getHoliday()));
         if (!TextUtils.isEmpty(data.getRest())) {
             mRestTv.setVisibility(View.VISIBLE);
-            mRestTv.setText(data.getRest());
+            String rest = data.getRest();
+            if (!(rest.startsWith("拼假建议") || rest.contains("拼假建议"))) {
+                rest = "拼假建议：" + rest;
+            }
+            mRestTv.setText(rest);
         } else {
             mRestTv.setVisibility(View.GONE);
         }
