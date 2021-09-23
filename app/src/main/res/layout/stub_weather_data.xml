@@ -67,10 +67,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp" />
 
-    <com.goodtech.tq.fragment.view.ObservationItemView
+    <com.goodtech.tq.fragment.view.ObservationView
         android:id="@+id/item_observation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        android:layout_height="550dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="40dp"/>
 
 </LinearLayout>

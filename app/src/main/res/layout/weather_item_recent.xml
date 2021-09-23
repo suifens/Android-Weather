@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="74dp"
     android:paddingBottom="2dp"
-    android:background="@color/black_alpha10"
-    android:minHeight="74dp">
+    android:background="@color/black_alpha10">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
@@ -30,7 +29,6 @@
             android:id="@+id/tv_temperature_today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="23/29℃"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_20"
             android:layout_marginBottom="8dp"
@@ -49,7 +47,6 @@
             android:ellipsize="end"
             android:gravity="end"
             android:singleLine="true"
-            android:text="阴转多云"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +58,6 @@
             android:id="@+id/tv_quality_today"
             android:layout_width="32dp"
             android:layout_height="16dp"
-            android:text="优"
             android:textColor="@color/white"
             android:textSize="12dp"
             android:gravity="center"
@@ -106,7 +102,6 @@
             android:id="@+id/tv_temperature_morn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="23/29℃"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_20"
             android:layout_marginBottom="8dp"
@@ -125,7 +120,6 @@
             android:ellipsize="end"
             android:gravity="end"
             android:singleLine="true"
-            android:text="阴转多云"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
             app:layout_constraintEnd_toEndOf="parent"
@@ -137,7 +131,6 @@
             android:id="@+id/tv_quality_morn"
             android:layout_width="32dp"
             android:layout_height="16dp"
-            android:text="优"
             android:textColor="@color/white"
             android:textSize="12dp"
             android:gravity="center"

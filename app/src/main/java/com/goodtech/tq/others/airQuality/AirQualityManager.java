@@ -21,6 +21,8 @@ import org.json.JSONObject;
  */
 public class AirQualityManager {
 
+    private static final String TAG = "AirQualityManager";
+
     public interface AirPmListener {
         void onCompletion(AirPmModel pmModel);
     }
@@ -48,7 +50,7 @@ public class AirQualityManager {
         JuHeHelper.getInstance().fetchAirPM(city, new ApiResponseHandler() {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
-                Log.e("AirQualityManager", "onResponse: " + jsonObject.toString());
+                Log.e("AirQualityManager", "fetchAirPM onResponse: " + jsonObject.toString());
                 AirPmModel pmModel = null;
                 try {
                     if (success) {
@@ -93,7 +95,7 @@ public class AirQualityManager {
         JuHeHelper.getInstance().fetchAirPM(city, new ApiResponseHandler() {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
-                Log.e("AirQualityManager", "onResponse: " + jsonObject.toString());
+                Log.e("AirQualityManager", "fetchAirPM onResponse: " + jsonObject.toString());
                 AirQualityModel qualityModel = null;
                 try {
                     if (success) {

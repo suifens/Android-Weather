@@ -30,8 +30,8 @@ public class Holiday implements Serializable {
     public String getTimeSpan() {
         if (list != null && list.size() > 0) {
             if (list.size() > 1) {
-                String first = list.get(0).getDate();
-                String last = list.get(list.size() - 1).getDate();
+                String first = getFirstDay().getDate();
+                String last = getLastDay().getDate();
 
                 String firstYear = getYear(first);
                 String lastYear = getYear(last);
@@ -46,6 +46,27 @@ public class Holiday implements Serializable {
         }
         return "";
     }
+
+    private ListDay getFirstDay() {
+        for (int i = 0; i < list.size(); i++) {
+            ListDay day = list.get(i);
+            if (day != null && day.getStatus().equals("1")) {
+                return day;
+            }
+        }
+        return null;
+    }
+
+    private ListDay getLastDay() {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            ListDay day = list.get(i);
+            if (day != null && day.getStatus().equals("1")) {
+                return day;
+            }
+        }
+        return null;
+    }
+
 
     public long getDate() {
         return TimeUtils.longWithDate(festival, "yyyy-MM-dd");
@@ -125,6 +146,19 @@ public class Holiday implements Serializable {
 
     public void setList(List<ListDay> list) {
         this.list = list;
+    }
+
+    /**
+     * 获取假期时长，status 为 1时 为放假
+     */
+    public int getHoliday() {
+        int count = 0;
+        for (ListDay day : list) {
+            if (day != null && day.getStatus().equals("1")) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public static class ListDay {

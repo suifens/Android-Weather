@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -28,7 +29,7 @@ import com.goodtech.tq.utils.WeatherUtils;
  */
 
 @SuppressLint("ViewConstructor")
-public class RecentItemView extends ConstraintLayout {
+public class RecentItemView extends LinearLayout {
 
     public RecentItemView(Context context) {
         this(context, null);
@@ -67,7 +68,6 @@ public class RecentItemView extends ConstraintLayout {
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel weatherModel) {
         if (weatherModel != null) {
-            setVisibility(VISIBLE);
             Daily today = weatherModel.today();
             if (today != null) {
                 long currentTime = System.currentTimeMillis();

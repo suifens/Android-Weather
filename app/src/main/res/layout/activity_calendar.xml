@@ -150,13 +150,14 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/linear_holidays"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    app:layoutManager="LinearLayoutManager"
+                    android:layout_marginBottom="20dp">
 
-                </LinearLayout>
+                </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
 

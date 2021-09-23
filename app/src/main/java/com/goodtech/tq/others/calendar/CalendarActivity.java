@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
@@ -32,6 +35,8 @@ public class CalendarActivity extends BaseActivity implements
 
     private View mYearMonthView;
     private View mDayDetailView;
+    private RecyclerView mRecyclerView;
+    private HolidayRecyclerAdapter mAdapter;
     private CalendarPresenter mPresenter = CalendarPresenter.getInstance();
 
     private int mYear;
@@ -51,6 +56,10 @@ public class CalendarActivity extends BaseActivity implements
 
         mTextYearMonth = topBar.findViewById(R.id.tv_bar_title);
         mYearMonthView = topBar.findViewById(R.id.layout_time);
+
+        mRecyclerView = findViewById(R.id.linear_holidays);
+        mAdapter = new HolidayRecyclerAdapter(this, mPresenter.mHolidayList);
+        mRecyclerView.setAdapter(mAdapter);
 
         initView();
     }
@@ -119,10 +128,6 @@ public class CalendarActivity extends BaseActivity implements
         mTextYearMonth.setText(calendar.getYear() + "年" + calendar.getMonth() + "月");
         if (mYear != calendar.getYear()) {
             getHolidays("" + calendar.getYear());
-            mHandler.post(() -> {
-                LinearLayout linearLayout = findViewById(R.id.linear_holidays);
-                linearLayout.removeAllViewsInLayout();
-            });
             ((TextView) findViewById(R.id.tv_year)).setText(String.valueOf(calendar.getYear()));
         }
         mYear = calendar.getYear();
@@ -159,24 +164,27 @@ public class CalendarActivity extends BaseActivity implements
         mPresenter.getHolidays(year, this::configHolidays);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void configHolidays() {
-
         mHandler.post(() -> {
-            LinearLayout linearLayout = findViewById(R.id.linear_holidays);
-            linearLayout.removeAllViewsInLayout();
+            mAdapter.notifyDataSetChanged(mPresenter.mHolidayList);
 
-            List<Holiday> list = mPresenter.mHolidayList;
-            if (list != null) {
-                for (int i = 0; i < list.size(); i++) {
 
-                    Holiday data = list.get(i);
-                    if (data != null) {
-                        HolidayItemView view = new HolidayItemView(this);
-                        view.setData(data);
-                        linearLayout.addView(view);
-                    }
-                }
-            }
+//            LinearLayout linearLayout = findViewById(R.id.linear_holidays);
+//            linearLayout.removeAllViewsInLayout();
+//
+//            List<Holiday> list = mPresenter.mHolidayList;
+//            if (list != null) {
+//                for (int i = 0; i < list.size(); i++) {
+//
+//                    Holiday data = list.get(i);
+//                    if (data != null) {
+//                        HolidayItemView view = new HolidayItemView(this);
+//                        view.setData(data);
+//                        linearLayout.addView(view);
+//                    }
+//                }
+//            }
         });
     }
 

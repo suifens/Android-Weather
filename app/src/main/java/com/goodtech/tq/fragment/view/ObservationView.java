@@ -5,10 +5,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.Daily;
@@ -16,41 +16,41 @@ import com.goodtech.tq.models.Metric;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.TimeUtils;
-
+import com.goodtech.tq.views.ObservationItemView;
 
 /**
  * @author wangrengshun <wangrengshun@gengee.cn>
  */
 
 @SuppressLint("ViewConstructor")
-public class ObservationItemView extends ConstraintLayout {
+public class ObservationView extends LinearLayout {
 
-    public ObservationItemView(Context context) {
+    public ObservationView(Context context) {
         this(context, null);
     }
 
-    public ObservationItemView(Context context, @Nullable AttributeSet attrs) {
+    public ObservationView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, -1);
     }
 
-    public ObservationItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ObservationView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initData();
     }
 
-    TextView mAddressTv;
-    TextView mTempTv;
-    TextView mSunriseTimeTv;
-    TextView mSunsetTimeTv;
+    private TextView mAddressTv;
+    private TextView mTempTv;
+    private TextView mSunriseTimeTv;
+    private TextView mSunsetTimeTv;
 
-    com.goodtech.tq.views.ObservationItemView mTempItemView;
-    com.goodtech.tq.views.ObservationItemView mWspdItemView;  //风速
-    com.goodtech.tq.views.ObservationItemView mRhItemView;    //湿度
-    com.goodtech.tq.views.ObservationItemView mDewptItemView; //露点
-    com.goodtech.tq.views.ObservationItemView mPressureItemView; //气压
-    com.goodtech.tq.views.ObservationItemView mUvItemView;    //紫外线
-    com.goodtech.tq.views.ObservationItemView mVisibilityItemView; //能见度
-    com.goodtech.tq.views.ObservationItemView mMoonItemView;  //月相
+    private ObservationItemView mTempItemView;
+    private ObservationItemView mWspdItemView;  //风速
+    private ObservationItemView mRhItemView;    //湿度
+    private ObservationItemView mDewptItemView; //露点
+    private ObservationItemView mPressureItemView; //气压
+    private ObservationItemView mUvItemView;    //紫外线
+    private ObservationItemView mVisibilityItemView; //能见度
+    private ObservationItemView mMoonItemView;  //月相
     
     @SuppressLint("DefaultLocale")
     protected void initData() {
@@ -73,7 +73,6 @@ public class ObservationItemView extends ConstraintLayout {
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel model, String address) {
         if (model != null) {
-            setVisibility(VISIBLE);
             mAddressTv.setText(address);
             Observation observation = model.observation;
             if (observation == null) {

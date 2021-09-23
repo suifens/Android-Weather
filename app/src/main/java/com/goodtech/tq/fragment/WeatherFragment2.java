@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.view.CurrentItemView;
@@ -19,7 +17,7 @@ import com.goodtech.tq.fragment.view.DailyItemView;
 import com.goodtech.tq.fragment.view.HoursItemView;
 import com.goodtech.tq.fragment.view.LineTempItemView;
 import com.goodtech.tq.fragment.view.NativeExpressAD2View;
-import com.goodtech.tq.fragment.view.ObservationItemView;
+import com.goodtech.tq.fragment.view.ObservationView;
 import com.goodtech.tq.fragment.view.RecentItemView;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.WeatherHeaderListener;
@@ -98,8 +96,8 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         ViewStub viewStub = mCacheView.findViewById(R.id.stub_weather_data);
         if (viewStub != null && viewStub.getParent() != null) {         // 判断是否第一次加载
             View inflate = viewStub.inflate();      // 布局加载
@@ -121,47 +119,36 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     private DailyItemView mDailyView7;
     private NativeExpressAD2View mAd2View;
     private LineTempItemView mLineTempView;
-    private ObservationItemView mObservationView;
+    private ObservationView mObservationView;
 
     private void initView(View view) {
         mCurrentView = view.findViewById(R.id.item_current);
-        mCurrentView.setVisibility(View.GONE);
         mCurrentView.setItemListener(mHeaderListener);
-        
         mRecentView = view.findViewById(R.id.item_recent);
-        mRecentView.setVisibility(View.GONE);
-        
         mHoursView = view.findViewById(R.id.item_hours);
-        mHoursView.setVisibility(View.GONE);
-
         mDailyView1 = view.findViewById(R.id.item_daily_1);
-        mDailyView1.setVisibility(View.GONE);
-        
         mDailyView2 = view.findViewById(R.id.item_daily_2);
-        mDailyView2.setVisibility(View.GONE);
-        
         mDailyView3 = view.findViewById(R.id.item_daily_3);
-        mDailyView3.setVisibility(View.GONE);
-        
         mDailyView4 = view.findViewById(R.id.item_daily_4);
-        mDailyView4.setVisibility(View.GONE);
-        
         mDailyView5 = view.findViewById(R.id.item_daily_5);
-        mDailyView5.setVisibility(View.GONE);
-        
         mDailyView6 = view.findViewById(R.id.item_daily_6);
-        mDailyView6.setVisibility(View.GONE);
-        
         mDailyView7 = view.findViewById(R.id.item_daily_7);
-        mDailyView7.setVisibility(View.GONE);
-        
         mAd2View = view.findViewById(R.id.item_ad);
-        mAd2View.setVisibility(View.GONE);
-        
         mLineTempView = view.findViewById(R.id.item_line_temp);
-        mLineTempView.setVisibility(View.GONE);
-        
         mObservationView = view.findViewById(R.id.item_observation);
+
+        mDailyView2.setVisibility(View.GONE);
+        mCurrentView.setVisibility(View.GONE);
+        mRecentView.setVisibility(View.GONE);
+        mHoursView.setVisibility(View.GONE);
+        mDailyView1.setVisibility(View.GONE);
+        mDailyView3.setVisibility(View.GONE);
+        mDailyView4.setVisibility(View.GONE);
+        mDailyView5.setVisibility(View.GONE);
+        mDailyView6.setVisibility(View.GONE);
+        mDailyView7.setVisibility(View.GONE);
+        mAd2View.setVisibility(View.GONE);
+        mLineTempView.setVisibility(View.GONE);
         mObservationView.setVisibility(View.GONE);
     }
 
@@ -232,6 +219,20 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     private void updateData() {
         if (mHadLoad && mCurrentView != null && mModel != null) {
             mHandler.post(() -> {
+                mDailyView2.setVisibility(View.VISIBLE);
+                mCurrentView.setVisibility(View.VISIBLE);
+                mRecentView.setVisibility(View.VISIBLE);
+                mHoursView.setVisibility(View.VISIBLE);
+                mDailyView1.setVisibility(View.VISIBLE);
+                mDailyView3.setVisibility(View.VISIBLE);
+                mDailyView4.setVisibility(View.VISIBLE);
+                mDailyView5.setVisibility(View.VISIBLE);
+                mDailyView6.setVisibility(View.VISIBLE);
+                mDailyView7.setVisibility(View.VISIBLE);
+                mAd2View.setVisibility(View.VISIBLE);
+                mLineTempView.setVisibility(View.VISIBLE);
+                mObservationView.setVisibility(View.VISIBLE);
+
                 Log.e(TAG, "updateData: " + mModel.toString());
                 mCurrentView.setData(mModel);
                 mRecentView.setData(mModel);

@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -22,7 +23,7 @@ import com.goodtech.tq.widget.weatherview.WeatherView;
  */
 
 @SuppressLint("ViewConstructor")
-public class LineTempItemView extends ConstraintLayout {
+public class LineTempItemView extends LinearLayout {
 
     public LineTempItemView(Context context) {
         this(context, null);

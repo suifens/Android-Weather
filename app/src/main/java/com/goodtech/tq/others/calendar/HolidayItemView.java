@@ -43,6 +43,6 @@ public class HolidayItemView extends LinearLayout {
         mWeekTv.setText(TimeUtils.getWeek(data.getFestival()));
         mNameTv.setText(data.getName());
         mHolidayTimeTv.setText(data.getTimeSpan());
-        mLengthTv.setText(String.format("共%d天", data.getList_num()));
+        mLengthTv.setText(String.format("共%d天", data.getHoliday()));
     }
 }

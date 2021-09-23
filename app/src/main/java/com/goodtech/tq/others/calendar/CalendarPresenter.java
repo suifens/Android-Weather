@@ -1,6 +1,7 @@
 package com.goodtech.tq.others.calendar;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 
 import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;
@@ -8,6 +9,7 @@ import com.goodtech.tq.httpClient.JuHeHelper;
 import com.goodtech.tq.listener.CompletionListener;
 import com.goodtech.tq.models.calendar.DayDetail;
 import com.goodtech.tq.models.calendar.Holiday;
+import com.goodtech.tq.utils.SpUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -91,6 +93,20 @@ public class CalendarPresenter {
             return;
         }
 
+        String holidayJson = SpUtils.getInstance().getString(String.format("holiday-%s", year), "");
+        if (!TextUtils.isEmpty(holidayJson)) {
+            List<Holiday> list = new Gson().fromJson(holidayJson, new TypeToken<List<Holiday>>() {
+            }.getType());
+            if (list != null && list.size() > 0) {
+                mHolidayList = list;
+                mHolidayMap.put(year, list);
+                if (callback != null) {
+                    callback.onCompletion();
+                }
+                return;
+            }
+        }
+
         List<Holiday> holidayList = new ArrayList<>();
         final int[] count = {0};
         for (int i = 1; i <= 12; i++) {
@@ -136,6 +152,8 @@ public class CalendarPresenter {
                         if (holidayList.size() > 0) {
                             mHolidayList = holidayList;
                             mHolidayMap.put(year, holidayList);
+
+                            SpUtils.getInstance().putString(String.format("holiday-%s", year), new Gson().toJson(holidayList));
                         }
                         if (callback != null) {
                             callback.onCompletion();

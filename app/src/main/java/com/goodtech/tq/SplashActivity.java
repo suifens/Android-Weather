@@ -48,10 +48,6 @@ public class SplashActivity extends Activity {
                 httpHelper.getBaseUrl(httpHelper::fetchCitiesWeather);
             }
 
-
-            Intent intent = new Intent(this, AirQualityActivity.class);
-            startActivity(intent);
-
             SplashADActivity.redirectTo(this);
             overridePendingTransition(0, 0);
             this.finish();

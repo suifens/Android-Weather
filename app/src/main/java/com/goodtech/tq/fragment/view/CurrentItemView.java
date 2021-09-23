@@ -75,7 +75,6 @@ public class CurrentItemView extends ConstraintLayout {
     public void setData(WeatherModel model) {
         if (model != null) {
             setVisibility(VISIBLE);
-
             if (model.hourlies.size() > 0) {
                 Hourly hourly = model.hourlies.get(0);
                 if (hourly != null) {
@@ -113,6 +112,8 @@ public class CurrentItemView extends ConstraintLayout {
                 mPhraseTv.setText(observation.wxPhrase);
             }
 
+            findViewById(R.id.layout_data).setVisibility(VISIBLE);
+            findViewById(R.id.layout_notice).setVisibility(VISIBLE);
         }
     }
 

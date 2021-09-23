@@ -3,6 +3,7 @@ package com.goodtech.tq.fragment.viewholder;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -12,7 +13,7 @@ import com.goodtech.tq.listener.WeatherHeaderListener;
 /**
  * com.goodtech.tq.fragment.viewholder
  */
-public class HeaderItemsView extends ConstraintLayout {
+public class HeaderItemsView extends LinearLayout {
 
     public HeaderItemsView(Context context, AttributeSet attrs) {
         super(context, attrs);
