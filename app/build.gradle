@@ -171,4 +171,7 @@ dependencies {
 //    implementation 'com.github.tbruyelle:rxpermissions:0.12'
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    implementation 'com.github.gzu-liyujiang.AndroidPicker:Common:3.1.2'
+    implementation 'com.github.gzu-liyujiang.AndroidPicker:WheelPicker:3.1.2'
 }

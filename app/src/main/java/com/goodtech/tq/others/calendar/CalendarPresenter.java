@@ -39,11 +39,10 @@ public class CalendarPresenter {
 
     public List<Holiday> mHolidayList;
 
-    private Map<String, DayDetail> mDayDetails = new HashMap<>();
+    private final Map<String, DayDetail> mDayDetails = new HashMap<>();
 
-    private Map<String, List<Holiday>> mHolidayMap = new HashMap<>();
+    private final Map<String, List<Holiday>> mHolidayMap = new HashMap<>();
 
-    private static final String TAG = "CalendarPresenter";
     public void getDayDetails(String day, CompletionListener callback) {
 
         if (mDayDetails.containsKey(day)) {
@@ -119,23 +118,21 @@ public class CalendarPresenter {
                         if (success) {
                             if (!jsonObject.isNull("result")) {
                                 JSONObject data = jsonObject.getJSONObject("result").getJSONObject("data");
-                                if (data != null) {
-                                    JSONArray array = data.getJSONArray("holiday_array");
-                                    List<Holiday> dataList = new Gson().fromJson(String.valueOf(array), new TypeToken<List<Holiday>>() {
-                                    }.getType());
-                                    if (dataList != null) {
-                                        for (Holiday holiday : dataList) {
-                                            boolean isContain = false;
-                                            for (int j = holidayList.size() - 1; j >= 0 ; j--) {
-                                                Holiday lastDay = holidayList.get(j);
-                                                if (lastDay.getName().equals(holiday.getName())) {
-                                                    isContain = true;
-                                                    break;
-                                                }
+                                JSONArray array = data.getJSONArray("holiday_array");
+                                List<Holiday> dataList = new Gson().fromJson(String.valueOf(array), new TypeToken<List<Holiday>>() {
+                                }.getType());
+                                if (dataList != null) {
+                                    for (Holiday holiday : dataList) {
+                                        boolean isContain = false;
+                                        for (int j = holidayList.size() - 1; j >= 0 ; j--) {
+                                            Holiday lastDay = holidayList.get(j);
+                                            if (lastDay.getName().equals(holiday.getName())) {
+                                                isContain = true;
+                                                break;
                                             }
-                                            if (!isContain) {
-                                                holidayList.add(holiday);
-                                            }
+                                        }
+                                        if (!isContain) {
+                                            holidayList.add(holiday);
                                         }
                                     }
                                 }

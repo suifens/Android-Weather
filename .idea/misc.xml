@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../.gradle/caches/transforms-3/4ccce36da6c7e2757b6868067c45d4bd/transformed/jetified-Common-3.1.2/res/layout/picker_confirm_header.xml" value="0.40395882663240384" />
         <entry key="../../../.gradle/caches/transforms-3/e519e5ca11a2e18a9c46042f8e0da2c3/transformed/jetified-calendarview-3.7.1/res/layout/cv_layout_calendar_view.xml" value="0.34601449275362317" />
         <entry key="../../../.gradle/caches/transforms-3/e519e5ca11a2e18a9c46042f8e0da2c3/transformed/jetified-calendarview-3.7.1/res/layout/cv_week_bar.xml" value="0.34601449275362317" />
         <entry key="app/src/main/res/drawable/bg_circle_00a2ff.xml" value="0.2984375" />

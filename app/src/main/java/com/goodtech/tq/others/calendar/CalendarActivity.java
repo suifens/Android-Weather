@@ -1,6 +1,7 @@
 package com.goodtech.tq.others.calendar;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,22 +9,24 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.gzuliyujiang.wheelpicker.DatePicker;
+import com.github.gzuliyujiang.wheelpicker.annotation.DateMode;
+import com.github.gzuliyujiang.wheelpicker.entity.DateEntity;
+import com.github.gzuliyujiang.wheelpicker.impl.BirthdayFormatter;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.calendar.DayDetail;
-import com.goodtech.tq.models.calendar.Holiday;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
-
-import java.util.List;
 
 public class CalendarActivity extends BaseActivity implements
         CalendarView.OnCalendarSelectListener,
@@ -40,6 +43,10 @@ public class CalendarActivity extends BaseActivity implements
     private CalendarPresenter mPresenter = CalendarPresenter.getInstance();
 
     private int mYear;
+    private int mMonth;
+    private int mDay;
+
+    private CalendarPicker mPicker;
 
     public static void show(Context context) {
         context.startActivity(new Intent(context, CalendarActivity.class));
@@ -98,21 +105,34 @@ public class CalendarActivity extends BaseActivity implements
         mCalendarView.setOnCalendarSelectListener(this);
         mCalendarView.setOnYearChangeListener(this);
         mYear = mCalendarView.getCurYear();
+        mMonth = mCalendarView.getCurMonth();
+        mDay = mCalendarView.getCurDay();
         mTextYearMonth.setText(mCalendarView.getCurYear() + "年" + mCalendarView.getCurMonth() + "月");
 
         mYearMonthView.setOnClickListener(v -> {
 
-            if (mCalendarView.isYearSelectLayoutVisible()) {
-                mCalendarView.closeYearSelectLayout();
+            if (mPicker != null && mPicker.isShowing()) {
                 return;
             }
+            CalendarPicker picker = new CalendarPicker(this);
+            picker.setDefaultValue(mYear, mMonth, mDay);
+            picker.setOnDatePickedListener((year, month, day) -> {
+                mCalendarView.scrollToCalendar(year, month, day, false, true);
+            });
+            picker.show();
+            mPicker = picker;
 
-            if (!mCalendarLayout.isExpand()) {
-                mCalendarLayout.expand();
-                return;
-            }
-            mCalendarView.showYearSelectLayout(mYear);
-            mTextYearMonth.setText(String.format("%d年", mYear));
+//            if (mCalendarView.isYearSelectLayoutVisible()) {
+//                mCalendarView.closeYearSelectLayout();
+//                return;
+//            }
+//
+//            if (!mCalendarLayout.isExpand()) {
+//                mCalendarLayout.expand();
+//                return;
+//            }
+//            mCalendarView.showYearSelectLayout(mYear);
+//            mTextYearMonth.setText(String.format("%d年", mYear));
         });
     }
 
@@ -131,6 +151,8 @@ public class CalendarActivity extends BaseActivity implements
             ((TextView) findViewById(R.id.tv_year)).setText(String.valueOf(calendar.getYear()));
         }
         mYear = calendar.getYear();
+        mMonth = calendar.getMonth();
+        mDay = calendar.getDay();
 
         getDetails(TimeUtils.longToString(calendar.getTimeInMillis(), "yyyy-M-d"));
 
@@ -168,24 +190,37 @@ public class CalendarActivity extends BaseActivity implements
     private void configHolidays() {
         mHandler.post(() -> {
             mAdapter.notifyDataSetChanged(mPresenter.mHolidayList);
-
-
-//            LinearLayout linearLayout = findViewById(R.id.linear_holidays);
-//            linearLayout.removeAllViewsInLayout();
-//
-//            List<Holiday> list = mPresenter.mHolidayList;
-//            if (list != null) {
-//                for (int i = 0; i < list.size(); i++) {
-//
-//                    Holiday data = list.get(i);
-//                    if (data != null) {
-//                        HolidayItemView view = new HolidayItemView(this);
-//                        view.setData(data);
-//                        linearLayout.addView(view);
-//                    }
-//                }
-//            }
         });
+    }
+
+    public static class CalendarPicker extends DatePicker {
+        private static final int MAX_AGE = 50;
+
+        public CalendarPicker(@NonNull Activity activity) {
+            super(activity);
+        }
+
+        public CalendarPicker(@NonNull Activity activity, @StyleRes int themeResId) {
+            super(activity, themeResId);
+        }
+
+        @Override
+        protected void initData() {
+            super.initData();
+            titleView.setText("选择日期");
+            java.util.Calendar calendar = java.util.Calendar.getInstance();
+            int currentYear = calendar.get(java.util.Calendar.YEAR);
+            DateEntity startValue = DateEntity.target(currentYear - MAX_AGE, 1, 1);
+            DateEntity endValue = DateEntity.target(currentYear + MAX_AGE, 12, 12);
+            wheelLayout.setRange(startValue, endValue);
+            wheelLayout.setDateMode(DateMode.YEAR_MONTH_DAY);
+            wheelLayout.setDateFormatter(new BirthdayFormatter());
+        }
+
+        public void setDefaultValue(int year, int month, int day) {
+            wheelLayout.setDefaultValue(DateEntity.target(year, month, day));
+        }
+
     }
 
 
