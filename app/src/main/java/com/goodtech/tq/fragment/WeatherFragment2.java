@@ -213,6 +213,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
 
     public void changeWeather(WeatherModel model, CityMode cityMode) {
 
+        Log.e(TAG, "changeWeather: city = " + cityMode.getCity() + "  ---- mergerName =  " + cityMode.getMergerName());
         if (mWeatherModel != null
                 && model != null) {
 //                && model.expireTime == mWeatherModel.expireTime) {
@@ -241,7 +242,6 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 mLineTempView.setVisibility(View.VISIBLE);
                 mObservationView.setVisibility(View.VISIBLE);
 
-                Log.e(TAG, "updateData: " + mWeatherModel.toString());
                 mCurrentView.setData(mWeatherModel);
                 mRecentView.setData(mWeatherModel);
                 if (mWeatherModel.hourlies != null) {
@@ -281,7 +281,11 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 }
 
                 if (mCityMode != null) {
-                    mObservationView.setData(mWeatherModel, mCityMode.city);
+                    if (mCityMode.getCid() == 1000) {
+                        mObservationView.setData(mWeatherModel, mCityMode.getMergerName());
+                    } else {
+                        mObservationView.setData(mWeatherModel, mCityMode.getCity());
+                    }
                 }
             });
         }

@@ -138,35 +138,29 @@ public class NewsFragment extends BaseFragment implements NativeExpressAD.Native
                 getDataFromNet(newsType.enKey);
             }
         });
-        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
-                page++;
-                // 下一步实现从数据库中读取数据刷新到listview适配器中
-                new Thread(new Runnable() {
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
+            page++;
+            // 下一步实现从数据库中读取数据刷新到listview适配器中
+            new Thread(() -> {
+
+                int offset = page * row;
+                List<NewsDataBean> newsBeanList = dbHelper.queryNewsList(newsType.cnKey, offset, row);
+                if (newsBeanList != null) {
+                    list.addAll(newsBeanList);
+                }
+                mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-
-                        int offset = page * row;
-                        List<NewsDataBean> newsBeanList = dbHelper.queryNewsList(newsType.cnKey, offset, row);
-                        if (newsBeanList != null) {
-                            list.addAll(newsBeanList);
+                        NewsTabAdapter adapter = (NewsTabAdapter) listView.getAdapter();
+                        if (adapter == null) {
+                            adapter = new NewsTabAdapter(getActivity(), list);
+                            listView.setAdapter(adapter);
                         }
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                NewsTabAdapter adapter = (NewsTabAdapter) listView.getAdapter();
-                                if (adapter == null) {
-                                    adapter = new NewsTabAdapter(getActivity(), list);
-                                    listView.setAdapter(adapter);
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
-                        refreshLayout.finishLoadMore(500);
+                        adapter.notifyDataSetChanged();
                     }
-                }).start();
-            }
+                });
+                refreshLayout.finishLoadMore(500);
+            }).start();
         });
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
@@ -243,7 +237,7 @@ public class NewsFragment extends BaseFragment implements NativeExpressAD.Native
     private void initNativeExpressAD() {
         ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT); // 消息流中用AUTO_HEIGHT
         mADManager = new NativeExpressAD(getContext(), adSize, Constants.NEWS_POS_ID, this);
-        mADManager.loadAD(mAdapter.getCount() / 10);
+        mADManager.loadAD(mAdapter.getCount() / 5);
     }
 
     @Override
@@ -274,7 +268,6 @@ public class NewsFragment extends BaseFragment implements NativeExpressAD.Native
         }
         mAdViewList.addAll(adList);
         mAdapter.notifyDataSetChanged();
-
     }
 
     @Override

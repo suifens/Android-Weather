@@ -27,18 +27,19 @@ public class LocationSpHelper {
      */
     public static void saveWithLocation(BDLocation bdLocation) {
         CityMode cityMode = new CityMode();
-        cityMode.location = true;
+        cityMode.setLocation(true);
         if (bdLocation == null || TextUtils.isEmpty(bdLocation.getCity())) {
             if (getLocation() != null) {
                 EventBus.getDefault().post(new MessageEvent().setLocation(false));
             }
             return;
         } else {
-            cityMode.listNum = 0;
-            cityMode.cid = 1000;
-            cityMode.lat = String.valueOf(bdLocation.getLatitude());
-            cityMode.lon = String.valueOf(bdLocation.getLongitude());
-            cityMode.city = String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet());
+            cityMode.setListNum(0);
+            cityMode.setCid(1000);
+            cityMode.setLat(String.valueOf(bdLocation.getLatitude()));
+            cityMode.setLon(String.valueOf(bdLocation.getLongitude()));
+            cityMode.setCity(bdLocation.getCity());
+            cityMode.setMergerName(String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet()));
             //  获取天气信息
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(BaseApp.getInstance());
             httpHelper.getBaseUrl(() -> httpHelper.fetchWeather(cityMode));
@@ -47,7 +48,7 @@ public class LocationSpHelper {
         String json = gson.toJson(cityMode);
         SpUtils.getInstance().putString(Constants.SP_LOCATION, json);
 
-        EventBus.getDefault().post(new MessageEvent().setLocation(cityMode.cid != 0));
+        EventBus.getDefault().post(new MessageEvent().setLocation(cityMode.getCid() != 0));
     }
 
     /**
@@ -64,7 +65,7 @@ public class LocationSpHelper {
 //
 //        CityMode cityMode = new CityMode();
 //        cityMode.location = true;
-//        cityMode.cid = 0;
+//        cityMode.getCid() = 0;
 //        return cityMode;
     }
 
@@ -72,7 +73,7 @@ public class LocationSpHelper {
         ArrayList<CityMode> tempList = new ArrayList<>(cityList);
         for (int i = 0; i < cityList.size(); i++) {
             CityMode cityMode = cityList.get(i);
-            if (cityMode.location) {
+            if (cityMode.getLocation()) {
                 tempList.remove(cityMode);
             }
         }
@@ -143,7 +144,7 @@ public class LocationSpHelper {
     private static boolean canAddCity(CityMode city) {
         List<CityMode> locations = getCityListAndLocation();
         for (CityMode cityMode : locations) {
-            if (cityMode.cid == city.cid) {
+            if (cityMode.getCid() == city.getCid()) {
                 return false;
             }
         }

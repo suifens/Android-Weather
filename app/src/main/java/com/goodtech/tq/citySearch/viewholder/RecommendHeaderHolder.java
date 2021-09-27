@@ -27,8 +27,8 @@ public class RecommendHeaderHolder extends RecyclerView.ViewHolder implements Vi
 
         mLocationTv = view.findViewById(R.id.tv_location);
         if (mLocationTv != null) {
-            if (location.cid != 0 && !TextUtils.isEmpty(location.city)) {
-                mLocationTv.setText(location.city);
+            if (location.getCid() != 0 && !TextUtils.isEmpty(location.getCity())) {
+                mLocationTv.setText(location.getCity());
             } else {
                 mLocationTv.setText("定位失败");
             }

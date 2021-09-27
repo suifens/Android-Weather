@@ -5,8 +5,12 @@ import android.text.TextUtils;
 
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.models.AirQualityModel;
+import com.goodtech.tq.models.JuheAirModel;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.SpUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -54,7 +58,16 @@ public class WeatherSpHelper {
 
         JSONObject weatherJson = getWeatherJson(cid);
 
-        return WeatherHttpHelper.parseWeatherJson(weatherJson, cid);
+        WeatherModel weatherModel = WeatherHttpHelper.parseWeatherJson(weatherJson, cid);
+
+        if (weatherModel != null && !TextUtils.isEmpty(getJuheAqi(cid))) {
+            JuheAirModel airModel = new Gson().fromJson(getJuheAqi(cid), new TypeToken<JuheAirModel>(){ }.getType());
+            if (airModel != null) {
+                weatherModel.aqi = Integer.parseInt(airModel.getAqi());
+            }
+        }
+
+        return weatherModel;
     }
 
     public static JSONObject getWeatherJson(int cid) {
@@ -68,6 +81,22 @@ public class WeatherSpHelper {
             }
         }
         return null;
+    }
+
+    public static void saveJuheAqi(String jsonObject, int cid) {
+        String key = String.format("aqi_%d", cid);
+        String timeKey = String.format("aqi_%d_update", cid);
+        if (jsonObject != null) {
+            SpUtils.getInstance().putString(key, jsonObject);
+            SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
+
+            EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
+        }
+    }
+
+    public static String getJuheAqi(int cid) {
+        String key = String.format("aqi_%d", cid);
+        return SpUtils.getInstance().getString(key, "");
     }
 
     public static void deleteWeatherModel(int cid) {

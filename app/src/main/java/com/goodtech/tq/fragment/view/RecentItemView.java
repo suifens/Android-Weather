@@ -5,23 +5,17 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.helpers.AqiHelper;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Daypart;
-import com.goodtech.tq.models.Hourly;
-import com.goodtech.tq.models.Metric;
-import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
-import com.goodtech.tq.utils.WeatherUtils;
 
 
 /**
@@ -77,6 +71,14 @@ public class RecentItemView extends LinearLayout {
                 Daypart todayPart = day ? today.dayPart : today.nightPart;
                 mTTempTv.setText(String.format("%d/%d℃", today.metric.maxTemp, today.metric.minTemp));
                 if (todayPart != null) mTPhraseTv.setText(todayPart.phraseChar);
+
+                if (weatherModel.aqi > 0) {
+                    mTQualityTv.setVisibility(VISIBLE);
+                    mTQualityTv.setText(AqiHelper.getQuality(weatherModel.aqi));
+                    mTQualityTv.setBackgroundResource(AqiHelper.getBgColorResId(weatherModel.aqi));
+                } else {
+                    mTQualityTv.setVisibility(GONE);
+                }
 
                 Daily tomorrow = weatherModel.tomorrow();
                 if (tomorrow != null) {

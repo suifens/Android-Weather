@@ -4,18 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".others.airQuality.AirQualityActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.goodtech.tq.views.IArcView
+<!--        <com.goodtech.tq.views.IArcView-->
+<!--            android:id="@+id/img_top_bg"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="400dp"-->
+<!--            android:scaleType="fitXY"-->
+<!--            app:arcColor="@color/color_e7a139"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            />-->
+
+        <ImageView
             android:id="@+id/img_top_bg"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:scaleType="fitXY"
-            app:arcColor="@color/color_e7a139"
             app:layout_constraintTop_toTopOf="parent"
             />
 
@@ -63,16 +72,13 @@
             app:layout_constraintTop_toBottomOf="@+id/layout_top_bar"
             app:layout_constraintBottom_toBottomOf="@id/img_top_bg" />
 
-        <com.goodtech.tq.others.airQuality.view.AirPmView
-            android:id="@+id/layout_air_pm"
+        <com.goodtech.tq.others.airQuality.view.AirLifeView
+            android:id="@+id/view_life"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:layout_constraintTop_toBottomOf="@+id/img_top_bg" />
-        
-<!--        <include layout="@layout/air_stub_state"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/layout_air_pm" />-->
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@+id/img_top_bg"
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

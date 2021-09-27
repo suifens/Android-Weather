@@ -1,5 +1,6 @@
 package com.goodtech.tq.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,7 +77,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
 //        });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mCityMode != null ? mCityMode.city : null);
+        mAdapter = new WeatherRecyclerAdapter(getContext(), mModel, mCityMode != null ? mCityMode.getCity() : null);
         mAdapter.setHeaderListener(mHeaderListener);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -150,6 +151,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
         }
     };
 
+    @SuppressLint("NotifyDataSetChanged")
     public void changeWeather(WeatherModel model, CityMode cityMode) {
 
         if (mModel != null
@@ -161,7 +163,7 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
         this.mModel = model;
         this.mCityMode = cityMode;
         if (mAdapter != null && cityMode != null) {
-            mAdapter.notifyDataSetChanged(model, cityMode.city);
+            mAdapter.notifyDataSetChanged(model, cityMode.getCity());
         }
     }
 

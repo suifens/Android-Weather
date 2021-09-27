@@ -27,7 +27,7 @@ public class CircleProgressView extends View {
     private float mValue;
     //  angle : 0 - 360
     public void setAngle(float angle) {
-        mValue = angle / 360;
+        mValue = angle;
         invalidate();
     }
 
@@ -55,7 +55,7 @@ public class CircleProgressView extends View {
         if (mValue > 0) {
             paint.setAlpha(255);
             paint.setStrokeCap(Paint.Cap.ROUND);
-            canvas.drawArc(rectF, 135, Math.min(mValue, 270), false, paint);
+            canvas.drawArc(rectF, 135, mValue * 270, false, paint);
         }
     }
 }

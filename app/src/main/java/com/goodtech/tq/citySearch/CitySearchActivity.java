@@ -132,7 +132,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendHeaderView = findViewById(R.id.header_recommend);
         mRecommendHeaderView.setListener((view, position, cityMode) -> {
 
-            if (cityMode != null && cityMode.cid != 0) {
+            if (cityMode != null && cityMode.getCid() != 0) {
                 addCity(cityMode);
             } else if (!CitySearchActivity.this.isFinishing()) {
                 toGetLocation();
@@ -146,7 +146,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         CityRecommendAdapter mRecommendAdapter = new CityRecommendAdapter(this, recommends);
         mRecommendAdapter.setOnItemClickListener((view, position, cityMode) -> {
 
-            if (cityMode != null && cityMode.cid != 0) {
+            if (cityMode != null && cityMode.getCid() != 0) {
                 addCity(cityMode);
             }
         });

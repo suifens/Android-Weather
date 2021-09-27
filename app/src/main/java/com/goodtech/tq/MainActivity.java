@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity {
         if (event.getFetchCId() != 0) {
             for (int i = 0; i < mCityModes.size(); i++) {
                 CityMode cityMode = mCityModes.get(i);
-                if (cityMode.cid == event.getFetchCId()) {
+                if (cityMode.getCid() == event.getFetchCId()) {
                     reloadWeather(i);
                     break;
                 }
@@ -249,8 +249,8 @@ public class MainActivity extends BaseActivity {
 
         mHandler.post(() -> {
             CityMode cityMode = mCityModes.get(index);
-            if (cityMode.cid != 0) {
-                WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.cid);
+            if (cityMode.getCid() != 0) {
+                WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.getCid());
                 if (mFragmentList.size() > index) {
                     WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(index);
                     fragment.changeWeather(model, cityMode);
@@ -362,7 +362,7 @@ public class MainActivity extends BaseActivity {
             CityMode cityMode = mCityModes.get(position);
             if (cityMode != null) {
                 setAddress(cityMode);
-                WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(cityMode.cid);
+                WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getCid());
                 changeBg(weatherModel);
 
                 if (mFragmentList.size() > position) {
@@ -375,10 +375,15 @@ public class MainActivity extends BaseActivity {
 
     private void setAddress(CityMode cityMode) {
         if (cityMode != null && mAddressTv != null) {
-            mLocationTip.setVisibility(cityMode.location ? View.VISIBLE : View.GONE);
+            mLocationTip.setVisibility(cityMode.getLocation() ? View.VISIBLE : View.GONE);
 
-            if (!TextUtils.isEmpty(cityMode.city)) {
-                mAddressTv.setText(cityMode.city);
+            if (!TextUtils.isEmpty(cityMode.getCity())) {
+                if (cityMode.getLocation()) {
+                    //  定位
+                    mAddressTv.setText(cityMode.getMergerName());
+                } else {
+                    mAddressTv.setText(cityMode.getCity());
+                }
             } else {
                 mAddressTv.setText("");
             }

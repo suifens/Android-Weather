@@ -13,6 +13,7 @@ import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.others.airQuality.AirQualityHelper;
 import com.goodtech.tq.utils.TimeUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -38,7 +39,7 @@ public class WeatherHttpHelper {
 
     private static final String WEATHER_API = "%s/v1/geocode/%s/%s/aggregate.json?language=zh-CN&apiKey=e45ff1b7c7bda231216c7ab7c33509b8&products=conditionsshort,fcstdaily10short,fcsthourly24short,nowlinks";
 
-    private Context mContext;
+    private final Context mContext;
 
     private String mBaseUrl;
 
@@ -99,9 +100,9 @@ public class WeatherHttpHelper {
     }
 
     public boolean fetchWeather(final CityMode cityMode, final ApiCallback callback) {
-        if (cityMode != null && !TextUtils.isEmpty(cityMode.lat) && !TextUtils.isEmpty(cityMode.lon)) {
+        if (cityMode != null && !TextUtils.isEmpty(cityMode.getLat()) && !TextUtils.isEmpty(cityMode.getLon())) {
             long current = System.currentTimeMillis();
-            long lastUpdate = WeatherSpHelper.getLastUpdate(cityMode.cid);
+            long lastUpdate = WeatherSpHelper.getLastUpdate(cityMode.getCid());
 
             boolean needUpdate = current - lastUpdate > 5 * 60 * 1000;
             if (!needUpdate) {
@@ -122,22 +123,25 @@ public class WeatherHttpHelper {
     }
 
     protected void getWeather(final CityMode cityMode, final ApiCallback callback) {
-        if (cityMode == null || cityMode.lat == null || cityMode.lon == null) {
+        if (cityMode == null || cityMode.getLat() == null || cityMode.getLon() == null) {
             if (callback != null) {
                 callback.onResponse(false, null, null);
             }
             return;
         }
 
+        //  获取aqi
+        AirQualityHelper.fetchAqi(cityMode);
+
         ApiClient client = ApiClient.getInstance();
-        String url = String.format(WEATHER_API, mBaseUrl, cityMode.lat, cityMode.lon);
+        String url = String.format(WEATHER_API, mBaseUrl, cityMode.getLat(), cityMode.getLon());
 
         client.get(url, null, new ApiResponseHandler(mContext) {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 if (success) {
-                    WeatherSpHelper.saveWeather(jsonObject, cityMode.cid);
-                    WeatherModel model = parseWeatherJson(jsonObject, cityMode.cid);
+                    WeatherSpHelper.saveWeather(jsonObject, cityMode.getCid());
+                    WeatherModel model = parseWeatherJson(jsonObject, cityMode.getCid());
                     if (callback != null) {
                         callback.onResponse(true, model, errCode);
                     }

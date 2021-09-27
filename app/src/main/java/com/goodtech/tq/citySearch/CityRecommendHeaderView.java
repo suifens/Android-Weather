@@ -63,8 +63,8 @@ public class CityRecommendHeaderView extends LinearLayout {
         CityMode location = LocationSpHelper.getLocation();
         this.mCityMode = location;
         if (location != null) {
-            if (mLocationTv != null && !TextUtils.isEmpty(location.city)) {
-                mLocationTv.setText(location.city);
+            if (mLocationTv != null && !TextUtils.isEmpty(location.getCity())) {
+                mLocationTv.setText(location.getCity());
             }
             mTipTv.setVisibility(GONE);
         } else {

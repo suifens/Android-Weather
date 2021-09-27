@@ -32,7 +32,7 @@ public class CitySearchHolder extends RecyclerView.ViewHolder implements View.On
     public void setCityMode(CityMode mode) {
 
         this.mCityMode = mode;
-        String searchCity = String.format("%s", mode.mergerName);
+        String searchCity = String.format("%s", mode.getMergerName());
         mCityTv.setText(searchCity);
     }
 

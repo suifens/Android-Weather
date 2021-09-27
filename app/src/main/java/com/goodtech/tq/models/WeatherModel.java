@@ -1,8 +1,9 @@
 package com.goodtech.tq.models;
 
+import androidx.annotation.NonNull;
+
 import com.goodtech.tq.utils.TimeUtils;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,15 +27,16 @@ public class WeatherModel {
     //  10天天气
     public List<Daily> dailies;
 
+    //  天气质量
+    public int aqi;
+
     public boolean needReload() {
         long curTime = System.currentTimeMillis()/1000;
-        if (curTime - expireTime > 3600
-                || !TimeUtils.timeToHH(curTime).equals(TimeUtils.timeToHH(expireTime))) {
-            return true;
-        }
-        return false;
+        return curTime - expireTime > 3600
+                || !TimeUtils.timeToHH(curTime).equals(TimeUtils.timeToHH(expireTime));
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "WeatherModel {" + "\n" +

@@ -16,23 +16,95 @@ public class CityMode implements Parcelable {
      * "lon": "117.17",
      * "pinyin": "he fei"
      */
-    public int cid = 0;
+    private int cid = 0;
 
-    public String mergerName;
+    private String mergerName;
 
-    public String city;
+    private String city;
 
-    public String lat;
+    private String lat;
 
-    public String lon;
+    private String lon;
 
-    public String pinyin;
+    private String pinyin;
 
-    public int listNum;
+    private int listNum;
 
-    public boolean location = false;
+    private boolean location = false;
 
-    private int mViewType = 0;
+    private int viewType = 0;
+
+    public boolean getLocation() {
+        return location;
+    }
+
+    public void setLocation(boolean location) {
+        this.location = location;
+    }
+
+    public int getCid() {
+        return cid;
+    }
+
+    public void setCid(int cid) {
+        this.cid = cid;
+    }
+
+    public String getMergerName() {
+        return mergerName;
+    }
+
+    public void setMergerName(String mergerName) {
+        this.mergerName = mergerName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
+
+    public String getPinyin() {
+        return pinyin;
+    }
+
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
+    }
+
+    public int getListNum() {
+        return listNum;
+    }
+
+    public void setListNum(int listNum) {
+        this.listNum = listNum;
+    }
+
+    public int getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(int viewType) {
+        this.viewType = viewType;
+    }
 
     public CityMode() {}
 
@@ -45,14 +117,6 @@ public class CityMode implements Parcelable {
         pinyin = in.readString();
         listNum = in.readInt();
         location = in.readInt() == 0;
-    }
-
-    public int getId() {
-        return cid;
-    }
-
-    public int getViewType() {
-        return mViewType;
     }
 
     public static final Creator<CityMode> CREATOR = new Creator<CityMode>() {

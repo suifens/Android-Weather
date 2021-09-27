@@ -34,8 +34,8 @@ public class CityRecommendHolder extends RecyclerView.ViewHolder implements View
     public void setCityMode(CityMode mode) {
 
         this.mCityMode = mode;
-        if (mode != null && !TextUtils.isEmpty(mode.city)) {
-            mRecommendTv.setText(mode.city);
+        if (mode != null && !TextUtils.isEmpty(mode.getCity())) {
+            mRecommendTv.setText(mode.getCity());
         }
     }
 

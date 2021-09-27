@@ -83,4 +83,20 @@ public class JuHeHelper {
         client.get(url, null, handler);
     }
 
+    //  根据城市查询天气
+    public static final String JUHE_WEATHER = "http://apis.juhe.cn/simpleWeather/query?city=%s&key=9af0b9d910cf209a708ba81a2d694012";
+    public void fetchJuheWeather(String city, ApiResponseHandler handler) {
+        String url = String.format(JUHE_WEATHER, city);
+        ApiClient client = ApiClient.getInstance();
+        client.get(url, null, handler);
+    }
+
+    //  根据城市查询生活指数
+    public static final String JUHE_LIFE = "http://apis.juhe.cn/simpleWeather/life?city=%s&key=9af0b9d910cf209a708ba81a2d694012";
+    public void fetchJuheLife(String city, ApiResponseHandler handler) {
+        String url = String.format(JUHE_LIFE, city);
+        ApiClient client = ApiClient.getInstance();
+        client.get(url, null, handler);
+    }
+
 }

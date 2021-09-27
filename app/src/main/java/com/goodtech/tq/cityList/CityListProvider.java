@@ -6,7 +6,6 @@ import com.goodtech.tq.models.CityMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * com.goodtech.tq.cityList
@@ -25,9 +24,9 @@ public class CityListProvider extends AbstractDataProvider {
         mData = LocationSpHelper.getCityListAndLocation();
         if (mData.size() > 0) {
             CityMode firstMode = mData.get(0);
-            if (!firstMode.location) {
+            if (!firstMode.getLocation()) {
                 CityMode tempMode = new CityMode();
-                tempMode.location = true;
+                tempMode.setLocation(true);
                 mData.add(0, tempMode);
             }
         }

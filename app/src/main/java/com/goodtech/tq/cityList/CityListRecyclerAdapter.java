@@ -1,6 +1,7 @@
 package com.goodtech.tq.cityList;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
@@ -60,12 +62,13 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityHolder>
         super.notifyDataSetChanged();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(@NonNull CityHolder viewHolder, int i) {
 
         final CityMode item = mProvider.getItem(i);
-        if (item.cid != 0) {
-            WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(item.cid);
+        if (item.getCid() != 0) {
+            WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(item.getCid());
             viewHolder.setCityMode(item, weatherModel, isEdit);
         } else {
             viewHolder.setCityMode(item, null, isEdit);
@@ -106,7 +109,7 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityHolder>
 
     @Override
     public long getItemId(int position) {
-        return mProvider.getItem(position).getId();
+        return mProvider.getItem(position).getCid();
     }
 
     @Override

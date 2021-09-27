@@ -150,7 +150,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mAdapter.setOnItemClickListener(new CityListRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
-                if (cityMode.cid != 0) {
+                if (cityMode.getCid() != 0) {
                     EventBus.getDefault().post(new MessageEvent().setCityIndex(position));
                     finishToRight();
                 } else {

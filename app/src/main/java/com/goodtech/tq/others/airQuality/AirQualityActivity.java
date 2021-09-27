@@ -1,58 +1,55 @@
 package com.goodtech.tq.others.airQuality;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
-import com.goodtech.tq.httpClient.ApiResponseHandler;
-import com.goodtech.tq.httpClient.ErrorCode;
-import com.goodtech.tq.httpClient.JuHeHelper;
-import com.goodtech.tq.listener.CompletionListener;
-import com.goodtech.tq.models.AirPmModel;
-import com.goodtech.tq.models.AirQualityModel;
-import com.goodtech.tq.others.airQuality.view.AirPmView;
+import com.goodtech.tq.helpers.AqiHelper;
+import com.goodtech.tq.helpers.LocationSpHelper;
+import com.goodtech.tq.models.CityMode;
+import com.goodtech.tq.others.airQuality.view.AirLifeView;
 import com.goodtech.tq.views.CircleProgressView;
-import com.goodtech.tq.views.IArcView;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONObject;
 
 public class AirQualityActivity extends BaseActivity {
 
-    private static final String TAG = "AirQualityActivity";
     private static final String EXTRA_CITY = "city";
+    private static final String EXTRA_AQI = "aqi";
 
-    public static void redirectTo(Context ctx, String city) {
+    public static void redirectTo(Context ctx, CityMode cityMode, int aqi) {
         Intent intent = new Intent(ctx, AirQualityActivity.class);
-        intent.putExtra(EXTRA_CITY, city);
+        intent.putExtra(EXTRA_CITY, cityMode);
+        intent.putExtra(EXTRA_AQI, aqi);
         ctx.startActivity(intent);
     }
 
-    private String mCity;
-    private AirPmModel mPmModel;
+    private CityMode mCityMode;
+    private int mAqi;
 
-    private IArcView mArcView;
+//    private IArcView mArcView;
+    private ImageView mArcView;
     private CircleProgressView mProgressView;
     private TextView mAqiTv;
     private TextView mAqiTypeTv;
     private TextView mAqiRemindTv;
     private TextView mUpdateTimeTv;
-    private AirPmView mAirPmView;
+    private AirLifeView mLifeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_air_quality);
 
-        mCity = getIntent().getStringExtra(EXTRA_CITY);
+        mCityMode = getIntent().getParcelableExtra(EXTRA_CITY);
+        if (mCityMode.getCid() == 1000) {
+            mCityMode = LocationSpHelper.getLocation();
+        }
+        mAqi = getIntent().getIntExtra(EXTRA_AQI, 0);
 
         View topBar = findViewById(R.id.layout_top_bar);
         configStationBar(topBar);
@@ -62,7 +59,12 @@ public class AirQualityActivity extends BaseActivity {
 
         TextView titleTv = findViewById(R.id.tv_city_name);
         if (titleTv != null) {
-            titleTv.setText(mCity);
+            if (mCityMode.getCid() == 1000) {
+                //  定位
+                titleTv.setText(mCityMode.getMergerName());
+            } else {
+                titleTv.setText(mCityMode.getCity());
+            }
         }
 
         mArcView = findViewById(R.id.img_top_bg);
@@ -71,62 +73,32 @@ public class AirQualityActivity extends BaseActivity {
         mAqiTypeTv = findViewById(R.id.tv_aqi_type);
         mAqiRemindTv = findViewById(R.id.tv_aqi_remind);
         mUpdateTimeTv = findViewById(R.id.tv_update_time);
-        mAirPmView = findViewById(R.id.layout_air_pm);
+        mLifeView = findViewById(R.id.view_life);
 
-        mPmModel = new AirPmModel();
-        mPmModel.setPm25("10");
-        mPmModel.setAqi("90");
-        mPmModel.setPm10("30");
-        mPmModel.setCo("0.8");
-        mPmModel.setNo2("32");
-        mPmModel.setOzone("23");
-        mPmModel.setSo2("41");
-        mPmModel.setQuality("优");
-        mPmModel.setTime("2021-4-29 12:32:28");
+        AirQualityHelper.fetchCityLife(mCityMode, lifeModel -> {
+            if (lifeModel != null) {
+                mHandler.post(() -> {
+                    mLifeView.setVisibility(View.VISIBLE);
+                    mLifeView.setupLife(lifeModel);
+                });
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        initData();
         configUI();
     }
 
+    @SuppressLint("DefaultLocale")
     protected void configUI() {
-        mArcView.setColor(mPmModel.getColorResId());
-        mProgressView.setAngle((float) Math.min(200, Float.parseFloat(mPmModel.getPm25()) / 200));
-        mAqiTv.setText(mPmModel.getAqi());
-        mAqiTypeTv.setText(mPmModel.getQuality());
-        mAqiRemindTv.setText(mPmModel.getRemindString());
-        mAirPmView.setValue(mPmModel);
-    }
-
-    private void initData() {
-        if (!TextUtils.isEmpty(mCity)) {
-            getData(mCity, () -> {
-
-            });
-        }
-    }
-
-    private void getData(String city, CompletionListener listener) {
-        JuHeHelper.getInstance().fetchAirPM(city, new ApiResponseHandler() {
-            @Override
-            public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
-                Log.e(TAG, "onResponse: " + jsonObject.toString());
-                try {
-                    if (success) {
-                        JsonObject resultJson = new Gson().fromJson(jsonObject.optString("result"), JsonObject.class);
-                        if (resultJson != null) {
-                            mPmModel = new Gson().fromJson(resultJson, new TypeToken<AirPmModel>() {
-                            }.getType());
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (listener != null) listener.onCompletion();
-            }
-        });
+        mArcView.setImageResource(AqiHelper.getImgResId(mAqi));
+        mProgressView.setAngle((float)(Math.min(200, mAqi)/200.0));
+        mAqiTv.setText(String.format("%d", mAqi));
+        mAqiTypeTv.setText(AqiHelper.getQuality(mAqi));
+        mAqiRemindTv.setText(AqiHelper.getRemindString(mAqi));
+//        long updateTime = Math.max(AqiHelper.getUpdateTime(), System.currentTimeMillis());
+//        mUpdateTimeTv.setText(String.format("更新于今天%s", TimeUtils.longToString(updateTime, "HH:mm")));
     }
 }
