@@ -24,6 +24,7 @@ import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.others.constellation.ConstellationActivity;
@@ -48,7 +49,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     private static final String TAG = "WeatherFragment2";
     protected SmartRefreshLayout mRefreshLayout;
     protected NestedScrollView mScrollView;
-    protected WeatherModel mModel;
+    protected WeatherModel mWeatherModel;
 
     protected View mStateBarBg;
 
@@ -72,7 +73,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         this.mStateBarBg = stateBar;
     }
 
-    private int totalDy = 0;
+    private final int totalDy = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -164,8 +165,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         @Override
         public void onAirQuality() {
             if (getActivity() != null) {
-                Intent intent = new Intent(getActivity(), AirQualityActivity.class);
-                getActivity().startActivity(intent);
+                AirQualityActivity.redirectTo(getActivity(), mCityMode, mWeatherModel.aqi);
             }
         }
 
@@ -182,6 +182,14 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
             if (getActivity() != null) {
                 Intent intent = new Intent(getActivity(), ConstellationActivity.class);
                 getActivity().startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onNews() {
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), NewsActivity.class);
+                requireActivity().startActivity(intent);
             }
         }
     };
@@ -205,19 +213,19 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
 
     public void changeWeather(WeatherModel model, CityMode cityMode) {
 
-        if (mModel != null
+        if (mWeatherModel != null
                 && model != null) {
-//                && model.expireTime == mModel.expireTime) {
+//                && model.expireTime == mWeatherModel.expireTime) {
             return;
         }
 
-        this.mModel = model;
+        this.mWeatherModel = model;
         this.mCityMode = cityMode;
         updateData();
     }
 
     private void updateData() {
-        if (mHadLoad && mCurrentView != null && mModel != null) {
+        if (mHadLoad && mCurrentView != null && mWeatherModel != null) {
             mHandler.post(() -> {
                 mDailyView2.setVisibility(View.VISIBLE);
                 mCurrentView.setVisibility(View.VISIBLE);
@@ -233,47 +241,47 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 mLineTempView.setVisibility(View.VISIBLE);
                 mObservationView.setVisibility(View.VISIBLE);
 
-                Log.e(TAG, "updateData: " + mModel.toString());
-                mCurrentView.setData(mModel);
-                mRecentView.setData(mModel);
-                if (mModel.hourlies != null) {
-                    mHoursView.setHourlies(mModel);
+                Log.e(TAG, "updateData: " + mWeatherModel.toString());
+                mCurrentView.setData(mWeatherModel);
+                mRecentView.setData(mWeatherModel);
+                if (mWeatherModel.hourlies != null) {
+                    mHoursView.setHourlies(mWeatherModel);
                 }
-                if (mModel.dailies != null) {
-                    mLineTempView.setData(mModel);
+                if (mWeatherModel.dailies != null) {
+                    mLineTempView.setData(mWeatherModel);
                 }
 
                 for (int i = 0; i < 7; i++) {
-                    if (mModel.dailies != null && mModel.dailies.size() > i) {
-                        Daily daily = mModel.dailies.get(i);
+                    if (mWeatherModel.dailies != null && mWeatherModel.dailies.size() > i) {
+                        Daily daily = mWeatherModel.dailies.get(i);
                         switch (i) {
                             case 0:
-                                mDailyView1.setData(mModel, daily);
+                                mDailyView1.setData(mWeatherModel, daily);
                                 break;
                             case 1:
-                                mDailyView2.setData(mModel, daily);
+                                mDailyView2.setData(mWeatherModel, daily);
                                 break;
                             case 2:
-                                mDailyView3.setData(mModel, daily);
+                                mDailyView3.setData(mWeatherModel, daily);
                                 break;
                             case 3:
-                                mDailyView4.setData(mModel, daily);
+                                mDailyView4.setData(mWeatherModel, daily);
                                 break;
                             case 4:
-                                mDailyView5.setData(mModel, daily);
+                                mDailyView5.setData(mWeatherModel, daily);
                                 break;
                             case 5:
-                                mDailyView6.setData(mModel, daily);
+                                mDailyView6.setData(mWeatherModel, daily);
                                 break;
                             case 6:
-                                mDailyView7.setData(mModel, daily);
+                                mDailyView7.setData(mWeatherModel, daily);
                                 break;
                         }
                     }
                 }
 
                 if (mCityMode != null) {
-                    mObservationView.setData(mModel, mCityMode.city);
+                    mObservationView.setData(mWeatherModel, mCityMode.city);
                 }
             });
         }

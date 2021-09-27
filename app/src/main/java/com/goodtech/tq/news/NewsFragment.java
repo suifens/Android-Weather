@@ -169,18 +169,15 @@ public class NewsFragment extends BaseFragment implements NativeExpressAD.Native
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //获取点击条目的路径，传值显示webview页面
-                String url = ((NewsDataBean)list.get(position)).getUrl();
-                String uniquekey = ((NewsDataBean)list.get(position)).getUniquekey();
-                Intent intent = new Intent(getActivity(), WebActivity.class);
-                intent.putExtra("url", url);
-                intent.putExtra("uniquekey", uniquekey);
-                startActivity(intent);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            //获取点击条目的路径，传值显示webview页面
+            String url = ((NewsDataBean)list.get(position)).getUrl();
+            String uniquekey = ((NewsDataBean)list.get(position)).getUniquekey();
+            Intent intent = new Intent(getActivity(), WebActivity.class);
+            intent.putExtra("url", url);
+            intent.putExtra("uniquekey", uniquekey);
+            startActivity(intent);
 
-            }
         });
     }
 
@@ -276,7 +273,7 @@ public class NewsFragment extends BaseFragment implements NativeExpressAD.Native
             }
         }
         mAdViewList.addAll(adList);
-        //mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
 
     }
 

@@ -143,6 +143,11 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
                 getActivity().startActivity(intent);
             }
         }
+
+        @Override
+        public void onNews() {
+
+        }
     };
 
     public void changeWeather(WeatherModel model, CityMode cityMode) {

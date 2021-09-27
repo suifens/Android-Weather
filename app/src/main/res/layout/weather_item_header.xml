@@ -3,9 +3,7 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp">
+    android:layout_height="80dp">
 
     <View
         android:layout_width="0dp"
@@ -14,7 +12,7 @@
 
     <LinearLayout
         android:id="@+id/item_typhoon"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -43,11 +41,10 @@
 
     <LinearLayout
         android:id="@+id/item_air_quality"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical" >
 
         <ImageView
             android:layout_width="36dp"
@@ -68,12 +65,11 @@
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="1"
-        android:visibility="gone"/>
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:id="@+id/item_calendar"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -101,7 +97,7 @@
 
     <LinearLayout
         android:id="@+id/item_constellation"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -116,6 +112,34 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="@string/title_constellation"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/item_news"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_news" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/title_news"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="12dp" />

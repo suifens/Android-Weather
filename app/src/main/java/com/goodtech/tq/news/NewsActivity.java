@@ -38,12 +38,7 @@ public class NewsActivity extends BaseActivity {
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
 
-        findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        findViewById(R.id.button_back).setOnClickListener(v -> finish());
     }
 
     @Override
