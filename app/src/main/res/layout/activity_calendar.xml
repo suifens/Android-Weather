@@ -133,20 +133,22 @@
                         android:id="@+id/tv_year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2021年"
+                        android:layout_marginStart="13dp"
+                        android:fontFamily="sans-serif-black"
                         android:gravity="center"
-                        android:textColor="@color/black_alpha50"
-                        android:textSize="14dp"
-                        android:layout_marginStart="13dp"/>
+                        android:text="2021年"
+                        android:textColor="@color/black"
+                        android:textSize="18dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="假期"
+                        android:layout_marginStart="4dp"
+                        android:fontFamily="sans-serif-black"
                         android:gravity="center"
+                        android:text="假期"
                         android:textColor="@color/black_alpha80"
-                        android:textSize="14dp"
-                        android:layout_marginStart="4dp" />
+                        android:textSize="16dp" />
 
                 </LinearLayout>
 

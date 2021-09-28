@@ -92,8 +92,6 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 mStateBarBg.setAlpha(0);
             }
         });
-
-        initNativeExpressAD();
     }
 
     @Override
@@ -228,6 +226,9 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     private void updateData() {
         if (mHadLoad && mCurrentView != null && mWeatherModel != null) {
             mHandler.post(() -> {
+
+                initNativeExpressAD();
+
                 mDailyView2.setVisibility(View.VISIBLE);
                 mCurrentView.setVisibility(View.VISIBLE);
                 mRecentView.setVisibility(View.VISIBLE);
@@ -307,10 +308,11 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     private NativeExpressADView mAdView;
 
     private void initNativeExpressAD() {
-        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT); // 消息流中用AUTO_HEIGHT
-        mADManager = new NativeExpressAD(getContext(), adSize, Constants.EXPRESS_POS_ID, this);
-        mADManager.loadAD(1);
-
+        if (mADManager == null) {
+            ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT); // 消息流中用AUTO_HEIGHT
+            mADManager = new NativeExpressAD(getContext(), adSize, Constants.EXPRESS_POS_ID, this);
+            mADManager.loadAD(1);
+        }
     }
 
     @Override
@@ -321,8 +323,10 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
             if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
                 mAdView.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
             }
-            mAd2View.setAdView(mAdView);
-            mAd2View.setVisibility(View.VISIBLE);
+            if (mAd2View != null) {
+                mAd2View.setVisibility(View.VISIBLE);
+                mAd2View.setAdView(mAdView);
+            }
         }
     }
 
