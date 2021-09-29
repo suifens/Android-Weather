@@ -26,8 +26,16 @@ public class AirQualityHelper {
     public static void fetchAqi(final CityMode cityMode) {
 
         String city = cityMode.getCity();
-        if (!TextUtils.isEmpty(city) && city.endsWith("市")) {
-            city = city.replace("市", "");
+        if (!TextUtils.isEmpty(city)) {
+            if (city.endsWith("市")) {
+                city = city.replace("市", "");
+            }
+            if (city.endsWith("县")) {
+                city = city.replace("县", "");
+            }
+            if (city.endsWith("区")) {
+                city = city.replace("区", "");
+            }
         }
 
         JuHeHelper.getInstance().fetchJuheWeather(city, new ApiResponseHandler() {
@@ -63,8 +71,16 @@ public class AirQualityHelper {
     public static void fetchCityLife(final CityMode cityMode, CityLifeCallback callback) {
 
         String city = cityMode.getCity();
-        if (!TextUtils.isEmpty(city) && city.endsWith("市")) {
-            city = city.replace("市", "");
+        if (!TextUtils.isEmpty(city)) {
+            if (city.endsWith("市")) {
+                city = city.replace("市", "");
+            }
+            if (city.endsWith("县")) {
+                city = city.replace("县", "");
+            }
+            if (city.endsWith("区")) {
+                city = city.replace("区", "");
+            }
         }
 
         JuHeHelper.getInstance().fetchJuheLife(city, new ApiResponseHandler() {

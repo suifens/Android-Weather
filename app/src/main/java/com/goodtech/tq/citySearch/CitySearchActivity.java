@@ -24,7 +24,6 @@ import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.listener.CompletionListener;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.DeviceUtils;
@@ -58,6 +57,14 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         Intent intent = new Intent(ctx, CitySearchActivity.class);
         intent.putExtra(EXTRA_START, isStart);
         ctx.startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mRecommendHeaderView != null) {
+            mRecommendHeaderView.hideSoftInput(this);
+        }
     }
 
     @Override
@@ -189,6 +196,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                     startActivity(intent);
                     finishToRight();
                 }, 1000);
+                if (mRecommendHeaderView != null) {
+                    mRecommendHeaderView.hideSoftInput(this);
+                }
                 return;
             }
         }
@@ -207,6 +217,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         }
 
         isStart = false;
+
+        if (mRecommendHeaderView != null) {
+            mRecommendHeaderView.hideSoftInput(this);
+        }
 
         mHandler.postDelayed(() -> {
             Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);

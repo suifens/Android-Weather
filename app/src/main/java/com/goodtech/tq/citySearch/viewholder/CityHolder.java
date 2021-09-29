@@ -81,7 +81,12 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
                 mTipTv.setVisibility(View.GONE);
             } else {
                 if (mCityNameTv != null) {
-                    mCityNameTv.setText(mode.getCity());
+                    if (mCityMode.getCid() == 1000) {
+                        //  定位
+                        mCityNameTv.setText(mCityMode.getMergerName());
+                    } else {
+                        mCityNameTv.setText(mCityMode.getCity());
+                    }
                 }
             }
             mLocationTip.setVisibility(View.VISIBLE);

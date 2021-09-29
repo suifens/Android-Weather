@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.goodtech.tq.BuildConfig;
@@ -171,7 +172,9 @@ public class BaseApp extends Application {
      */
     private void back2App(Activity activity) {
         isRunInBackground = false;
-        SplashADActivity.redirectToFront(activity);
+        if (!TextUtils.isEmpty( SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))) {
+            SplashADActivity.redirectToFront(activity);
+        }
     }
 
     /**

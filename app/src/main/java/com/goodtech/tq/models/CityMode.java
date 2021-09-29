@@ -109,14 +109,14 @@ public class CityMode implements Parcelable {
     public CityMode() {}
 
     protected CityMode(Parcel in) {
-        cid = in.readInt();
-        mergerName = in.readString();
-        city = in.readString();
-        lat = in.readString();
-        lon = in.readString();
-        pinyin = in.readString();
-        listNum = in.readInt();
-        location = in.readInt() == 0;
+        this.cid = in.readInt();
+        this.mergerName = in.readString();
+        this.city = in.readString();
+        this.lat = in.readString();
+        this.lon = in.readString();
+        this.pinyin = in.readString();
+        this.listNum = in.readInt();
+        this.location = in.readInt() == 0;
     }
 
     public static final Creator<CityMode> CREATOR = new Creator<CityMode>() {
@@ -147,13 +147,13 @@ public class CityMode implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(cid);
-        dest.writeString(mergerName);
-        dest.writeString(city);
-        dest.writeString(lat);
-        dest.writeString(lon);
-        dest.writeString(pinyin);
-        dest.writeInt(listNum);
-        dest.writeInt(location ? 1 : 0);
+        dest.writeInt(this.cid);
+        dest.writeString(this.mergerName);
+        dest.writeString(this.city);
+        dest.writeString(this.lat);
+        dest.writeString(this.lon);
+        dest.writeString(this.pinyin);
+        dest.writeInt(this.listNum);
+        dest.writeInt(this.location ? 1 : 0);
     }
 }

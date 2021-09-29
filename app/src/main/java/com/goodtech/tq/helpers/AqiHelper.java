@@ -1,5 +1,7 @@
 package com.goodtech.tq.helpers;
 
+import android.graphics.Color;
+
 import com.goodtech.tq.R;
 
 /**
@@ -79,7 +81,7 @@ public class AqiHelper {
             return R.color.color_ff8550;
         } else if (aqi > 50) {
             //  良
-            return R.color.color_e7a139;
+            return Color.parseColor("#F8BE58");
         } else {
             return R.color.color_5ecd75;
         }

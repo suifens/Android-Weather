@@ -1,11 +1,13 @@
 package com.goodtech.tq.citySearch;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -63,13 +65,21 @@ public class CityRecommendHeaderView extends LinearLayout {
         CityMode location = LocationSpHelper.getLocation();
         this.mCityMode = location;
         if (location != null) {
-            if (mLocationTv != null && !TextUtils.isEmpty(location.getCity())) {
-                mLocationTv.setText(location.getCity());
+            if (mLocationTv != null && !TextUtils.isEmpty(location.getMergerName())) {
+                mLocationTv.setText(location.getMergerName());
             }
             mTipTv.setVisibility(GONE);
         } else {
             mLocationTv.setText("定位失败");
             mTipTv.setVisibility(VISIBLE);
+        }
+    }
+
+    public void hideSoftInput(Activity activity) {
+        if (mLocationTv != null) {
+            //  隐藏键盘
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mLocationTv.getWindowToken(), 0);
         }
     }
 

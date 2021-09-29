@@ -1,8 +1,6 @@
 package com.goodtech.tq.location;
 
 import com.baidu.location.BDLocation;
-import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.SpUtils;
 
 import java.io.Serializable;
 

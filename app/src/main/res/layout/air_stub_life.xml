@@ -8,8 +8,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:orientation="horizontal"
+        android:layout_marginTop="10dp"
         android:gravity="center" >
 
         <View
@@ -107,6 +108,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="130dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
         <com.goodtech.tq.others.airQuality.view.AirLifeItemView
@@ -137,6 +139,5 @@
             />
 
     </LinearLayout>
-
 
 </LinearLayout>

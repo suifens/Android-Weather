@@ -41,6 +41,9 @@
         <entry key="app/src/main/res/layout/fragment_item_list.xml" value="0.35054347826086957" />
         <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_weather_data.xml" value="0.1894630192502533" />
+        <entry key="app/src/main/res/layout/item_layout01.xml" value="0.28125" />
+        <entry key="app/src/main/res/layout/item_layout02.xml" value="0.28125" />
+        <entry key="app/src/main/res/layout/item_layout03.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/stub_calendar_day_detail.xml" value="0.335" />
         <entry key="app/src/main/res/layout/stub_weather_data.xml" value="0.189209726443769" />
         <entry key="app/src/main/res/layout/view_calendar_holiday.xml" value="0.41403716404812335" />
