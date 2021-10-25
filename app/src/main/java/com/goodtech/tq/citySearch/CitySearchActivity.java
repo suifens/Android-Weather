@@ -77,29 +77,38 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "onResume: " + System.currentTimeMillis());
-        if (isStart) {
-            if (mFirstLoad) {
-                mFirstLoad = false;
-                mHandler.postDelayed(() -> {
-
-                    MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
-                                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true));
-                    alert.setCancelListener(((dialog, which)
-                            -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false)));
-                    alert.show();
-
-                }, 100);
-            } else {
-                if (!checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                        && !checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                    //  同意定位
-                    checkOrStartLocation();
-                }
-            }
-        }
+//        if (isStart) {
+//            if (mFirstLoad) {
+//                mFirstLoad = false;
+//                mHandler.postDelayed(() -> {
+//
+//                    MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
+//                                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true));
+//                    alert.setCancelListener(((dialog, which)
+//                            -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false)));
+//                    alert.show();
+//
+//                }, 100);
+//            } else {
+//                if (!checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+//                        && !checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+//                    //  同意定位
+//                    checkOrStartLocation();
+//                }
+//            }
+//        }
     }
 
     private void toGetLocation() {
+        if (isStart) {
+            MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
+                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true));
+            alert.setCancelListener(((dialog, which)
+                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false)));
+            alert.show();
+            isStart = false;
+            return;
+        }
         if (checkPermission()) {
             MessageAlert alert = new MessageAlert(CitySearchActivity.this,
                     (dialog, which) -> openLocationPermission(false));
@@ -223,6 +232,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         }
 
         mHandler.postDelayed(() -> {
+            if (isStart) {
+                BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false);
+            }
             Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

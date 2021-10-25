@@ -70,7 +70,7 @@ public class CityRecommendHeaderView extends LinearLayout {
             }
             mTipTv.setVisibility(GONE);
         } else {
-            mLocationTv.setText("定位失败");
+            mLocationTv.setText("点击开始定位");
             mTipTv.setVisibility(VISIBLE);
         }
     }

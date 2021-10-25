@@ -377,7 +377,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     public void onNoAD(AdError error) {
         Log.i(TAG, String.format("onNoAD: error code : %d, error msg %s", error.getErrorCode(),
                 error.getErrorMsg()));
-        if (mReloadCount <= 3) {
+        if (mReloadCount <= 3 && mADManager != null) {
             mReloadCount++;
             mADManager.loadAD(1);
         }
