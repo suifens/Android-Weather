@@ -11,4 +11,6 @@ public interface WeatherHeaderListener {
     void onFortune();
     //  新闻点击
     void onNews();
+    //  点击签到
+    void onSignIn();
 }

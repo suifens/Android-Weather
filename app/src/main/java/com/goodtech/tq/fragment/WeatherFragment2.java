@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewStub;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
 
@@ -29,6 +30,7 @@ import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.others.constellation.ConstellationActivity;
 import com.goodtech.tq.others.taifeng.TyphoonActivity;
+import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.qq.e.ads.nativ.ADSize;
@@ -77,8 +79,8 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         mRefreshLayout.setOnRefreshListener(this);
 
@@ -188,6 +190,13 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
             if (getActivity() != null) {
                 Intent intent = new Intent(getActivity(), NewsActivity.class);
                 requireActivity().startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onSignIn() {
+            if (getActivity() != null) {
+                SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0);
             }
         }
     };

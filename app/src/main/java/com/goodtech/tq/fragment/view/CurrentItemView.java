@@ -1,10 +1,12 @@
 package com.goodtech.tq.fragment.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,6 +57,9 @@ public class CurrentItemView extends ConstraintLayout {
     public TextView mNotice;
     public HeaderItemsView mItemsView;
 
+    private WeatherHeaderListener mListener;
+    public View mSignTipV;
+
     @SuppressLint("DefaultLocale")
     protected void initData() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.weather_item_current, this, true);
@@ -64,13 +69,29 @@ public class CurrentItemView extends ConstraintLayout {
         mPhraseTv = view.findViewById(R.id.tv_wx_phrase);
         mNotice = view.findViewById(R.id.tv_notice);
         mItemsView = view.findViewById(R.id.view_items);
+        //  签到
+        Button signBtn = view.findViewById(R.id.btn_sign);
+        signBtn.setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onSignIn();
+            }
+        });
+        mSignTipV = view.findViewById(R.id.view_sign_tip);
     }
 
+    /**
+     * 设置回调
+     */
     public void setItemListener(WeatherHeaderListener listener) {
-        if (mItemsView != null && listener != null)
+        mListener = listener;
+        if (mItemsView != null && listener != null) {
             mItemsView.setListener(listener);
+        }
     }
 
+    /**
+     * 数据赋值
+     */
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel model) {
         if (model != null) {
@@ -114,6 +135,18 @@ public class CurrentItemView extends ConstraintLayout {
 
             findViewById(R.id.layout_data).setVisibility(VISIBLE);
             findViewById(R.id.layout_notice).setVisibility(VISIBLE);
+        }
+    }
+
+    /**
+     * 设置签到状态
+     * @param signedIn 是否已签到
+     */
+    public void setSignType(boolean signedIn) {
+        if (signedIn) {
+            mSignTipV.setVisibility(View.VISIBLE);
+        } else {
+            mSignTipV.setVisibility(View.GONE);
         }
     }
 

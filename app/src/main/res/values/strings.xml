@@ -74,4 +74,6 @@
     <string name="title_aqi">全市平均AQI</string>
 
     <string name="underline_later"><u>以后再说</u></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

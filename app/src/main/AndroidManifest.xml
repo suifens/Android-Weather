@@ -24,6 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         tools:replace="android:label,android:icon, android:theme">
+        <activity
+            android:name=".signing.SigningActivity"
+            android:exported="true" />
         <activity android:name=".others.taifeng.TyphoonActivity" />
         <activity android:name=".others.airQuality.AirQualityActivity" />
         <activity android:name=".others.calendar.CalendarActivity" />
@@ -52,6 +55,7 @@
             tools:targetApi="cupcake">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
