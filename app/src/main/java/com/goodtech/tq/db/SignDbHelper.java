@@ -2,6 +2,7 @@ package com.goodtech.tq.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.goodtech.tq.models.db.SignRecord;
@@ -35,10 +36,11 @@ public class SignDbHelper extends BaseDbHelper {
         db.execSQL(makeCreateTableSql(TABLE_NAME, columnClause));
     }
 
-    public void insert(SignRecord record) {
-        if (update(record) == 0) {
-            mdbHelper.insert(TABLE_NAME, makeContentValues(record));
+    public long insert(SignRecord record) {
+        if (!hadSigning(record)) {
+            return mdbHelper.insert(TABLE_NAME, makeContentValues(record));
         }
+        return -1;
     }
 
     public int update(SignRecord record) {
@@ -46,6 +48,109 @@ public class SignDbHelper extends BaseDbHelper {
         String whereClause = COL_SIGN_DAY + "=? AND " + COL_SIGN_TYPE + "=?" ;
         String[] whereArgs = new String[]{record.getDateDay(), record.getSignType()};
         return mdbHelper.update(TABLE_NAME, values, whereClause, whereArgs);
+    }
+
+    /**
+     * 是否有
+     */
+    public boolean hadSigning(SignRecord record) {
+        StringBuffer sqlSb = new StringBuffer();
+        sqlSb.append("select count(" + COL_SIGN_TYPE + ") ");
+        sqlSb.append("from ");
+        sqlSb.append(getTableName() + " ");
+        sqlSb.append("where " + COL_SIGN_DAY + " = '" + record.getDateDay() + "' ");
+        sqlSb.append("and " + COL_SIGN_TYPE + " = '" + record.getSignType() + "' ");
+        Cursor cursor = mdbHelper.rawQuery(sqlSb.toString(), null);
+        int count = 0;
+        if (cursor == null) {
+            return false;
+        }
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            cursor.close();
+        }
+        return count > 0;
+    }
+
+    /**
+     * 是否有
+     */
+    public boolean hadSigning(String dateDay) {
+        StringBuffer sqlSb = new StringBuffer();
+        sqlSb.append("select count(" + COL_SIGN_TYPE + ") ");
+        sqlSb.append("from ");
+        sqlSb.append(getTableName() + " ");
+        sqlSb.append("where " + COL_SIGN_DAY + " = '" + dateDay + "' ");
+        Cursor cursor = mdbHelper.rawQuery(sqlSb.toString(), null);
+        int count = 0;
+        if (cursor == null) {
+            return false;
+        }
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            cursor.close();
+        }
+        return count > 0;
+    }
+
+    /**
+     * 获取连续
+     */
+    public int queryContinuousCount(String signType) {
+
+        StringBuffer sqlSb = new StringBuffer();
+        sqlSb.append("select count(" + COL_SIGN_TYPE + ") from ");
+        sqlSb.append(getTableName() + " ");
+        sqlSb.append("where " + COL_SIGN_TYPE + " = '" + signType + "' ");
+
+        Cursor cursor = mdbHelper.rawQuery(sqlSb.toString(), null);
+        int count = 0;
+        if (cursor == null) {
+            return count;
+        }
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            cursor.close();
+        }
+        return count;
+    }
+
+    public int queryContinuousCount() {
+
+        StringBuffer sqlSb = new StringBuffer();
+        sqlSb.append("select count(DISTINCT " + COL_SIGN_DAY + ") from ");
+        sqlSb.append(getTableName() + " ");
+
+        Cursor cursor = mdbHelper.rawQuery(sqlSb.toString(), null);
+        int count = 0;
+        if (cursor == null) {
+            return count;
+        }
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    count = cursor.getInt(0);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            cursor.close();
+        }
+        return count;
     }
 
     protected ContentValues makeContentValues(SignRecord record) {

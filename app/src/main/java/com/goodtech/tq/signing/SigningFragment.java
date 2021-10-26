@@ -1,7 +1,9 @@
 package com.goodtech.tq.signing;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +32,8 @@ public class SigningFragment extends BaseFragment {
     protected TextView mTempTv;   //  温度
     protected TextView mAddressTv;    //  地址
     protected TextView mDayTv;    //  日期
+    protected SigningListener mListener;
+    protected boolean isAM; //是否早起
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,14 +57,20 @@ public class SigningFragment extends BaseFragment {
             mTempTv = mCacheView.findViewById(R.id.tv_temp);
             mAddressTv = mCacheView.findViewById(R.id.tv_address);
             mDayTv = mCacheView.findViewById(R.id.tv_day);
+            configPressed();
+            configData(isAM);
         }
+    }
+
+    public void setupConfig(boolean am) {
+        this.isAM = am;
     }
 
     /**
      * 配置数据
      * @param am 是否是早上 
      */
-    public void configData(boolean am) {
+    protected void configData(boolean am) {
         mTitleImgV.setImageResource(am ? R.drawable.ic_good_morning : R.drawable.ic_good_night);
         mContinueTitle.setText(am ? "连续早起" : "连续早睡");
         mTimeTitle.setText(am ? "今日早起" : "今日早睡");
@@ -68,26 +78,65 @@ public class SigningFragment extends BaseFragment {
 
     @SuppressLint("DefaultLocale")
     public void updateData(Hourly hourly, CityMode cityMode, int continueCount) {
-        mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
-        if (hourly.metric != null) {
-            mTempTv.setText(String.format("%d", hourly.metric.temp));
-        }
-        //  地址
-        if (cityMode != null) {
-            if (cityMode.getCid() == 1000) {
-                mAddressTv.setText(cityMode.getMergerName());
-            } else {
-                mAddressTv.setText(cityMode.getCity());
+        if (mWeatherIcon != null) {
+            mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
+            if (hourly.metric != null) {
+                mTempTv.setText(String.format("%d", hourly.metric.temp));
             }
+            //  地址
+            if (cityMode != null) {
+                if (cityMode.getCid() == 1000) {
+                    mAddressTv.setText(cityMode.getMergerName());
+                } else {
+                    mAddressTv.setText(cityMode.getCity());
+                }
+            }
+
+            //  时间
+            long current = System.currentTimeMillis();
+            mDayTv.setText(TimeUtils.longToString(current, "MM月dd日"));
+            mTimeTv.setText(TimeUtils.longToString(current, "HH:mm"));
+
+            //  连续天数
+            mContinueCountTv.setText(String.valueOf(continueCount));
         }
+    }
 
-        //  时间
-        long current = System.currentTimeMillis();
-        mDayTv.setText(TimeUtils.longToString(current, "MM月dd日"));
-        mTimeTv.setText(TimeUtils.longToString(current, "HH:mm"));
+    public void startScreenshot() {
+        mCameraBtn.setVisibility(View.INVISIBLE);
+        mEditBtn.setVisibility(View.INVISIBLE);
+    }
 
-        //  连续天数
-        mContinueCountTv.setText(String.valueOf(continueCount));
+    public void endScreenshot() {
+        mCameraBtn.setVisibility(View.VISIBLE);
+        mEditBtn.setVisibility(View.VISIBLE);
+    }
+    
+    public void setListener(SigningListener listener) {
+        this.mListener = listener;
+    }
+    
+    public void changeBgImage(Uri uri) {
+        mBgImgView.setImageURI(uri);
+    }
+
+    public void changeWriter(String title) {
+        mWriterTv.setText(title);
+    }
+
+    private void configPressed() {
+        mEditBtn.setOnClickListener(v -> {
+            if (mListener != null) mListener.onEditPressed();
+        });
+
+        mCameraBtn.setOnClickListener(v -> {
+            if (mListener != null) mListener.onCameraPressed();
+        });
+    }
+
+    public interface SigningListener {
+        void onEditPressed();
+        void onCameraPressed();
     }
 
 }

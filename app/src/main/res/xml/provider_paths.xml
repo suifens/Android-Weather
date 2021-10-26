@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="external_files" path="."/>
+<!--    <external-path name="external_files" path="diary sdcard/photo"/>-->
+    <external-path path="photos" name="camera_photos" />
+    <external-path name="my_images" path="/insaitjoy/image/" />
+    <external-path name="images" path="image/" />
+    <external-path name="dcim" path="DCIM/" />
+    <external-files-path name="opensdk_external" path="Images/tmp"/>
+    <root-path name="opensdk_root" path=""/>
+    <root-path name="root_path" path="." />
+</paths>

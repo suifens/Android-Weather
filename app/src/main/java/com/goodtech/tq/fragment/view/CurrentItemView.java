@@ -1,12 +1,10 @@
 package com.goodtech.tq.fragment.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,8 +68,7 @@ public class CurrentItemView extends ConstraintLayout {
         mNotice = view.findViewById(R.id.tv_notice);
         mItemsView = view.findViewById(R.id.view_items);
         //  签到
-        Button signBtn = view.findViewById(R.id.btn_sign);
-        signBtn.setOnClickListener(v -> {
+        view.findViewById(R.id.btn_sign).setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onSignIn();
             }
@@ -144,9 +141,9 @@ public class CurrentItemView extends ConstraintLayout {
      */
     public void setSignType(boolean signedIn) {
         if (signedIn) {
-            mSignTipV.setVisibility(View.VISIBLE);
-        } else {
             mSignTipV.setVisibility(View.GONE);
+        } else {
+            mSignTipV.setVisibility(View.VISIBLE);
         }
     }
 

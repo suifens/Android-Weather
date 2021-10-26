@@ -13,7 +13,7 @@ public class SigningAFragment extends SigningFragment {
      * 配置数据
      * @param am 是否是早上
      */
-    public void configData(boolean am) {
+    protected void configData(boolean am) {
         super.configData(am);
         mBgImgView.setImageResource(am ? R.drawable.bg_morning_a : R.drawable.bg_night_a);
         mWriterTv.setText(am ? "希望阳光很暖，微风不燥" : "从遇见你开始，凛冬散尽星河长明");

@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.goodtech.tq.cityList.CityListActivity;
+import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragment.WeatherFragment2;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
@@ -62,6 +63,7 @@ public class MainActivity extends BaseActivity {
     private int mCurrIndex;
     private long mBackTime;
     private boolean mLoadLast;
+    private boolean mSigned;    //  是否已签到
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
@@ -239,6 +241,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void reloadWeathers() {
+        SignDbHelper signDbHelper = new SignDbHelper(this);
+        mSigned = signDbHelper.hadSigning(TimeUtils.longToString(System.currentTimeMillis(), "yyyy-MM-dd"));
+
         TipHelper.showProgressDialog(this, R.string.loading_data, false);
         for (int i = 0; i < mCityModes.size(); i++) {
             reloadWeather(i);
@@ -253,7 +258,7 @@ public class MainActivity extends BaseActivity {
                 WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.getCid());
                 if (mFragmentList.size() > index) {
                     WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(index);
-                    fragment.changeWeather(model, cityMode);
+                    fragment.changeWeather(model, cityMode, mSigned);
                 }
                 if (index == mCurrIndex) {
                     changeBg(model);
@@ -367,7 +372,7 @@ public class MainActivity extends BaseActivity {
 
                 if (mFragmentList.size() > position) {
                     WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(position);
-                    fragment.changeWeather(weatherModel, cityMode);
+                    fragment.changeWeather(weatherModel, cityMode, mSigned);
                 }
             }
         }

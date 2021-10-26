@@ -1,6 +1,9 @@
 package com.goodtech.tq.utils;
 
 public class Constants {
+
+    public static final int GET_PERMISSION_STORAGE_REQUEST_CODE = 10006;
+
     //tencentAds
     public static final String APP_ID = "1106354620"; //应用ID
     public static final String SPLASH_POS_ID = "9000928561858848";  //广告id
@@ -25,6 +28,12 @@ public class Constants {
     public final static String TIME_WEATHER = "weather_fetch_time";
     //  个性化广告
     public static final String PERSONALIZED_AD = "personalized advertising";
+
+    //第三方微信
+    public static final String WECHAT_APP_ID = "wx3aa675641ffe1f1d";
+    public static final String WECHAT_APP_Secret = "4069e24495ae018eed3993c1895c72f5";
+
+    public static final String QQ_APP_ID = "1106159384";
 
 
 }

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewStub;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
 
@@ -58,6 +57,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     protected CityMode mCityMode;
 
     protected boolean mHadLoad;
+    protected boolean mSigned;
 
     @Override
     protected int getViewLayoutRes() {
@@ -79,8 +79,8 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         mRefreshLayout.setOnRefreshListener(this);
 
@@ -104,7 +104,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
             View inflate = viewStub.inflate();      // 布局加载
             initView(inflate);
             mHadLoad = true;
-            updateData();
+            updateData(mSigned);
         }
     }
 
@@ -207,7 +207,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 (success, weather, errCode) ->
                         mHandler.post(() -> {
                             if (weather != null && mCityMode != null) {
-                                changeWeather(weather, mCityMode);
+                                changeWeather(weather, mCityMode, mSigned);
                             }
                             refreshLayout.finishRefresh();
                         }));
@@ -218,9 +218,9 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         }
     }
 
-    public void changeWeather(WeatherModel model, CityMode cityMode) {
+    public void changeWeather(WeatherModel model, CityMode cityMode, boolean signed) {
+        this.mSigned = signed;
 
-        Log.e(TAG, "changeWeather: city = " + cityMode.getCity() + "  ---- mergerName =  " + cityMode.getMergerName());
         if (mWeatherModel != null
                 && model != null) {
 //                && model.expireTime == mWeatherModel.expireTime) {
@@ -229,10 +229,10 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
 
         this.mWeatherModel = model;
         this.mCityMode = cityMode;
-        updateData();
+        updateData(signed);
     }
 
-    private void updateData() {
+    private void updateData(boolean signed) {
         if (mHadLoad && mCurrentView != null && mWeatherModel != null) {
             mHandler.post(() -> {
 
@@ -253,6 +253,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 mObservationView.setVisibility(View.VISIBLE);
 
                 mCurrentView.setData(mWeatherModel);
+                mCurrentView.setSignType(signed);
                 mRecentView.setData(mWeatherModel);
                 if (mWeatherModel.hourlies != null) {
                     mHoursView.setHourlies(mWeatherModel);
