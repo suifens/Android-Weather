@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/sl_btn_segment"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="sans-serif-medium"
         android:text="早安打卡"
         android:textColor="@drawable/sl_font_segment"
         android:textSize="18dp" />
@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/sl_btn_segment"
-        android:fontFamily="sans-serif-black"
+        android:fontFamily="sans-serif-medium"
         android:text="晚安打卡"
         android:textColor="@drawable/sl_font_segment"
         android:textSize="18dp"

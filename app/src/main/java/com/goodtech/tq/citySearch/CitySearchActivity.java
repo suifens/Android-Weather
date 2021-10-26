@@ -136,6 +136,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
         ((ViewStub) findViewById(R.id.stub_view)).inflate();
 
+        //  定位
         mRecommendHeaderView = findViewById(R.id.header_recommend);
         mRecommendHeaderView.setListener((view, position, cityMode) -> {
 
@@ -239,6 +240,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mSearchView.onActionViewExpanded();
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(false);
+        mSearchView.clearFocus();
         SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
         if (textView != null) {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
