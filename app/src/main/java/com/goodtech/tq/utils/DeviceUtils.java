@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 import com.goodtech.tq.app.BaseApp;
@@ -21,6 +22,22 @@ public class DeviceUtils {
     private static final String TAG = "DeviceUtils";
 
     private static float currentDensity = 0;
+
+    /**
+     * 获取应用程序名称
+     */
+    public static String getAppName(Context context) {
+        if (context == null) {
+            return "";
+        }
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            return String.valueOf(packageManager.getApplicationLabel(context.getApplicationInfo()));
+        } catch (Throwable e) {
+            Log.i("DeviceUtil","getAppName >> e:" + e.toString());
+        }
+        return "null";
+    }
 
     /**
      * 返回版本号

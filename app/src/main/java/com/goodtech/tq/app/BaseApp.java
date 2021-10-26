@@ -19,6 +19,7 @@ import com.goodtech.tq.SplashADActivity;
 import com.goodtech.tq.SplashActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.location.services.LocationService;
+import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.qq.e.comm.managers.GDTADManager;
@@ -150,7 +151,10 @@ public class BaseApp extends Application {
             @Override
             public void onActivityStopped(Activity activity) {
                 appCount--;
-                if (appCount == 0 && !(activity instanceof SplashActivity || activity instanceof SplashADActivity || activity instanceof SettingActivity)) {
+                if (appCount == 0 && !(activity instanceof SplashActivity
+                        || activity instanceof SplashADActivity
+                        || activity instanceof SettingActivity
+                        || activity instanceof SigningActivity)) {
                     //应用进入后台 需要做的操作
                     leaveApp(activity);
                 }

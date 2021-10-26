@@ -29,6 +29,7 @@ import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.others.constellation.ConstellationActivity;
 import com.goodtech.tq.others.taifeng.TyphoonActivity;
+import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.qq.e.ads.nativ.ADSize;
@@ -56,6 +57,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     protected CityMode mCityMode;
 
     protected boolean mHadLoad;
+    protected boolean mSigned;
 
     @Override
     protected int getViewLayoutRes() {
@@ -102,7 +104,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
             View inflate = viewStub.inflate();      // 布局加载
             initView(inflate);
             mHadLoad = true;
-            updateData();
+            updateData(mSigned);
         }
     }
 
@@ -190,6 +192,13 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 requireActivity().startActivity(intent);
             }
         }
+
+        @Override
+        public void onSignIn() {
+            if (getActivity() != null) {
+                SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0);
+            }
+        }
     };
 
     @Override
@@ -198,7 +207,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 (success, weather, errCode) ->
                         mHandler.post(() -> {
                             if (weather != null && mCityMode != null) {
-                                changeWeather(weather, mCityMode);
+                                changeWeather(weather, mCityMode, mSigned);
                             }
                             refreshLayout.finishRefresh();
                         }));
@@ -209,9 +218,9 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         }
     }
 
-    public void changeWeather(WeatherModel model, CityMode cityMode) {
+    public void changeWeather(WeatherModel model, CityMode cityMode, boolean signed) {
+        this.mSigned = signed;
 
-        Log.e(TAG, "changeWeather: city = " + cityMode.getCity() + "  ---- mergerName =  " + cityMode.getMergerName());
         if (mWeatherModel != null
                 && model != null) {
 //                && model.expireTime == mWeatherModel.expireTime) {
@@ -220,10 +229,10 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
 
         this.mWeatherModel = model;
         this.mCityMode = cityMode;
-        updateData();
+        updateData(signed);
     }
 
-    private void updateData() {
+    private void updateData(boolean signed) {
         if (mHadLoad && mCurrentView != null && mWeatherModel != null) {
             mHandler.post(() -> {
 
@@ -244,6 +253,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 mObservationView.setVisibility(View.VISIBLE);
 
                 mCurrentView.setData(mWeatherModel);
+                mCurrentView.setSignType(signed);
                 mRecentView.setData(mWeatherModel);
                 if (mWeatherModel.hourlies != null) {
                     mHoursView.setHourlies(mWeatherModel);

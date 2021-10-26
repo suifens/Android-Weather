@@ -16,7 +16,7 @@ public class SqliteDbHelper extends SQLiteOpenHelper {
     final int FIRST_DATABASE_VERSION = 1;
     
     //升级数据库版本请按顺序加1
-    private static final int DATABASE_VERSION = 2;//first 4;
+    private static final int DATABASE_VERSION = 3;//first 4;
     
     private static SqliteDbHelper mDbHelper;
     private static SQLiteDatabase mDatabase;
@@ -48,6 +48,9 @@ public class SqliteDbHelper extends SQLiteOpenHelper {
             switch (version) {
                 case 1:
                     NewsDbHelper.createTable(db);
+                    break;
+                case 2:
+                    SignDbHelper.createTable(db);
                     break;
                 default:
                     break;

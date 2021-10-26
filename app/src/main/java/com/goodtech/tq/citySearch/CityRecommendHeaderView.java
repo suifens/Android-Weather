@@ -47,12 +47,9 @@ public class CityRecommendHeaderView extends LinearLayout {
         View view = LayoutInflater.from(context).inflate(R.layout.search_header_recommend, this, true);
 
         mLocationTv = view.findViewById(R.id.tv_location);
-        view.findViewById(R.id.layout_location).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onItemClick(mLocationTv, 0, mCityMode);
-                }
+        view.findViewById(R.id.layout_location).setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onItemClick(mLocationTv, 0, mCityMode);
             }
         });
 
