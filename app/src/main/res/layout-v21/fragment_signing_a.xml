@@ -4,13 +4,13 @@
     android:id="@+id/private_station_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
     android:paddingStart="18dp"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
     android:paddingEnd="18dp"
+    android:background="@color/colorBackground"
     >
-
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -206,7 +206,7 @@
                 android:textColor="@color/white_alpha80"
                 android:textSize="@dimen/sp_14" />
         </LinearLayout>
-
+        
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

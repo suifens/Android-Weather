@@ -219,8 +219,8 @@ public class SigningActivity extends BaseShareActivity {
         mViewPager.setAdapter(trainsPageAdapter);
 
         int width = DeviceUtils.dip2px(this, 8);
-        int height = DeviceUtils.dip2px(this, 3);
-        int margin = DeviceUtils.dip2px(this, 6);
+        int height = DeviceUtils.dip2px(this, 8);
+        int margin = DeviceUtils.dip2px(this, 10);
         RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(width, height);
         for (int i = 0; i < 3; i++) {
             RadioButton tempButton = new RadioButton(this);

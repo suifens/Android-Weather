@@ -128,17 +128,33 @@ public class LocationSpHelper {
 
     /**
      * 添加城市
+     * return 所在列表的位置
      */
-    public static boolean addCity(CityMode city) {
-        if (!canAddCity(city)) {
-            return false;
+    public static int addCity(CityMode city) {
+        int index = getCityIndex(city);
+        if (index == -1) {
+            List<CityMode> locations = getCityList();
+            locations.add(city);
+            Gson gson = new Gson();
+            String json = gson.toJson(locations);
+            SpUtils.getInstance().putString(Constants.SP_LOCATION_LIST, json);
         }
-        List<CityMode> locations = getCityList();
-        locations.add(city);
-        Gson gson = new Gson();
-        String json = gson.toJson(locations);
-        SpUtils.getInstance().putString(Constants.SP_LOCATION_LIST, json);
-        return true;
+        return index;
+    }
+
+    /**
+     * 获取city所在列表的位置
+     * @return 所在位置，不存在则返回-1
+     */
+    private static int getCityIndex(CityMode city) {
+        List<CityMode> locations = getCityListAndLocation();
+        for (int i = 0; i < locations.size(); i++) {
+            CityMode cityMode = locations.get(i);
+            if (cityMode != null && cityMode.getCid() == city.getCid()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static boolean canAddCity(CityMode city) {

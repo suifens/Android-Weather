@@ -37,7 +37,6 @@ public class ShareFootView extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         View view = LayoutInflater.from(getContext()).inflate(R.layout.share_recycler_bottom, this, true);
-        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.white));
 
         TextView textView = view.findViewById(R.id.tv_app_name);
         textView.setText(DeviceUtils.getAppName(BaseApp.getInstance()));

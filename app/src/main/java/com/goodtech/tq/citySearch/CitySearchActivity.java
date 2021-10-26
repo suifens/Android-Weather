@@ -217,12 +217,13 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
     private void addCity(CityMode cityMode) {
         if (cityMode != null) {
-            boolean success = LocationSpHelper.addCity(cityMode);
-            if (success) {
+            int index = LocationSpHelper.addCity(cityMode);
+            if (index == -1) {
                 WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
                 helper.getBaseUrl(() -> helper.fetchWeather(cityMode));
-
                 EventBus.getDefault().post(new MessageEvent().addCity(true));
+            } else {
+                EventBus.getDefault().post(new MessageEvent().setCityIndex(index));
             }
         }
 

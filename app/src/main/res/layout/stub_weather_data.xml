@@ -64,14 +64,12 @@
     <com.goodtech.tq.fragment.view.LineTempItemView
         android:id="@+id/item_line_temp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        android:layout_height="wrap_content" />
 
     <com.goodtech.tq.fragment.view.ObservationView
         android:id="@+id/item_observation"
         android:layout_width="match_parent"
         android:layout_height="550dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginBottom="20dp"/>
 
 </LinearLayout>
