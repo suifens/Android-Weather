@@ -5,7 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.models.db.SignRecord;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * com.goodtech.tq.db
@@ -38,6 +41,7 @@ public class SignDbHelper extends BaseDbHelper {
 
     public long insert(SignRecord record) {
         if (!hadSigning(record)) {
+            EventBus.getDefault().post(new MessageEvent().needReload(true));
             return mdbHelper.insert(TABLE_NAME, makeContentValues(record));
         }
         return -1;

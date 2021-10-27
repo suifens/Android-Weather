@@ -3,6 +3,7 @@ package com.goodtech.tq.signing;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -76,6 +77,13 @@ public class SigningFragment extends BaseFragment {
         mTimeTitle.setText(am ? "今日早起" : "今日早睡");
     }
 
+    /**
+     * 恢复文案
+     */
+    protected void recoverWriter(boolean am) {
+
+    }
+
     @SuppressLint("DefaultLocale")
     public void updateData(Hourly hourly, CityMode cityMode, int continueCount) {
         if (mWeatherIcon != null) {
@@ -121,7 +129,9 @@ public class SigningFragment extends BaseFragment {
     }
 
     public void changeWriter(String title) {
-        mWriterTv.setText(title);
+        if (!TextUtils.isEmpty(title)) {
+            mWriterTv.setText(title);
+        }
     }
 
     private void configPressed() {

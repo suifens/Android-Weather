@@ -18,4 +18,10 @@ public class SigningCFragment extends SigningFragment {
         mBgImgView.setImageResource(am ? R.drawable.bg_morning_c : R.drawable.bg_night_c);
         mWriterTv.setText(am ? "希望阳光很暖\n微风不燥" : "从遇见你开始\n凛冬散尽星河长明");
     }
+
+    @Override
+    protected void recoverWriter(boolean am) {
+        super.recoverWriter(am);
+        mWriterTv.setText(am ? "希望阳光很暖\n微风不燥" : "从遇见你开始\n凛冬散尽星河长明");
+    }
 }

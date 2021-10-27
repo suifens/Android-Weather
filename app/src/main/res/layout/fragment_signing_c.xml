@@ -60,6 +60,7 @@
             android:textColor="@color/white"
             android:textSize="16dp"
             android:textStyle="bold"
+            android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="@+id/img_title"
             app:layout_constraintStart_toEndOf="@+id/img_title" />
 

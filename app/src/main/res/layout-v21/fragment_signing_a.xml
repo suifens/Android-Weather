@@ -39,9 +39,11 @@
 
         <TextView
             android:id="@+id/tv_writer"
-            android:layout_width="22dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="-1sp"
             android:text="希望阳光很暖，微风不燥"
@@ -49,6 +51,7 @@
             android:textColor="@color/white"
             android:textSize="16dp"
             android:textStyle="bold"
+            android:ems="1"
             app:layout_constraintEnd_toEndOf="@+id/btn_edit"
             app:layout_constraintStart_toStartOf="@+id/btn_edit"
             app:layout_constraintTop_toBottomOf="@+id/btn_edit" />

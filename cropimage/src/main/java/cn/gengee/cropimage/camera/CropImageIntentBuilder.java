@@ -61,7 +61,7 @@ public class CropImageIntentBuilder {
      * @since 1.0.1
      */
     public CropImageIntentBuilder(final int outputX, final int outputY, final Uri saveUri) {
-        this(DEFAULT_SCALE, DEFAULT_SCALE, outputX, outputY, saveUri);
+        this(568, 318, outputX, outputY, saveUri);
     }
 
     /**

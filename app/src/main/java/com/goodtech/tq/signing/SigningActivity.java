@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.method.TextKeyListener;
 import android.util.Log;
@@ -98,13 +99,7 @@ public class SigningActivity extends BaseShareActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if (mCurPageIndex != position) {
-                    mCurPageIndex = position;
-                    setIndicator(position % 3);
-                    changeSegmentType(position / 3 == 0);
-                    SigningFragment fragment = (SigningFragment) mFragments.get(position);
-                    fragment.updateData(mHourly, mCityMode, mContinuous);
-                }
+                onPageChange(position);
             }
         });
 
@@ -154,6 +149,13 @@ public class SigningActivity extends BaseShareActivity {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        mCameraTool.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void shareImage(Bitmap saveBitmap, ShareType shareType) {
         super.shareImage(saveBitmap, shareType);
         SignRecord record = new SignRecord();
@@ -188,12 +190,12 @@ public class SigningActivity extends BaseShareActivity {
 
         mMorningBtn.setOnClickListener(v -> {
             mViewPager.setCurrentItem(0);
-            changeSegmentType(true);
+            onPageChange(0);
         });
 
         mNightBtn.setOnClickListener(v -> {
             mViewPager.setCurrentItem(3);
-            changeSegmentType(false);
+            onPageChange(3);
         });
     }
 
@@ -241,6 +243,16 @@ public class SigningActivity extends BaseShareActivity {
     protected void setIndicator(int position) {
         if (position >= 0 && position < mRgIndicator.getChildCount()) {
             mRgIndicator.check(mRgIndicator.getChildAt(position).getId());
+        }
+    }
+
+    protected void onPageChange(int position) {
+        if (mCurPageIndex != position) {
+            mCurPageIndex = position;
+            setIndicator(position % 3);
+            changeSegmentType(position / 3 == 0);
+            SigningFragment fragment = (SigningFragment) mFragments.get(position);
+            fragment.updateData(mHourly, mCityMode, mContinuous);
         }
     }
 
@@ -404,7 +416,10 @@ public class SigningActivity extends BaseShareActivity {
         InputAlert alert = new InputAlert(this);
         alert.setTitle("编辑文字");
         alert.setFocusable(true);
-        alert.setInputType(InputType.TYPE_CLASS_TEXT);
+        if (mCurPageIndex%3 == 0) {
+            alert.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+        }
+        alert.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         TextKeyListener keyListener = new TextKeyListener(TextKeyListener.Capitalize.NONE, true);
         alert.setKeyListener(keyListener);
 

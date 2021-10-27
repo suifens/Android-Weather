@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/private_station_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +17,9 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:elevation="10dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        tools:layout_editor_absoluteX="18dp"
+        tools:layout_editor_absoluteY="16dp">
 
         <ImageView
             android:id="@+id/img_background"
@@ -29,19 +32,21 @@
             android:id="@+id/btn_edit"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="6dp"
-            android:src="@drawable/ic_edit"
-            android:background="@color/color_clear"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="12dp"
+            android:background="@color/color_clear"
+            android:padding="6dp"
+            android:src="@drawable/ic_edit"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_writer"
-            android:layout_width="22dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="-1sp"
             android:text="希望阳光很暖，微风不燥"
@@ -49,6 +54,8 @@
             android:textColor="@color/white"
             android:textSize="16dp"
             android:textStyle="bold"
+            android:ems="1"
+            app:layout_constraintBottom_toTopOf="@+id/linear_address"
             app:layout_constraintEnd_toEndOf="@+id/btn_edit"
             app:layout_constraintStart_toStartOf="@+id/btn_edit"
             app:layout_constraintTop_toBottomOf="@+id/btn_edit" />
@@ -58,21 +65,21 @@
             android:id="@+id/btn_camera"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="6dp"
+            android:background="@color/color_clear"
             android:padding="6dp"
             android:src="@drawable/ic_camera"
-            android:background="@color/color_clear"
-            android:layout_marginTop="6dp"
-            android:layout_marginStart="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/img_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_good_morning"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
+            android:src="@drawable/ic_good_morning"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_camera" />
 
@@ -81,10 +88,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.44"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintVertical_bias="0.44">
 
             <TextView
                 android:id="@+id/tv_title_continue"
@@ -94,17 +101,17 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.goodtech.tq.utils.font.AlternateBoldTextView
                 android:id="@+id/tv_continue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/white"
                 android:textSize="36dp"
-                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_title_continue"/>
+                app:layout_constraintTop_toTopOf="@+id/tv_title_continue" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -137,7 +144,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_time_now"
@@ -159,7 +166,7 @@
             android:layout_marginBottom="18dp"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" >
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:id="@+id/icon_weather"
@@ -170,9 +177,9 @@
                 android:id="@+id/tv_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
                 android:textColor="@color/white"
-                android:textSize="30dp"
-                android:layout_marginStart="6dp" />
+                android:textSize="30dp" />
 
             <com.goodtech.tq.utils.font.AlternateBoldTextView
                 android:layout_width="wrap_content"
@@ -183,6 +190,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
@@ -190,7 +198,7 @@
             android:gravity="end"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" >
+            app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
                 android:id="@+id/tv_address"

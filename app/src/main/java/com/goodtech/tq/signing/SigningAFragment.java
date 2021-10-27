@@ -19,4 +19,9 @@ public class SigningAFragment extends SigningFragment {
         mWriterTv.setText(am ? "希望阳光很暖，微风不燥" : "从遇见你开始，凛冬散尽星河长明");
     }
 
+    @Override
+    protected void recoverWriter(boolean am) {
+        super.recoverWriter(am);
+        mWriterTv.setText(am ? "希望阳光很暖，微风不燥" : "从遇见你开始，凛冬散尽星河长明");
+    }
 }
