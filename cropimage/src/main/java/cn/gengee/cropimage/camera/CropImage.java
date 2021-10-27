@@ -359,7 +359,7 @@ public class CropImage extends MonitoredActivity {
             while (true) {
                 x += 1;
                 String candidate = directory.toString()
-                        + "/" + fileName + "-" + x + ".jpg";
+                        + "/" + fileName + "-" + x + ".png";
                 boolean exists = (new File(candidate)).exists();
                 if (!exists) {
                     break;
@@ -374,7 +374,7 @@ public class CropImage extends MonitoredActivity {
                         mImage.getDateTaken(),
                         null,    // TODO this null is going to cause us to lose
                                  // the location (gps).
-                        directory.toString(), fileName + "-" + x + ".jpg",
+                        directory.toString(), fileName + "-" + x + ".png",
                         croppedImage, null,
                         degree);
 

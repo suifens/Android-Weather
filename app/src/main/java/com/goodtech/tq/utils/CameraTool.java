@@ -32,8 +32,8 @@ public class CameraTool {
     public static final int REQUEST_CODE_CAMERA = 10001;
     public static final int REQUEST_CODE_ALBUM = 10002;
     public static final int REQUEST_CODE_CROP = 10003;
-    private final String IMAGE_NAME = "tempImage.jpg";
-    private String CROPPED_IMAGE_NAME = "tempImage_cropped.jpg";
+    private final String IMAGE_NAME = "tempImage.png";
+    private String CROPPED_IMAGE_NAME = "tempImage_cropped.png";
     private final Activity mActivity;
     private int mOutputX = 400; // pixel
     private int mOutputY = 400; // pixel
@@ -126,7 +126,7 @@ public class CameraTool {
 //
 //		startActivityForResult(intent, REQUEST_CODE_CROP);
     
-        CROPPED_IMAGE_NAME = java.util.UUID.randomUUID().toString() + ".jpg";
+        CROPPED_IMAGE_NAME = java.util.UUID.randomUUID().toString() + ".png";
         startImageZoom(uri, Uri.fromFile(getImageFile(CROPPED_IMAGE_NAME)));
     }
     

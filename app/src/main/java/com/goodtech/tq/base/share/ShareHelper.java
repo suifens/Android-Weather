@@ -95,7 +95,7 @@ public class ShareHelper {
         msg.title = title;
         msg.description = des;;
         Bitmap bmp = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.ic_about_logo);
-        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 318, 568, true);
         msg.thumbData = bmpToByteArray(thumbBmp, false);
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
@@ -197,6 +197,11 @@ public class ShareHelper {
         WXImageObject wxImageObject = new WXImageObject(bitmap);
         WXMediaMessage wxMediaMessage = new WXMediaMessage();
         wxMediaMessage.mediaObject = wxImageObject;
+//
+//        //设置缩略图
+//        Bitmap thumbBmp = Bitmap.createScaledBitmap(bitmap, THUMB_SIZE, THUMB_SIZE, true);
+//        bitmap.recycle();
+//        wxMediaMessage.thumbData = bmpToByteArray(thumbBmp, true);
         
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("img");

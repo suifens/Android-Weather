@@ -674,7 +674,7 @@ public class ImageTools {
 	 * @return
 	 */
 	public static String saveBitmapToSD(Bitmap bmp) {
-		String imageName = java.util.UUID.randomUUID().toString() + ".jpg";
+		String imageName = java.util.UUID.randomUUID().toString() + ".png";
 		File file = new File(FileUtils.getDirByType(FileUtils.DIR_TYPE_IMAGE), imageName);
 		try {
 			FileOutputStream out = new FileOutputStream(file);
