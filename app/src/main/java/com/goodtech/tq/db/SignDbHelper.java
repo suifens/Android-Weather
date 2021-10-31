@@ -41,8 +41,11 @@ public class SignDbHelper extends BaseDbHelper {
 
     public long insert(SignRecord record) {
         if (!hadSigning(record)) {
-            EventBus.getDefault().post(new MessageEvent().needReload(true));
-            return mdbHelper.insert(TABLE_NAME, makeContentValues(record));
+            long insertRt = mdbHelper.insert(TABLE_NAME, makeContentValues(record));
+            if (insertRt != -1) {
+                EventBus.getDefault().post(new MessageEvent().needReload(true));
+            }
+            return insertRt;
         }
         return -1;
     }
@@ -86,7 +89,7 @@ public class SignDbHelper extends BaseDbHelper {
      */
     public boolean hadSigning(String dateDay) {
         StringBuffer sqlSb = new StringBuffer();
-        sqlSb.append("select count(" + COL_SIGN_TYPE + ") ");
+        sqlSb.append("select count(" + COL_SIGN_DAY + ") ");
         sqlSb.append("from ");
         sqlSb.append(getTableName() + " ");
         sqlSb.append("where " + COL_SIGN_DAY + " = '" + dateDay + "' ");

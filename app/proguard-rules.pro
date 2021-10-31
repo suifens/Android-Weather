@@ -53,3 +53,16 @@
   -keep class com.vivo.**{*;}
 
   -keep class com.haibin.calendarview.** { *; }
+
+# 微信 sdk 代码混淆
+-keep class com.tencent.mm.opensdk.** {
+    *;
+}
+
+-keep class com.tencent.wxop.** {
+    *;
+}
+
+-keep class com.tencent.mm.sdk.** {
+    *;
+}

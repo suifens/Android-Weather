@@ -99,7 +99,9 @@ public class SigningActivity extends BaseShareActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                onPageChange(position);
+                if (mCurPageIndex != position) {
+                    onPageChange(position);
+                }
             }
         });
 
@@ -114,11 +116,18 @@ public class SigningActivity extends BaseShareActivity {
         configCameraTool();
 
         mDbHelper = new SignDbHelper(BaseApp.getInstance());
+        SignRecord record = new SignRecord();
+        long current = System.currentTimeMillis();
+        record.setDateDay(com.goodtech.tq.utils.TimeUtils.longToString(current, "yyyy-MM-dd"));
+        record.setCreateTime(current);
+        long insert = mDbHelper.insert(record);
+        Log.e("TAG", "shareImage: insert = " + insert);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("TAG", "onResume: ");
         TipHelper.dismissProgressDialog();
         mContinuous = mDbHelper.queryContinuousCount();
 
@@ -127,7 +136,7 @@ public class SigningActivity extends BaseShareActivity {
             //  segment 初始化
 //            changeSegmentType(TimeUtils.isAm());
             changeSegmentType(true);
-            
+
             mHandler.postDelayed(() -> {
                 //  持续天数
                 for (Fragment fragment : mFragments) {
@@ -158,15 +167,6 @@ public class SigningActivity extends BaseShareActivity {
     @Override
     protected void shareImage(Bitmap saveBitmap, ShareType shareType) {
         super.shareImage(saveBitmap, shareType);
-        SignRecord record = new SignRecord();
-        long current = System.currentTimeMillis();
-        record.setDateDay(com.goodtech.tq.utils.TimeUtils.longToString(current, "yyyy-MM-dd"));
-        record.setSignType(mCurPageIndex/3 == 0 ? "morning" : "night");
-        record.setCreateTime(current);
-
-        SignDbHelper dbHelper = new SignDbHelper(this);
-        long insert = dbHelper.insert(record);
-        Log.e("TAG", "shareImage: insert = " + insert);
     }
 
     /**
@@ -190,12 +190,12 @@ public class SigningActivity extends BaseShareActivity {
 
         mMorningBtn.setOnClickListener(v -> {
             mViewPager.setCurrentItem(0);
-            onPageChange(0);
+            mHandler.postDelayed(() -> onPageChange(0), 500);
         });
 
         mNightBtn.setOnClickListener(v -> {
             mViewPager.setCurrentItem(3);
-            onPageChange(3);
+            mHandler.postDelayed(() -> onPageChange(3), 500);
         });
     }
 
@@ -247,13 +247,11 @@ public class SigningActivity extends BaseShareActivity {
     }
 
     protected void onPageChange(int position) {
-        if (mCurPageIndex != position) {
-            mCurPageIndex = position;
-            setIndicator(position % 3);
-            changeSegmentType(position / 3 == 0);
-            SigningFragment fragment = (SigningFragment) mFragments.get(position);
-            fragment.updateData(mHourly, mCityMode, mContinuous);
-        }
+        mCurPageIndex = position;
+        setIndicator(position % 3);
+        changeSegmentType(position / 3 == 0);
+        SigningFragment fragment = (SigningFragment) mFragments.get(position);
+        fragment.updateData(mHourly, mCityMode, mContinuous);
     }
 
     /**
@@ -341,7 +339,7 @@ public class SigningActivity extends BaseShareActivity {
             }
         }
         return bigBitmap;
-}
+    }
 
     /**
      * 显示头像更好弹窗
@@ -369,9 +367,9 @@ public class SigningActivity extends BaseShareActivity {
         public void afterCrop(final File imgFile) {
 
             mHandler.post(() -> {
-                    SigningFragment fragment = (SigningFragment) mFragments.get(mCurPageIndex);
-                    String uri = String.format("file://%s", imgFile.getAbsolutePath());
-                    fragment.changeBgImage(Uri.parse(uri));
+                SigningFragment fragment = (SigningFragment) mFragments.get(mCurPageIndex);
+                String uri = String.format("file://%s", imgFile.getAbsolutePath());
+                fragment.changeBgImage(Uri.parse(uri));
             });
         }
     };
@@ -416,10 +414,10 @@ public class SigningActivity extends BaseShareActivity {
         InputAlert alert = new InputAlert(this);
         alert.setTitle("编辑文字");
         alert.setFocusable(true);
-        if (mCurPageIndex%3 == 0) {
+        if (mCurPageIndex % 3 == 0) {
             alert.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
         }
-        alert.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        alert.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         TextKeyListener keyListener = new TextKeyListener(TextKeyListener.Capitalize.NONE, true);
         alert.setKeyListener(keyListener);
 

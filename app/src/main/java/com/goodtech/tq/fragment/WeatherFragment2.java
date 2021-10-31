@@ -220,6 +220,9 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
 
     public void changeWeather(WeatherModel model, CityMode cityMode, boolean signed) {
         this.mSigned = signed;
+        if (mCurrentView != null) {
+            mCurrentView.setSignType(signed);
+        }
 
         if (mWeatherModel != null
                 && model != null) {

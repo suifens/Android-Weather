@@ -59,6 +59,8 @@ public class BaseApp extends Application {
         MMKV.initialize(this);
         //  Activity生命周期监听
         registerLifecycle();
+
+        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
 
     public void configLocation() {
@@ -68,10 +70,12 @@ public class BaseApp extends Application {
         }
     }
 
+//    public void configDB() {
+//        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
+//    }
+
     @SuppressLint("CheckResult")
     public void startUsingApp(Activity activity, boolean needPermission) {
-
-        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
 
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
