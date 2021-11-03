@@ -15,7 +15,8 @@ public class SigningAFragment extends SigningFragment {
      */
     protected void configData(boolean am) {
         super.configData(am);
-        mBgImgView.setImageResource(am ? R.drawable.bg_morning_a : R.drawable.bg_night_a);
+        mPlaceholder = am ? R.drawable.bg_morning_a : R.drawable.bg_night_a;
+        mBgImgView.setImageResource(mPlaceholder);
         mWriterTv.setText(am ? "希望阳光很暖，微风不燥" : "从遇见你开始，凛冬散尽星河长明");
     }
 

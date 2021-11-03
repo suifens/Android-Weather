@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Size;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -11,12 +12,16 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.BaseFragment;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
+
+import java.io.File;
 
 public class SigningFragment extends BaseFragment {
 
@@ -35,6 +40,7 @@ public class SigningFragment extends BaseFragment {
     protected TextView mDayTv;    //  日期
     protected SigningListener mListener;
     protected boolean isAM; //是否早起
+    protected int mPlaceholder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,8 +130,21 @@ public class SigningFragment extends BaseFragment {
         this.mListener = listener;
     }
     
-    public void changeBgImage(Uri uri) {
-        mBgImgView.setImageURI(uri);
+//    public void changeBgImage(Uri uri) {
+//        Glide.with(this)
+//                .load(uri)
+//                .placeholder(mPlaceholder)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(mBgImgView);
+////        mBgImgView.setImageURI(uri);
+//    }
+
+    public void changeBgImage(File file) {
+        Glide.with(this)
+                .load(file)
+                .placeholder(mPlaceholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(mBgImgView);
     }
 
     public void changeWriter(String title) {

@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.TextKeyListener;
 import android.util.Log;
 import android.view.View;
@@ -34,15 +35,17 @@ import com.goodtech.tq.base.share.ShareType;
 import com.goodtech.tq.db.NewsDbHelper;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
+import com.goodtech.tq.helpers.picture.PictureSelectHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.db.SignRecord;
-import com.goodtech.tq.utils.CameraTool;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ShotUtil;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.CommonBottomSheet;
 import com.goodtech.tq.views.InputAlert;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.qq.e.comm.constants.Sig;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -113,7 +116,6 @@ public class SigningActivity extends BaseShareActivity {
         setPagerViews(fragments);
 
         configClickListener();
-        configCameraTool();
 
         mDbHelper = new SignDbHelper(BaseApp.getInstance());
         SignRecord record = new SignRecord();
@@ -155,13 +157,6 @@ public class SigningActivity extends BaseShareActivity {
                 }
             }, 100);
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        mCameraTool.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -342,35 +337,25 @@ public class SigningActivity extends BaseShareActivity {
     }
 
     /**
-     * 显示头像更好弹窗
-     */
-    private CameraTool mCameraTool;
-
-    private void configCameraTool() {
-        mCameraTool = new CameraTool(this);
-        mCameraTool.setCameraToolCallback(mCameraToolCallback);
-    }
-
-    /**
      * 照相机回调
      */
-    private final CameraTool.CameraToolCallback mCameraToolCallback = new CameraTool.CameraToolCallback() {
+    private OnResultCallbackListener<LocalMedia> mPictureCallback = new OnResultCallbackListener<LocalMedia>() {
         @Override
-        public void afterCamera(File imgFile) {
-        }
-
-        @Override
-        public void afterAlbum(File imgFile) {
-        }
-
-        @Override
-        public void afterCrop(final File imgFile) {
-
+        public void onResult(List<LocalMedia> result) {
             mHandler.post(() -> {
-                SigningFragment fragment = (SigningFragment) mFragments.get(mCurPageIndex);
-                String uri = String.format("file://%s", imgFile.getAbsolutePath());
-                fragment.changeBgImage(Uri.parse(uri));
+                if (result.size() > 0) {
+                    LocalMedia image = result.get(0);
+                    if (!TextUtils.isEmpty(image.getCutPath())) {
+                        SigningFragment fragment = (SigningFragment) mFragments.get(mCurPageIndex);
+                        fragment.changeBgImage(new File(image.getCutPath()));
+                    }
+                }
             });
+        }
+
+        @Override
+        public void onCancel() {
+
         }
     };
 
@@ -391,14 +376,14 @@ public class SigningActivity extends BaseShareActivity {
                 mRxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         .subscribe(granted -> {
                             if (granted) {
-                                mCameraTool.startCamera();
+                                PictureSelectHelper.showCamera(SigningActivity.this, mPictureCallback);
                             }
                         });
             } else {
                 mRxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         .subscribe(granted -> {
                             if (granted) {
-                                mCameraTool.startAlbum();
+                                PictureSelectHelper.showGallery(SigningActivity.this, mPictureCallback);
                             }
                         });
             }
