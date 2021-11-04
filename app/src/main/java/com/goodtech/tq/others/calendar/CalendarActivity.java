@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
@@ -27,6 +28,7 @@ import com.goodtech.tq.utils.TimeUtils;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
+import com.umeng.analytics.MobclickAgent;
 
 public class CalendarActivity extends BaseActivity implements
         CalendarView.OnCalendarSelectListener,
@@ -75,6 +77,7 @@ public class CalendarActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart("Ac_Calendar");
         if (firstLoad) {
             firstLoad = false;
             mHandler.postDelayed(() -> {
@@ -85,6 +88,12 @@ public class CalendarActivity extends BaseActivity implements
 
             }, 200);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("Ac_Calendar");
     }
 
     /**

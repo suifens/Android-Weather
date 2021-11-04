@@ -26,6 +26,7 @@ import com.qq.e.comm.managers.GDTADManager;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.mmkv.MMKV;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
 public class BaseApp extends Application {
@@ -97,10 +98,9 @@ public class BaseApp extends Application {
                     if (permission.granted) {
                         switch (permission.name) {
                             case Manifest.permission.READ_PHONE_STATE:
-                            case Manifest.permission.ACCESS_WIFI_STATE: {
+                            case Manifest.permission.ACCESS_WIFI_STATE:
                                 //  配置 UM_APP_ID , 标识
-                                UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
-                            }
+                                configUM();
                             break;
                             case Manifest.permission.ACCESS_FINE_LOCATION:
                             case Manifest.permission.ACCESS_COARSE_LOCATION:
@@ -117,12 +117,22 @@ public class BaseApp extends Application {
                     }
                 });
             } else {
-                //  配置 UM_APP_ID , 标识
-                UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
+                configUM();
                 //  定位
                 configLocation();
             }
         }
+    }
+
+
+    /**
+     * 友盟配置
+     */
+    private void configUM() {
+        //  配置 UM_APP_ID , 标识
+        UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
+        //手动采集选择
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
     }
 
     public int appCount = 0;

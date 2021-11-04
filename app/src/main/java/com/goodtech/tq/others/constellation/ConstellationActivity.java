@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
+import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint("NonConstantResourceId")
 public class ConstellationActivity extends BaseActivity implements View.OnClickListener {
@@ -31,6 +32,18 @@ public class ConstellationActivity extends BaseActivity implements View.OnClickL
         findViewById(R.id.constellation_10).setOnClickListener(this);
         findViewById(R.id.constellation_11).setOnClickListener(this);
         findViewById(R.id.constellation_12).setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("Ac_Constellation");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("Ac_Constellation");
     }
 
     @Override

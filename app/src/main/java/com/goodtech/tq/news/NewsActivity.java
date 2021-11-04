@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.google.android.material.tabs.TabLayout;
+import com.umeng.analytics.MobclickAgent;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -91,5 +92,17 @@ public class NewsActivity extends BaseActivity {
             //TabLayout要与ViewPager关联显示
             tabLayout.setupWithViewPager(viewPager);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("Ac_News");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("Ac_News");
     }
 }

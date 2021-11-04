@@ -15,6 +15,7 @@ import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.others.airQuality.view.AirLifeView;
 import com.goodtech.tq.views.CircleProgressView;
+import com.umeng.analytics.MobclickAgent;
 
 public class AirQualityActivity extends BaseActivity {
 
@@ -89,6 +90,18 @@ public class AirQualityActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         configUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart("Ac_AirQuality");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("Ac_AirQuality");
     }
 
     @SuppressLint("DefaultLocale")

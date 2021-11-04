@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.utils.TipHelper;
+import com.umeng.analytics.MobclickAgent;
 
 import java.lang.reflect.Method;
 
@@ -54,6 +55,7 @@ public class TyphoonActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart("Ac_Typhoon");
         if (!TextUtils.isEmpty(mUrl)) {
             if (mWebView.getUrl() != null) {
                 mWebView.reload();
@@ -62,6 +64,12 @@ public class TyphoonActivity extends BaseActivity {
                 mWebView.loadUrl(mUrl);
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd("Ac_Typhoon");
     }
 
     @Override

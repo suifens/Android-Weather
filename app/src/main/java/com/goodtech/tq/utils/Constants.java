@@ -35,5 +35,4 @@ public class Constants {
 
     public static final String QQ_APP_ID = "1106159384";
 
-
 }
