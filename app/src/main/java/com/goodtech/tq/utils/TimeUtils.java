@@ -109,6 +109,23 @@ public class TimeUtils {
         return System.currentTimeMillis() - locationTime > 5 * 60 * 1000;
     }
 
+    /**
+     * 之后是否还有假期
+     */
+    public static boolean afterHoliday(long timeMills) {
+        int month = Integer.parseInt(longToString(timeMills, "MM"));
+        int day = Integer.parseInt(longToString(timeMills, "dd"));
+        return month >= 10 && day > 7;
+    }
+
+    /**
+     * 获取年份
+     */
+    public static int getYear(long timeMills) {
+        String year = longToString(timeMills, "yyyy");
+        return Integer.parseInt(year);
+    }
+
     public static String getWeek(String time) {
         String Week = "";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

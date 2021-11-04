@@ -81,9 +81,25 @@ public class CalendarActivity extends BaseActivity implements
                 ((ViewStub) mDayDetailView).inflate();
 
                 getDetails(TimeUtils.longToString(System.currentTimeMillis(), "yyyy-M-d"));
-                getHolidays(TimeUtils.longToString(System.currentTimeMillis(), "yyyy"));
+                updateHoliday(System.currentTimeMillis());
 
             }, 200);
+        }
+    }
+
+    /**
+     * 更新假期
+     */
+    protected void updateHoliday(long timeMillis) {
+        int year = TimeUtils.getYear(timeMillis);
+
+        ((TextView) findViewById(R.id.tv_year)).setText(String.valueOf(year));
+
+        if (TimeUtils.afterHoliday(timeMillis)) {
+            //  之后无假期，加载下一年的假期
+            getHolidays(String.valueOf(year + 1));
+        } else {
+            getHolidays(String.valueOf(year));
         }
     }
 
@@ -147,8 +163,7 @@ public class CalendarActivity extends BaseActivity implements
         mTextYearMonth.setVisibility(View.VISIBLE);
         mTextYearMonth.setText(calendar.getYear() + "年" + calendar.getMonth() + "月");
         if (mYear != calendar.getYear()) {
-            getHolidays("" + calendar.getYear());
-            ((TextView) findViewById(R.id.tv_year)).setText(String.valueOf(calendar.getYear()));
+            updateHoliday(calendar.getTimeInMillis());
         }
         mYear = calendar.getYear();
         mMonth = calendar.getMonth();
