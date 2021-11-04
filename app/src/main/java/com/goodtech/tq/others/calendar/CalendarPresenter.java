@@ -36,11 +36,9 @@ public class CalendarPresenter {
     }
 
     public DayDetail mDayDetail;
-
     public List<Holiday> mHolidayList;
-
+    public String mHolidayYear; //  加载假期的年份
     private final Map<String, DayDetail> mDayDetails = new HashMap<>();
-
     private final Map<String, List<Holiday>> mHolidayMap = new HashMap<>();
 
     public void getDayDetails(String day, CompletionListener callback) {
@@ -83,7 +81,7 @@ public class CalendarPresenter {
     }
 
     public void getHolidays(String year, CompletionListener callback) {
-
+        mHolidayYear = year;
         if (mHolidayMap.containsKey(year)) {
             mHolidayList = mHolidayMap.get(year);
             if (callback != null) {

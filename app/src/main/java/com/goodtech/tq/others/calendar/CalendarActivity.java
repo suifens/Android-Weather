@@ -92,15 +92,18 @@ public class CalendarActivity extends BaseActivity implements
      */
     protected void updateHoliday(long timeMillis) {
         int year = TimeUtils.getYear(timeMillis);
-
-        ((TextView) findViewById(R.id.tv_year)).setText(String.valueOf(year));
-
         if (TimeUtils.afterHoliday(timeMillis)) {
             //  之后无假期，加载下一年的假期
-            getHolidays(String.valueOf(year + 1));
-        } else {
-            getHolidays(String.valueOf(year));
+            year += 1;
         }
+
+        String yearStr = String.valueOf(year);
+        if (!TextUtils.isEmpty(mPresenter.mHolidayYear) && mPresenter.mHolidayYear.equals(yearStr)) {
+            return;
+        }
+
+        ((TextView) findViewById(R.id.tv_year)).setText(yearStr);
+        getHolidays(yearStr);
     }
 
     /**
@@ -162,9 +165,7 @@ public class CalendarActivity extends BaseActivity implements
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
         mTextYearMonth.setVisibility(View.VISIBLE);
         mTextYearMonth.setText(calendar.getYear() + "年" + calendar.getMonth() + "月");
-        if (mYear != calendar.getYear()) {
-            updateHoliday(calendar.getTimeInMillis());
-        }
+        updateHoliday(calendar.getTimeInMillis());
         mYear = calendar.getYear();
         mMonth = calendar.getMonth();
         mDay = calendar.getDay();

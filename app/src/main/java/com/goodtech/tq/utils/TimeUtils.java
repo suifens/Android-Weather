@@ -114,8 +114,12 @@ public class TimeUtils {
      */
     public static boolean afterHoliday(long timeMills) {
         int month = Integer.parseInt(longToString(timeMills, "MM"));
-        int day = Integer.parseInt(longToString(timeMills, "dd"));
-        return month >= 10 && day > 7;
+        if (month == 10) {
+            int day = Integer.parseInt(longToString(timeMills, "dd"));
+            return day > 7;
+        } else {
+            return month > 10;
+        }
     }
 
     /**
