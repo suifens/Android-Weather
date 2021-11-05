@@ -154,6 +154,11 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
         public void onSignIn() {
 
         }
+
+        @Override
+        public void onOutbreakTravel() {
+
+        }
     };
 
     @SuppressLint("NotifyDataSetChanged")

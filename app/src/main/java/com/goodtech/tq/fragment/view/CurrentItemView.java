@@ -73,6 +73,13 @@ public class CurrentItemView extends ConstraintLayout {
                 mListener.onSignIn();
             }
         });
+        //  出行
+        view.findViewById(R.id.btn_outbreak).setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onOutbreakTravel();
+            }
+        });
+
         mSignTipV = view.findViewById(R.id.view_sign_tip);
     }
 

@@ -28,6 +28,7 @@ import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.others.constellation.ConstellationActivity;
+import com.goodtech.tq.others.outbreak.OutbreakActivity;
 import com.goodtech.tq.others.taifeng.TyphoonActivity;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
@@ -197,6 +198,14 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         public void onSignIn() {
             if (getActivity() != null) {
                 SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0);
+            }
+        }
+
+        @Override
+        public void onOutbreakTravel() {
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), OutbreakActivity.class);
+                getActivity().startActivity(intent);
             }
         }
     };

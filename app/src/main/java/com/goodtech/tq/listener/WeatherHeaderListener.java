@@ -13,4 +13,6 @@ public interface WeatherHeaderListener {
     void onNews();
     //  点击签到
     void onSignIn();
+    //  疫情出行
+    void onOutbreakTravel();
 }
