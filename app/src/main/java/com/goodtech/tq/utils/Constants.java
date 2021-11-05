@@ -8,7 +8,7 @@ public class Constants {
     public static final String APP_ID = "1106354620"; //应用ID
     public static final String SPLASH_POS_ID = "9000928561858848";  //广告id
     public static final String BANNER_POS_ID = "9001366014022230";  //banner id
-    public static final String EXPRESS_POS_ID = "3091019114002285";  //动态信息流 id
+    public static final String EXPRESS_POS_ID = "9052754449381091";  //动态信息流 id
     public static final String NEWS_POS_ID = "7081917104907407";  //上文下图信息流 id
 
     public static final String UM_APP_ID = "595a3b236e27a468630021e8";
