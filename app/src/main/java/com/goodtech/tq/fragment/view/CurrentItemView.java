@@ -146,7 +146,7 @@ public class CurrentItemView extends ConstraintLayout {
      * 设置签到状态
      * @param signedIn 是否已签到
      */
-    public void setSignType(boolean signedIn) {
+    public void setSignedIn(boolean signedIn) {
         if (signedIn) {
             mSignTipV.setVisibility(View.GONE);
         } else {

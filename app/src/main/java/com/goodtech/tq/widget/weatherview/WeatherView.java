@@ -449,42 +449,44 @@ public class WeatherView extends HorizontalScrollView {
         int max = getMaxTemp(list);
         int min = getMinTemp(list);
         removeAllViews();
-        LinearLayout llRoot = new LinearLayout(getContext());
-        llRoot.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        llRoot.setOrientation(LinearLayout.HORIZONTAL);
-        for (int i = 0; i < list.size(); i++) {
-            Daily model = list.get(i);
-            final WeatherItemView itemView = new WeatherItemView(getContext());
-            itemView.setMaxTemp(max);
-            itemView.setMinTemp(min);
-            itemView.setDate(TimeUtils.longToString(model.fcst_valid * 1000, "MM/dd"));
-            itemView.setWeek(dayString(model.fcst_valid * 1000, model.dow));
+        if (list != null) {
+            LinearLayout llRoot = new LinearLayout(getContext());
+            llRoot.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            llRoot.setOrientation(LinearLayout.HORIZONTAL);
+            for (int i = 0; i < list.size(); i++) {
+                Daily model = list.get(i);
+                final WeatherItemView itemView = new WeatherItemView(getContext());
+                itemView.setMaxTemp(max);
+                itemView.setMinTemp(min);
+                itemView.setDate(TimeUtils.longToString(model.fcst_valid * 1000, "MM/dd"));
+                itemView.setWeek(dayString(model.fcst_valid * 1000, model.dow));
 
-            itemView.setDayTemp(model.metric.maxTemp);
-            if (model.dayPart != null) {
-                itemView.setDayWeather(model.dayPart.phraseChar);
-                itemView.setDayImg(ImageUtils.weatherImageRes(model.dayPart.iconCd));
-            }
-            itemView.setNightTemp(model.metric.minTemp);
-            if (model.nightPart != null) {
-                itemView.setNightWeather(model.nightPart.phraseChar);
-                itemView.setNightImg(ImageUtils.weatherImageRes(model.nightPart.iconCd));
-            }
-           // itemView.setAirLevel(model.getAirLevel());
-            itemView.setLayoutParams(new LinearLayout.LayoutParams(screenWidth / columnNumber, ViewGroup.LayoutParams.WRAP_CONTENT));
-            itemView.setClickable(true);
-            final int finalI = i;
-            itemView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (weatherItemClickListener != null) {
-                        weatherItemClickListener.onItemClick(itemView, finalI, list.get(finalI));
-                    }
+                itemView.setDayTemp(model.metric.maxTemp);
+                if (model.dayPart != null) {
+                    itemView.setDayWeather(model.dayPart.phraseChar);
+                    itemView.setDayImg(ImageUtils.weatherImageRes(model.dayPart.iconCd));
                 }
-            });
-            llRoot.addView(itemView);
+                itemView.setNightTemp(model.metric.minTemp);
+                if (model.nightPart != null) {
+                    itemView.setNightWeather(model.nightPart.phraseChar);
+                    itemView.setNightImg(ImageUtils.weatherImageRes(model.nightPart.iconCd));
+                }
+                // itemView.setAirLevel(model.getAirLevel());
+                itemView.setLayoutParams(new LinearLayout.LayoutParams(screenWidth / columnNumber, ViewGroup.LayoutParams.WRAP_CONTENT));
+                itemView.setClickable(true);
+                final int finalI = i;
+                itemView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (weatherItemClickListener != null) {
+                            weatherItemClickListener.onItemClick(itemView, finalI, list.get(finalI));
+                        }
+                    }
+                });
+                llRoot.addView(itemView);
+            }
+            addView(llRoot);
         }
-        addView(llRoot);
         invalidate();
     }
 

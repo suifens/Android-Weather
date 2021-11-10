@@ -78,6 +78,7 @@ public class CalendarActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
         MobclickAgent.onPageStart("Ac_Calendar");
+        MobclickAgent.onResume(this);
         if (firstLoad) {
             firstLoad = false;
             mHandler.postDelayed(() -> {
@@ -94,6 +95,7 @@ public class CalendarActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd("Ac_Calendar");
+        MobclickAgent.onPause(this);
     }
 
     /**

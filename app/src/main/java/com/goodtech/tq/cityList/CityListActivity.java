@@ -324,7 +324,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         }
         // 不需要传递tags使用下面构造函数
         // this.bv = new UnifiedBannerView(this, Constants.APPID, posId, this);
-        bannerContainer.addView(bv, getUnifiedBannerLayoutParams());
+//        bannerContainer.addView(bv, getUnifiedBannerLayoutParams());
+        bannerContainer.addView(bv);
         return this.bv;
     }
 

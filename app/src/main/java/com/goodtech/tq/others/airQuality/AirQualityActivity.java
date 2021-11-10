@@ -96,12 +96,14 @@ public class AirQualityActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onPageStart("Ac_AirQuality");
+        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd("Ac_AirQuality");
+        MobclickAgent.onPause(this);
     }
 
     @SuppressLint("DefaultLocale")

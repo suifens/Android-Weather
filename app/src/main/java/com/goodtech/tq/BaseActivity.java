@@ -85,7 +85,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void checkOrStartLocation() {
-        BaseApp.getInstance().configLocation();
+        BaseApp.getInstance().configLocation(this, false);
         if (!isLocationEnabled()) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);

@@ -113,6 +113,10 @@ public class SigningFragment extends BaseFragment {
 
             //  连续天数
             mContinueCountTv.setText(String.valueOf(continueCount));
+        } else {
+            mHandler.postDelayed(() -> {
+                updateData(hourly, cityMode, continueCount);
+            }, 200);
         }
     }
 

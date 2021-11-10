@@ -230,7 +230,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     public void changeWeather(WeatherModel model, CityMode cityMode, boolean signed) {
         this.mSigned = signed;
         if (mCurrentView != null) {
-            mCurrentView.setSignType(signed);
+            mCurrentView.setSignedIn(signed);
         }
 
         if (mWeatherModel != null
@@ -265,7 +265,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
                 mObservationView.setVisibility(View.VISIBLE);
 
                 mCurrentView.setData(mWeatherModel);
-                mCurrentView.setSignType(signed);
+                mCurrentView.setSignedIn(signed);
                 mRecentView.setData(mWeatherModel);
                 if (mWeatherModel.hourlies != null) {
                     mHoursView.setHourlies(mWeatherModel);
@@ -329,12 +329,18 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     private NativeExpressAD mADManager;
     private NativeExpressADView mAdView;
 
+    public void reloadNativeAD() {
+        if (mADManager != null) {
+            mADManager.loadAD(1);
+        }
+    }
+
     private void initNativeExpressAD() {
         if (mADManager == null) {
             ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT); // 消息流中用AUTO_HEIGHT
             mADManager = new NativeExpressAD(getContext(), adSize, Constants.EXPRESS_POS_ID, this);
-            mADManager.loadAD(1);
         }
+        mADManager.loadAD(1);
     }
 
     @Override
@@ -377,6 +383,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         Log.i(TAG, "onADClosed: " + adView.toString());
         if (mAd2View != null) {
             mAd2View.setAdView(adView);
+            mAd2View.setVisibility(View.GONE);
         }
     }
 
@@ -399,9 +406,11 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     public void onNoAD(AdError error) {
         Log.i(TAG, String.format("onNoAD: error code : %d, error msg %s", error.getErrorCode(),
                 error.getErrorMsg()));
-        if (mReloadCount <= 3 && mADManager != null) {
+        if (mReloadCount <= 2 && mADManager != null) {
             mReloadCount++;
             mADManager.loadAD(1);
         }
+
+        mAd2View.setVisibility(View.GONE);
     }
 }

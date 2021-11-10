@@ -38,12 +38,14 @@ public class ConstellationActivity extends BaseActivity implements View.OnClickL
     protected void onResume() {
         super.onResume();
         MobclickAgent.onPageStart("Ac_Constellation");
+        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd("Ac_Constellation");
+        MobclickAgent.onPause(this);
     }
 
     @Override

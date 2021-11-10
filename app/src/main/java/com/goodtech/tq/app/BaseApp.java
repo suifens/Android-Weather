@@ -17,11 +17,14 @@ import com.goodtech.tq.MyActivityManager;
 import com.goodtech.tq.SettingActivity;
 import com.goodtech.tq.SplashADActivity;
 import com.goodtech.tq.SplashActivity;
+import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.TipHelper;
 import com.qq.e.comm.managers.GDTADManager;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -64,10 +67,15 @@ public class BaseApp extends Application {
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
 
-    public void configLocation() {
+    public void configLocation(Activity activity, boolean getLocation) {
         if (locationService == null) {
             //  初始化定位sdk，建议在Application中创建
             locationService = new LocationService(getApplicationContext());
+
+            if (getLocation) {
+                TipHelper.showProgressDialog(activity, true);
+                LocationHelper.getInstance().startWithDelay(activity);
+            }
         }
     }
 
@@ -76,7 +84,7 @@ public class BaseApp extends Application {
 //    }
 
     @SuppressLint("CheckResult")
-    public void startUsingApp(Activity activity, boolean needPermission) {
+    public void startUsingApp(Activity activity, boolean needPermission, boolean getLocation) {
 
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
@@ -104,7 +112,7 @@ public class BaseApp extends Application {
                             break;
                             case Manifest.permission.ACCESS_FINE_LOCATION:
                             case Manifest.permission.ACCESS_COARSE_LOCATION:
-                                configLocation();
+                                configLocation(activity, getLocation);
                                 break;
                         }
                     } else {
@@ -119,7 +127,7 @@ public class BaseApp extends Application {
             } else {
                 configUM();
                 //  定位
-                configLocation();
+                configLocation(activity, getLocation);
             }
         }
     }

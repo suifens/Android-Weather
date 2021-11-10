@@ -56,6 +56,7 @@ public class TyphoonActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onPageStart("Ac_Typhoon");
+        MobclickAgent.onResume(this);
         if (!TextUtils.isEmpty(mUrl)) {
             if (mWebView.getUrl() != null) {
                 mWebView.reload();
@@ -70,6 +71,7 @@ public class TyphoonActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd("Ac_Typhoon");
+        MobclickAgent.onPause(this);
     }
 
     @Override

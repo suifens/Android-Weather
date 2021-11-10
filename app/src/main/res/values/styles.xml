@@ -2,6 +2,7 @@
 
     <style name="SplashActivityTheme" parent="android:Theme.NoTitleBar.Fullscreen">
         <!-- Customize your theme here. -->
+        <item name="android:fitsSystemWindows">false</item>
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 

@@ -76,7 +76,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@+id/private_station_bar"
-        app:layout_constraintBottom_toTopOf="@+id/layout_bottom">
+        app:layout_constraintBottom_toTopOf="@+id/bannerContainer">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_city"

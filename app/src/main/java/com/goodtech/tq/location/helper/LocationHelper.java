@@ -1,5 +1,6 @@
 package com.goodtech.tq.location.helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -55,6 +56,7 @@ public class LocationHelper {
         }
         locationService = BaseApp.getInstance().locationService;
         if (locationService != null) {
+            TipHelper.showProgressDialog((Activity) context);
             locationService.registerListener(mListener);
             LocationService.setLocationOption(locationService.getDefaultLocationClientOption());
             locationService.start();
@@ -65,6 +67,7 @@ public class LocationHelper {
     public void stop() {
         removeTicker();
         locationService = BaseApp.getInstance().locationService;
+        TipHelper.dismissProgressDialog();
         if (locationService != null) {
             locationService.unregisterListener(mListener); //注销掉监听
             locationService.stop(); //停止定位服务

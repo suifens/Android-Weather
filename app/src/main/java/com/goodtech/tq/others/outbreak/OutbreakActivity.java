@@ -56,6 +56,7 @@ public class OutbreakActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onPageStart("Ac_Outbreak");
+        MobclickAgent.onResume(this);
         if (!TextUtils.isEmpty(mUrl)) {
             if (mWebView.getUrl() != null) {
                 mWebView.reload();
@@ -70,6 +71,7 @@ public class OutbreakActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd("Ac_Outbreak");
+        MobclickAgent.onPause(this);
     }
 
     @Override

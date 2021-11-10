@@ -130,6 +130,28 @@ public class TimeUtils {
         return Integer.parseInt(year);
     }
 
+    /**
+     * 获取某天的00点
+     */
+    public static long getZoneTime(long timeMillis) {
+        String day = longToString(timeMillis, "yyyy-MM-dd");
+        return longWithDate(day, "yyyy-MM-dd");
+    }
+
+    /**
+     * 是否为白天时间 [4:00 ~ 18:00)
+     */
+    public static boolean isDaytime(long timeMillis) {
+       long zoneTime = getZoneTime(timeMillis);
+       long startTime = zoneTime + 4 * getHourMillis();
+       long endTime = zoneTime + 17 * getHourMillis();
+       return timeMillis >= startTime && timeMillis < endTime;
+    }
+
+    public static long getHourMillis() {
+        return 60 * 60 * 1000;
+    }
+
     public static String getWeek(String time) {
         String Week = "";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

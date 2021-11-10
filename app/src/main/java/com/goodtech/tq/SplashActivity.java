@@ -34,7 +34,7 @@ public class SplashActivity extends Activity {
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
             //  注册
-            BaseApp.getInstance().startUsingApp(this, true);
+            BaseApp.getInstance().startUsingApp(this, true, false);
 
             SpUtils.getInstance().remove(Constants.TIME_LOCATION);
             SpUtils.getInstance().remove(Constants.TIME_WEATHER);

@@ -373,6 +373,7 @@ public class MainActivity extends BaseActivity {
                 if (mFragmentList.size() > position) {
                     WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(position);
                     fragment.changeWeather(weatherModel, cityMode, mSigned);
+                    fragment.reloadNativeAD();
                 }
             }
         }

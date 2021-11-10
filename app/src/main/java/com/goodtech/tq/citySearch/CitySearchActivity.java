@@ -1,6 +1,5 @@
 package com.goodtech.tq.citySearch;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -77,41 +76,23 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "onResume: " + System.currentTimeMillis());
-//        if (isStart) {
-//            if (mFirstLoad) {
-//                mFirstLoad = false;
-//                mHandler.postDelayed(() -> {
-//
-//                    MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
-//                                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true));
-//                    alert.setCancelListener(((dialog, which)
-//                            -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false)));
-//                    alert.show();
-//
-//                }, 100);
-//            } else {
-//                if (!checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-//                        && !checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-//                    //  同意定位
-//                    checkOrStartLocation();
-//                }
-//            }
-//        }
     }
 
     private void toGetLocation() {
         if (isStart) {
             MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
-                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true));
+                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true, true));
             alert.setCancelListener(((dialog, which)
-                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false)));
+                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false, false)));
             alert.show();
             isStart = false;
             return;
         }
         if (checkPermission()) {
             MessageAlert alert = new MessageAlert(CitySearchActivity.this,
-                    (dialog, which) -> openLocationPermission(false));
+                    (dialog, which) -> {
+                openLocationPermission(false);
+                    });
             if (!isFinishing()) {
                 alert.show();
             }
@@ -192,11 +173,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (event.isSuccessLocation()) {
             mHandler.post(() -> mRecommendHeaderView.updateLocation());
 
-            if (isStart && LocationSpHelper.getLocation() != null) {
+            if (LocationSpHelper.getLocation() != null) {
                 if (!CitySearchActivity.this.isFinishing()) {
                     TipHelper.showProgressDialog(this);
                 }
-                isStart = false;
                 //  能够获取到定位
                 mHandler.postDelayed(() -> {
                     TipHelper.dismissProgressDialog();
@@ -235,7 +215,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
         mHandler.postDelayed(() -> {
             if (isStart) {
-                BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false);
+                BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false, false);
             }
             Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

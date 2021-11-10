@@ -98,11 +98,13 @@ public class NewsActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onPageStart("Ac_News");
+        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd("Ac_News");
+        MobclickAgent.onPause(this);
     }
 }

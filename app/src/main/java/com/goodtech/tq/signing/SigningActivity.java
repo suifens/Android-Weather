@@ -26,7 +26,6 @@ import androidx.collection.LruCache;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.blankj.utilcode.util.TimeUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.base.BaseShareActivity;
@@ -41,6 +40,7 @@ import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.db.SignRecord;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ShotUtil;
+import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.CommonBottomSheet;
 import com.goodtech.tq.views.InputAlert;
@@ -69,7 +69,7 @@ public class SigningActivity extends BaseShareActivity {
 
     protected ViewPager2 mViewPager;
     protected RadioGroup mRgIndicator;
-    protected int mCurPageIndex;
+    protected int mCurPageIndex = -1;
     protected List<Fragment> mFragments;
     protected Hourly mHourly;
     protected CityMode mCityMode;
@@ -122,6 +122,8 @@ public class SigningActivity extends BaseShareActivity {
         long current = System.currentTimeMillis();
         record.setDateDay(com.goodtech.tq.utils.TimeUtils.longToString(current, "yyyy-MM-dd"));
         record.setCreateTime(current);
+        //  设置早晚签到
+        record.setSignType(TimeUtils.isDaytime(current) ? "MORNING" : "NIGHT");
         long insert = mDbHelper.insert(record);
         Log.e("TAG", "shareImage: insert = " + insert);
     }
@@ -136,13 +138,9 @@ public class SigningActivity extends BaseShareActivity {
         if (!isLoad) {
             isLoad = true;
             //  segment 初始化
-//            changeSegmentType(TimeUtils.isAm());
-            changeSegmentType(true);
-
             mHandler.postDelayed(() -> {
                 //  持续天数
                 for (Fragment fragment : mFragments) {
-                    ((SigningFragment) fragment).updateData(mHourly, mCityMode, mContinuous);
                     ((SigningFragment) fragment).setListener(new SigningFragment.SigningListener() {
                         @Override
                         public void onEditPressed() {
@@ -155,7 +153,8 @@ public class SigningActivity extends BaseShareActivity {
                         }
                     });
                 }
-            }, 100);
+                mViewPager.setCurrentItem(TimeUtils.isDaytime(System.currentTimeMillis()) ? 0 : 3, false);
+            }, 0);
         }
     }
 
@@ -230,9 +229,6 @@ public class SigningActivity extends BaseShareActivity {
             }
             mRgIndicator.addView(tempButton, layoutParams);
         }
-
-        mViewPager.setCurrentItem(mCurPageIndex);
-        setIndicator(mCurPageIndex % 3);
     }
 
     protected void setIndicator(int position) {
