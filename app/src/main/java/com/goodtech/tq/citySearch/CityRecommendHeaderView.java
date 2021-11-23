@@ -20,7 +20,8 @@ public class CityRecommendHeaderView extends LinearLayout {
     private CityRecommendAdapter.OnItemClickListener mListener;
     private TextView mLocationTv;
     private CityMode mCityMode;
-    private TextView mTipTv;
+    private View mLocationView;
+    private View mSearchView;
 
     public CityRecommendHeaderView(Context context) {
         super(context);
@@ -46,16 +47,25 @@ public class CityRecommendHeaderView extends LinearLayout {
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         View view = LayoutInflater.from(context).inflate(R.layout.search_header_recommend, this, true);
 
+        mLocationView = view.findViewById(R.id.layout_location_container);
+        mSearchView = view.findViewById(R.id.layout_location_start);
+        mSearchView.setOnClickListener(v -> onLocationClick());
+
         mLocationTv = view.findViewById(R.id.tv_location);
-        view.findViewById(R.id.layout_location).setOnClickListener(v -> {
+        view.findViewById(R.id.layout_location).setOnClickListener(v -> onLocationClick());
+        view.findViewById(R.id.layout_refresh).setOnClickListener(v-> {
             if (mListener != null) {
-                mListener.onItemClick(mLocationTv, 0, mCityMode);
+                mListener.onRefreshClick();
             }
         });
 
-        mTipTv = view.findViewById(R.id.tv_location_fail);
-
         updateLocation();
+    }
+
+    private void onLocationClick() {
+        if (mListener != null) {
+            mListener.onItemClick(mLocationTv, 0, mCityMode);
+        }
     }
 
     public void updateLocation() {
@@ -65,10 +75,11 @@ public class CityRecommendHeaderView extends LinearLayout {
             if (mLocationTv != null && !TextUtils.isEmpty(location.getMergerName())) {
                 mLocationTv.setText(location.getMergerName());
             }
-            mTipTv.setVisibility(GONE);
+            mSearchView.setVisibility(GONE);
+            mLocationView.setVisibility(VISIBLE);
         } else {
-            mLocationTv.setText("点击开始定位");
-            mTipTv.setVisibility(VISIBLE);
+            mSearchView.setVisibility(VISIBLE);
+            mLocationView.setVisibility(GONE);
         }
     }
 

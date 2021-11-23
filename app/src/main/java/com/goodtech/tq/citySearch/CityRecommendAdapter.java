@@ -86,6 +86,7 @@ public class CityRecommendAdapter extends Adapter {
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position, CityMode cityMode);
+        void onRefreshClick();
     }
 
     private OnItemClickListener mOnItemClickListener;//声明接口

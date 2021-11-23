@@ -50,6 +50,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     private View mEmptyView;
     private boolean isStart;
     private boolean mFirstLoad = true;
+    private boolean isRefresh;
 
     public static void redirectTo(Context ctx, boolean isStart) {
         Log.e(TAG, "onStartWeather: " + System.currentTimeMillis());
@@ -128,11 +129,19 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
         //  定位
         mRecommendHeaderView = findViewById(R.id.header_recommend);
-        mRecommendHeaderView.setListener((view, position, cityMode) -> {
+        mRecommendHeaderView.setListener(new CityRecommendAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, CityMode cityMode) {
+                if (cityMode != null && cityMode.getCid() != 0) {
+                    addCity(cityMode);
+                } else if (!CitySearchActivity.this.isFinishing()) {
+                    toGetLocation();
+                }
+            }
 
-            if (cityMode != null && cityMode.getCid() != 0) {
-                addCity(cityMode);
-            } else if (!CitySearchActivity.this.isFinishing()) {
+            @Override
+            public void onRefreshClick() {
+                isRefresh = true;
                 toGetLocation();
             }
         });
@@ -142,10 +151,17 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendView.setVisibility(View.VISIBLE);
         final ArrayList<CityMode> recommends = CityHelper.getRecommends(this);
         CityRecommendAdapter mRecommendAdapter = new CityRecommendAdapter(this, recommends);
-        mRecommendAdapter.setOnItemClickListener((view, position, cityMode) -> {
+        mRecommendAdapter.setOnItemClickListener(new CityRecommendAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, CityMode cityMode) {
+                if (cityMode != null && cityMode.getCid() != 0) {
+                    addCity(cityMode);
+                }
+            }
 
-            if (cityMode != null && cityMode.getCid() != 0) {
-                addCity(cityMode);
+            @Override
+            public void onRefreshClick() {
+
             }
         });
         mRecommendView.setAdapter(mRecommendAdapter);
@@ -173,18 +189,18 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (event.isSuccessLocation()) {
             mHandler.post(() -> mRecommendHeaderView.updateLocation());
 
-            if (LocationSpHelper.getLocation() != null) {
+            if (LocationSpHelper.getLocation() != null && !isRefresh) {
                 if (!CitySearchActivity.this.isFinishing()) {
                     TipHelper.showProgressDialog(this);
                 }
                 //  能够获取到定位
                 mHandler.postDelayed(() -> {
-                    TipHelper.dismissProgressDialog();
                     Log.e(TAG, "message activity");
                     Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finishToRight();
+                    TipHelper.dismissProgressDialog();
                 }, 1000);
                 if (mRecommendHeaderView != null) {
                     mRecommendHeaderView.hideSoftInput(this);
