@@ -60,6 +60,10 @@ public class ConsDetailFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    public ConsDayMode getConsModel() {
+        return mConsModel;
+    }
+
     @SuppressLint("SetTextI18n")
     public void setConsDetailModel(ConsDayMode consDayModel) {
         this.mConsModel = consDayModel;

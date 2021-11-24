@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.BaseFragment;
+import com.goodtech.tq.models.constellation.ConsDayMode;
 import com.goodtech.tq.models.constellation.ConsMonthMode;
 import com.goodtech.tq.models.constellation.ConsWeekMode;
 import com.goodtech.tq.models.constellation.ConsYearMode;
@@ -20,6 +21,7 @@ import com.goodtech.tq.models.constellation.ConsYearMode;
 public class ConsOtherFragment extends BaseFragment {
 
     private LinearLayout mContainerLayout;
+    private ConsWeekMode mWeekModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +56,12 @@ public class ConsOtherFragment extends BaseFragment {
         });
     }
 
+    public ConsWeekMode getWeekModel() {
+        return mWeekModel;
+    }
+
     public void setConsWeekModel(ConsWeekMode model) {
+        this.mWeekModel = model;
         mHandler.post(() -> {
             mContainerLayout.removeAllViewsInLayout();
             if (model != null) {
@@ -83,7 +90,13 @@ public class ConsOtherFragment extends BaseFragment {
         });
     }
 
+    private ConsMonthMode mMonthModel;
+    public ConsMonthMode getMonthMode() {
+        return mMonthModel;
+    }
+
     public void setConsMonthModel(ConsMonthMode model) {
+        this.mMonthModel = model;
         mHandler.post(() -> {
             mContainerLayout.removeAllViewsInLayout();
             if (model != null) {
@@ -117,7 +130,13 @@ public class ConsOtherFragment extends BaseFragment {
         });
     }
 
+    private ConsYearMode mYearMode;
+    public ConsYearMode getYearMode() {
+        return mYearMode;
+    }
+
     public void setConsYearModel(ConsYearMode model) {
+        this.mYearMode = model;
         mHandler.post(() -> {
             mContainerLayout.removeAllViewsInLayout();
             if (model != null) {

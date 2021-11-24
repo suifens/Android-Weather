@@ -41,11 +41,13 @@
         <entry key="app/src/main/res/layout-v21/fragment_signing_c.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_about.xml" value="0.17844202898550723" />
         <entry key="app/src/main/res/layout/activity_air_quality.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_calendar.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_calendar.xml" value="0.1850238488544391" />
         <entry key="app/src/main/res/layout/activity_city_list.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_city_search.xml" value="0.10462962962962963" />
+        <entry key="app/src/main/res/layout/activity_constellation_detail.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_contact.xml" value="0.3307291666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19630192502532928" />
+        <entry key="app/src/main/res/layout/activity_news.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_outbreak.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2682291666666667" />
@@ -85,6 +87,7 @@
         <entry key="app/src/main/res/layout/stub_signing_container_c.xml" value="0.335" />
         <entry key="app/src/main/res/layout/stub_weather_data.xml" value="0.189209726443769" />
         <entry key="app/src/main/res/layout/view_calendar_holiday.xml" value="0.41403716404812335" />
+        <entry key="app/src/main/res/layout/view_city_search.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/view_common_bottom_sheet.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/view_cons_item.xml" value="0.3546195652173913" />
         <entry key="app/src/main/res/layout/view_score.xml" value="0.55" />

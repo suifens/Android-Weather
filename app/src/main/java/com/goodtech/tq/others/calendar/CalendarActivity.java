@@ -82,7 +82,7 @@ public class CalendarActivity extends BaseActivity implements
         if (firstLoad) {
             firstLoad = false;
             mHandler.postDelayed(() -> {
-                ((ViewStub) mDayDetailView).inflate();
+//                ((ViewStub) mDayDetailView).inflate();
 
                 getDetails(TimeUtils.longToString(System.currentTimeMillis(), "yyyy-M-d"));
                 updateHoliday(System.currentTimeMillis());
