@@ -22,6 +22,7 @@ public class CityRecommendHeaderView extends LinearLayout {
     private CityMode mCityMode;
     private View mLocationView;
     private View mSearchView;
+    protected RippleLayout mRippleLayout;
 
     public CityRecommendHeaderView(Context context) {
         super(context);
@@ -38,11 +39,20 @@ public class CityRecommendHeaderView extends LinearLayout {
         init(context, attrs);
     }
 
+    public void onStart() {
+        if (mSearchView.getVisibility() == VISIBLE) {
+            mRippleLayout.startRippleAnimation();
+        }
+    }
+
+    public void onStop() {
+        mRippleLayout.stopRippleAnimation();
+    }
+
     /**
      * 初始化参数
      */
     private void init(Context context, AttributeSet attrs) {
-
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         View view = LayoutInflater.from(context).inflate(R.layout.search_header_recommend, this, true);
@@ -53,11 +63,10 @@ public class CityRecommendHeaderView extends LinearLayout {
 
         mLocationTv = view.findViewById(R.id.tv_location);
         view.findViewById(R.id.layout_location).setOnClickListener(v -> onLocationClick());
-        view.findViewById(R.id.layout_refresh).setOnClickListener(v-> {
-            if (mListener != null) {
-                mListener.onRefreshClick();
-            }
-        });
+        view.findViewById(R.id.btn_location).setOnClickListener(v-> onLocationClick());
+        view.findViewById(R.id.layout_refresh).setOnClickListener(v-> onLocationClick());
+
+        mRippleLayout = view.findViewById(R.id.ripplelayout_train_main);
 
         updateLocation();
     }

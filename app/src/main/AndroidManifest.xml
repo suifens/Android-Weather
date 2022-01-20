@@ -112,6 +112,7 @@
         <activity
             android:name=".SplashADActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
