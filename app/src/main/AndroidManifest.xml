@@ -53,7 +53,8 @@
             android:theme="@style/SplashActivityTheme"
             android:windowSoftInputMode="stateHidden"
             tools:ignore="DuplicateActivity,LockedOrientationActivity"
-            tools:targetApi="cupcake">
+            tools:targetApi="cupcake"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -132,7 +133,8 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

@@ -4,13 +4,15 @@ buildscript {
     
     repositories {
         google()
-        maven { url 'https://dl.bintray.com/umsdk/release' }
-        maven { url "https://maven.google.com" }
-        jcenter()
+//        maven { url 'https://dl.bintray.com/umsdk/release' }
+        maven {
+            url 'https://maven.aliyun.com/repository/public/'
+        }
+        mavenLocal()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath 'com.android.tools.build:gradle:7.0.3'
 
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -21,9 +23,11 @@ buildscript {
 allprojects {
     repositories {
         google()
-        maven { url 'https://dl.bintray.com/umsdk/release' }
-        maven { url "https://maven.google.com" }
-        jcenter()
+//        maven { url 'https://dl.bintray.com/umsdk/release' }
+        maven {
+            url 'https://maven.aliyun.com/repository/public/'
+        }
+        mavenLocal()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
     }
