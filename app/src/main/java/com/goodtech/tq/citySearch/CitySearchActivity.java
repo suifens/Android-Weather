@@ -64,6 +64,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         super.onStop();
         if (mRecommendHeaderView != null) {
             mRecommendHeaderView.hideSoftInput(this);
+            mRecommendHeaderView.onStop();
         }
     }
 
@@ -76,6 +77,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     @Override
     protected void onResume() {
         super.onResume();
+        if (mRecommendHeaderView != null) {
+            mRecommendHeaderView.onStart();
+        }
         Log.e(TAG, "onResume: " + System.currentTimeMillis());
     }
 
