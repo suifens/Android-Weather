@@ -26,18 +26,24 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:id="@+id/image001"
+            android:scaleType="centerCrop"
+            android:minHeight="72dp"
             android:layout_height="wrap_content"/>
 
         <ImageView
             android:layout_weight="1"
             android:layout_width="0dp"
             android:id="@+id/image002"
+            android:scaleType="centerCrop"
+            android:minHeight="72dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"/>
 
         <ImageView
             android:layout_weight="1"
             android:layout_width="0dp"
+            android:scaleType="centerCrop"
+            android:minHeight="72dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"/>
 

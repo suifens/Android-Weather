@@ -26,12 +26,16 @@
             android:layout_weight="1"
             android:id="@+id/image01"
             android:layout_width="0dp"
+            android:scaleType="centerCrop"
+            android:minHeight="72dp"
             android:layout_height="wrap_content"   />
 
         <ImageView
             android:layout_weight="1"
             android:id="@+id/image02"
             android:layout_width="0dp"
+            android:scaleType="centerCrop"
+            android:minHeight="72dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"/>
 
@@ -39,6 +43,8 @@
             android:layout_weight="1"
             android:id="@+id/image03"
             android:layout_width="0dp"
+            android:scaleType="centerCrop"
+            android:minHeight="72dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"/>
 
