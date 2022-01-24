@@ -54,6 +54,14 @@ android {
             buildConfigField 'int', 'BAIDU_CHANNEL', '4'
             manifestPlaceholders=[app_name:"天气预报-日历天气", umeng_channel:"sougou"]
         }
+        tuiguang1 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"tuiguang1"]
+        }
+        tuiguang2 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"tuiguang2"]
+        }
         vivo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '7'
             manifestPlaceholders=[app_name:"天气-苹果天气预报", umeng_channel:"vivo"]
@@ -69,14 +77,6 @@ android {
         yyb {
             buildConfigField 'int', 'BAIDU_CHANNEL', '9'
             manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
-        }
-        tuiguang1 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"tuiguang1"]
-        }
-        tuiguang2 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"tuiguang2"]
         }
     }
 
