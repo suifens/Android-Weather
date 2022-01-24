@@ -19,6 +19,7 @@ public class Constants {
 
     public final static String URL_AGREEMENT = "file:///android_asset/agreement/index.html";
     public final static String URL_PRIVACY = "file:///android_asset/privacy/index-%s.html";
+    public final static String URL_PRIVACY_LIST = "file:///android_asset/privacyList/index-%s.html";
 
     public final static String URL_CITY = "file:///android_asset/cityRecommend.json";
 

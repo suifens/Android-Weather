@@ -41,6 +41,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         configStationBar(findViewById(R.id.private_station_bar));
 
         findViewById(R.id.button_back).setOnClickListener(this);
+        findViewById(R.id.layout_private_list).setOnClickListener(this);
         findViewById(R.id.layout_praise).setOnClickListener(this);
         findViewById(R.id.layout_about).setOnClickListener(this);
         findViewById(R.id.layout_contact).setOnClickListener(this);
@@ -70,12 +71,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         MobclickAgent.onPause(this);
     }
 
-    @SuppressLint("QueryPermissionsNeeded")
+    @SuppressLint({"QueryPermissionsNeeded", "NonConstantResourceId"})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_back:
                 finish();
+                break;
+            case R.id.layout_private_list: {
+                Intent intent = new Intent(SettingActivity.this, PrivateListActivity.class);
+                startActivity(intent);
+            }
                 break;
             case R.id.layout_praise:
             case R.id.layout_version: {
