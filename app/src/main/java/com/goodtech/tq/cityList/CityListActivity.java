@@ -364,22 +364,11 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onADClicked() {
-        Log.i(TAG, "onADClicked : " + (bv.getExt() != null? bv.getExt().get("clickUrl") : ""));
     }
 
     @Override
     public void onADLeftApplication() {
         Log.i(TAG, "onADLeftApplication");
-    }
-
-    @Override
-    public void onADOpenOverlay() {
-        Log.i(TAG, "onADOpenOverlay");
-    }
-
-    @Override
-    public void onADCloseOverlay() {
-        Log.i(TAG, "onADCloseOverlay");
     }
 
 }

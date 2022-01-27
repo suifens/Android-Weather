@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
-import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DownloadConfirmHelper;
@@ -87,7 +86,7 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     private void fetchSplashAD(Activity activity, ViewGroup adContainer, View skipContainer,
                                String posId, SplashADListener adListener) {
         fetchSplashADTime = System.currentTimeMillis();
-        splashAD = new SplashAD(activity, skipContainer, Constants.APP_ID, posId, adListener, 0);
+        splashAD = new SplashAD(activity, posId, adListener, 0);
         splashAD.fetchAndShowIn(adContainer);
         if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
             splashAD.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
@@ -101,8 +100,8 @@ public class SplashADActivity extends Activity implements SplashADListener, View
 
     @Override
     public void onADClicked() {
-        Log.i("AD_DEMO", "SplashADClicked clickUrl: "
-                + (splashAD.getExt() != null ? splashAD.getExt().get("clickUrl") : ""));
+//        Log.i("AD_DEMO", "SplashADClicked clickUrl: "
+//                + (splashAD.getExt() != null ? splashAD.getExt().get("clickUrl") : ""));
     }
 
     /**

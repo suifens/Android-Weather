@@ -255,16 +255,6 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
     }
 
     @Override
-    public void onADOpenOverlay(NativeExpressADView adView) {
-        Log.i(TAG, "onADOpenOverlay: " + adView.toString());
-    }
-
-    @Override
-    public void onADCloseOverlay(NativeExpressADView adView) {
-        Log.i(TAG, "onADCloseOverlay");
-    }
-
-    @Override
     public void onNoAD(AdError error) {
         Log.i(TAG, String.format("onNoAD: error code : %d, error msg %s", error.getErrorCode(),
                 error.getErrorMsg()));

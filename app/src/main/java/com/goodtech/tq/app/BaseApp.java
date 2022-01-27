@@ -17,7 +17,6 @@ import com.goodtech.tq.MyActivityManager;
 import com.goodtech.tq.SettingActivity;
 import com.goodtech.tq.SplashADActivity;
 import com.goodtech.tq.SplashActivity;
-import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.jpush.JPushHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
@@ -26,7 +25,7 @@ import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
-import com.qq.e.comm.managers.GDTADManager;
+import com.qq.e.comm.managers.GDTAdSdk;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.mmkv.MMKV;
@@ -92,7 +91,7 @@ public class BaseApp extends Application {
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
         // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
-        GDTADManager.getInstance().initWith(getApplicationContext(), Constants.APP_ID);
+        GDTAdSdk.init(getApplicationContext(), Constants.APP_ID);
         GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
 
         Log.e(TAG, "startUsingApp: ");

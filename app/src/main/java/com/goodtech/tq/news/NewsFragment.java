@@ -303,15 +303,4 @@ public class NewsFragment extends BaseFragment implements NativeExpressAD.Native
     public void onADLeftApplication(NativeExpressADView adView) {
         Log.i(TAG, "onADLeftApplication: " + adView.toString());
     }
-
-    @Override
-    public void onADOpenOverlay(NativeExpressADView adView) {
-        Log.i(TAG, "onADOpenOverlay: " + adView.toString());
-    }
-
-    @Override
-    public void onADCloseOverlay(NativeExpressADView adView) {
-        Log.i(TAG, "onADCloseOverlay");
-    }
-
 }

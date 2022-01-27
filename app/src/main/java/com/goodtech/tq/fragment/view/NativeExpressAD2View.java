@@ -13,8 +13,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.goodtech.tq.R;
 import com.qq.e.ads.nativ.NativeExpressADView;
-import com.qq.e.ads.nativ.express2.NativeExpressADData2;
-
 
 /**
  * @author wangrengshun <wangrengshun@gengee.cn>
@@ -44,23 +42,23 @@ public class NativeExpressAD2View extends FrameLayout {
         mAdContainer = view.findViewById(R.id.express_2_ad_container);
     }
 
-    public void setData(NativeExpressADData2 adData) {
-        if (adData == null || adData.getAdView() == null) {
-            return;
-        }
-
-        View adView = adData.getAdView();
-        if (mAdContainer.getChildCount() > 0 && mAdContainer.getChildAt(0) == adView) {
-            return;
-        }
-        if (mAdContainer.getChildCount() > 0) {
-            mAdContainer.removeAllViews();
-        }
-        if (adView != null && adView.getParent() != null) {
-            ((ViewGroup) adView.getParent()).removeView(adView);
-        }
-        mAdContainer.addView(adView);
-    }
+//    public void setData(NativeExpressADData2 adData) {
+//        if (adData == null || adData.getAdView() == null) {
+//            return;
+//        }
+//
+//        View adView = adData.getAdView();
+//        if (mAdContainer.getChildCount() > 0 && mAdContainer.getChildAt(0) == adView) {
+//            return;
+//        }
+//        if (mAdContainer.getChildCount() > 0) {
+//            mAdContainer.removeAllViews();
+//        }
+//        if (adView != null && adView.getParent() != null) {
+//            ((ViewGroup) adView.getParent()).removeView(adView);
+//        }
+//        mAdContainer.addView(adView);
+//    }
 
     public void setAdView(NativeExpressADView adView) {
 
