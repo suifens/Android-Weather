@@ -29,6 +29,7 @@ public class Constants {
     public final static String TIME_WEATHER = "weather_fetch_time";
     //  个性化广告
     public static final String PERSONALIZED_AD = "personalized advertising";
+    public static final String REMINDER_WEATHER = "ReminderWeather";
 
     //第三方微信
     public static final String WECHAT_APP_ID = "wx3aa675641ffe1f1d";

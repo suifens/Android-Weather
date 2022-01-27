@@ -19,6 +19,7 @@ import com.goodtech.tq.SplashADActivity;
 import com.goodtech.tq.SplashActivity;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.DatabaseHelper;
+import com.goodtech.tq.jpush.JPushHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.signing.SigningActivity;
@@ -32,6 +33,8 @@ import com.tencent.mmkv.MMKV;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class BaseApp extends Application {
     private static final String TAG = "BaseApp";
     protected Handler mHandler = new Handler(Looper.getMainLooper());
@@ -41,8 +44,8 @@ public class BaseApp extends Application {
     public boolean needStatePerm = true;
     //  定位权限，
     public boolean needLocationPerm = true;
-
     private static BaseApp mApplication;
+    private String mJPushRegId;
 
     public static BaseApp getInstance() {
         return mApplication;
@@ -130,6 +133,15 @@ public class BaseApp extends Application {
                 configLocation(activity, getLocation);
             }
         }
+
+        JPushInterface.setDebugMode(true);
+        
+        //  极光推送 register id
+        String registerId = JPushInterface.getRegistrationID(BaseApp.getInstance());
+        Log.e(TAG, "startUsingApp: register id = " + registerId);
+        if (!TextUtils.isEmpty(registerId)) {
+            BaseApp.getInstance().setJPushRegId(registerId);
+        }
     }
 
 
@@ -208,5 +220,16 @@ public class BaseApp extends Application {
      */
     private void leaveApp(Activity activity) {
         isRunInBackground = true;
+    }
+
+    public String getJPushRegId() {
+        return mJPushRegId;
+    }
+
+    public void setJPushRegId(String jPushRegId) {
+        this.mJPushRegId = jPushRegId;
+        Log.e(TAG, "setJPushRegId: " + jPushRegId);
+        //  恢复极光推送
+        JPushHelper.resumePush();
     }
 }

@@ -1,5 +1,6 @@
 package com.goodtech.tq;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +15,10 @@ import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 
+import cn.jpush.android.api.JPushInterface;
 
+
+@SuppressLint("CustomSplashScreen")
 public class SplashActivity extends Activity {
 
     private final Handler handler = new Handler(Looper.getMainLooper());

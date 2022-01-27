@@ -11,14 +11,16 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.RequiresApi;
 
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
-import com.goodtech.tq.views.SwitchView;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.umeng.analytics.MobclickAgent;
+
+import cn.jpush.android.api.JPushInterface;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -27,7 +29,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private static final int grantedColor = Color.parseColor("#9B9B9B");
     private static final int deniedColor = Color.parseColor("#00C4FF");
 
-    private SwitchView mSwitchView;
+    private ToggleButton mSwitchView;
+    private ToggleButton mToggleSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
         mSwitchView = findViewById(R.id.switchBtn_setting_m);
         updateAdType(SpUtils.getInstance().getBoolean(Constants.PERSONALIZED_AD, true));
+        //  异常天气提醒
+        mToggleSwitch = findViewById(R.id.switchBtn_reminder);
+        boolean checked = SpUtils.getInstance().getBoolean(Constants.REMINDER_WEATHER, true);
+        mToggleSwitch.setChecked(checked);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -50,6 +57,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.layout_permission_storage).setOnClickListener(this);
         findViewById(R.id.layout_permission_location).setOnClickListener(this);
         findViewById(R.id.switchBtn_setting_m).setOnClickListener(this);
+        findViewById(R.id.switchBtn_reminder).setOnClickListener(this);
     }
 
     @Override
@@ -129,13 +137,27 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 GlobalSetting.setAgreePrivacyStrategy(!show);
             }
             break;
+            case R.id.switchBtn_reminder: {
+                updateReminder();
+            }
+            break;
         }
     }
 
     private void updateAdType(boolean show) {
         if (mSwitchView != null) {
-            mSwitchView.toggleSwitch(show);
+            mSwitchView.setChecked(show);
         }
+    }
+
+    private void updateReminder() {
+        boolean checked = mToggleSwitch.isChecked();
+        if (checked) {
+            JPushInterface.resumePush(this);
+        } else {
+            JPushInterface.stopPush(this);
+        }
+        SpUtils.getInstance().getBoolean(Constants.REMINDER_WEATHER, checked);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

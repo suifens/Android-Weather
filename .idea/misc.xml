@@ -6,6 +6,7 @@
         <entry key="../../../.gradle/caches/transforms-3/4ccce36da6c7e2757b6868067c45d4bd/transformed/jetified-Common-3.1.2/res/layout/picker_confirm_header.xml" value="0.40395882663240384" />
         <entry key="../../../.gradle/caches/transforms-3/e519e5ca11a2e18a9c46042f8e0da2c3/transformed/jetified-calendarview-3.7.1/res/layout/cv_layout_calendar_view.xml" value="0.34601449275362317" />
         <entry key="../../../.gradle/caches/transforms-3/e519e5ca11a2e18a9c46042f8e0da2c3/transformed/jetified-calendarview-3.7.1/res/layout/cv_week_bar.xml" value="0.34601449275362317" />
+        <entry key="app/src/main/res/drawable-xxhdpi/jpush_demo_selector_switch_btn.xml" value="0.21296296296296297" />
         <entry key="app/src/main/res/drawable/bg_circle_007bff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_00a2ff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_1592f3.xml" value="0.2984375" />
@@ -49,7 +50,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19630192502532928" />
         <entry key="app/src/main/res/layout/activity_news.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_outbreak.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/activity_signing.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_typhoon.xml" value="0.19630192502532928" />

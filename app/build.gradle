@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.huawei.agconnect'
 
 android {
     dataBinding {
@@ -14,70 +15,90 @@ android {
         }
     }
 
-    compileSdkVersion 31
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
-        targetSdkVersion 31
-        versionCode 580
-        versionName "5.8.0"
+        targetSdkVersion 30
+        versionCode 590
+        versionName "5.9.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+
+        ndk {
+            //选择要添加的对应 cpu 类型的 .so 库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "e2416540f4d3f0081fbef6df", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+                MEIZU_APPKEY : "MZ-3465e4112e2141f6b1438a648a5f6670",
+                MEIZU_APPID : "MZ-146740",
+                XIAOMI_APPID : "MI-2882303761517596193",
+                XIAOMI_APPKEY : "MI-5321759614193",
+                OPPO_APPKEY : "OP-86qoYufhhbWG84k0gkg0SScc0",
+                OPPO_APPID : "OP-3574478",
+                OPPO_APPSECRET : "OP-254Ebdc6DA2c044f855c2EebC89041f",
+                VIVO_APPKEY : "af805fb3b61c6f4daf4e082c506b6275",
+                VIVO_APPID : "100111470"
+        ]
     }
 
     flavorDimensions "default"
     productFlavors {
-        anzhi {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"苹果天气预报", umeng_channel:"anzhi"]
-        }
-        baidu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
-            manifestPlaceholders=[app_name:"日历天气预报", umeng_channel:"baidu"]
-        }
-        huawei {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
-            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"huawei"]
-        }
-        meizu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
-            manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
-        }
-        oppo {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"oppo"]
-        }
-        sougou {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
-            manifestPlaceholders=[app_name:"天气预报-日历天气", umeng_channel:"sougou"]
-        }
-        tuiguang1 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"tuiguang1"]
-        }
-        tuiguang2 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"tuiguang2"]
-        }
-        vivo {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
-            manifestPlaceholders=[app_name:"天气-苹果天气预报", umeng_channel:"vivo"]
-        }
-        wdj {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"日历天气", umeng_channel:"wandoujia"]
-        }
+//        anzhi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            manifestPlaceholders=[app_name:"苹果天气预报", umeng_channel:"anzhi"]
+//        }
+//        baidu {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+//            manifestPlaceholders=[app_name:"日历天气预报", umeng_channel:"baidu"]
+//        }
+//        huawei {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+//            manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"huawei"]
+//        }
+//        meizu {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+//            manifestPlaceholders=[app_name:"天气：天气预报", umeng_channel:"meizu"]
+//        }
+//        oppo {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+//            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"oppo"]
+//        }
+//        sougou {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
+//            manifestPlaceholders=[app_name:"天气预报-日历天气", umeng_channel:"sougou"]
+//        }
+//        tuiguang1 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"tuiguang1"]
+//        }
+//        tuiguang2 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"tuiguang2"]
+//        }
+//        vivo {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
+//            manifestPlaceholders=[app_name:"天气-苹果天气预报", umeng_channel:"vivo"]
+//        }
+//        wdj {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            manifestPlaceholders=[app_name:"日历天气", umeng_channel:"wandoujia"]
+//        }
         xiaomi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '10'
             manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"]
         }
-        yyb {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
-        }
+//        yyb {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
+//        }
     }
 
     def fileArray = []
@@ -182,4 +203,21 @@ dependencies {
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.4.0'
     //  相机/相册
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
+
+    implementation 'cn.jiguang.sdk:jcore:3.1.2'  // 此处以JCore 2.7.2 版本为例。
+    implementation 'cn.jiguang.sdk:jpush:4.5.0'  // 此处以JPush 4.0.0 版本为例
+    // 接入华为厂商
+    implementation 'com.huawei.hms:push:6.1.0.300'
+    implementation 'cn.jiguang.sdk.plugin:huawei:4.5.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
+    // 接入 FCM 厂商
+//    implementation 'com.google.firebase:firebase-messaging:21.0.1'
+//    implementation 'cn.jiguang.sdk.plugin:fcm:4.0.0'
+    // 接入魅族厂商
+    implementation 'cn.jiguang.sdk.plugin:meizu:4.5.0'
+    // 接入 VIVO 厂商
+    implementation 'cn.jiguang.sdk.plugin:vivo:4.5.0'
+    // 接入 OPPO 厂商
+    implementation 'cn.jiguang.sdk.plugin:oppo:4.5.0'
+    // 接入小米厂商
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.5.0'
 }
