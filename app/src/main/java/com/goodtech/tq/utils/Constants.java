@@ -24,6 +24,7 @@ public class Constants {
     public final static String URL_CITY = "file:///android_asset/cityRecommend.json";
 
     public final static String RECOMMEND_CITY = "cityRecommend.json";
+    public final static String JUHE_CODE_CITY = "cityCode.json";
 
     public final static String TIME_LOCATION = "location_time";
     public final static String TIME_WEATHER = "weather_fetch_time";
@@ -36,5 +37,7 @@ public class Constants {
     public static final String WECHAT_APP_Secret = "4069e24495ae018eed3993c1895c72f5";
 
     public static final String QQ_APP_ID = "1106159384";
+
+    public static final String KEY_CALENDAR = "KEY_CALENDAR";
 
 }

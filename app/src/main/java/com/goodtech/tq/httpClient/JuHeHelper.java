@@ -99,4 +99,12 @@ public class JuHeHelper {
         client.get(url, null, handler);
     }
 
+    //  气象预警查询
+    public static final String JUHE_ALARM = "https://apis.juhe.cn/fapig/alarm/queryV2?key=c6f53b5c5b62866f2f5b3a604a8fd81b&province_code=%s&city_code=%s";
+    public void fetchJuheAlarm(String provinceCode, String cityCode, ApiResponseHandler handler) {
+        String url = String.format(JUHE_ALARM, provinceCode, cityCode);
+        ApiClient client = ApiClient.getInstance();
+        client.get(url, null, handler);
+    }
+
 }

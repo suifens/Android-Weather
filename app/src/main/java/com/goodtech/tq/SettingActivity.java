@@ -157,7 +157,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         } else {
             JPushInterface.stopPush(this);
         }
-        SpUtils.getInstance().getBoolean(Constants.REMINDER_WEATHER, checked);
+        SpUtils.getInstance().putBoolean(Constants.REMINDER_WEATHER, checked);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

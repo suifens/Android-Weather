@@ -2,8 +2,11 @@ package com.goodtech.tq.jpush.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.goodtech.tq.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,41 +58,13 @@ public class PushMessageReceiver extends JPushMessageReceiver {
     @Override
     public void onNotifyMessageOpened(Context context, NotificationMessage message) {
         Log.e(TAG, "[onNotifyMessageOpened]:" + message);
-        if (message == null) {
-            return;
-        }
-        String extras = message.notificationExtras;
-        if (TextUtils.isEmpty(extras)) {
-            return;
-        }
-        try {
-            JSONObject jsonObject = new JSONObject(extras);
-            String key = jsonObject.getString("key");
-            if (TextUtils.isEmpty(key)) {
-                return;
-            }
-//            if (DeviceUtil.isForegroundRunning(context)) {
-//            if (DeviceUtil.isContextExisted(context)) {
+        try{
+            //打开自定义的Activity
+            Intent i = new Intent(context, MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+            context.startActivity(i);
+        } catch (Throwable ignored){
 
-            JPushInterface.reportNotificationOpened(context, message.msgId, (byte) message.platform);
-
-//            if (DeviceUtil.isAppAlive(context) != 0) {
-//                //  app还存活
-//                Log.e(TAG, "onNotifyMessageOpened: is alive");
-//                JPushEventActivity.redirectWithKey(MyActivityManager.getInstance().getCurrentActivity(), key);
-//            } else {
-//                Log.e(TAG, "onNotifyMessageOpened: is dead");
-//                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-//                if (launchIntent != null) {
-//                    launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-//                    Bundle args = new Bundle();
-//                    args.putString("pushKey", key);
-//                    launchIntent.putExtra(Constant.EXTRA_BUNDLE, args);
-//                    context.startActivity(launchIntent);
-//                }
-//            }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 

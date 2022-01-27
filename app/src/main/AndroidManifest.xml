@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.goodtech.tq">
 
+    <!--前台服务-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 这个权限用于进行网络定位 -->
@@ -100,7 +103,15 @@
             android:name=".MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            android:exported="false"
+            tools:ignore="LockedOrientationActivity">
+
+            <intent-filter>
+                <action android:name="jpush.testAction" />
+                <category android:name="jpush.testCategory" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".AgreementActivity"
             android:screenOrientation="portrait"
@@ -524,6 +535,23 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="${JPUSH_APPKEY}" /> <!-- </>值来自开发者平台取得的AppKey -->
+
+        <!--alarm_config-->
+        <service
+            android:name=".alarm.AlarmService"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <receiver
+            android:name=".alarm.JAlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter android:priority="1000">
+                <action android:name="com.goodtech.tq.alarm" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+        <!--alarm_config_end-->
 
     </application>
 

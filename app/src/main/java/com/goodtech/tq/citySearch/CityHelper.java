@@ -3,6 +3,7 @@ package com.goodtech.tq.citySearch;
 import android.content.Context;
 
 import com.goodtech.tq.helpers.LocationSpHelper;
+import com.goodtech.tq.models.CityCodeMode;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.Utils;
@@ -26,6 +27,18 @@ public class CityHelper {
         if (jsonElement != null) {
             JsonArray jsonArray = new Gson().fromJson(jsonElement.get("citys"), JsonArray.class);
             ArrayList<CityMode> list = new Gson().fromJson(jsonArray, new TypeToken<ArrayList<CityMode>>() {}.getType());
+            cityModes.addAll(list);
+        }
+        return cityModes;
+    }
+
+    public static ArrayList<CityCodeMode> getCityCodes(Context context) {
+        ArrayList<CityCodeMode> cityModes = new ArrayList<>();
+        String cityJson = Utils.getJson(Constants.JUHE_CODE_CITY, context);
+        JsonObject jsonElement = new Gson().fromJson(cityJson, JsonObject.class);
+        if (jsonElement != null) {
+            JsonArray jsonArray = new Gson().fromJson(jsonElement.get("citys"), JsonArray.class);
+            ArrayList<CityCodeMode> list = new Gson().fromJson(jsonArray, new TypeToken<ArrayList<CityCodeMode>>() {}.getType());
             cityModes.addAll(list);
         }
         return cityModes;
