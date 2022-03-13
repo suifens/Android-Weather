@@ -1,5 +1,6 @@
 package com.goodtech.tq.alarm;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -27,10 +28,15 @@ public class AlarmManagerUtil {
         }
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     public static void cancelAlarm(Context context, String action, int id) {
         Intent intent = new Intent(action);
-        PendingIntent pi = PendingIntent.getBroadcast(context, id, intent, PendingIntent
-                .FLAG_UPDATE_CURRENT);
+        PendingIntent pi = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            pi = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pi = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         try {
             am.cancel(pi);
@@ -44,12 +50,13 @@ public class AlarmManagerUtil {
 
     /**
      */
-    public static void setAlarm(Context context) {
+    @SuppressLint({"MissingPermission", "UnspecifiedImmutableFlag"})
+    public static void setAlarm(Context context, int hourOfDay) {
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get
-                (Calendar.DAY_OF_MONTH), 8, 0, 10);
+                (Calendar.DAY_OF_MONTH), hourOfDay, 0, 10);
         long intervalMillis = 12 * 3600 * 1000;
 
         int requestCode = calendar.get(Calendar.MONTH) * 100 + calendar.get(Calendar.DAY_OF_MONTH);
@@ -59,7 +66,12 @@ public class AlarmManagerUtil {
         intent.setPackage(BaseApp.getInstance().getPackageName());
         intent.putExtra("intervalMillis", intervalMillis);
 
-        PendingIntent sender = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent sender = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            sender = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            sender = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         long startTime = calMethod(0, calendar.getTimeInMillis());
         am.setExact(AlarmManager.RTC_WAKEUP, startTime, sender);
     }
@@ -107,7 +119,7 @@ public class AlarmManagerUtil {
             if (dateTime > System.currentTimeMillis()) {
                 time = dateTime;
             } else {
-                time = dateTime + 12 * 3600 * 1000;
+                time = dateTime + 10 * 1000; //12 * 3600 * 1000;
             }
         }
         return time;

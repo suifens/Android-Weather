@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity {
         int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
         int minute = mCalendar.get(Calendar.MINUTE);
 //        AlarmManagerUtil.setAlarm(this, 0, hour, minute, 0);
-        AlarmManagerUtil.setAlarm(this);
+        AlarmManagerUtil.setAlarm(getApplicationContext(), 8);
 
     }
 

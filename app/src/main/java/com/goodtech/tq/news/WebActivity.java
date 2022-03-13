@@ -8,6 +8,7 @@ import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -55,14 +56,23 @@ public class WebActivity extends BaseActivity {
         //获取传递的路径
         webView = (WebView) findViewById(R.id.webView);
         listView = (ListView) findViewById(R.id.list_view);
-//        findViewById(R.id.toolbar_webcomment).bringToFront();
-        findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.button_back).setOnClickListener(v -> {
+            if (webView.canGoBack()) {
+                webView.goBack();
+            } else {
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+            webView.goBack();// 返回前一个页面
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

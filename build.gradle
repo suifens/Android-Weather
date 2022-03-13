@@ -4,7 +4,6 @@ buildscript {
     
     repositories {
         google()
-//        maven { url 'https://dl.bintray.com/umsdk/release' }
         maven {
             url 'https://maven.aliyun.com/repository/public/'
         }

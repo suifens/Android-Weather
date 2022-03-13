@@ -43,9 +43,11 @@ public class JAlarmReceiver extends BroadcastReceiver {
         mContext = context;
         long intervalMillis = intent.getLongExtra("intervalMillis", 0);
         Log.e("BroadcastReceiver", "onReceive: intervalMillis= " + System.currentTimeMillis());
-        if (intervalMillis != 0) {
-            AlarmManagerUtil.setAlarm(context);
-        }
+//        if (intervalMillis != 0) {
+//            Calendar calendar = Calendar.getInstance();
+//            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+//            AlarmManagerUtil.setAlarm(context, hour);
+//        }
 
         new Thread(() -> mHandler.sendEmptyMessage(1)).start();
     }

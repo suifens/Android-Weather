@@ -30,6 +30,8 @@
         <entry key="app/src/main/res/drawable/bg_stroke_e1e4e8.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_stroke_white_50.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/download_confirm_background_confirm.xml" value="0.10677083333333333" />
+        <entry key="app/src/main/res/drawable/gradient_fortune.xml" value="0.2984375" />
+        <entry key="app/src/main/res/drawable/gradient_weather.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/sl_btn_007bff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/sl_btn_1aff4c4c_4.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/sl_btn_3764e1.xml" value="0.3921875" />
@@ -55,6 +57,7 @@
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/activity_signing.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_typhoon.xml" value="0.19630192502532928" />
+        <entry key="app/src/main/res/layout/activity_web.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/air_stub_life.xml" value="0.335" />
         <entry key="app/src/main/res/layout/air_stub_life_item.xml" value="0.45" />
         <entry key="app/src/main/res/layout/air_stub_pm.xml" value="0.2536231884057971" />

@@ -107,7 +107,7 @@
             android:id="@+id/tv_holiday_rest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:alpha="0.6"
+            android:alpha="0.4"
             android:gravity="left"
             android:textColor="@color/black"
             android:textSize="14dp"

@@ -58,7 +58,12 @@ public class HolidayHolder extends RecyclerView.ViewHolder {
             }
             mRestTv.setText(rest);
         } else {
-            mRestTv.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(data.getDesc())) {
+                mRestTv.setVisibility(View.VISIBLE);
+                mRestTv.setText(data.getDesc());
+            } else {
+                mRestTv.setVisibility(View.GONE);
+            }
         }
     }
 
