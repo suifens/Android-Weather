@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.goodtech.tq.alarm.AlarmManagerUtil;
-import com.goodtech.tq.alarm.AlarmService;
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.MessageEvent;
@@ -35,11 +33,19 @@ import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.utils.AdUtil;
+import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.qq.e.ads.interstitial2.UnifiedInterstitialAD;
+import com.qq.e.ads.interstitial2.UnifiedInterstitialADListener;
+import com.qq.e.ads.interstitial2.UnifiedInterstitialMediaListener;
+import com.qq.e.comm.listeners.NegativeFeedbackListener;
+import com.qq.e.comm.util.AdError;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,9 +55,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements UnifiedInterstitialADListener, UnifiedInterstitialMediaListener {
 
     private static final String TAG = "MainActivity";
     private final BroadcastReceiver receiver = new IntentReceiver();
@@ -112,17 +119,17 @@ public class MainActivity extends BaseActivity {
 //            startService(intent);
 //        }
 
-        Calendar mCalendar = Calendar.getInstance();
-        mCalendar.setTimeInMillis(System.currentTimeMillis());
-        //获取当前毫秒值
-        long systemTime = System.currentTimeMillis();
-        //是设置日历的时间，主要是让日历的年月日和当前同步
-        mCalendar.setTimeInMillis(System.currentTimeMillis());
-        // 这里时区需要设置一下，不然可能个别手机会有8个小时的时间差
-        mCalendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-
-        int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
-        int minute = mCalendar.get(Calendar.MINUTE);
+//        Calendar mCalendar = Calendar.getInstance();
+//        mCalendar.setTimeInMillis(System.currentTimeMillis());
+//        //获取当前毫秒值
+//        long systemTime = System.currentTimeMillis();
+//        //是设置日历的时间，主要是让日历的年月日和当前同步
+//        mCalendar.setTimeInMillis(System.currentTimeMillis());
+//        // 这里时区需要设置一下，不然可能个别手机会有8个小时的时间差
+//        mCalendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+//
+//        int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
+//        int minute = mCalendar.get(Calendar.MINUTE);
 //        AlarmManagerUtil.setAlarm(this, 0, hour, minute, 0);
         AlarmManagerUtil.setAlarm(getApplicationContext(), 8);
 
@@ -153,6 +160,8 @@ public class MainActivity extends BaseActivity {
         MobclickAgent.onResume(this);
         WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
         Log.e(TAG, "onResume: ");
+        //  加载广告
+        mHandler.postDelayed(this::loadAd, 5000);
     }
 
     @Override
@@ -423,5 +432,185 @@ public class MainActivity extends BaseActivity {
             }
         }
 
+    }
+
+
+    /**
+     * 以下为插屏广告
+     */
+    private UnifiedInterstitialAD iad;
+    private boolean isRenderFail;
+    private boolean mAdLoadSuccess;
+    
+    private void loadAd() {
+        if (!mAdLoadSuccess) {
+            iad = getIAD();
+            iad.loadAD();
+        }
+    }
+
+    private void showAd() {
+        if (AdUtil.isAdValid(this, mAdLoadSuccess, iad != null && iad.isValid(), true) && !isRenderFail) {
+            iad.show();
+        }
+    }
+    
+    private UnifiedInterstitialAD getIAD() {
+        if (this.iad != null) {
+            iad.close();
+            iad.destroy();
+        }
+        isRenderFail = false;
+        String posId = Constants.INT_POS_ID;
+//        Log.d(TAG, "getIAD: BiddingToken " + s2sBiddingToken);
+        if (iad == null) {
+//            if (!TextUtils.isEmpty(s2sBiddingToken)) {
+//                iad = new UnifiedInterstitialAD(this, posId, this, null, s2sBiddingToken);
+//            } else {
+                iad = new UnifiedInterstitialAD(this, posId, this);
+//            }
+            iad.setNegativeFeedbackListener(new NegativeFeedbackListener() {
+                @Override
+                public void onComplainSuccess() {
+                    Log.i(TAG, "onComplainSuccess");
+                }
+            });
+            iad.setMediaListener(this);
+            iad.setLoadAdParams(AdUtil.getLoadAdParams("interstitial"));
+//            currentPosId = posId;
+        }
+        return iad;
+    }
+
+    private void close() {
+        if (iad != null) {
+            iad.close();
+        } else {
+//            Toast.makeText(this, "广告尚未加载 ！ ", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onADReceive() {
+        mAdLoadSuccess = true;
+        showAd();
+//        Toast.makeText(this, "广告加载成功 ！ ", Toast.LENGTH_LONG).show();
+        // onADReceive之后才可调用getECPM()
+        Log.d(TAG, "onADReceive eCPMLevel = " + iad.getECPMLevel()+ ", ECPM: " + iad.getECPM()
+                + ", videoduration=" + iad.getVideoDuration()
+                + ", testExtraInfo:" + iad.getExtraInfo().get("mp")
+                + ", request_id:" + iad.getExtraInfo().get("request_id"));
+        if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
+            iad.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
+        }
+        reportBiddingResult(iad);
+    }
+
+    /**
+     * 上报给优量汇服务端在开发者客户端竞价中优量汇的竞价结果，以便于优量汇服务端调整策略提供给开发者更合理的报价
+     *
+     * 优量汇竞价失败调用 sendLossNotification，并填入优量汇竞败原因（必填）、竞胜ADN ID（选填）、竞胜ADN报价（选填）
+     * 优量汇竞价胜出调用 sendWinNotification，并填入开发者期望扣费价格（单位分）
+     * 请开发者如实上报相关参数，以保证优量汇服务端能根据相关参数调整策略，使开发者收益最大化
+     */
+    private void reportBiddingResult(UnifiedInterstitialAD interstitialAD) {
+//        DemoBiddingC2SUtils.reportBiddingWinLoss(interstitialAD);
+//        if (DemoUtil.isNeedSetBidECPM()) {
+//            interstitialAD.setBidECPM(300);
+//        }
+    }
+
+    @Override
+    public void onVideoCached() {
+        // 视频素材加载完成，在此时调用iad.show()或iad.showAsPopupWindow()视频广告不会有进度条。
+        Log.i(TAG, "onVideoCached");
+    }
+
+    @Override
+    public void onNoAD(AdError error) {
+        String msg = String.format(Locale.getDefault(), "onNoAD, error code: %d, error msg: %s",
+                error.getErrorCode(), error.getErrorMsg());
+//        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onADOpened() {
+        Log.i(TAG, "onADOpened");
+    }
+
+    @Override
+    public void onADExposure() {
+        Log.i(TAG, "onADExposure");
+    }
+
+    @Override
+    public void onADClicked() {
+        Log.i(TAG, "onADClicked");
+    }
+
+    @Override
+    public void onADLeftApplication() {
+        Log.i(TAG, "onADLeftApplication");
+    }
+
+    @Override
+    public void onADClosed() {
+        Log.i(TAG, "onADClosed");
+    }
+
+    @Override
+    public void onRenderSuccess() {
+        Log.i(TAG, "onRenderSuccess，建议在此回调后再调用展示方法");
+    }
+
+    @Override
+    public void onRenderFail() {
+        Log.i(TAG, "onRenderFail");
+        isRenderFail = true;
+    }
+
+    @Override
+    public void onVideoInit() {
+        Log.i(TAG, "onVideoInit");
+    }
+
+    @Override
+    public void onVideoLoading() {
+        Log.i(TAG, "onVideoLoading");
+    }
+
+    @Override
+    public void onVideoReady(long videoDuration) {
+        Log.i(TAG, "onVideoReady, duration = " + videoDuration);
+    }
+
+    @Override
+    public void onVideoStart() {
+        Log.i(TAG, "onVideoStart");
+    }
+
+    @Override
+    public void onVideoPause() {
+        Log.i(TAG, "onVideoPause");
+    }
+
+    @Override
+    public void onVideoComplete() {
+        Log.i(TAG, "onVideoComplete");
+    }
+
+    @Override
+    public void onVideoError(AdError error) {
+        Log.i(TAG, "onVideoError, code = " + error.getErrorCode() + ", msg = " + error.getErrorMsg());
+    }
+
+    @Override
+    public void onVideoPageOpen() {
+        Log.i(TAG, "onVideoPageOpen");
+    }
+
+    @Override
+    public void onVideoPageClose() {
+        Log.i(TAG, "onVideoPageClose");
     }
 }

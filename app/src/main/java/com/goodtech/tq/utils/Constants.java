@@ -10,6 +10,7 @@ public class Constants {
     public static final String BANNER_POS_ID = "3022356574123691";  //banner id
     public static final String EXPRESS_POS_ID = "9052754449381091";  //动态信息流 id
     public static final String NEWS_POS_ID = "6032151594725662";  //上文下图信息流 id
+    public static final String INT_POS_ID = "7043003812416547";  //插屏广告 id
 
     public static final String UM_APP_ID = "595a3b236e27a468630021e8";
     public static final String UM_APP_CHANNEL = "jinli";
