@@ -1,2 +1,3 @@
 rootProject.name='Weather'
 include ':app', ':cropimage'
+include ':mediationAdapters:Util',':mediationAdapters:BDAdapter',':mediationAdapters:TTAdapter',':mediationAdapters:KSAdapter'
