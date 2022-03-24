@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity implements UnifiedInterstitialADL
         configStationBar(findViewById(R.id.private_station_bar));
 
         //  静止底部图片滑动
-        findViewById(R.id.scroll_background).setOnTouchListener((v, event) -> true);
+//        findViewById(R.id.scroll_background).setOnTouchListener((v, event) -> true);
 
         //  点击地址，跳转到城市列表
         findViewById(R.id.layout_address).setOnClickListener(v -> CityListActivity.redirectTo(MainActivity.this));
