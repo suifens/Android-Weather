@@ -50,6 +50,8 @@ public class SplashActivity extends Activity {
                 httpHelper.getBaseUrl(httpHelper::fetchCitiesWeather);
             }
 
+            SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
+
             SplashADActivity.redirectTo(this);
             overridePendingTransition(0, 0);
             this.finish();

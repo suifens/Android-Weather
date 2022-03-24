@@ -1,8 +1,6 @@
 package com.goodtech.tq.alarm;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -12,10 +10,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.WindowManager;
-import android.widget.Toast;
 
-import com.blankj.utilcode.util.SPUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CityHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -26,11 +21,9 @@ import com.goodtech.tq.jpush.JPushHelper;
 import com.goodtech.tq.models.CityCodeMode;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.JuheAlarmModel;
-import com.goodtech.tq.models.JuheLifeModel;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;

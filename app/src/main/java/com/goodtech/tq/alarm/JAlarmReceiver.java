@@ -49,6 +49,9 @@ public class JAlarmReceiver extends BroadcastReceiver {
 //            AlarmManagerUtil.setAlarm(context, hour);
 //        }
 
+        JPushHelper.buildLocalNotification(mContext.getApplicationContext(),
+                mContext.getString(R.string.app_name), "收到消息");
+
         new Thread(() -> mHandler.sendEmptyMessage(1)).start();
     }
 

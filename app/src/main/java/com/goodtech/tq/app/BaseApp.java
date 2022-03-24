@@ -211,6 +211,7 @@ public class BaseApp extends Application {
         isRunInBackground = false;
         if (!TextUtils.isEmpty( SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))) {
             SplashADActivity.redirectToFront(activity);
+            SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
         }
     }
 
