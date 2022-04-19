@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.goodtech.tq.alarm.AlarmManagerUtil;
+import com.goodtech.tq.alarm.JAlarmReceiver;
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.MessageEvent;
@@ -111,6 +112,12 @@ public class MainActivity extends BaseActivity implements UnifiedInterstitialADL
         this.registerReceiver(receiver, filter);
 
 //        AlarmManagerUtil.setAlarm(getApplicationContext(), 21);
+
+        String curDay = TimeUtils.timeToDay(System.currentTimeMillis());
+        if (!SpUtils.getInstance().getString("alarmDay", "").equals(curDay)) {
+            JAlarmReceiver.fetchAlarm(this);
+        }
+        JAlarmReceiver.fetchAlarm(this);
     }
 
     @Override

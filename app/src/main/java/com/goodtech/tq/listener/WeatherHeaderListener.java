@@ -15,4 +15,6 @@ public interface WeatherHeaderListener {
     void onSignIn();
     //  疫情出行
     void onOutbreakTravel();
+    //  抖音彩铃
+    void onDyMovie();
 }

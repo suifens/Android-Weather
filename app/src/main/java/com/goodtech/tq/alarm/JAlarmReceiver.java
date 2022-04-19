@@ -20,6 +20,7 @@ import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.TimeUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -61,14 +62,14 @@ public class JAlarmReceiver extends BroadcastReceiver {
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    fetchAlarm();
+                    fetchAlarm(mContext);
                     break;
             }
         }
     };
 
     //  获取天气预警
-    private void fetchAlarm() {
+    public static void fetchAlarm(Context context) {
         if (!SpUtils.getInstance().getBoolean(Constants.REMINDER_WEATHER, true)) {
             //  不添加提醒
             return;
@@ -81,7 +82,7 @@ public class JAlarmReceiver extends BroadcastReceiver {
 
         String province_code = null;
         String city_code = null;
-        ArrayList<CityCodeMode> list = CityHelper.getCityCodes(mContext);
+        ArrayList<CityCodeMode> list = CityHelper.getCityCodes(context);
         for (CityCodeMode cityCodeMode : list) {
             if (cityCodeMode.getCity_name().contains(cityMode.getCity())) {
                 province_code = cityCodeMode.getProvince_code();
@@ -94,6 +95,7 @@ public class JAlarmReceiver extends BroadcastReceiver {
             return;
         }
 
+        SpUtils.getInstance().putString("alarmDay", TimeUtils.timeToDay(System.currentTimeMillis()));
         JuHeHelper.getInstance().fetchJuheAlarm(province_code, city_code, new ApiResponseHandler() {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
@@ -102,7 +104,7 @@ public class JAlarmReceiver extends BroadcastReceiver {
                         if (!jsonObject.isNull("result")) {
                             JSONArray data = jsonObject.getJSONArray("result");
                             ArrayList<JuheAlarmModel> list = new Gson().fromJson(String.valueOf(data), new TypeToken<ArrayList<JuheAlarmModel>>() {}.getType());
-                            checkAlarmModels(list);
+                            checkAlarmModels(context, list);
                         }
                     }
                 } catch (Exception e) {
@@ -112,7 +114,7 @@ public class JAlarmReceiver extends BroadcastReceiver {
         });
     }
 
-    private void checkAlarmModels(ArrayList<JuheAlarmModel> list) {
+    public static void checkAlarmModels(Context context, ArrayList<JuheAlarmModel> list) {
         CityMode cityMode = LocationSpHelper.getLocation();
         if (list != null && list.size() > 0) {
             JuheAlarmModel alarmModel = null;
@@ -128,8 +130,8 @@ public class JAlarmReceiver extends BroadcastReceiver {
             }
             if (alarmModel != null) {
                 //  建立推送
-                JPushHelper.buildLocalNotification(mContext.getApplicationContext(),
-                        mContext.getString(R.string.app_name), alarmModel.getTitle());
+                JPushHelper.buildLocalNotification(context.getApplicationContext(),
+                        context.getString(R.string.app_name), alarmModel.getTitle());
             }
         }
     }

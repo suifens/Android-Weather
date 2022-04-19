@@ -151,7 +151,7 @@ public class BaseApp extends Application {
         //  配置 UM_APP_ID , 标识
         UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
         //手动采集选择
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
     }
 
     public int appCount = 0;

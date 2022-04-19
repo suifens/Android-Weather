@@ -28,6 +28,7 @@ import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.others.constellation.ConstellationActivity;
+import com.goodtech.tq.others.dymovies.DyMoviesActivity;
 import com.goodtech.tq.others.outbreak.OutbreakActivity;
 import com.goodtech.tq.others.taifeng.TyphoonActivity;
 import com.goodtech.tq.signing.SigningActivity;
@@ -205,6 +206,14 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         public void onOutbreakTravel() {
             if (getActivity() != null) {
                 Intent intent = new Intent(getActivity(), OutbreakActivity.class);
+                getActivity().startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onDyMovie() {
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), DyMoviesActivity.class);
                 getActivity().startActivity(intent);
             }
         }

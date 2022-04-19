@@ -68,6 +68,7 @@
         >
         <activity android:name=".signing.SigningActivity" />
         <activity android:name=".others.taifeng.TyphoonActivity" />
+        <activity android:name=".others.dymovies.DyMoviesActivity" />
         <activity android:name=".others.outbreak.OutbreakActivity" />
         <activity android:name=".others.airQuality.AirQualityActivity" />
         <activity android:name=".others.calendar.CalendarActivity" />

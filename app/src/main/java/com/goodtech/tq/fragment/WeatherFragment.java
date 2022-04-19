@@ -159,6 +159,11 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
         public void onOutbreakTravel() {
 
         }
+
+        @Override
+        public void onDyMovie() {
+
+        }
     };
 
     @SuppressLint("NotifyDataSetChanged")
