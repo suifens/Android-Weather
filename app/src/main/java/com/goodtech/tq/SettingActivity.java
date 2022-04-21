@@ -87,8 +87,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.button_back:
                 finish();
                 break;
-            case R.id.layout_widget:
-
+            case R.id.layout_widget: {
+                Intent intent = new Intent(SettingActivity.this, WidgetSettingActivity.class);
+                startActivity(intent);
+            }
                 break;
             case R.id.layout_private_list: {
                 Intent intent = new Intent(SettingActivity.this, PrivateListActivity.class);

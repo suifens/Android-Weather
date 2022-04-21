@@ -189,15 +189,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="16dp"
-                android:fontFamily="sans-serif-black"
                 android:lineSpacingExtra="4sp"
-                android:text="1.长按“桌面空白处”添加天气小插件，调节不同样式
-                \n2.选择“小部件”或“添加插件”
-                \n3.找到“天气预报”小插件，长按拖动至桌面
-                \n
-                \n*oppo手机需要在桌面“两指捏合”添加小工具/小部件
-                \n*为保证插件及通知功能的正常使用，请在系统中设置
-                \n为允许自动启动(开机启动或后台运行)"
                 android:textColor="#9B9B9B"
                 android:textSize="14sp" />
 
