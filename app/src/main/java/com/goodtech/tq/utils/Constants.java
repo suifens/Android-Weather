@@ -41,4 +41,6 @@ public class Constants {
 
     public static final String KEY_CALENDAR = "KEY_CALENDAR";
 
+    public static final String WIDGET_TYPE = "WIDGET_TYPE";
+
 }

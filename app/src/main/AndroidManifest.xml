@@ -67,6 +67,7 @@
         tools:replace="android:label,android:icon, android:theme"
         >
         <activity android:name=".signing.SigningActivity" />
+        <activity android:name=".WidgetSettingActivity" />
         <activity android:name=".others.taifeng.TyphoonActivity" />
         <activity android:name=".others.dymovies.DyMoviesActivity" />
         <activity android:name=".others.outbreak.OutbreakActivity" />
