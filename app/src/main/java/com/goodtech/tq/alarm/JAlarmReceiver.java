@@ -95,7 +95,6 @@ public class JAlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        SpUtils.getInstance().putString("alarmDay", TimeUtils.timeToDay(System.currentTimeMillis()));
         JuHeHelper.getInstance().fetchJuheAlarm(province_code, city_code, new ApiResponseHandler() {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
@@ -130,6 +129,7 @@ public class JAlarmReceiver extends BroadcastReceiver {
             }
             if (alarmModel != null) {
                 //  建立推送
+                SpUtils.getInstance().putString("alarmDay", TimeUtils.timeToDay(alarmModel.getTime(), "yyyy-MM-dd HH:mm"));
                 JPushHelper.buildLocalNotification(context.getApplicationContext(),
                         context.getString(R.string.app_name), alarmModel.getTitle());
             }

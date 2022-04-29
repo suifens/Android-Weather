@@ -86,6 +86,12 @@ public class TimeUtils {
         return format.format(timeMills);
     }
 
+    public static String timeToDay(String strTime, String formatType) {
+        long timeMills = longWithDate(strTime, formatType);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
+        return dateFormat.format(timeMills);
+    }
+
     public static String timeToDay(long timeMills) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
         return dateFormat.format(timeMills);

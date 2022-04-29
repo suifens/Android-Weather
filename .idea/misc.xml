@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/drawable/bg_circle_007bff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_00a2ff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_1592f3.xml" value="0.2984375" />
+        <entry key="app/src/main/res/drawable/bg_circle_black_15.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/drawable/bg_circle_ff3838.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_white.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_circle_white_15.xml" value="0.3921875" />
@@ -20,8 +21,10 @@
         <entry key="app/src/main/res/drawable/bg_radius10_e7a139.xml" value="0.321875" />
         <entry key="app/src/main/res/drawable/bg_radius10_ff6b5f.xml" value="0.321875" />
         <entry key="app/src/main/res/drawable/bg_radius10_ff8550.xml" value="0.321875" />
+        <entry key="app/src/main/res/drawable/bg_radius12_black_10.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/drawable/bg_radius4_00c4ff_10.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_radius4_48c7a1.xml" value="0.3260416666666667" />
+        <entry key="app/src/main/res/drawable/bg_radius4_e05353.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/drawable/bg_radius4_ff4c4c_10.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_radius8_white.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_radius_48c7a1.xml" value="0.3260416666666667" />
@@ -62,6 +65,7 @@
         <entry key="app/src/main/res/layout/activity_signing.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_typhoon.xml" value="0.19630192502532928" />
         <entry key="app/src/main/res/layout/activity_web.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/activity_widge.xml" value="0.335" />
         <entry key="app/src/main/res/layout/air_stub_life.xml" value="0.335" />
         <entry key="app/src/main/res/layout/air_stub_life_item.xml" value="0.45" />
         <entry key="app/src/main/res/layout/air_stub_pm.xml" value="0.2536231884057971" />
@@ -110,6 +114,9 @@
         <entry key="app/src/main/res/layout/weather_item_line.xml" value="0.1" />
         <entry key="app/src/main/res/layout/weather_item_observation.xml" value="0.4121338912133891" />
         <entry key="app/src/main/res/layout/weather_item_recent.xml" value="0.35054347826086957" />
+        <entry key="app/src/main/res/layout/widget_item.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/widget_layout.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/widget_layout_small.xml" value="0.1" />
       </map>
     </option>
   </component>

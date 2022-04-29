@@ -1,5 +1,6 @@
 package com.goodtech.tq;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -45,6 +46,8 @@ public class WidgetSettingActivity extends BaseActivity {
     private Boolean isSingle = true;
     private Boolean isClear = false;
 
+    private Boolean hadChanged = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,17 +64,20 @@ public class WidgetSettingActivity extends BaseActivity {
         singleBtn = findViewById(R.id.singleBtn);
         singleBtn.setOnClickListener(v -> {
             selectedSingle();
+            hadChanged = true;
         });
 
         doubleBtn = findViewById(R.id.doubleBtn);
         doubleBtn.setOnClickListener(v -> {
             selectedDouble();
+            hadChanged = true;
         });
 
         clearBtn = findViewById(R.id.switchBtn_clear);
         clearBtn.setOnClickListener(v -> {
             isClear = clearBtn.isChecked();
             changePreview();
+            hadChanged = true;
         });
 
         previewImgView = findViewById(R.id.previewImgView);
@@ -81,6 +87,17 @@ public class WidgetSettingActivity extends BaseActivity {
         String widgetTypeStr = SpUtils.getInstance().getString(Constants.WIDGET_TYPE, WidgetType.SingleLine1.toString());
         configType(WidgetType.valueOf(widgetTypeStr));
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (hadChanged) {
+//            this.startService(new Intent(this, WidgetService.class));
+            Intent intent = new Intent(this, MyWidget.class);
+            intent.putExtra("WidgetUpdate", true);
+            sendBroadcast(intent);
+        }
+        super.onDestroy();
     }
 
     private void selectedSingle() {

@@ -1,0 +1,19 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/activity_widge"
+    android:minHeight="110dp"
+    android:minWidth="350dp"
+    android:previewImage="@drawable/img_preview_1"
+    android:updatePeriodMillis="8640000"
+    android:widgetCategory="home_screen|keyguard">
+
+</appwidget-provider>
+    <!--
+
+    initialLayout :  widget 的布局文件
+     minHeight： widget  的 最低高度 40dp 110dp 180dp
+     minWidth : widget  的最低高度
+     previewImage ： widget 的预览图
+     android:updatePeriodMillis ： 更新的频率  google 规定最小时间30 min
+                                  在这里设置 0 我们自定义
+     widgetCategory ： widget 可以被添加主屏幕或者锁屏
+    -->

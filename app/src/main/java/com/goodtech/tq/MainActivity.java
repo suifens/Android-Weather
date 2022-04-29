@@ -117,7 +117,8 @@ public class MainActivity extends BaseActivity implements UnifiedInterstitialADL
         if (!SpUtils.getInstance().getString("alarmDay", "").equals(curDay)) {
             JAlarmReceiver.fetchAlarm(this);
         }
-        JAlarmReceiver.fetchAlarm(this);
+
+        mHandler.postDelayed(() -> this.startService(new Intent(this, WidgetService.class)), 1000);
     }
 
     @Override
@@ -431,7 +432,7 @@ public class MainActivity extends BaseActivity implements UnifiedInterstitialADL
     private boolean mAdLoadSuccess;
     
     private void loadAd() {
-        if (!mAdLoadSuccess) {
+        if (!mAdLoadSuccess || !(iad != null && iad.isValid())) {
             iad = getIAD();
             iad.loadAD();
         }
@@ -442,7 +443,7 @@ public class MainActivity extends BaseActivity implements UnifiedInterstitialADL
         mHandler.postDelayed(() -> {
             if (mAdLoadSuccess && iad != null && iad.isValid()) {
                 Log.e(TAG, "showAd: true");
-                iad.showAsPopupWindow();
+                iad.show();
                 SpUtils.getInstance().putBoolean("hadShowInterstitialAD", true);
             }
         }, 1000);
@@ -539,6 +540,9 @@ public class MainActivity extends BaseActivity implements UnifiedInterstitialADL
     @Override
     public void onADClicked() {
         Log.i(TAG, "onADClicked");
+        if (iad != null && iad.isValid()) {
+            iad.close();
+        }
     }
 
     @Override

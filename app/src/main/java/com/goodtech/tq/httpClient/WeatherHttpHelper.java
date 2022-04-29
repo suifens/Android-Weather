@@ -122,7 +122,7 @@ public class WeatherHttpHelper {
         return false;
     }
 
-    protected void getWeather(final CityMode cityMode, final ApiCallback callback) {
+    public void getWeather(final CityMode cityMode, final ApiCallback callback) {
         if (cityMode == null || cityMode.getLat() == null || cityMode.getLon() == null) {
             if (callback != null) {
                 callback.onResponse(false, null, null);

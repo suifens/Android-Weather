@@ -49,6 +49,10 @@ public class LocationHelper {
     }
 
     public void start(Context context) {
+        start(context, mListener);
+    }
+
+    public void start(Context context, BDAbstractLocationListener listener) {
         startTicker();
         if (!PermissionUtil.isLocationEnabled(context)) {
             removeTicker();
@@ -56,11 +60,12 @@ public class LocationHelper {
         }
         locationService = BaseApp.getInstance().locationService;
         if (locationService != null) {
-            TipHelper.showProgressDialog((Activity) context);
-            locationService.registerListener(mListener);
+            if (context.getClass() == Activity.class) {
+                TipHelper.showProgressDialog((Activity) context);
+            }
+            locationService.registerListener(listener);
             LocationService.setLocationOption(locationService.getDefaultLocationClientOption());
             locationService.start();
-
         }
     }
 
