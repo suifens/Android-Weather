@@ -87,8 +87,6 @@ public class AqiHelper {
         }
     }
 
-
-
     public static String getQuality(int aqi) {
         if (aqi > 200) {
             //  重度
@@ -104,6 +102,24 @@ public class AqiHelper {
             return "良";
         } else {
             return "优";
+        }
+    }
+
+    public static int getQualityRes(int aqi) {
+        if (aqi > 200) {
+            //  重度
+            return R.drawable.ic_quality_1;
+        } else if (aqi > 150) {
+            //  中度
+            return R.drawable.ic_quality_2;
+        } else if (aqi > 100) {
+            //  轻度
+            return R.drawable.ic_quality_3;
+        } else if (aqi > 50) {
+            //  良
+            return R.drawable.ic_quality_4;
+        } else {
+            return R.drawable.ic_quality_5;
         }
     }
     

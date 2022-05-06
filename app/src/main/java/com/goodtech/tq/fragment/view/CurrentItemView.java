@@ -20,6 +20,7 @@ import com.goodtech.tq.models.Metric;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.WeatherUtils;
 
 
@@ -105,17 +106,18 @@ public class CurrentItemView extends ConstraintLayout {
     public void setData(WeatherModel model) {
         if (model != null) {
             setVisibility(VISIBLE);
-            if (model.hourlies.size() > 0) {
-                Hourly hourly = model.hourlies.get(0);
+            boolean hadSetTemp = false;
+            String current = TimeUtils.longToString(System.currentTimeMillis(), "MMddHH");
+            for (Hourly hourly : model.hourlies) {
                 if (hourly != null) {
-                    long time = hourly.fcst_valid;
-                    if (System.currentTimeMillis() > time * 1000) {
-                        //
+                    String dayHour = TimeUtils.longToString(hourly.fcst_valid * 1000, "MMddHH");
+                    if (dayHour.equals(current)) {
                         mIconImgV.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
                         if (hourly.metric != null) {
                             mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", hourly.wdir_cardinal,
                                     WeatherUtils.windGrade(hourly.metric.wspd), hourly.rh));
                             mTempTv.setText(String.format("%d", hourly.metric.temp));
+                            hadSetTemp = true;
                         }
                         mPhraseTv.setText(hourly.phraseChar);
                     }
@@ -135,11 +137,13 @@ public class CurrentItemView extends ConstraintLayout {
                             metric.maxTemp, metric.minTemp));
                 }
 
-                mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", observation.wdirCardinal,
-                        WeatherUtils.windGrade(metric.wspd), observation.rh));
-                mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
-                mTempTv.setText(String.format("%d", metric.temp));
-                mPhraseTv.setText(observation.wxPhrase);
+                if (!hadSetTemp) {
+                    mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", observation.wdirCardinal,
+                            WeatherUtils.windGrade(metric.wspd), observation.rh));
+                    mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
+                    mTempTv.setText(String.format("%d", metric.temp));
+                    mPhraseTv.setText(observation.wxPhrase);
+                }
             }
 
             findViewById(R.id.layout_data).setVisibility(VISIBLE);

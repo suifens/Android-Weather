@@ -312,19 +312,7 @@ public class MainActivity extends BaseActivity implements UnifiedInterstitialADL
                     night = current < tSunrise || current > tSunset;
                 }
                 //  天气图标
-                int icon_cd = -1;
-                if (model.observation != null) {
-                    icon_cd = model.observation.wxIcon;
-                    if (model.hourlies.size() > 0 && model.hourlies.get(0) != null) {
-                        Hourly hourly = model.hourlies.get(0);
-                        long time = hourly.fcst_valid;
-                        if (System.currentTimeMillis() > time * 1000) {
-                            icon_cd = hourly.icon_cd;
-                        }
-                    }
-                }
-
-                mBgImgView.setImageResource(ImageUtils.bgImageRes(icon_cd, night));
+                mBgImgView.setImageResource(ImageUtils.bgImageRes(model.getIconCd(), night));
             } else {
                 mBgImgView.setImageResource(R.drawable.bg_normal);
                 mHandler.postDelayed(TipHelper::dismissProgressDialog, 2000);

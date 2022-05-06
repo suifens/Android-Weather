@@ -8,31 +8,39 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.goodtech.tq.alarm.JAlarmReceiver;
-import com.goodtech.tq.app.BaseApp;
-import com.goodtech.tq.helpers.LocationSpHelper;
-import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.location.helper.LocationHelper;
-import com.goodtech.tq.utils.SpUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.goodtech.tq.utils.TimeUtils;
 
 public class MyWidget extends AppWidgetProvider {
-    String TAG = "MyWidget：";
+    String TAG = "MyWidget：--------------";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.i(TAG, "接受广播");
+        Log.e(TAG, "接受广播");
+
+        String action = intent.getAction();
         Bundle extras = intent.getExtras();
-        boolean update = extras.getBoolean("WidgetUpdate");
-        if (update) {
+        boolean update = extras != null && extras.getBoolean("WidgetUpdate");
+        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action) || update) {
+
+            String current = TimeUtils.longToString(System.currentTimeMillis(), "MMdd-HH:mm");
+            ToastUtils.showLong(current);
+
             context.stopService(new Intent(context, WidgetService.class));
-            context.startService(new Intent(context, WidgetService.class));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                if (Settings.canDrawOverlays(context)) {
+                    context.startForegroundService(new Intent(context, WidgetService.class));
+                } else {
+                    context.startService(new Intent(context, WidgetService.class));
+                }
+            } else  {
+                context.startService(new Intent(context, WidgetService.class));
+            }
         }
     }
 
@@ -44,7 +52,7 @@ public class MyWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);
-        Log.i(TAG, "widget  onEnabled 状态");
+        Log.e(TAG, "widget  onEnabled 状态");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(new Intent(context, WidgetService.class));
         } else  {
@@ -60,7 +68,7 @@ public class MyWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        Log.i(TAG, "widget  onUpdate 状态");
+        Log.e(TAG, "widget  onUpdate 状态");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             if (Settings.canDrawOverlays(context)) {
@@ -81,7 +89,7 @@ public class MyWidget extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        Log.i(TAG, "widget  onDisabled 状态");
+        Log.e(TAG, "widget  onDisabled 状态");
         context.stopService(new Intent(context, WidgetService.class));
     }
 
@@ -94,7 +102,7 @@ public class MyWidget extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        Log.i(TAG, "widget  onDeleted 状态");
+        Log.e(TAG, "widget  onDeleted 状态");
 
     }
 }

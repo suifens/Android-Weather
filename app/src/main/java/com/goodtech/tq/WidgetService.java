@@ -79,6 +79,8 @@ public class WidgetService  extends Service {
                 LocationSpHelper.saveWithLocation(location);
                 LocationHelper.getInstance().stop();
 
+                Log.e(TAG, "onReceiveLocation: --------------------------");
+
                 WeatherHttpHelper.getInstance().getBaseUrl(() ->
                         WeatherHttpHelper.getInstance().fetchWeather(LocationSpHelper.getLocation(),
                                 (success, weather, errCode) ->
@@ -108,6 +110,7 @@ public class WidgetService  extends Service {
 
         CityMode location = LocationSpHelper.getLocation();
         if (location != null) {
+            Log.e(TAG, "updateWidget: -------------" + location.getMergerName());
             WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(location.getCid());
             if (weatherModel != null) {
                 updateAppWidget(context, location, weatherModel);
@@ -117,6 +120,7 @@ public class WidgetService  extends Service {
 
     @SuppressLint({"DefaultLocale", "RemoteViewLayout"})
     private void updateAppWidget(Context context, CityMode cityMode, WeatherModel model) {
+        Log.e(TAG, "updateAppWidget: ----------------");
         //通过 RemoteViews 加载布局文件
         //通过 setTextView 等方法实现对控件的控制
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
@@ -155,7 +159,7 @@ public class WidgetService  extends Service {
                 break;
         }
         
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(this, SplashActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.widgetBtn, pendingIntent);   //点击跳转
 
         ComponentName componentName = new ComponentName(this, MyWidget.class);
@@ -165,7 +169,9 @@ public class WidgetService  extends Service {
     @SuppressLint("DefaultLocale")
     private void updateDouble(Context context, RemoteViews remoteViews, CityMode cityMode, WeatherModel model) {
         //  地址
-        remoteViews.setTextViewText(R.id.addressTv, cityMode.getMergerName());
+        String current = TimeUtils.longToString(System.currentTimeMillis(), "MMddHH");
+        remoteViews.setTextViewText(R.id.addressTv, String.format("%s -- %s", cityMode.getMergerName(), current));
+//        remoteViews.setTextViewText(R.id.addressTv, cityMode.getMergerName());
         remoteViews.setImageViewResource(R.id.locationImgView, R.drawable.ic_location_blue);
 
         if (model != null) {
@@ -181,8 +187,8 @@ public class WidgetService  extends Service {
                 if (todayPart != null) remoteViews.setTextViewText(R.id.tv_weather_today,todayPart.phraseChar);
 
                 if (model.aqi > 0) {
-                    remoteViews.setViewVisibility(R.id.tv_quality_today, View.VISIBLE);
-                    remoteViews.setTextViewText(R.id.tv_quality_today, AqiHelper.getQuality(model.aqi));
+                    remoteViews.setViewVisibility(R.id.img_quality_today, View.VISIBLE);
+                    remoteViews.setImageViewResource(R.id.img_quality_today, AqiHelper.getQualityRes(model.aqi));
 //                    remoteViews.setColorAttr(R.id.tv_quality_today, "",AqiHelper.getBgColorResId(model.aqi));
                 } else {
                     remoteViews.setViewVisibility(R.id.tv_quality_today, View.GONE);
@@ -196,11 +202,10 @@ public class WidgetService  extends Service {
                 }
             }
 
-            if (model.hourlies.size() > 0) {
-                Hourly hourly = model.hourlies.get(0);
+            for (Hourly hourly : model.hourlies) {
                 if (hourly != null) {
-                    long time = hourly.fcst_valid;
-                    if (System.currentTimeMillis() > time * 1000) {
+                    String dayHour = TimeUtils.longToString(hourly.fcst_valid * 1000, "MMddHH");
+                    if (dayHour.equals(current)) {
                         //
                         remoteViews.setImageViewResource(R.id.iconImgView, ImageUtils.weatherImageRes(hourly.icon_cd));
                         remoteViews.setTextViewText(R.id.tv_wx_phrase, hourly.phraseChar);
@@ -229,17 +234,19 @@ public class WidgetService  extends Service {
         }
     }
     
+    @SuppressLint("DefaultLocale")
     private void updateSmall(Context context, RemoteViews remoteViews, CityMode cityMode, WeatherModel model) {
         //  地址
-        remoteViews.setTextViewText(R.id.sAddressTv, cityMode.getMergerName());
+        String current = TimeUtils.longToString(System.currentTimeMillis(), "MMddHH");
+        remoteViews.setTextViewText(R.id.sAddressTv, String.format("%s -- %s", cityMode.getMergerName(), current));
+//        remoteViews.setTextViewText(R.id.sAddressTv, cityMode.getMergerName());
         remoteViews.setImageViewResource(R.id.locationImgView, R.drawable.ic_location_blue);
 
         if (model != null) {
-            if (model.hourlies.size() > 0) {
-                Hourly hourly = model.hourlies.get(0);
+            for (Hourly hourly : model.hourlies) {
                 if (hourly != null) {
-                    long time = hourly.fcst_valid;
-                    if (System.currentTimeMillis() > time * 1000) {
+                    String dayHour = TimeUtils.longToString(hourly.fcst_valid * 1000, "MMddHH");
+                    if (dayHour.equals(current)) {
                         //
                         remoteViews.setImageViewResource(R.id.sIconImgView, ImageUtils.weatherImageRes(hourly.icon_cd));
                         remoteViews.setTextViewText(R.id.sTv_wx_phrase, hourly.phraseChar);

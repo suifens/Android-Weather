@@ -3,6 +3,7 @@ package com.goodtech.tq.httpClient;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -100,6 +101,7 @@ public class WeatherHttpHelper {
     }
 
     public boolean fetchWeather(final CityMode cityMode, final ApiCallback callback) {
+        Log.e("TAG", "fetchWeather:  ------------" + cityMode.getMergerName() );
         if (cityMode != null && !TextUtils.isEmpty(cityMode.getLat()) && !TextUtils.isEmpty(cityMode.getLon())) {
             long current = System.currentTimeMillis();
             long lastUpdate = WeatherSpHelper.getLastUpdate(cityMode.getCid());
@@ -112,12 +114,12 @@ public class WeatherHttpHelper {
                     needUpdate = true;
                 }
             }
-            if (needUpdate) {
+//            if (needUpdate) {
                 getWeather(cityMode, callback);
                 return true;
-            } else {
-                return false;
-            }
+//            } else {
+//                return false;
+//            }
         }
         return false;
     }

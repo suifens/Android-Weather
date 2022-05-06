@@ -242,11 +242,11 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
             mCurrentView.setSignedIn(signed);
         }
 
-        if (mWeatherModel != null
-                && model != null) {
-//                && model.expireTime == mWeatherModel.expireTime) {
-            return;
-        }
+//        if (mWeatherModel != null
+//                && model != null) {
+////                && model.expireTime == mWeatherModel.expireTime) {
+//            return;
+//        }
 
         this.mWeatherModel = model;
         this.mCityMode = cityMode;
