@@ -19,7 +19,6 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.goodtech.tq.alarm.AlarmManagerUtil;
 import com.goodtech.tq.alarm.JAlarmReceiver;
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.db.SignDbHelper;
@@ -32,7 +31,6 @@ import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
-import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.AdUtil;
 import com.goodtech.tq.utils.Constants;
@@ -43,6 +41,7 @@ import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.widget.WidgetService;
 import com.qq.e.ads.interstitial2.UnifiedInterstitialAD;
 import com.qq.e.ads.interstitial2.UnifiedInterstitialADListener;
 import com.qq.e.ads.interstitial2.UnifiedInterstitialMediaListener;
@@ -148,8 +147,10 @@ public class MainActivity extends BaseActivity implements UnifiedInterstitialADL
         Log.e(TAG, "onResume: ");
         //  加载广告
         if (!SpUtils.getInstance().getBoolean("hadShowInterstitialAD", false)) {
-            mAdLoadSuccess = false;
-            mHandler.postDelayed(this::loadAd, 4000);
+            if (!mAdLoadSuccess || !(iad != null && iad.isValid())) {
+                mAdLoadSuccess = false;
+                mHandler.postDelayed(this::loadAd, 4000);
+            }
         }
     }
 

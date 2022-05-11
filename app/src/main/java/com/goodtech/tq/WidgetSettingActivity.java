@@ -14,6 +14,7 @@ import android.widget.ToggleButton;
 import com.goodtech.tq.others.widget.WidgetType;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.widget.MyWidget;
 import com.umeng.analytics.MobclickAgent;
 
 public class WidgetSettingActivity extends BaseActivity {

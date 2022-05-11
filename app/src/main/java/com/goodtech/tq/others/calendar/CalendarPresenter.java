@@ -141,10 +141,8 @@ public class CalendarPresenter {
                     }
 
                     if (count[0] == 12) {
-
-                        Collections.sort(holidayList, (o1, o2) -> Long.compare(o1.getDate(), o2.getDate()));
-
                         if (holidayList.size() > 0) {
+                            Collections.sort(holidayList, (o1, o2) -> Long.compare(o1.getDate(), o2.getDate()));
                             mHolidayList = holidayList;
                             mHolidayMap.put(year, holidayList);
 

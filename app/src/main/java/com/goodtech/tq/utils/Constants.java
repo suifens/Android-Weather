@@ -42,5 +42,7 @@ public class Constants {
     public static final String KEY_CALENDAR = "KEY_CALENDAR";
 
     public static final String WIDGET_TYPE = "WIDGET_TYPE";
+    public static final String WIDGET_TRANSPARENT = "WIDGET_TRANSPARENT";
+    public static final String WIDGET_DOUBLE = "WIDGET_DOUBLE";
 
 }

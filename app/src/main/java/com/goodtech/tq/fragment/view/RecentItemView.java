@@ -50,7 +50,6 @@ public class RecentItemView extends LinearLayout {
     protected void initData() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.weather_item_recent, this, true);
         mTTempTv = view.findViewById(R.id.tv_temperature_today);
-        mTTempTv = view.findViewById(R.id.tv_temperature_today);
         mTPhraseTv = view.findViewById(R.id.tv_weather_today);
         mTQualityTv = view.findViewById(R.id.tv_quality_today);
 

@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -8,13 +8,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 
-public class MyWidget extends AppWidgetProvider {
-    String TAG = "MyWidget：--------------";
+public class MyDoubleWidget extends AppWidgetProvider {
+    String TAG = "MyDoubleWidget：--------------";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -29,17 +30,17 @@ public class MyWidget extends AppWidgetProvider {
             String current = TimeUtils.longToString(System.currentTimeMillis(), "MMdd-HH:mm");
             ToastUtils.showLong(current);
 
-            context.stopService(new Intent(context, WidgetService.class));
+            context.stopService(new Intent(context, DoubleWidgetService.class));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                 if (Settings.canDrawOverlays(context)) {
-                    context.startForegroundService(new Intent(context, WidgetService.class));
+                    context.startForegroundService(new Intent(context, DoubleWidgetService.class));
                 } else {
-                    context.startService(new Intent(context, WidgetService.class));
+                    context.startService(new Intent(context, DoubleWidgetService.class));
                 }
             } else  {
-                context.startService(new Intent(context, WidgetService.class));
+                context.startService(new Intent(context, DoubleWidgetService.class));
             }
         }
     }
@@ -54,10 +55,11 @@ public class MyWidget extends AppWidgetProvider {
         super.onEnabled(context);
         Log.e(TAG, "widget  onEnabled 状态");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(new Intent(context, WidgetService.class));
+            context.startForegroundService(new Intent(context, DoubleWidgetService.class));
         } else  {
-            context.startService(new Intent(context, WidgetService.class));
+            context.startService(new Intent(context, DoubleWidgetService.class));
         }
+        SpUtils.getInstance().putBoolean(Constants.WIDGET_DOUBLE, true);
     }
 
     /**
@@ -72,12 +74,12 @@ public class MyWidget extends AppWidgetProvider {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             if (Settings.canDrawOverlays(context)) {
-                context.startForegroundService(new Intent(context, WidgetService.class));
+                context.startForegroundService(new Intent(context, DoubleWidgetService.class));
             } else {
-                context.startService(new Intent(context, WidgetService.class));
+                context.startService(new Intent(context, DoubleWidgetService.class));
             }
         } else  {
-            context.startService(new Intent(context, WidgetService.class));
+            context.startService(new Intent(context, DoubleWidgetService.class));
         }
     }
 
@@ -90,7 +92,7 @@ public class MyWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         super.onDisabled(context);
         Log.e(TAG, "widget  onDisabled 状态");
-        context.stopService(new Intent(context, WidgetService.class));
+        context.stopService(new Intent(context, DoubleWidgetService.class));
     }
 
     /**
@@ -103,6 +105,6 @@ public class MyWidget extends AppWidgetProvider {
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
         Log.e(TAG, "widget  onDeleted 状态");
-
+        SpUtils.getInstance().remove(Constants.WIDGET_DOUBLE);
     }
 }
