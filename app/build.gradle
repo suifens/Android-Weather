@@ -154,15 +154,29 @@ static def getTime() {
     return new Date().format("yyMMdd", TimeZone.getDefault())
 }
 
+
+//msdk
+def M_SDK_VERSION = "3.4.0"
+def M_SDK_VERSION_FIX = ".4"
+//pangle 穿山甲
+def PANGLE_SDK_VERSION = "4.5.1.1"
+def PANGLE_ADAPTER_VERSION = ".0"
+//gdt
+def GDT_SDK_VERSION = "4.462.1332"
+def GDT_ADAPTER_VERSION = ".1"
+//baidu
+def BAIDU_SDK_VERSION = "9.21"
+def BAIDU_ADAPTER_VERSION = ".1"
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation fileTree(dir: 'libs', include: '*.jar')
     implementation project(':cropimage')
-//    implementation fileTree(dir: 'aars', include: ['*.aar'])
-    /// 流量聚合
-//    implementation project(path:':mediationAdapters:TTAdapter')
-//    implementation project(path:':mediationAdapters:BDAdapter')
-//    implementation project(path:':mediationAdapters:KSAdapter')
-//    implementation project(path:':mediationAdapters:Util')
 
     implementation 'com.google.android.material:material:1.3.0'
     //noinspection GradleCompatible
@@ -234,4 +248,23 @@ dependencies {
     implementation 'cn.jiguang.sdk.plugin:oppo:4.5.0'
     // 接入小米厂商
     implementation 'cn.jiguang.sdk.plugin:xiaomi:4.5.0'
+
+    /*GroMore广告显示*/
+    //GroMore_sdk
+    implementation "com.gromore.cn:gromore-sdk:${M_SDK_VERSION}${M_SDK_VERSION_FIX}"  //groMore sdk
+
+    //GroMore_sdk adapter
+    implementation "com.gromore.cn:gdt-adapter:${GDT_SDK_VERSION}${GDT_ADAPTER_VERSION}"
+    implementation "com.gromore.cn:baidu-adapter:${BAIDU_SDK_VERSION}${BAIDU_ADAPTER_VERSION}"
+    implementation "com.gromore.cn:pangle-adapter:${PANGLE_SDK_VERSION}${PANGLE_ADAPTER_VERSION}"
+
+    //Baidu
+    implementation(name: "Baidu_MobAds_SDK_v${BAIDU_SDK_VERSION}", ext: 'aar')
+
+    //pangle
+    implementation(name: "open_ad_sdk_${PANGLE_SDK_VERSION}", ext: 'aar')
+
+    //GDT
+    implementation(name: "GDTSDK.unionNormal.${GDT_SDK_VERSION}", ext: 'aar')
+
 }

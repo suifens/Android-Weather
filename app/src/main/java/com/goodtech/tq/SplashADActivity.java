@@ -12,26 +12,42 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.bytedance.msdk.adapter.TToast;
+import com.bytedance.msdk.adapter.util.Logger;
+import com.bytedance.msdk.adapter.util.UIUtils;
+import com.bytedance.msdk.api.AdError;
+import com.bytedance.msdk.api.TTAdConstant;
+import com.bytedance.msdk.api.v2.GMNetworkPlatformConst;
+import com.bytedance.msdk.api.v2.GMNetworkRequestInfo;
+import com.bytedance.msdk.api.v2.ad.splash.GMSplashAd;
+import com.bytedance.msdk.api.v2.ad.splash.GMSplashAdListener;
+import com.bytedance.msdk.api.v2.ad.splash.GMSplashAdLoadCallback;
+import com.bytedance.msdk.api.v2.ad.splash.GMSplashMinWindowListener;
+import com.bytedance.msdk.api.v2.slot.GMAdSlotSplash;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.SplashUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
-import com.qq.e.comm.util.AdError;
+
+import java.lang.ref.SoftReference;
 
 /**
  * 这是demo工程的入口Activity，在这里会首次调用广点通的SDK。
  *
  * 在调用SDK之前，如果您的App的targetSDKVersion >= 23，那么建议动态申请相关权限。
  */
-public class SplashADActivity extends Activity implements SplashADListener, View.OnClickListener {
+public class SplashADActivity extends Activity {
 
+    private static final String TAG = "SplashADActivity";
     private SplashAD splashAD;
     private TextView skipView;
     private static final String SKIP_TEXT = "点击跳过 %d";
@@ -44,6 +60,27 @@ public class SplashADActivity extends Activity implements SplashADListener, View
      */
     private long fetchSplashADTime = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private GMSplashAd mTTSplashAd;
+    private FrameLayout mSplashContainer;
+    //是否强制跳转到主页面
+    private boolean mForceGoMain;
+    private String mAdUnitId = null;
+
+    //开屏广告加载超时时间,建议大于1000,这里为了冷启动第一次加载到广告并且展示,示例设置了2000ms
+    private static final int AD_TIME_OUT = 3000;
+    private static final int MSG_GO_MAIN = 1;
+    //开屏广告是否已经加载
+    private boolean mHasLoaded;
+
+    // 百度开屏广告点击跳转落地页后倒计时不暂停，即使在看落地页，倒计时结束后仍然会强制跳转，需要特殊处理：
+    // 检测到广告被点击，且走了activity的onPaused证明跳转到了落地页，这时候onAdDismiss回调中不进行跳转，而是在activity的onResume中跳转。
+    private boolean isBaiduSplashAd = false;
+    private boolean baiduSplashAdClicked = false;
+    private boolean onPaused = false;
+
+    //----------------开屏小窗参数-------------------
+    private boolean showInCurrent = false; //开屏小窗是否在当前页面展示
 
     public static void redirectTo(Activity ctx) {
         Intent intent = new Intent(ctx, SplashADActivity.class);
@@ -62,138 +99,189 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_ad);
-        ViewGroup container = this.findViewById(R.id.splash_container);
 
         StatusBarUtil.setImmerseStatusBarSystemUiVisibility(this);
+        mSplashContainer = this.findViewById(R.id.splash_container);
 
-        //  获取广告
-        fetchSplashAD(this, container, skipView, getPosId(), this);
-    }
-
-    private String getPosId() {
-        String posId = getIntent().getStringExtra("ad_id");
-        return TextUtils.isEmpty(posId) ? Constants.SPLASH_POS_ID : posId;
+        Intent intent = getIntent();
+        if (intent == null) {
+            return;
+        }
+        mAdUnitId = Constants.PGE_SPLASH_POS_ID;
+        //加载开屏广告
+        mSplashContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                loadSplashAd();
+            }
+        });
     }
 
     /**
-     * 拉取开屏广告，开屏广告的构造方法有3种，详细说明请参考开发者文档。
-     * @param activity        展示广告的activity
-     * @param adContainer     展示广告的大容器
-     * @param skipContainer   自定义的跳过按钮：传入该view给SDK后，SDK会自动给它绑定点击跳过事件。SkipView的样式可以由开发者自由定制，其尺寸限制请参考activity_splash.xml或者接入文档中的说明。
-     * @param posId           广告位ID
-     * @param adListener      广告状态监听器
+     * 加载开屏广告
      */
-    private void fetchSplashAD(Activity activity, ViewGroup adContainer, View skipContainer,
-                               String posId, SplashADListener adListener) {
-        fetchSplashADTime = System.currentTimeMillis();
-        splashAD = new SplashAD(activity, posId, adListener, 0);
-        splashAD.fetchAndShowIn(adContainer);
-        if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
-            splashAD.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
+    private void loadSplashAd() {
+        if (mAdUnitId == null) return;
+        /**
+         * 注：每次加载开屏广告的时候需要新建一个TTSplashAd，否则可能会出现广告填充问题
+         * （ 例如：mTTSplashAd = new TTSplashAd(this, mAdUnitId);）
+         */
+        mTTSplashAd = new GMSplashAd(this, mAdUnitId);
+        mTTSplashAd.setAdSplashListener(mSplashAdListener);
+
+        //step3:创建开屏广告请求参数AdSlot,具体参数含义参考文档
+        GMAdSlotSplash adSlot = new GMAdSlotSplash.Builder()
+                .setImageAdSize(UIUtils.getScreenWidth(this), UIUtils.getScreenHeight(this)) // 单位px
+                .setSplashPreLoad(true)//开屏gdt开屏广告预加载
+                .setMuted(false) //声音开启
+                .setVolume(1f)//admob 声音配置，与setMuted配合使用
+                .setTimeOut(AD_TIME_OUT)//设置超时
+                .setSplashButtonType(TTAdConstant.SPLASH_BUTTON_TYPE_FULL_SCREEN)
+                .setDownloadType(TTAdConstant.DOWNLOAD_TYPE_POPUP)
+                .setSplashShakeButton(true) //开屏摇一摇开关，默认开启，目前只有gdt支持
+                .build();
+
+        //自定义兜底方案 选择使用
+        GMNetworkRequestInfo networkRequestInfo = SplashUtils.getGMNetworkRequestInfo(2);
+        //step4:请求广告，调用开屏广告异步请求接口，对请求回调的广告作渲染处理
+        mTTSplashAd.loadAd(adSlot, new GMSplashAdLoadCallback() {
+            @Override
+            public void onSplashAdLoadFail(com.bytedance.msdk.api.AdError adError) {
+                Log.d(TAG, adError.message);
+                mHasLoaded = true;
+                Log.e(TAG, "load splash ad error : " + adError.code + ", " + adError.message);
+                goToMainActivity();
+
+                // 获取本次waterfall加载中，加载失败的adn错误信息。
+                if (mTTSplashAd != null) {
+                    Log.d(TAG, "ad load infos: " + mTTSplashAd.getAdLoadInfoList().toString());
+                }
+            }
+
+            @Override
+            public void onSplashAdLoadSuccess() {
+                if (mTTSplashAd != null) {
+                    if(mTTSplashAd.getAdNetworkPlatformId() == GMNetworkPlatformConst.SDK_NAME_KLEVIN){
+                        //游可赢开屏与其他ADN开屏不同，是单独开启一个Activity，而不是通过传入的container添加，需要做符合业务的特殊处理
+                    }
+                    // 根据需要选择调用isReady()
+//                    if (mTTSplashAd.isReady()) {
+//                        mTTSplashAd.showAd(mSplashContainer);
+//                    }
+                    mTTSplashAd.showAd(mSplashContainer);
+                    isBaiduSplashAd = mTTSplashAd.getAdNetworkPlatformId() == GMNetworkPlatformConst.SDK_NAME_BAIDU;
+                    // 获取本次waterfall加载中，加载失败的adn错误信息。
+                    Log.d(TAG, "ad load infos: " + mTTSplashAd.getAdLoadInfoList());
+                }
+                Log.e(TAG, "load splash ad success ");
+            }
+
+            // 注意：***** 开屏广告加载超时回调已废弃，统一走onSplashAdLoadFail，GroMore作为聚合不存在SplashTimeout情况。*****
+            @Override
+            public void onAdLoadTimeout() {
+            }
+        });
+
+    }
+
+    GMSplashAdListener mSplashAdListener = new GMSplashAdListener() {
+        @Override
+        public void onAdClicked() {
+            baiduSplashAdClicked = true;
+            showToast("开屏广告被点击");
+            Log.d(TAG, "onAdClicked");
         }
-    }
 
-    @Override
-    public void onADPresent() {
-        Log.i("AD_DEMO", "SplashADPresent");
-    }
-
-    @Override
-    public void onADClicked() {
-//        Log.i("AD_DEMO", "SplashADClicked clickUrl: "
-//                + (splashAD.getExt() != null ? splashAD.getExt().get("clickUrl") : ""));
-    }
-
-    /**
-     * 倒计时回调，返回广告还将被展示的剩余时间。
-     * 通过这个接口，开发者可以自行决定是否显示倒计时提示，或者还剩几秒的时候显示倒计时
-     *
-     * @param millisUntilFinished 剩余毫秒数
-     */
-    @SuppressLint("DefaultLocale")
-    @Override
-    public void onADTick(long millisUntilFinished) {
-        Log.i("AD_DEMO", "SplashADTick " + millisUntilFinished + "ms");
-        if (skipView != null) {
-            skipView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-            skipView.setText(String.format(SKIP_TEXT, Math.round(millisUntilFinished / 1000f)));
+        @Override
+        public void onAdShow() {
+            showToast("开屏广告展示");
+            Log.d(TAG, "onAdShow");
         }
-    }
 
-    @Override
-    public void onADExposure() {
-        Log.i("AD_DEMO", "SplashADExposure");
-    }
+        /**
+         * show失败回调。如果show时发现无可用广告（比如广告过期），会触发该回调。
+         * 开发者应该结合自己的广告加载、展示流程，在该回调里进行重新加载。
+         * @param adError showFail的具体原因
+         */
+        @Override
+        public void onAdShowFail(AdError adError) {
+            showToast("开屏广告展示失败");
+            Log.d(TAG, "onAdShowFail");
 
-    @Override
-    public void onADLoaded(long expireTimestamp) {
-        Log.i("AD_DEMO", "SplashADFetch expireTimestamp:"+expireTimestamp);
-    }
-
-    @Override
-    public void onADDismissed() {
-        Log.i("AD_DEMO", "SplashADDismissed");
-        next();
-    }
-
-    @SuppressLint("DefaultLocale")
-    @Override
-    public void onNoAD(AdError error) {
-//        final String str = String.format("LoadSplashADFail, eCode=%d, errorMsg=%s", error.getErrorCode(),
-//                error.getErrorMsg());
-//        Log.i("AD_DEMO",str);
-//        handler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(SplashActivity.this.getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        //为防止无广告时造成视觉上类似于"闪退"的情况，设定无广告时页面跳转根据需要延迟一定时间，demo
-        //给出的延时逻辑是从拉取广告开始算开屏最少持续多久
-        long alreadyDelayMills = System.currentTimeMillis() - fetchSplashADTime;//从拉广告开始到onNoAD已经消耗了多少时间
-        int minSplashTimeWhenNoAD = 2000;
-        long shouldDelayMills = alreadyDelayMills > minSplashTimeWhenNoAD ? 0 : minSplashTimeWhenNoAD
-                - alreadyDelayMills;//为防止加载广告失败后立刻跳离开屏可能造成的视觉上类似于"闪退"的情况，根据设置的minSplashTimeWhenNoAD
-        // 计算出还需要延时多久
-        handler.postDelayed(SplashADActivity.this::onStartWeather, shouldDelayMills);
-    }
-
-    /**
-     * 设置一个变量来控制当前开屏页面是否可以跳转，当开屏广告为普链类广告时，点击会打开一个广告落地页，此时开发者还不能打开自己的App主页。当从广告落地页返回以后，
-     * 才可以跳转到开发者自己的App主页；当开屏广告是App类广告时只会下载App。
-     */
-    private void next() {
-        if (canJump) {
-            this.onStartWeather();
-        } else {
-            canJump = true;
+            // 开发者应该结合自己的广告加载、展示流程，在该回调里进行重新加载
+            loadSplashAd();
         }
+
+        @Override
+        public void onAdSkip() {
+            showToast("开屏广告点击跳过按钮");
+            Log.d(TAG, "onAdSkip");
+
+            goToMainActivity();
+        }
+
+        @Override
+        public void onAdDismiss() {
+            showToast("开屏广告倒计时结束关闭");
+            Log.d(TAG, "onAdDismiss");
+            if (isBaiduSplashAd && onPaused && baiduSplashAdClicked) {
+                // 这种情况下，百度开屏广告不能在onAdDismiss中跳转，需要在onResume中跳转主页。
+                return;
+            }
+            goToMainActivity();
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        //判断是否该跳转到主页面
+        if (mForceGoMain) {
+            goToMainActivity();
+        }
+        if (isBaiduSplashAd && onPaused && baiduSplashAdClicked) {
+            // 这种情况下，百度开屏广告不能在onAdDismiss中跳转，需要自己在onResume中跳转主页。
+            goToMainActivity();
+        }
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        canJump = false;
+        onPaused = true;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (canJump) {
-            next();
-        }
-        canJump = true;
+    protected void onStop() {
+        super.onStop();
+        mForceGoMain = true;
     }
 
     @Override
     protected void onDestroy() {
-        if (splashAD != null) {
-            splashAD = null;
-        }
-        handler.removeCallbacksAndMessages(null);
         super.onDestroy();
+        mSplashContainer.removeAllViews();
+        if (mTTSplashAd != null) {
+           mTTSplashAd.destroy();  //跨页面展示开屏小窗时不能对相关广告进行销毁
+        }
     }
+
+    /**
+     * 跳转到主页面
+     */
+    private void goToMainActivity() {
+        // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        // startActivity(intent);
+        // overridePendingTransition(0, 0);
+        // mSplashContainer.removeAllViews();
+        // this.finish();
+        onStartWeather();
+    }
+
+    private void showToast(String msg) {
+        TToast.show(this, msg);
+    }
+
 
     /** 开屏页一定要禁止用户对返回按钮的控制，否则将可能导致用户手动退出了App而广告无法正常曝光和计费 */
     @Override
@@ -202,13 +290,6 @@ public class SplashADActivity extends Activity implements SplashADListener, View
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.skip_view) {
-            onStartWeather();
-        }
     }
 
     private void onStartWeather() {
@@ -229,6 +310,6 @@ public class SplashADActivity extends Activity implements SplashADListener, View
     private void onShowSkip() {
         skipView = findViewById(R.id.skip_view);
         skipView.setVisibility(View.VISIBLE);
-        skipView.setOnClickListener(this);
+        // skipView.setOnClickListener(this);
     }
 }

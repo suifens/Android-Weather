@@ -17,6 +17,7 @@ import com.goodtech.tq.MyActivityManager;
 import com.goodtech.tq.SettingActivity;
 import com.goodtech.tq.SplashADActivity;
 import com.goodtech.tq.SplashActivity;
+import com.goodtech.tq.app.config.GMAdManagerHolder;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.jpush.JPushHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
@@ -65,6 +66,8 @@ public class BaseApp extends Application {
         MMKV.initialize(this);
         //  Activity生命周期监听
         registerLifecycle();
+
+        GMAdManagerHolder.init(this);
 
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
