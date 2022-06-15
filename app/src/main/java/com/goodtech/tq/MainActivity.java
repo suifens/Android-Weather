@@ -120,7 +120,6 @@ public class MainActivity extends BaseActivity {
 
         mHandler.postDelayed(() -> this.startService(new Intent(this, WidgetService.class)), 1000);
 
-        initListener();
         initAdLoader();
     }
 
@@ -439,94 +438,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void initListener() {
-        mGMInterstitialFullAdListener = new GMInterstitialFullAdListener() {
-            @Override
-            public void onInterstitialFullShow() {
-                Toast.makeText(getApplicationContext(), "插全屏广告show", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onInterstitialFullShow");
-            }
-
-            /**
-             * show失败回调。如果show时发现无可用广告（比如广告过期或者isReady=false），会触发该回调。
-             * 开发者应该结合自己的广告加载、展示流程，在该回调里进行重新加载。
-             * @param adError showFail的具体原因
-             */
-            @Override
-            public void onInterstitialFullShowFail(@NonNull AdError adError) {
-                Toast.makeText(getApplicationContext(), "插全屏广告展示失败", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onInterstitialFullShowFail");
-
-                // 开发者应该结合自己的广告加载、展示流程，在该回调里进行重新加载
-
-            }
-
-            @Override
-            public void onInterstitialFullClick() {
-                Toast.makeText(getApplicationContext(), "插全屏广告click", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onInterstitialFullClick");
-            }
-
-            @Override
-            public void onInterstitialFullClosed() {
-                Toast.makeText(getApplicationContext(), "插全屏广告close", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onInterstitialFullClosed");
-            }
-
-            @Override
-            public void onVideoComplete() {
-                TToast.show(getApplicationContext(), "插全屏播放完成");
-                Log.d(TAG, "onVideoComplete");
-            }
-
-            @Override
-            public void onVideoError() {
-                TToast.show(getApplicationContext(), "插全屏播放出错");
-                Log.d(TAG, "onVideoError");
-            }
-
-            @Override
-            public void onSkippedVideo() {
-                TToast.show(getApplicationContext(), "插全屏跳过");
-                Log.d(TAG, "onSkippedVideo");
-            }
-
-            /**
-             * 当广告打开浮层时调用，如打开内置浏览器、内容展示浮层，一般发生在点击之后
-             * 常常在onAdLeftApplication之前调用
-             */
-            @Override
-            public void onAdOpened() {
-                Toast.makeText(getApplicationContext(), "插全屏广告onAdOpened", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onAdOpened");
-            }
-
-            /**
-             * 此方法会在用户点击打开其他应用（例如 Google Play）时
-             * 于 onAdOpened() 之后调用，从而在后台运行当前应用。
-             */
-            @Override
-            public void onAdLeftApplication() {
-                Toast.makeText(getApplicationContext(), "插全屏广告onAdLeftApplication", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onAdLeftApplication");
-            }
-
-            @Override
-            public void onRewardVerify(@NonNull RewardItem rewardItem) {
-                Map<String, Object> customData = rewardItem.getCustomData();
-                if (customData != null) {
-                    String adnName = (String) customData.get(RewardItem.KEY_ADN_NAME);
-                    switch (adnName) {
-                        case RewardItem.KEY_GDT:
-                            Logger.d(TAG, "rewardItem gdt: " + customData.get(RewardItem.KEY_GDT_TRANS_ID));
-                            break;
-                    }
-                }
-                Log.d(TAG, "onRewardVerify");
-            }
-        };
-    }
-
     private void initAdLoader() {
         mAdInterstitialFullManager = new AdInterstitialFullManager(this, new GMInterstitialFullAdLoadCallback() {
             @Override
@@ -540,7 +451,6 @@ public class MainActivity extends BaseActivity {
             public void onInterstitialFullAdLoad() {
                 mLoadSuccess = true;
                 Log.e(TAG, "load interaction ad success ! ");
-                TToast.show(getApplicationContext(), "插全屏加载成功！");
                 mAdInterstitialFullManager.printLoadAdInfo(); //展示已经加载广告的信息
                 mAdInterstitialFullManager.printLoadFailAdnInfo();// 获取本次waterfall加载中，加载失败的adn错误信息。
             }
@@ -549,7 +459,6 @@ public class MainActivity extends BaseActivity {
             public void onInterstitialFullCached() {
                 mLoadSuccess = true;
                 Log.d(TAG, "onFullVideoCached....缓存成功！");
-                TToast.show(getApplicationContext(), "插全屏缓存成功！");
                 if (mIsLoadedAndShow) {
                     showInterFullAd();
                 }
@@ -570,195 +479,10 @@ public class MainActivity extends BaseActivity {
                 mAdInterstitialFullManager.getGMInterstitialFullAd().showAd(this);
                 mAdInterstitialFullManager.printSHowAdInfo();//打印已经展示的广告信息
             } else {
-                TToast.show(this, "当前广告不满足show的条件");
+                // TToast.show(this, "当前广告不满足show的条件");
             }
         } else {
-            TToast.show(this, "请先加载广告");
+            // TToast.show(this, "请先加载广告");
         }
     }
-    
-//     private UnifiedInterstitialAD iad;
-//     private boolean isRenderFail;
-//    
-//     private void loadAd() {
-//         if (!mAdLoadSuccess || !(iad != null && iad.isValid())) {
-//             iad = getIAD();
-//             iad.loadAD();
-//         }
-//     }
-//
-//     private void showAd() {
-//         Log.e(TAG, "showAd: ");
-//         mHandler.postDelayed(() -> {
-//             if (mAdLoadSuccess && iad != null && iad.isValid()) {
-//                 Log.e(TAG, "showAd: true");
-//                 iad.show();
-//                 SpUtils.getInstance().putBoolean("hadShowInterstitialAD", true);
-//             }
-//         }, 1000);
-//     }
-//    
-//     private UnifiedInterstitialAD getIAD() {
-//         if (this.iad != null) {
-//             iad.close();
-//             iad.destroy();
-//         }
-//         isRenderFail = false;
-//         String posId = Constants.INT_POS_ID;
-// //        Log.d(TAG, "getIAD: BiddingToken " + s2sBiddingToken);
-//         if (iad == null) {
-// //            if (!TextUtils.isEmpty(s2sBiddingToken)) {
-// //                iad = new UnifiedInterstitialAD(this, posId, this, null, s2sBiddingToken);
-// //            } else {
-//                 iad = new UnifiedInterstitialAD(this, posId, this);
-// //            }
-//             iad.setNegativeFeedbackListener(new NegativeFeedbackListener() {
-//                 @Override
-//                 public void onComplainSuccess() {
-//                     Log.i(TAG, "onComplainSuccess");
-//                 }
-//             });
-//             iad.setMediaListener(this);
-//             iad.setLoadAdParams(AdUtil.getLoadAdParams("interstitial"));
-// //            currentPosId = posId;
-//         }
-//         return iad;
-//     }
-//
-//     private void close() {
-//         if (iad != null) {
-//             iad.close();
-//         } else {
-// //            Toast.makeText(this, "广告尚未加载 ！ ", Toast.LENGTH_LONG).show();
-//         }
-//     }
-//
-//     @Override
-//     public void onADReceive() {
-// //        mAdLoadSuccess = true;
-// //        showAd();
-// //        Toast.makeText(this, "广告加载成功 ！ ", Toast.LENGTH_LONG).show();
-//         // onADReceive之后才可调用getECPM()
-//         Log.d(TAG, "onADReceive eCPMLevel = " + iad.getECPMLevel()+ ", ECPM: " + iad.getECPM()
-//                 + ", videoduration=" + iad.getVideoDuration()
-//                 + ", testExtraInfo:" + iad.getExtraInfo().get("mp")
-//                 + ", request_id:" + iad.getExtraInfo().get("request_id"));
-//         if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
-//             iad.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
-//         }
-//         reportBiddingResult(iad);
-//     }
-//
-//     /**
-//      * 上报给优量汇服务端在开发者客户端竞价中优量汇的竞价结果，以便于优量汇服务端调整策略提供给开发者更合理的报价
-//      *
-//      * 优量汇竞价失败调用 sendLossNotification，并填入优量汇竞败原因（必填）、竞胜ADN ID（选填）、竞胜ADN报价（选填）
-//      * 优量汇竞价胜出调用 sendWinNotification，并填入开发者期望扣费价格（单位分）
-//      * 请开发者如实上报相关参数，以保证优量汇服务端能根据相关参数调整策略，使开发者收益最大化
-//      */
-//     private void reportBiddingResult(UnifiedInterstitialAD interstitialAD) {
-// //        DemoBiddingC2SUtils.reportBiddingWinLoss(interstitialAD);
-// //        if (DemoUtil.isNeedSetBidECPM()) {
-// //            interstitialAD.setBidECPM(300);
-// //        }
-//     }
-//
-//     @Override
-//     public void onVideoCached() {
-//         // 视频素材加载完成，在此时调用iad.show()或iad.showAsPopupWindow()视频广告不会有进度条。
-//         Log.i(TAG, "onVideoCached");
-//     }
-//
-//     @Override
-//     public void onNoAD(AdError error) {
-//         String msg = String.format(Locale.getDefault(), "onNoAD, error code: %d, error msg: %s",
-//                 error.getErrorCode(), error.getErrorMsg());
-// //        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-//     }
-//
-//     @Override
-//     public void onADOpened() {
-//         Log.i(TAG, "onADOpened");
-//     }
-//
-//     @Override
-//     public void onADExposure() {
-//         Log.i(TAG, "onADExposure");
-//     }
-//
-//     @Override
-//     public void onADClicked() {
-//         Log.i(TAG, "onADClicked");
-//         if (iad != null && iad.isValid()) {
-//             iad.close();
-//         }
-//     }
-//
-//     @Override
-//     public void onADLeftApplication() {
-//         Log.i(TAG, "onADLeftApplication");
-//     }
-//
-//     @Override
-//     public void onADClosed() {
-//         Log.i(TAG, "onADClosed");
-//     }
-//
-//     @Override
-//     public void onRenderSuccess() {
-//         Log.i(TAG, "onRenderSuccess，建议在此回调后再调用展示方法");
-//         mAdLoadSuccess = true;
-//         showAd();
-//     }
-//
-//     @Override
-//     public void onRenderFail() {
-//         Log.i(TAG, "onRenderFail");
-//         isRenderFail = true;
-//     }
-//
-//     @Override
-//     public void onVideoInit() {
-//         Log.i(TAG, "onVideoInit");
-//     }
-//
-//     @Override
-//     public void onVideoLoading() {
-//         Log.i(TAG, "onVideoLoading");
-//     }
-//
-//     @Override
-//     public void onVideoReady(long videoDuration) {
-//         Log.i(TAG, "onVideoReady, duration = " + videoDuration);
-//     }
-//
-//     @Override
-//     public void onVideoStart() {
-//         Log.i(TAG, "onVideoStart");
-//     }
-//
-//     @Override
-//     public void onVideoPause() {
-//         Log.i(TAG, "onVideoPause");
-//     }
-//
-//     @Override
-//     public void onVideoComplete() {
-//         Log.i(TAG, "onVideoComplete");
-//     }
-//
-//     @Override
-//     public void onVideoError(AdError error) {
-//         Log.i(TAG, "onVideoError, code = " + error.getErrorCode() + ", msg = " + error.getErrorMsg());
-//     }
-//
-//     @Override
-//     public void onVideoPageOpen() {
-//         Log.i(TAG, "onVideoPageOpen");
-//     }
-//
-//     @Override
-//     public void onVideoPageClose() {
-//         Log.i(TAG, "onVideoPageClose");
-//     }
 }

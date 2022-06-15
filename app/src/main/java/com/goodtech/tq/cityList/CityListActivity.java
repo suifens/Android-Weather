@@ -7,8 +7,10 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,12 +18,29 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bytedance.msdk.adapter.TToast;
+import com.bytedance.msdk.api.AdError;
+import com.bytedance.msdk.api.nativeAd.TTNativeAdAppInfo;
+import com.bytedance.msdk.api.nativeAd.TTViewBinder;
+import com.bytedance.msdk.api.v2.GMAdConstant;
+import com.bytedance.msdk.api.v2.GMAdDislike;
+import com.bytedance.msdk.api.v2.GMDislikeCallback;
+import com.bytedance.msdk.api.v2.ad.banner.GMBannerAdListener;
+import com.bytedance.msdk.api.v2.ad.banner.GMBannerAdLoadCallback;
+import com.bytedance.msdk.api.v2.ad.banner.GMNativeAdInfo;
+import com.bytedance.msdk.api.v2.ad.banner.GMNativeToBannerListener;
+import com.bytedance.msdk.api.v2.ad.nativeAd.GMViewBinder;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
@@ -30,6 +49,7 @@ import com.goodtech.tq.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
+import com.goodtech.tq.manager.AdBannerManager;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DownloadConfirmHelper;
@@ -42,7 +62,6 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.qq.e.ads.banner2.UnifiedBannerADListener;
 import com.qq.e.ads.banner2.UnifiedBannerView;
-import com.qq.e.comm.util.AdError;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,12 +69,15 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
  */
-public class CityListActivity extends BaseActivity implements View.OnClickListener, UnifiedBannerADListener {
+public class CityListActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "CityListActivity";
 
@@ -63,6 +85,9 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        if (mAdBannerManager != null) {
+            mAdBannerManager.onResume();
+        }
     }
 
     @Override
@@ -70,6 +95,9 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mRecyclerViewDragDropManager.cancelDrag();
         MobclickAgent.onPause(this);
         super.onPause();
+        if (mAdBannerManager != null) {
+            mAdBannerManager.onPause();
+        }
     }
 
     @Override
@@ -92,8 +120,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mAdapter = null;
         mLayoutManager = null;
 
-        if (bv != null) {
-            bv.destroy();
+        if (mAdBannerManager != null) {
+            mAdBannerManager.destroy();
         }
 
         EventBus.getDefault().unregister(this);
@@ -194,10 +222,12 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
         mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
 
+        setClickListener();
+
+        initListener();
+        initAdLoader();
         //  banner
         configBanner();
-
-        setClickListener();
     }
 
     @Override
@@ -297,78 +327,143 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
      * banner
      */
 
-    private ViewGroup bannerContainer;
-    private UnifiedBannerView bv;
+    private FrameLayout mBannerContainer;
+    //广告是否加载成功了
+    private boolean mIsLoaded;
+    //广告加载成功并展示
+    private boolean mIsLoadedAndShow;
+    //广告管理类
+    private AdBannerManager mAdBannerManager;
+    // banner广告事件的监听
+    private GMBannerAdListener mAdBannerListener;
 
     private void configBanner() {
-        bannerContainer = (ViewGroup) this.findViewById(R.id.bannerContainer);
-        this.getBanner().loadAD();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (bv != null) {
-            bv.setLayoutParams(getUnifiedBannerLayoutParams());
+        mBannerContainer = this.findViewById(R.id.bannerContainer);
+        mIsLoadedAndShow = true;
+        clearStatus();
+        if (mAdBannerListener != null) {
+            mAdBannerManager.loadAdWithCallback(Constants.PGE_BANNER_POS_ID);
         }
     }
 
-    private UnifiedBannerView getBanner() {
-        if(this.bv != null){
-            bannerContainer.removeView(bv);
-            bv.destroy();
-        }
-        this.bv = new UnifiedBannerView(this, Constants.BANNER_POS_ID, this);
-        if (DownloadConfirmHelper.USE_CUSTOM_DIALOG) {
-            bv.setDownloadConfirmListener(DownloadConfirmHelper.DOWNLOAD_CONFIRM_LISTENER);
-        }
-        // 不需要传递tags使用下面构造函数
-        // this.bv = new UnifiedBannerView(this, Constants.APPID, posId, this);
-//        bannerContainer.addView(bv, getUnifiedBannerLayoutParams());
-        bannerContainer.addView(bv);
-        return this.bv;
+    private void initAdLoader() {
+        mAdBannerManager = new AdBannerManager(this, new GMBannerAdLoadCallback() {
+            @Override
+            public void onAdFailedToLoad(com.bytedance.msdk.api.AdError adError) {
+                TToast.show(CityListActivity.this, "广告加载失败");
+                mIsLoaded = false;
+                Log.e(TAG, "load banner ad error : " + adError.code + ", " + adError.message);
+                mBannerContainer.removeAllViews();
+                mAdBannerManager.printLoadFailAdnInfo();// 获取本次waterfall加载中，加载失败的adn错误信息。
+            }
+
+            @Override
+            public void onAdLoaded() {
+                TToast.show(CityListActivity.this, "广告加载成功");
+                Log.i(TAG, "banner load success ");
+                mIsLoaded = true;
+                if (mIsLoadedAndShow) {
+                    showBannerAd();
+                }
+                mAdBannerManager.printLoadAdInfo(); //已经加载广告的信息
+            }
+        }, mAdBannerListener);
     }
 
     /**
-     * banner2.0规定banner宽高比应该为6.4:1 , 开发者可自行设置符合规定宽高比的具体宽度和高度值
-     *
+     * 清除状态
      */
-    private FrameLayout.LayoutParams getUnifiedBannerLayoutParams() {
-        Point screenSize = new Point();
-        getWindowManager().getDefaultDisplay().getSize(screenSize);
-        return new FrameLayout.LayoutParams(screenSize.x,  Math.round(screenSize.x / 6.4F));
+    private void clearStatus() {
+        //重置load标识
+        mIsLoaded = false;
+        //清空banner父容器
+        mBannerContainer.removeAllViews();
     }
 
-    @Override
-    public void onNoAD(AdError adError) {
-        String msg = String.format(Locale.getDefault(), "onNoAD, error code: %d, error msg: %s",
-                adError.getErrorCode(), adError.getErrorMsg());
-//        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-        Log.e(TAG, "onNoAD: " + msg );
+    private void initListener() {
+        
+        mAdBannerListener = new GMBannerAdListener() {
+
+            @Override
+            public void onAdOpened() {
+                Log.d(TAG, "onAdOpened");
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                Log.d(TAG, "onAdLeftApplication");
+            }
+
+            @Override
+            public void onAdClosed() {
+                Log.d(TAG, "onAdClosed");
+                if (mBannerContainer != null) {
+                    mBannerContainer.removeAllViews();
+                }
+                if (mAdBannerManager != null && mAdBannerManager.getBannerAd() != null) {
+                    mAdBannerManager.getBannerAd().destroy();
+                }
+            }
+
+            @Override
+            public void onAdClicked() {
+                Log.d(TAG, "onAdClicked");
+            }
+
+            @Override
+            public void onAdShow() {
+                Log.d(TAG, "onAdShow");
+                mIsLoaded = false;
+                if (mAdBannerManager != null) {
+                    mAdBannerManager.printShowAdInfo();//已经展示的广告信息
+                }
+            }
+
+            /**
+             * show失败回调。如果show时发现无可用广告（比如广告过期），会触发该回调。
+             * 开发者应该结合自己的广告加载、展示流程，在该回调里进行重新加载。
+             * @param adError showFail的具体原因
+             */
+            @Override
+            public void onAdShowFail(AdError adError) {
+                Log.d(TAG, "onAdShowFail");
+                mIsLoaded = false;
+            }
+        };
     }
 
-    @Override
-    public void onADReceive() {
-        Log.i(TAG, "onADReceive");
-    }
-
-    @Override
-    public void onADExposure() {
-        Log.i(TAG, "onADExposure");
-    }
-
-    @Override
-    public void onADClosed() {
-        Log.i(TAG, "onADClosed");
-    }
-
-    @Override
-    public void onADClicked() {
-    }
-
-    @Override
-    public void onADLeftApplication() {
-        Log.i(TAG, "onADLeftApplication");
+    /**
+     * 展示广告
+     */
+    private void showBannerAd() {
+        /**
+         * 加载成功才能展示
+         */
+        if (mIsLoaded && mAdBannerManager != null) {
+            /**
+             * 在添加banner的View前需要清空父容器
+             */
+            mBannerContainer.removeAllViews();
+            if (mAdBannerManager.getBannerAd() != null) {
+                // 在调用getBannerView之前，可以选择使用isReady进行判断，当前是否有可用广告。
+                if (!mAdBannerManager.getBannerAd().isReady()) {
+                    // TToast.show(this, "广告已经无效，建议重新请求");
+                    return;
+                }
+                //横幅广告容器的尺寸必须至少与横幅广告一样大。如果您的容器留有内边距，实际上将会减小容器大小。如果容器无法容纳横幅广告，则横幅广告不会展示
+                /**
+                 * mBannerViewAd.getBannerView()一个广告对象只能调用一次，第二次为null
+                 */
+                View view = mAdBannerManager.getBannerAd().getBannerView();
+                if (view != null) {
+                    mBannerContainer.addView(view);
+                } else {
+                    // TToast.show(this, "请重新加载广告");
+                }
+            }
+        } else {
+            // TToast.show(this, "请先加载广告");
+        }
     }
 
 }
