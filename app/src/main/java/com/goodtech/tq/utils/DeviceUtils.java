@@ -9,6 +9,8 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.goodtech.tq.app.BaseApp;
 
@@ -205,6 +207,15 @@ public class DeviceUtils {
     public static void clearState(Drawable drawable) {
         if (drawable != null) {
             drawable.setState(EMPTY_STATE);
+        }
+    }
+
+    public static void removeFromParent(View view) {
+        if (view != null) {
+            ViewParent vp = view.getParent();
+            if (vp instanceof ViewGroup) {
+                ((ViewGroup) vp).removeView(view);
+            }
         }
     }
 

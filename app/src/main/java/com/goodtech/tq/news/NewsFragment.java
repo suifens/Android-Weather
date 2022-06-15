@@ -104,7 +104,6 @@ public class NewsFragment extends BaseFragment implements NativeExpressAD.Native
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_item, container, false);
         listView = view.findViewById(R.id.listView);
-//        fab = (FloatingActionButton) view.findViewById(R.id.fab);
         refreshLayout = view.findViewById(R.id.swipe_refresh);
         return view;
     }

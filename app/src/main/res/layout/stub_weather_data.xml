@@ -55,10 +55,11 @@
         android:layout_width="match_parent"
         android:layout_height="42dp" />
 
-    <com.goodtech.tq.fragment.view.NativeExpressAD2View
+    <FrameLayout
         android:id="@+id/item_ad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         />
 
     <com.goodtech.tq.fragment.view.LineTempItemView
