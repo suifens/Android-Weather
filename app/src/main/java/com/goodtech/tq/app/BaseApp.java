@@ -94,7 +94,7 @@ public class BaseApp extends Application {
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
         // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
-        GDTAdSdk.init(getApplicationContext(), Constants.APP_ID);
+        // GDTAdSdk.init(getApplicationContext(), Constants.APP_ID);
         GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
 
         Log.e(TAG, "startUsingApp: ");

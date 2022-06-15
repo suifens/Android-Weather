@@ -60,6 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@drawable/bg_circle_white_6"
         />
 
     <com.goodtech.tq.fragment.view.LineTempItemView

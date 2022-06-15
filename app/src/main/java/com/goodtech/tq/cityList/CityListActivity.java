@@ -1,58 +1,32 @@
 package com.goodtech.tq.cityList;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Point;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bytedance.msdk.adapter.TToast;
 import com.bytedance.msdk.api.AdError;
-import com.bytedance.msdk.api.nativeAd.TTNativeAdAppInfo;
-import com.bytedance.msdk.api.nativeAd.TTViewBinder;
-import com.bytedance.msdk.api.v2.GMAdConstant;
-import com.bytedance.msdk.api.v2.GMAdDislike;
-import com.bytedance.msdk.api.v2.GMDislikeCallback;
 import com.bytedance.msdk.api.v2.ad.banner.GMBannerAdListener;
 import com.bytedance.msdk.api.v2.ad.banner.GMBannerAdLoadCallback;
-import com.bytedance.msdk.api.v2.ad.banner.GMNativeAdInfo;
-import com.bytedance.msdk.api.v2.ad.banner.GMNativeToBannerListener;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMViewBinder;
 import com.goodtech.tq.BaseActivity;
-import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.eventbus.MessageEvent;
-import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.manager.AdBannerManager;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.MessageAlert;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
@@ -60,8 +34,6 @@ import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
-import com.qq.e.ads.banner2.UnifiedBannerADListener;
-import com.qq.e.ads.banner2.UnifiedBannerView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -69,10 +41,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -350,7 +318,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mAdBannerManager = new AdBannerManager(this, new GMBannerAdLoadCallback() {
             @Override
             public void onAdFailedToLoad(com.bytedance.msdk.api.AdError adError) {
-                TToast.show(CityListActivity.this, "广告加载失败");
+                //TToast.show(CityListActivity.this, "广告加载失败");
                 mIsLoaded = false;
                 Log.e(TAG, "load banner ad error : " + adError.code + ", " + adError.message);
                 mBannerContainer.removeAllViews();
@@ -359,7 +327,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
             @Override
             public void onAdLoaded() {
-                TToast.show(CityListActivity.this, "广告加载成功");
+                //TToast.show(CityListActivity.this, "广告加载成功");
                 Log.i(TAG, "banner load success ");
                 mIsLoaded = true;
                 if (mIsLoadedAndShow) {
@@ -447,7 +415,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             if (mAdBannerManager.getBannerAd() != null) {
                 // 在调用getBannerView之前，可以选择使用isReady进行判断，当前是否有可用广告。
                 if (!mAdBannerManager.getBannerAd().isReady()) {
-                    // TToast.show(this, "广告已经无效，建议重新请求");
+                    // //TToast.show(this, "广告已经无效，建议重新请求");
                     return;
                 }
                 //横幅广告容器的尺寸必须至少与横幅广告一样大。如果您的容器留有内边距，实际上将会减小容器大小。如果容器无法容纳横幅广告，则横幅广告不会展示
@@ -458,11 +426,11 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 if (view != null) {
                     mBannerContainer.addView(view);
                 } else {
-                    // TToast.show(this, "请重新加载广告");
+                    // //TToast.show(this, "请重新加载广告");
                 }
             }
         } else {
-            // TToast.show(this, "请先加载广告");
+            // //TToast.show(this, "请先加载广告");
         }
     }
 

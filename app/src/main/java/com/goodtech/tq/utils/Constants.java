@@ -31,7 +31,8 @@ public class Constants {
     public static final String SP_LOCATION_LIST = "sp_location_list";
 
     public final static String URL_AGREEMENT = "file:///android_asset/agreement/index.html";
-    public final static String URL_PRIVACY = "file:///android_asset/privacy/index-%s.html";
+    // public final static String URL_PRIVACY = "file:///android_asset/privacy/index-%s.html";
+    public final static String URL_PRIVACY = "https://app.yiguxm.com/privacy/tqybPrivacy.html";
     public final static String URL_PRIVACY_LIST = "file:///android_asset/privacyList/index-%s.html";
 
     public final static String URL_CITY = "file:///android_asset/cityRecommend.json";

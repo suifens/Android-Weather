@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity {
         //  加载广告
         if (!SpUtils.getInstance().getBoolean("hadShowInterstitialAD", false)) {
             if (!mLoadSuccess) {
-                mHandler.postDelayed(this::showAd, 4000);
+                mHandler.postDelayed(this::showAd, 3000);
             }
         }
     }
@@ -394,7 +394,7 @@ public class MainActivity extends BaseActivity {
                 if (mFragmentList.size() > position) {
                     WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(position);
                     fragment.changeWeather(weatherModel, cityMode, mSigned);
-                    fragment.reloadNativeAD();
+                    // fragment.reloadNativeAD();
                 }
             }
         }

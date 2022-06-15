@@ -23,7 +23,6 @@ import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
-import com.bytedance.msdk.adapter.TToast;
 import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.nativeAd.TTNativeAdAppInfo;
 import com.bytedance.msdk.api.nativeAd.TTViewBinder;
@@ -42,7 +41,6 @@ import com.goodtech.tq.fragment.view.CurrentItemView;
 import com.goodtech.tq.fragment.view.DailyItemView;
 import com.goodtech.tq.fragment.view.HoursItemView;
 import com.goodtech.tq.fragment.view.LineTempItemView;
-import com.goodtech.tq.fragment.view.NativeExpressAD2View;
 import com.goodtech.tq.fragment.view.ObservationView;
 import com.goodtech.tq.fragment.view.RecentItemView;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
@@ -61,10 +59,6 @@ import com.goodtech.tq.others.taifeng.TyphoonActivity;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
-import com.goodtech.tq.utils.DownloadConfirmHelper;
-import com.qq.e.ads.nativ.ADSize;
-import com.qq.e.ads.nativ.NativeExpressAD;
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -293,7 +287,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         if (mHadLoad && mCurrentView != null && mWeatherModel != null) {
             mHandler.post(() -> {
 
-                initNativeExpressAD();
+                showAd();
 
                 mDailyView2.setVisibility(View.VISIBLE);
                 mCurrentView.setVisibility(View.VISIBLE);
@@ -387,12 +381,12 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
 
                 if (ads == null || ads.isEmpty()) {
                     Log.e(TAG, "on FeedAdLoaded: ad is null!");
-                    TToast.show(getContext(), "广告加载失败！");
+                    //TToast.show(getContext(), "广告加载失败！");
                     return;
                 }
                 mLoadSuccess = true;
                 mGMNativeAd = ads.get(0);
-                TToast.show(getContext(), "广告加载成功！");
+                //TToast.show(getContext(), "广告加载成功！");
 
                 for (GMNativeAd ttNativeAd : ads) {
                     mAdFeedManager.printShowAdInfo(ttNativeAd); //打印已经展示的广告信息
@@ -412,7 +406,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
 
             @Override
             public void onAdLoadedFail(AdError adError) {
-                TToast.show(getContext(), "广告加载失败！");
+                //TToast.show(getContext(), "广告加载失败！");
                 Log.e(TAG, "load feed ad error : " + adError.code + ", " + adError.message);
                 mAdFeedManager.printLoadFailAdnInfo();// 获取本次waterfall加载中，加载失败的adn错误信息。
             }
@@ -431,11 +425,13 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
      */
     private void showAd() {
         if (!mLoadSuccess || mAdFeedManager == null || mGMNativeAd == null) {
-            TToast.show(getContext(), "请先加载广告");
+            //TToast.show(getContext(), "请先加载广告");
+            initNativeExpressAD();
             return;
         }
         if (!mGMNativeAd.isReady()) {
-            TToast.show(getContext(), "广告已经无效，请重新请求");
+            //TToast.show(getContext(), "广告已经无效，请重新请求");
+            initNativeExpressAD();
             return;
         }
         mLoadSuccess = false;
@@ -463,7 +459,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         } else if (mGMNativeAd.getAdImageMode() == GMAdConstant.IMAGE_MODE_VIDEO_VERTICAL) {//原生视频
             view = getVideoView(mFeedContainer, mGMNativeAd);
         } else {
-            TToast.show(requireActivity(), "图片展示样式错误");
+            //TToast.show(requireActivity(), "图片展示样式错误");
         }
 
         if (view != null) {
@@ -491,14 +487,14 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                 ad.setDislikeCallback((Activity) requireActivity(), new GMDislikeCallback() {
                     @Override
                     public void onSelected(int position, String value) {
-                        TToast.show(requireActivity(), "点击 " + value);
+                        //TToast.show(requireActivity(), "点击 " + value);
                         //用户选择不喜欢原因后，移除广告展示
                         removeAdView();
                     }
 
                     @Override
                     public void onCancel() {
-                        TToast.show(requireActivity(), "dislike 点击了取消");
+                        //TToast.show(requireActivity(), "dislike 点击了取消");
                         Log.d(TAG, "dislike 点击了取消");
                     }
 
@@ -522,19 +518,19 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                 @Override
                 public void onAdClick() {
                     Log.d(TAG, "onAdClick");
-                    TToast.show(requireActivity(), "模板广告被点击");
+                    //TToast.show(requireActivity(), "模板广告被点击");
                 }
 
                 @Override
                 public void onAdShow() {
                     Log.d(TAG, "onAdShow");
-                    TToast.show(requireActivity(), "模板广告show");
+                    //TToast.show(requireActivity(), "模板广告show");
 
                 }
 
                 @Override
                 public void onRenderFail(View view, String msg, int code) {
-                    TToast.show(requireActivity(), "模板广告渲染失败code=" + code + ",msg=" + msg);
+                    //TToast.show(requireActivity(), "模板广告渲染失败code=" + code + ",msg=" + msg);
                     Log.d(TAG, "onRenderFail   code=" + code + ",msg=" + msg);
 
                 }
@@ -543,7 +539,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                 @Override
                 public void onRenderSuccess(float width, float height) {
                     Log.d(TAG, "onRenderSuccess");
-                    TToast.show(requireActivity(), "模板广告渲染成功:width=" + width + ",height=" + height);
+                    //TToast.show(requireActivity(), "模板广告渲染成功:width=" + width + ",height=" + height);
                     //回调渲染成功后将模板布局添加的父View中
                     if (adViewHolder.mAdContainerView != null) {
                         //获取视频播放view,该view SDK内部渲染，在媒体平台可配置视频是否自动播放等设置。
@@ -579,33 +575,33 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
 
                 @Override
                 public void onVideoStart() {
-                    TToast.show(requireActivity(), "模板广告视频开始播放");
+                    //TToast.show(requireActivity(), "模板广告视频开始播放");
                     Log.d(TAG, "onVideoStart");
                 }
 
                 @Override
                 public void onVideoPause() {
-                    TToast.show(requireActivity(), "模板广告视频暂停");
+                    //TToast.show(requireActivity(), "模板广告视频暂停");
                     Log.d(TAG, "onVideoPause");
 
                 }
 
                 @Override
                 public void onVideoResume() {
-                    TToast.show(requireActivity(), "模板广告视频继续播放");
+                    //TToast.show(requireActivity(), "模板广告视频继续播放");
                     Log.d(TAG, "onVideoResume");
 
                 }
 
                 @Override
                 public void onVideoCompleted() {
-                    TToast.show(requireActivity(), "模板播放完成");
+                    //TToast.show(requireActivity(), "模板播放完成");
                     Log.d(TAG, "onVideoCompleted");
                 }
 
                 @Override
                 public void onVideoError(AdError adError) {
-                    TToast.show(requireActivity(), "模板广告视频播放出错");
+                    //TToast.show(requireActivity(), "模板广告视频播放出错");
                     Log.d(TAG, "onVideoError");
                 }
             });
@@ -714,31 +710,31 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
 
                 @Override
                 public void onVideoStart() {
-                    TToast.show(requireActivity(), "广告视频开始播放");
+                    //TToast.show(requireActivity(), "广告视频开始播放");
                     Log.d(TAG, "onVideoStart");
                 }
 
                 @Override
                 public void onVideoPause() {
-                    TToast.show(requireActivity(), "广告视频暂停");
+                    //TToast.show(requireActivity(), "广告视频暂停");
                     Log.d(TAG, "onVideoPause");
                 }
 
                 @Override
                 public void onVideoResume() {
-                    TToast.show(requireActivity(), "广告视频继续播放");
+                    //TToast.show(requireActivity(), "广告视频继续播放");
                     Log.d(TAG, "onVideoResume");
                 }
 
                 @Override
                 public void onVideoCompleted() {
-                    TToast.show(requireActivity(), "广告播放完成");
+                    //TToast.show(requireActivity(), "广告播放完成");
                     Log.d(TAG, "onVideoCompleted");
                 }
 
                 @Override
                 public void onVideoError(AdError adError) {
-                    TToast.show(requireActivity(), "广告视频播放出错");
+                    //TToast.show(requireActivity(), "广告视频播放出错");
                     Log.d(TAG, "onVideoError");
                 }
             });
@@ -898,14 +894,14 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         @Override
         public void onAdClick() {
             Log.d(TAG, "onAdClick");
-            TToast.show(requireActivity(), "自渲染广告被点击");
+            //TToast.show(requireActivity(), "自渲染广告被点击");
         }
 
 
         @Override
         public void onAdShow() {
             Log.d(TAG, "onAdShow");
-            TToast.show(requireActivity(), "广告展示");
+            //TToast.show(requireActivity(), "广告展示");
         }
     };
 
@@ -922,14 +918,14 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                     ttAdDislike.setDislikeCallback(new GMDislikeCallback() {
                         @Override
                         public void onSelected(int position, String value) {
-                            TToast.show(requireActivity(), "点击 " + value);
+                            //TToast.show(requireActivity(), "点击 " + value);
                             //用户选择不喜欢原因后，移除广告展示
                             removeAdView();
                         }
 
                         @Override
                         public void onCancel() {
-                            TToast.show(requireActivity(), "dislike 点击了取消");
+                            //TToast.show(requireActivity(), "dislike 点击了取消");
                         }
 
                         /**
@@ -1008,7 +1004,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                 break;
             default:
                 adCreativeButton.setVisibility(View.GONE);
-                TToast.show(requireActivity(), "交互类型异常");
+                //TToast.show(requireActivity(), "交互类型异常");
         }
     }
 

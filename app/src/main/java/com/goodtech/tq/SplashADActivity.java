@@ -1,6 +1,5 @@
 package com.goodtech.tq;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,15 +7,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.bytedance.msdk.adapter.TToast;
-import com.bytedance.msdk.adapter.util.Logger;
 import com.bytedance.msdk.adapter.util.UIUtils;
 import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.TTAdConstant;
@@ -25,20 +20,15 @@ import com.bytedance.msdk.api.v2.GMNetworkRequestInfo;
 import com.bytedance.msdk.api.v2.ad.splash.GMSplashAd;
 import com.bytedance.msdk.api.v2.ad.splash.GMSplashAdListener;
 import com.bytedance.msdk.api.v2.ad.splash.GMSplashAdLoadCallback;
-import com.bytedance.msdk.api.v2.ad.splash.GMSplashMinWindowListener;
 import com.bytedance.msdk.api.v2.slot.GMAdSlotSplash;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
-import com.goodtech.tq.utils.DownloadConfirmHelper;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.SplashUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.qq.e.ads.splash.SplashAD;
-import com.qq.e.ads.splash.SplashADListener;
-
-import java.lang.ref.SoftReference;
 
 /**
  * 这是demo工程的入口Activity，在这里会首次调用广点通的SDK。
@@ -279,7 +269,7 @@ public class SplashADActivity extends Activity {
     }
 
     private void showToast(String msg) {
-        TToast.show(this, msg);
+        //TToast.show(this, msg);
     }
 
 
