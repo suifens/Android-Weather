@@ -217,13 +217,13 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
             }
         }
 
-        @Override
-        public void onNews() {
-            if (getActivity() != null) {
-                Intent intent = new Intent(getActivity(), NewsActivity.class);
-                requireActivity().startActivity(intent);
-            }
-        }
+        // @Override
+        // public void onNews() {
+        //     if (getActivity() != null) {
+        //         Intent intent = new Intent(getActivity(), NewsActivity.class);
+        //         requireActivity().startActivity(intent);
+        //     }
+        // }
 
         @Override
         public void onSignIn() {

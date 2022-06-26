@@ -80,11 +80,6 @@ public class CurrentItemView extends ConstraintLayout {
                 mListener.onOutbreakTravel();
             }
         });
-        view.findViewById(R.id.btn_dy).setOnClickListener(v -> {
-            if (mListener != null) {
-                mListener.onDyMovie();
-            }
-        });
 
         mSignTipV = view.findViewById(R.id.view_sign_tip);
     }

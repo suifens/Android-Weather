@@ -53,9 +53,9 @@ public class HeaderItemsView extends LinearLayout {
             }
         });
 
-        findViewById(R.id.item_news).setOnClickListener(v -> {
+        findViewById(R.id.item_calling).setOnClickListener(v -> {
             if (listener != null) {
-                listener.onNews();
+                listener.onDyMovie();
             }
         });
     }

@@ -146,11 +146,6 @@ public class WeatherFragment extends BaseFragment implements OnRefreshListener, 
         }
 
         @Override
-        public void onNews() {
-
-        }
-
-        @Override
         public void onSignIn() {
 
         }

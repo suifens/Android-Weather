@@ -153,18 +153,6 @@
         android:layout_marginBottom="54dp"
         />
 
-    <ImageButton
-        android:id="@+id/btn_dy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_douyin"
-        android:background="@color/color_clear"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="54dp"
-        />
-
     <View
         android:id="@+id/view_sign_tip"
         android:layout_width="12dp"

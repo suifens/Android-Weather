@@ -9,8 +9,8 @@ public interface WeatherHeaderListener {
     void onCalendar();
     //  星座运势
     void onFortune();
-    //  新闻点击
-    void onNews();
+    // //  新闻点击
+    // void onNews();
     //  点击签到
     void onSignIn();
     //  疫情出行

@@ -124,7 +124,7 @@
         android:layout_weight="1" />
 
     <LinearLayout
-        android:id="@+id/item_news"
+        android:id="@+id/item_calling"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -133,13 +133,13 @@
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@drawable/ic_news" />
+            android:src="@drawable/ic_cailing" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="@string/title_news"
+            android:text="彩铃多多"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="12dp" />
