@@ -23,12 +23,17 @@ import com.github.gzuliyujiang.wheelpicker.impl.BirthdayFormatter;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.calendar.DayDetail;
+import com.goodtech.tq.models.calendar.Holiday;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CalendarActivity extends BaseActivity implements
         CalendarView.OnCalendarSelectListener,
@@ -202,7 +207,8 @@ public class CalendarActivity extends BaseActivity implements
     private void configDayDetail(DayDetail dayDetail) {
 
         mHandler.post(() -> {
-            ((TextView) findViewById(R.id.tv_detail_week)).setText(dayDetail.getDate() + " " + dayDetail.getWeekday());
+            int weekOfYear = TimeUtils.getYearWeek(TimeUtils.stringToDate(dayDetail.getDate(), "yyyy-M-d"));
+            ((TextView) findViewById(R.id.tv_detail_week)).setText("第"+weekOfYear+"周" + " " + dayDetail.getWeekday());
             ((TextView) findViewById(R.id.tv_detail_lunar)).setText(dayDetail.getLunar());
             ((TextView) findViewById(R.id.tv_detail_suit)).setText(dayDetail.getSuit());
             ((TextView) findViewById(R.id.tv_detail_avoid)).setText(dayDetail.getAvoid());
@@ -217,7 +223,26 @@ public class CalendarActivity extends BaseActivity implements
     private void configHolidays() {
         mHandler.post(() -> {
             mAdapter.notifyDataSetChanged(mPresenter.mHolidayList);
+            Map<String, Calendar> map = new HashMap<>();
+            for (Holiday holiday : mPresenter.mHolidayList) {
+                for (Holiday.ListDay day : holiday.getList()) {
+                    long date = TimeUtils.longWithDate(day.getDate(), "yyyy-M-d");
+                    map.put(getSchemeCalendar(date, 0xFF40db25, "").toString(),
+                            getSchemeCalendar(date, 0xFF40db25, ""));
+                }
+            }
+            mCalendarView.setSchemeDate(map);
         });
+    }
+
+    private Calendar getSchemeCalendar(long date, int color, String text) {
+        Calendar calendar = new Calendar();
+        calendar.setYear(TimeUtils.getYear(date));
+        calendar.setMonth(TimeUtils.getMonth(date));
+        calendar.setDay(TimeUtils.getDay(date));
+        calendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
+        calendar.setScheme(text);
+        return calendar;
     }
 
     public static class CalendarPicker extends DatePicker {

@@ -1,5 +1,6 @@
 package com.goodtech.tq.models.calendar;
 
+import com.blankj.utilcode.util.TimeUtils;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -71,6 +72,23 @@ public class DayDetail implements Serializable {
     }
 
     public String getWeekday() {
+        switch (weekday) {
+            case "星期一":
+                return "周一";
+            case "星期二":
+                return "周二";
+            case "星期三":
+                return "周三";
+            case "星期四":
+                return "周四";
+            case "星期五":
+                return "周五";
+            case "星期六":
+                return "周六";
+            case "星期日":
+                return "周日";
+
+        }
         return weekday;
     }
 

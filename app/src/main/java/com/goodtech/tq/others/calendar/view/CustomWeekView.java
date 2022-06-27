@@ -64,7 +64,7 @@ public class CustomWeekView extends WeekView {
         mTextPaint.setFakeBoldText(true);
 
 
-        mSolarTermTextPaint.setColor(0xff489dff);
+        mSolarTermTextPaint.setColor(0xffE05353);
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -146,12 +146,12 @@ public class CustomWeekView extends WeekView {
         }
 
         if (calendar.isWeekend() && calendar.isCurrentMonth()) {
-            mCurMonthTextPaint.setColor(0xFF489dff);
-            mCurMonthLunarTextPaint.setColor(0xFF489dff);
-            mSchemeTextPaint.setColor(0xFF489dff);
-            mSchemeLunarTextPaint.setColor(0xFF489dff);
-            mOtherMonthLunarTextPaint.setColor(0xFF489dff);
-            mOtherMonthTextPaint.setColor(0xFF489dff);
+            mCurMonthTextPaint.setColor(0xFFE05353);
+            mCurMonthLunarTextPaint.setColor(0xFFE05353);
+            mSchemeTextPaint.setColor(0xFFE05353);
+            mSchemeLunarTextPaint.setColor(0xFFE05353);
+            mOtherMonthLunarTextPaint.setColor(0xFFE05353);
+            mOtherMonthTextPaint.setColor(0xFFE05353);
         } else {
             mCurMonthTextPaint.setColor(0xff333333);
             mCurMonthLunarTextPaint.setColor(0xffCFCFCF);

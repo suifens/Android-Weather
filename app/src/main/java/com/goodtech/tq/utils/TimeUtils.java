@@ -1,16 +1,11 @@
 package com.goodtech.tq.utils;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * com.goodtech.tq.utils.Weather
@@ -139,6 +134,25 @@ public class TimeUtils {
     public static int getYear(long timeMills) {
         String year = longToString(timeMills, "yyyy");
         return Integer.parseInt(year);
+    }
+
+    public static int getMonth(long timeMills) {
+        String year = longToString(timeMills, "MM");
+        return Integer.parseInt(year);
+    }
+
+    public static int getDay(long timeMills) {
+        String year = longToString(timeMills, "dd");
+        return Integer.parseInt(year);
+    }
+
+    public static int getYearWeek(Date date) {
+        Calendar cal = Calendar.getInstance();//这一句必须要设置，否则美国认为第一天是周日，而我国认为是周一，对计算当期日期是第几周会有错误
+        int weekYear = cal.get(Calendar.YEAR);//获得当前的年
+        cal.set(weekYear, 0,1);// 每周从周一开始
+        cal.setTime(date);
+        int weeks = cal.get(Calendar.WEEK_OF_YEAR);
+        return weeks;
     }
 
     /**

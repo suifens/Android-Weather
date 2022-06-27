@@ -82,9 +82,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif-black"
                 android:gravity="left"
                 android:text="宜"
-                android:textColor="@color/black_alpha80"
+                android:textColor="@color/black"
                 android:textSize="16dp" />
 
             <TextView
@@ -92,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
                 android:layout_marginStart="4dp"
-                android:background="@drawable/bg_radius_48c7a1"
+                android:background="@drawable/bg_radius4_5a9ef2"
                 android:fontFamily="sans-serif-black"
                 android:gravity="center"
                 android:paddingStart="8dp"

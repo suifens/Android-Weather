@@ -507,7 +507,7 @@ public class WeatherView extends HorizontalScrollView {
 
     private int getMaxTemp(List<Daily> list) {
         if (list != null) {
-            return Collections.max(list, new MinTempComparator()).metric.maxTemp;
+            return Collections.max(list, new MaxTempComparator()).metric.maxTemp;
         }
         return 0;
     }

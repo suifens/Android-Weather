@@ -21,7 +21,8 @@
             android:id="@+id/tv_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:text="今天"
             android:textColor="#FFFFFF"
@@ -41,7 +42,7 @@
             android:id="@+id/iv_day_weather"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/icon3" />
 
         <TextView
@@ -62,12 +63,12 @@
             android:id="@+id/tv_day_temp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:singleLine="true"
             android:text="29°"
             android:textColor="@color/white"
-            android:textSize="16dp" />
+            android:textSize="20dp" />
 
         <com.goodtech.tq.widget.weatherview.TemperatureView
             android:id="@+id/ttv_day"
@@ -81,12 +82,12 @@
             android:id="@+id/tv_night_temp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:singleLine="true"
             android:text="29°"
             android:textColor="@color/white"
-            android:textSize="16dp" />
+            android:textSize="20dp" />
 
         <ImageView
             android:id="@+id/iv_night_weather"
@@ -100,6 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:layout_marginBottom="5dp"
             android:lines="1"
             android:autoSizeMinTextSize="10dp"
             android:autoSizeTextType="uniform"
