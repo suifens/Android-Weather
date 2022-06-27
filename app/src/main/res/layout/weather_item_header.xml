@@ -5,14 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="80dp">
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
-
     <LinearLayout
         android:id="@+id/item_typhoon"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -28,20 +24,15 @@
             android:layout_marginTop="2dp"
             android:text="@string/title_typhoon"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="12dp" />
 
     </LinearLayout>
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1"
-        />
-
     <LinearLayout
         android:id="@+id/item_air_quality"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
@@ -57,19 +48,15 @@
             android:layout_marginTop="2dp"
             android:text="@string/title_air_quality"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="12dp" />
 
     </LinearLayout>
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1"/>
-
     <LinearLayout
         android:id="@+id/item_calendar"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -85,19 +72,15 @@
             android:layout_marginTop="2dp"
             android:text="@string/title_calendar"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="12dp" />
 
     </LinearLayout>
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
-
     <LinearLayout
         android:id="@+id/item_constellation"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -113,19 +96,15 @@
             android:layout_marginTop="2dp"
             android:text="@string/title_constellation"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="12dp" />
 
     </LinearLayout>
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
-
     <LinearLayout
         android:id="@+id/item_calling"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -141,14 +120,9 @@
             android:layout_marginTop="2dp"
             android:text="彩铃多多"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="12dp" />
 
     </LinearLayout>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
 
 </LinearLayout>

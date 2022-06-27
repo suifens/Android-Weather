@@ -2,14 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_3472f0_19d3fd"
+    android:background="@drawable/splash_lower"
     tools:context=".SplashActivity" >
 
     <ImageView
         android:id="@+id/splash_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/bg_launch" />
+        android:scaleType="centerInside"
+        android:src="@drawable/splash_up" />
 
 </FrameLayout>

@@ -53,11 +53,11 @@ public class CurrentItemView extends ConstraintLayout {
     //天气状态
     public TextView mPhraseTv;
     //提醒
-    public TextView mNotice;
+    // public TextView mNotice;
     public HeaderItemsView mItemsView;
 
     private WeatherHeaderListener mListener;
-    public View mSignTipV;
+    // public View mSignTipV;
 
     @SuppressLint("DefaultLocale")
     protected void initData() {
@@ -66,14 +66,20 @@ public class CurrentItemView extends ConstraintLayout {
         mWind_rh = view.findViewById(R.id.tv_rh_wrap);
         mTempTv = view.findViewById(R.id.tv_temperature);
         mPhraseTv = view.findViewById(R.id.tv_wx_phrase);
-        mNotice = view.findViewById(R.id.tv_notice);
         mItemsView = view.findViewById(R.id.view_items);
         //  签到
-        view.findViewById(R.id.btn_sign).setOnClickListener(v -> {
+        // view.findViewById(R.id.btn_sign).setOnClickListener(v -> {
+        //     if (mListener != null) {
+        //         mListener.onSignIn();
+        //     }
+        // });
+
+        view.findViewById(R.id.btn_dy_movie).setOnClickListener(v -> {
             if (mListener != null) {
-                mListener.onSignIn();
+                mListener.onDyMovie();
             }
         });
+
         //  出行
         view.findViewById(R.id.btn_outbreak).setOnClickListener(v -> {
             if (mListener != null) {
@@ -81,7 +87,7 @@ public class CurrentItemView extends ConstraintLayout {
             }
         });
 
-        mSignTipV = view.findViewById(R.id.view_sign_tip);
+        // mSignTipV = view.findViewById(R.id.view_sign_tip);
     }
 
     /**
@@ -123,14 +129,14 @@ public class CurrentItemView extends ConstraintLayout {
                 Observation observation = model.observation;
                 Metric metric = observation.metric;
 
-                Daily today = model.today();
-                if (today != null) {
-                    mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
-                            today.metric.maxTemp, today.metric.minTemp));
-                } else {
-                    mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
-                            metric.maxTemp, metric.minTemp));
-                }
+                // Daily today = model.today();
+                // if (today != null) {
+                //     mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                //             today.metric.maxTemp, today.metric.minTemp));
+                // } else {
+                //     mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                //             metric.maxTemp, metric.minTemp));
+                // }
 
                 if (!hadSetTemp) {
                     mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", observation.wdirCardinal,
@@ -142,7 +148,7 @@ public class CurrentItemView extends ConstraintLayout {
             }
 
             findViewById(R.id.layout_data).setVisibility(VISIBLE);
-            findViewById(R.id.layout_notice).setVisibility(VISIBLE);
+            // findViewById(R.id.layout_notice).setVisibility(VISIBLE);
         }
     }
 
@@ -150,12 +156,12 @@ public class CurrentItemView extends ConstraintLayout {
      * 设置签到状态
      * @param signedIn 是否已签到
      */
-    public void setSignedIn(boolean signedIn) {
-        if (signedIn) {
-            mSignTipV.setVisibility(View.GONE);
-        } else {
-            mSignTipV.setVisibility(View.VISIBLE);
-        }
-    }
+    // public void setSignedIn(boolean signedIn) {
+        // if (signedIn) {
+        //     mSignTipV.setVisibility(View.GONE);
+        // } else {
+        //     mSignTipV.setVisibility(View.VISIBLE);
+        // }
+    // }
 
 }

@@ -90,14 +90,14 @@ public class WeatherItemView extends LinearLayout {
     public void setDayTemp(int dayTemp) {
         if (ttvTemp != null) {
             ttvTemp.setTemperatureDay(dayTemp);
-            tvDayTemp.setText(String.format("%dºC", dayTemp));
+            tvDayTemp.setText(String.format("%d°", dayTemp));
         }
     }
 
     public void setNightTemp(int nightTemp) {
         if (ttvTemp != null) {
             ttvTemp.setTemperatureNight(nightTemp);
-            tvNightTemp.setText(String.format("%dºC", nightTemp));
+            tvNightTemp.setText(String.format("%d°", nightTemp));
         }
     }
 

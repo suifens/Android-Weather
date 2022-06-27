@@ -32,6 +32,7 @@ public class ObservationItemView extends LinearLayout {
     private ImageView mIconImgV;
     private TextView mTitleTv;
     private TextView mValueTv;
+    private TextView mUnitTv;
 
 
     /**
@@ -41,12 +42,14 @@ public class ObservationItemView extends LinearLayout {
 
         int imgIcon = 0;
         String title = "";
+        String unit = "";
 
         TypedArray typedArray = null;
         if (attrs != null) {
             typedArray = context.obtainStyledAttributes(attrs, R.styleable.ObservationItemView);
             imgIcon = typedArray.getResourceId(R.styleable.ObservationItemView_img_icon, 0);
             title = typedArray.getString(R.styleable.ObservationItemView_tv_title);
+            unit = typedArray.getString(R.styleable.ObservationItemView_tv_unit);
             typedArray.recycle();
         }
 
@@ -60,6 +63,11 @@ public class ObservationItemView extends LinearLayout {
         mTitleTv = view.findViewById(R.id.tv_title);
         if (mTitleTv != null) {
             mTitleTv.setText(title);
+        }
+
+        mUnitTv = view.findViewById(R.id.tv_unit);
+        if (mUnitTv != null) {
+            mUnitTv.setText(unit);
         }
 
         mValueTv = view.findViewById(R.id.tv_value);

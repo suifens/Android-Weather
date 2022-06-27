@@ -68,7 +68,7 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
             mTipTv.setVisibility(View.GONE);
             mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(getIconId(weatherModel)));
             if (weatherModel.observation != null && weatherModel.observation.metric != null) {
-                mTempTv.setText(String.format("%d℃", weatherModel.observation.metric.temp));
+                mTempTv.setText(String.format("%d°", weatherModel.observation.metric.temp));
             }
         } else {
             mWeatherIcon.setVisibility(View.GONE);

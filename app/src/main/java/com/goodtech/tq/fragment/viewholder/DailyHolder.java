@@ -40,8 +40,8 @@ public class DailyHolder extends RecyclerView.ViewHolder {
     public void setData(WeatherModel model, Daily daily) {
         if (daily != null) {
             mDayTv.setText(dayString(daily.fcst_valid * 1000, daily.dow));
-            mMaxTempTv.setText(String.format("%d℃", daily.metric.maxTemp));
-            mMinTempTv.setText(String.format("%d℃", daily.metric.minTemp));
+            mMaxTempTv.setText(String.format("%d°", daily.metric.maxTemp));
+            mMinTempTv.setText(String.format("%d°", daily.metric.minTemp));
 
             long currentTime = System.currentTimeMillis();
             long sunSetTime = TimeUtils.switchTime(daily.sunSet);

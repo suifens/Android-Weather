@@ -62,8 +62,8 @@ public class DailyItemView extends ConstraintLayout {
         if (daily != null) {
             setVisibility(VISIBLE);
             mDayTv.setText(dayString(daily.fcst_valid * 1000, daily.dow));
-            mMaxTempTv.setText(String.format("%d℃", daily.metric.maxTemp));
-            mMinTempTv.setText(String.format("%d℃", daily.metric.minTemp));
+            mMaxTempTv.setText(String.format("%d°", daily.metric.maxTemp));
+            mMinTempTv.setText(String.format("%d°", daily.metric.minTemp));
 
             long currentTime = System.currentTimeMillis();
             long sunSetTime = TimeUtils.switchTime(daily.sunSet);
@@ -85,15 +85,17 @@ public class DailyItemView extends ConstraintLayout {
         int timeDay = Integer.parseInt(TimeUtils.timeToDay(time));
         int today = Integer.parseInt(TimeUtils.timeToDay(System.currentTimeMillis()));
         String timeString = TimeUtils.longToString(time, "MM月dd日");
+
+        String weekStr = TimeUtils.getWeek(TimeUtils.timeToString(time, "yyyy-MM-dd"));
         switch (timeDay - today) {
             case -1:
-                return String.format("昨  天 (%s)", timeString);
+                return String.format("昨天 (%s)", timeString);
             case 0:
-                return String.format("今  天 (%s)", timeString);
+                return String.format("今天 (%s)", timeString);
             case 1:
-                return String.format("明  天 (%s)", timeString);
+                return String.format("明天 (%s)", timeString);
             default:
-                return String.format("%s (%s)", dow, timeString);
+                return String.format("%s (%s)", weekStr, timeString);
         }
     }
 

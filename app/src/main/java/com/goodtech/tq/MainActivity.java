@@ -40,6 +40,7 @@ import com.goodtech.tq.manager.AdInterstitialFullManager;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
@@ -70,6 +71,7 @@ public class MainActivity extends BaseActivity {
     private ViewPagerAdapter mAdapter;
     private ImageView mBgImgView;
     private RadioGroup mRgIndicator;
+    private View mSignTipV;
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private ArrayList<CityMode> mCityModes = new ArrayList<>();
     private int mCurrIndex;
@@ -87,6 +89,7 @@ public class MainActivity extends BaseActivity {
         mBgImgView = findViewById(R.id.img_background);
         mLocationTip = findViewById(R.id.img_location);
         mRgIndicator = findViewById(R.id.indicator_city);
+        mSignTipV = findViewById(R.id.view_sign_tip);
 
         EventBus.getDefault().register(this);
 
@@ -103,6 +106,20 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.img_setting).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, SettingActivity.class);
             startActivity(intent);
+        });
+
+        findViewById(R.id.img_sign).setOnClickListener(v -> {
+            CityMode cityMode = mCityModes.get(mCurrIndex);
+            WeatherModel weatherModel = null;
+            if (cityMode.getCid() != 0) {
+                weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getCid());
+            }
+            if (weatherModel != null) {
+                SigningActivity.redirectTo(MainActivity.this,
+                        weatherModel.hourlies.get(0),
+                        cityMode,
+                        0);
+            }
         });
 
         configViewPager();
@@ -281,6 +298,8 @@ public class MainActivity extends BaseActivity {
         for (int i = 0; i < mCityModes.size(); i++) {
             reloadWeather(i);
         }
+
+        setSignedIn(mSigned);
     }
 
     private void reloadWeather(final int index) {
@@ -291,7 +310,7 @@ public class MainActivity extends BaseActivity {
                 WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.getCid());
                 if (mFragmentList.size() > index) {
                     WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(index);
-                    fragment.changeWeather(model, cityMode, mSigned);
+                    fragment.changeWeather(model, cityMode);
                 }
                 if (index == mCurrIndex) {
                     changeBg(model);
@@ -393,7 +412,7 @@ public class MainActivity extends BaseActivity {
 
                 if (mFragmentList.size() > position) {
                     WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(position);
-                    fragment.changeWeather(weatherModel, cityMode, mSigned);
+                    fragment.changeWeather(weatherModel, cityMode);
                     // fragment.reloadNativeAD();
                 }
             }
@@ -416,6 +435,18 @@ public class MainActivity extends BaseActivity {
             }
         }
 
+    }
+
+    /**
+     * 设置签到状态
+     * @param signedIn 是否已签到
+     */
+    private void setSignedIn(boolean signedIn) {
+        if (signedIn) {
+            mSignTipV.setVisibility(View.GONE);
+        } else {
+            mSignTipV.setVisibility(View.VISIBLE);
+        }
     }
 
 

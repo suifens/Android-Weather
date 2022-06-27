@@ -82,7 +82,7 @@ public class TemperatureView extends View {
 
         drawPoint(canvas);
 
-        drawText(canvas);
+        // drawText(canvas);
 
     }
 

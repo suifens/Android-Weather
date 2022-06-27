@@ -3,6 +3,7 @@
     <declare-styleable name="ObservationItemView">
         <attr name="img_icon" format="reference"/>
         <attr name="tv_title" format="string"/>
+        <attr name="tv_unit" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="IArcView">

@@ -102,6 +102,11 @@ public class TimeUtils {
         return format.format(timeMills);
     }
 
+    public static String timeToString(long timeMills, String pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        return dateFormat.format(timeMills);
+    }
+
     /**
      * 是否需要重新定位， 5分钟内不需要
      */

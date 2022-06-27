@@ -557,15 +557,16 @@ public class WeatherView extends HorizontalScrollView {
     private String dayString(long time, String dow) {
         int timeDay = Integer.parseInt(TimeUtils.timeToDay(time));
         int today = Integer.parseInt(TimeUtils.timeToDay(System.currentTimeMillis()));
+        String weekStr = TimeUtils.getWeek(TimeUtils.timeToString(time, "yyyy-MM-dd"));
         switch (timeDay - today) {
             case -1:
-                return "昨    天";
+                return "昨天";
             case 0:
-                return "今    天";
+                return "今天";
             case 1:
-                return "明    天";
+                return "明天";
             default:
-                return String.format("%s", dow);
+                return String.format("%s", weekStr);
         }
     }
 

@@ -21,6 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bytedance.msdk.api.AdError;
@@ -77,13 +80,13 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
     protected SmartRefreshLayout mRefreshLayout;
     protected NestedScrollView mScrollView;
     protected WeatherModel mWeatherModel;
+    protected ViewPager2 mDailyPager;
 
     protected View mStateBarBg;
 
     protected CityMode mCityMode;
 
     protected boolean mHadLoad;
-    protected boolean mSigned;
 
     @Override
     protected int getViewLayoutRes() {
@@ -132,7 +135,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
             View inflate = viewStub.inflate();      // 布局加载
             initView(inflate);
             mHadLoad = true;
-            updateData(mSigned);
+            updateData();
         }
 
         if (mGMNativeAd != null) {
@@ -140,49 +143,53 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         }
     }
 
+    private View mContainerView;
     private CurrentItemView mCurrentView;
     private RecentItemView mRecentView;
     private HoursItemView mHoursView;
-    private DailyItemView mDailyView1;
-    private DailyItemView mDailyView2;
-    private DailyItemView mDailyView3;
-    private DailyItemView mDailyView4;
-    private DailyItemView mDailyView5;
-    private DailyItemView mDailyView6;
-    private DailyItemView mDailyView7;
     private FrameLayout mFeedContainer;
-    private LineTempItemView mLineTempView;
+    private TextView mListBtnTv;
+    private TextView mLineBtnTv;
+    
     private ObservationView mObservationView;
 
     private void initView(View view) {
+
+        mContainerView = view.findViewById(R.id.weatherContainer);
+        mContainerView.setVisibility(View.INVISIBLE);
         mCurrentView = view.findViewById(R.id.item_current);
         mCurrentView.setItemListener(mHeaderListener);
         mRecentView = view.findViewById(R.id.item_recent);
         mHoursView = view.findViewById(R.id.item_hours);
-        mDailyView1 = view.findViewById(R.id.item_daily_1);
-        mDailyView2 = view.findViewById(R.id.item_daily_2);
-        mDailyView3 = view.findViewById(R.id.item_daily_3);
-        mDailyView4 = view.findViewById(R.id.item_daily_4);
-        mDailyView5 = view.findViewById(R.id.item_daily_5);
-        mDailyView6 = view.findViewById(R.id.item_daily_6);
-        mDailyView7 = view.findViewById(R.id.item_daily_7);
         mFeedContainer = view.findViewById(R.id.item_ad);
-        mLineTempView = view.findViewById(R.id.item_line_temp);
         mObservationView = view.findViewById(R.id.item_observation);
 
-        mDailyView2.setVisibility(View.GONE);
-        mCurrentView.setVisibility(View.GONE);
-        mRecentView.setVisibility(View.GONE);
-        mHoursView.setVisibility(View.GONE);
-        mDailyView1.setVisibility(View.GONE);
-        mDailyView3.setVisibility(View.GONE);
-        mDailyView4.setVisibility(View.GONE);
-        mDailyView5.setVisibility(View.GONE);
-        mDailyView6.setVisibility(View.GONE);
-        mDailyView7.setVisibility(View.GONE);
-        mFeedContainer.setVisibility(View.GONE);
-        mLineTempView.setVisibility(View.GONE);
-        mObservationView.setVisibility(View.GONE);
+        mDailyPager = view.findViewById(R.id.dailyViewPager);
+
+        mListBtnTv = view.findViewById(R.id.tv_daily);
+        mListBtnTv.setOnClickListener(v -> {
+            onSegmentClick(0);
+        });
+        mLineBtnTv = view.findViewById(R.id.tv_line);
+        mLineBtnTv.setOnClickListener(v -> {
+            onSegmentClick(1);
+        });
+
+        configViewPager2();
+
+        onSegmentClick(0);
+    }
+
+    private void onSegmentClick(int index) {
+        if (index == 0) {
+            mDailyPager.setCurrentItem(0, true);
+            mListBtnTv.setBackgroundResource(R.drawable.bg_circle_5a9ef2_6);
+            mLineBtnTv.setBackgroundResource(R.color.color_clear);
+        } else {
+            mDailyPager.setCurrentItem(1, true);
+            mListBtnTv.setBackgroundResource(R.color.color_clear);
+            mLineBtnTv.setBackgroundResource(R.drawable.bg_circle_5a9ef2_6);
+        }
     }
 
     private final WeatherHeaderListener mHeaderListener = new WeatherHeaderListener() {
@@ -255,7 +262,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                 (success, weather, errCode) ->
                         mHandler.post(() -> {
                             if (weather != null && mCityMode != null) {
-                                changeWeather(weather, mCityMode, mSigned);
+                                changeWeather(weather, mCityMode);
                             }
                             refreshLayout.finishRefresh();
                         }));
@@ -266,91 +273,66 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         }
     }
 
-    public void changeWeather(WeatherModel model, CityMode cityMode, boolean signed) {
-        this.mSigned = signed;
-        if (mCurrentView != null) {
-            mCurrentView.setSignedIn(signed);
-        }
-
-//        if (mWeatherModel != null
-//                && model != null) {
-////                && model.expireTime == mWeatherModel.expireTime) {
-//            return;
-//        }
-
+    public void changeWeather(WeatherModel model, CityMode cityMode) {
         this.mWeatherModel = model;
         this.mCityMode = cityMode;
-        updateData(signed);
+        updateData();
     }
 
-    private void updateData(boolean signed) {
+    private void updateData() {
         if (mHadLoad && mCurrentView != null && mWeatherModel != null) {
             mHandler.post(() -> {
 
                 showAd();
 
-                mDailyView2.setVisibility(View.VISIBLE);
-                mCurrentView.setVisibility(View.VISIBLE);
-                mRecentView.setVisibility(View.VISIBLE);
-                mHoursView.setVisibility(View.VISIBLE);
-                mDailyView1.setVisibility(View.VISIBLE);
-                mDailyView3.setVisibility(View.VISIBLE);
-                mDailyView4.setVisibility(View.VISIBLE);
-                mDailyView5.setVisibility(View.VISIBLE);
-                mDailyView6.setVisibility(View.VISIBLE);
-                mDailyView7.setVisibility(View.VISIBLE);
-                mFeedContainer.setVisibility(View.VISIBLE);
-                mLineTempView.setVisibility(View.VISIBLE);
-                mObservationView.setVisibility(View.VISIBLE);
+                mContainerView.setVisibility(View.VISIBLE);
 
                 mCurrentView.setData(mWeatherModel);
-                mCurrentView.setSignedIn(signed);
                 mRecentView.setData(mWeatherModel);
                 if (mWeatherModel.hourlies != null) {
                     mHoursView.setHourlies(mWeatherModel);
                 }
-                if (mWeatherModel.dailies != null) {
-                    mLineTempView.setData(mWeatherModel);
-                }
-
-                for (int i = 0; i < 7; i++) {
-                    if (mWeatherModel.dailies != null && mWeatherModel.dailies.size() > i) {
-                        Daily daily = mWeatherModel.dailies.get(i);
-                        switch (i) {
-                            case 0:
-                                mDailyView1.setData(mWeatherModel, daily);
-                                break;
-                            case 1:
-                                mDailyView2.setData(mWeatherModel, daily);
-                                break;
-                            case 2:
-                                mDailyView3.setData(mWeatherModel, daily);
-                                break;
-                            case 3:
-                                mDailyView4.setData(mWeatherModel, daily);
-                                break;
-                            case 4:
-                                mDailyView5.setData(mWeatherModel, daily);
-                                break;
-                            case 5:
-                                mDailyView6.setData(mWeatherModel, daily);
-                                break;
-                            case 6:
-                                mDailyView7.setData(mWeatherModel, daily);
-                                break;
-                        }
-                    }
-                }
-
+                
                 if (mCityMode != null) {
-                    if (mCityMode.getCid() == 1000) {
-                        mObservationView.setData(mWeatherModel, mCityMode.getMergerName());
-                    } else {
-                        mObservationView.setData(mWeatherModel, mCityMode.getCity());
-                    }
+                    mObservationView.setData(mWeatherModel);
+                }
+
+                if (mListFragment != null) {
+                    mListFragment.setData(mWeatherModel);
+                }
+
+                if (mLineFragment != null) {
+                    mLineFragment.setData(mWeatherModel);
                 }
             });
         }
+    }
+
+
+    private DailyListFragment mListFragment;
+    private DailyLineFragment mLineFragment;
+    private void configViewPager2() {
+        this.mDailyPager.setUserInputEnabled(false);
+        this.mDailyPager.setOffscreenPageLimit(2);
+        FragmentStateAdapter adapter = new FragmentStateAdapter(this) {
+            @Override
+            public int getItemCount() {
+                return 2;
+            }
+
+            @NonNull
+            @Override
+            public Fragment createFragment(int position) {
+                if (position == 0) {
+                    mListFragment = new DailyListFragment();
+                    return mListFragment;
+                } else {
+                    mLineFragment = new DailyLineFragment();
+                    return mLineFragment;
+                }
+            }
+        };
+        mDailyPager.setAdapter(adapter);
     }
 
     /**
@@ -627,13 +609,13 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         GMViewBinder viewBinder;
         convertView = LayoutInflater.from(requireActivity()).inflate(R.layout.listitem_ad_vertical_pic, parent, false);
         adViewHolder = new VerticalAdViewHolder();
-        adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_listitem_ad_title);
-        adViewHolder.mSource = (TextView) convertView.findViewById(R.id.tv_listitem_ad_source);
-        adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_listitem_ad_desc);
+        adViewHolder.mTitle = convertView.findViewById(R.id.tv_listitem_ad_title);
+        adViewHolder.mSource = convertView.findViewById(R.id.tv_listitem_ad_source);
+        adViewHolder.mDescription = convertView.findViewById(R.id.tv_listitem_ad_desc);
         adViewHolder.mVerticalImage = convertView.findViewById(R.id.iv_listitem_image);
-        adViewHolder.mIcon = (ImageView) convertView.findViewById(R.id.iv_listitem_icon);
-        adViewHolder.mDislike = (ImageView) convertView.findViewById(R.id.iv_listitem_dislike);
-        adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_listitem_creative);
+        adViewHolder.mIcon = convertView.findViewById(R.id.iv_listitem_icon);
+        adViewHolder.mDislike = convertView.findViewById(R.id.iv_listitem_dislike);
+        adViewHolder.mCreativeButton = convertView.findViewById(R.id.btn_listitem_creative);
         adViewHolder.mLogo = convertView.findViewById(R.id.tt_ad_logo);//logoView 建议传入GroupView类型
 
         adViewHolder.app_info = convertView.findViewById(R.id.app_info);
@@ -672,17 +654,17 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         try {
             convertView = LayoutInflater.from(requireActivity()).inflate(R.layout.listitem_ad_large_video, parent, false);
             adViewHolder = new VideoAdViewHolder();
-            adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_listitem_ad_title);
-            adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_listitem_ad_desc);
-            adViewHolder.mSource = (TextView) convertView.findViewById(R.id.tv_listitem_ad_source);
+            adViewHolder.mTitle = convertView.findViewById(R.id.tv_listitem_ad_title);
+            adViewHolder.mDescription = convertView.findViewById(R.id.tv_listitem_ad_desc);
+            adViewHolder.mSource = convertView.findViewById(R.id.tv_listitem_ad_source);
             adViewHolder.videoView = (FrameLayout) convertView.findViewById(R.id.iv_listitem_video);
             // 可以通过GMNativeAd.getVideoWidth()、GMNativeAd.getVideoHeight()来获取视频的尺寸，进行UI调整（如果有需求的话）。
             // 在使用时需要判断返回值，如果返回为0，即表示该adn的广告不支持。目前仅Pangle和ks支持。
 //                    int videoWidth = ad.getVideoWidth();
 //                    int videoHeight = ad.getVideoHeight();
-            adViewHolder.mIcon = (ImageView) convertView.findViewById(R.id.iv_listitem_icon);
-            adViewHolder.mDislike = (ImageView) convertView.findViewById(R.id.iv_listitem_dislike);
-            adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_listitem_creative);
+            adViewHolder.mIcon = convertView.findViewById(R.id.iv_listitem_icon);
+            adViewHolder.mDislike = convertView.findViewById(R.id.iv_listitem_dislike);
+            adViewHolder.mCreativeButton = convertView.findViewById(R.id.btn_listitem_creative);
             adViewHolder.mLogo = convertView.findViewById(R.id.tt_ad_logo);//logoView 建议传入GroupView类型
 
             adViewHolder.app_info = convertView.findViewById(R.id.app_info);
@@ -755,13 +737,13 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         View convertView = null;
         convertView = LayoutInflater.from(requireActivity()).inflate(R.layout.listitem_ad_large_pic, parent, false);
         adViewHolder = new LargeAdViewHolder();
-        adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_listitem_ad_title);
-        adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_listitem_ad_desc);
-        adViewHolder.mSource = (TextView) convertView.findViewById(R.id.tv_listitem_ad_source);
-        adViewHolder.mLargeImage = (ImageView) convertView.findViewById(R.id.iv_listitem_image);
-        adViewHolder.mIcon = (ImageView) convertView.findViewById(R.id.iv_listitem_icon);
-        adViewHolder.mDislike = (ImageView) convertView.findViewById(R.id.iv_listitem_dislike);
-        adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_listitem_creative);
+        adViewHolder.mTitle = convertView.findViewById(R.id.tv_listitem_ad_title);
+        adViewHolder.mDescription = convertView.findViewById(R.id.tv_listitem_ad_desc);
+        adViewHolder.mSource = convertView.findViewById(R.id.tv_listitem_ad_source);
+        adViewHolder.mLargeImage = convertView.findViewById(R.id.iv_listitem_image);
+        adViewHolder.mIcon = convertView.findViewById(R.id.iv_listitem_icon);
+        adViewHolder.mDislike = convertView.findViewById(R.id.iv_listitem_dislike);
+        adViewHolder.mCreativeButton = convertView.findViewById(R.id.btn_listitem_creative);
         adViewHolder.mLogo = convertView.findViewById(R.id.tt_ad_logo);//logoView 建议传入GroupView类型
 
         adViewHolder.app_info = convertView.findViewById(R.id.app_info);
@@ -796,15 +778,15 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         View convertView = null;
         convertView = LayoutInflater.from(requireActivity()).inflate(R.layout.listitem_ad_group_pic, parent, false);
         adViewHolder = new GroupAdViewHolder();
-        adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_listitem_ad_title);
-        adViewHolder.mSource = (TextView) convertView.findViewById(R.id.tv_listitem_ad_source);
-        adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_listitem_ad_desc);
-        adViewHolder.mGroupImage1 = (ImageView) convertView.findViewById(R.id.iv_listitem_image1);
-        adViewHolder.mGroupImage2 = (ImageView) convertView.findViewById(R.id.iv_listitem_image2);
-        adViewHolder.mGroupImage3 = (ImageView) convertView.findViewById(R.id.iv_listitem_image3);
-        adViewHolder.mIcon = (ImageView) convertView.findViewById(R.id.iv_listitem_icon);
-        adViewHolder.mDislike = (ImageView) convertView.findViewById(R.id.iv_listitem_dislike);
-        adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_listitem_creative);
+        adViewHolder.mTitle = convertView.findViewById(R.id.tv_listitem_ad_title);
+        adViewHolder.mSource = convertView.findViewById(R.id.tv_listitem_ad_source);
+        adViewHolder.mDescription = convertView.findViewById(R.id.tv_listitem_ad_desc);
+        adViewHolder.mGroupImage1 = convertView.findViewById(R.id.iv_listitem_image1);
+        adViewHolder.mGroupImage2 = convertView.findViewById(R.id.iv_listitem_image2);
+        adViewHolder.mGroupImage3 = convertView.findViewById(R.id.iv_listitem_image3);
+        adViewHolder.mIcon = convertView.findViewById(R.id.iv_listitem_icon);
+        adViewHolder.mDislike = convertView.findViewById(R.id.iv_listitem_dislike);
+        adViewHolder.mCreativeButton = convertView.findViewById(R.id.btn_listitem_creative);
         adViewHolder.mLogo = convertView.findViewById(R.id.tt_ad_logo);//logoView 建议传入GroupView类型
 
         adViewHolder.app_info = convertView.findViewById(R.id.app_info);
@@ -856,13 +838,13 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         View convertView = null;
         convertView = LayoutInflater.from(requireActivity()).inflate(R.layout.listitem_ad_small_pic, parent, false);
         adViewHolder = new SmallAdViewHolder();
-        adViewHolder.mTitle = (TextView) convertView.findViewById(R.id.tv_listitem_ad_title);
-        adViewHolder.mSource = (TextView) convertView.findViewById(R.id.tv_listitem_ad_source);
-        adViewHolder.mDescription = (TextView) convertView.findViewById(R.id.tv_listitem_ad_desc);
-        adViewHolder.mSmallImage = (ImageView) convertView.findViewById(R.id.iv_listitem_image);
-        adViewHolder.mIcon = (ImageView) convertView.findViewById(R.id.iv_listitem_icon);
-        adViewHolder.mDislike = (ImageView) convertView.findViewById(R.id.iv_listitem_dislike);
-        adViewHolder.mCreativeButton = (Button) convertView.findViewById(R.id.btn_listitem_creative);
+        adViewHolder.mTitle = convertView.findViewById(R.id.tv_listitem_ad_title);
+        adViewHolder.mSource = convertView.findViewById(R.id.tv_listitem_ad_source);
+        adViewHolder.mDescription = convertView.findViewById(R.id.tv_listitem_ad_desc);
+        adViewHolder.mSmallImage = convertView.findViewById(R.id.iv_listitem_image);
+        adViewHolder.mIcon = convertView.findViewById(R.id.iv_listitem_icon);
+        adViewHolder.mDislike = convertView.findViewById(R.id.iv_listitem_dislike);
+        adViewHolder.mCreativeButton = convertView.findViewById(R.id.btn_listitem_creative);
 
         adViewHolder.app_info = convertView.findViewById(R.id.app_info);
         adViewHolder.app_name = convertView.findViewById(R.id.app_name);

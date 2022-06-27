@@ -103,6 +103,28 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
+            android:id="@+id/img_sign"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_share"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/img_setting" />
+
+        <View
+            android:id="@+id/view_sign_tip"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/bg_circle_cb5656"
+            android:layout_marginEnd="2dp"
+            android:layout_marginTop="2dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/img_sign"
+            app:layout_constraintTop_toTopOf="@+id/img_sign" />
+
+        <ImageView
             android:id="@+id/img_setting"
             android:layout_width="44dp"
             android:layout_height="44dp"

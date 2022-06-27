@@ -5,8 +5,7 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="42dp"
-    android:background="@color/black_alpha10">
+    android:minHeight="42dp" >
 
     <TextView
         android:id="@+id/tv_day_of_week"
@@ -30,32 +29,32 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.goodtech.tq.utils.font.AlternateBoldTextView
-        android:id="@+id/tv_max_temp"
+        android:id="@+id/tv_min_temp"
         android:layout_width="44dp"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_18"
         android:textAlignment="textEnd"
+        android:layout_marginEnd="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_space"
+        app:layout_constraintEnd_toStartOf="@+id/img_space"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_space"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="6dp"
+        android:src="@drawable/icon_line"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_max_temp"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.goodtech.tq.utils.font.AlternateBoldTextView
-        android:id="@+id/tv_space"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_18"
-        android:text="/"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_min_temp"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.goodtech.tq.utils.font.AlternateBoldTextView
-        android:id="@+id/tv_min_temp"
+        android:id="@+id/tv_max_temp"
         android:layout_width="44dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="14dp"
         android:textAlignment="textEnd"
         android:textColor="@color/white_alpha80"
         android:textSize="@dimen/sp_18"

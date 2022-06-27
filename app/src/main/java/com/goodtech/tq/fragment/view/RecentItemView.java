@@ -14,6 +14,8 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.helpers.AqiHelper;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Daypart;
+import com.goodtech.tq.models.Metric;
+import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.TimeUtils;
 
@@ -38,6 +40,8 @@ public class RecentItemView extends LinearLayout {
         initData();
     }
 
+    public TextView mNoticeTv;
+
     public TextView mTTempTv;
     public TextView mTPhraseTv;
     public TextView mTQualityTv;
@@ -49,6 +53,9 @@ public class RecentItemView extends LinearLayout {
     @SuppressLint("DefaultLocale")
     protected void initData() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.weather_item_recent, this, true);
+
+        mNoticeTv = view.findViewById(R.id.tv_notice);
+
         mTTempTv = view.findViewById(R.id.tv_temperature_today);
         mTPhraseTv = view.findViewById(R.id.tv_weather_today);
         mTQualityTv = view.findViewById(R.id.tv_quality_today);
@@ -61,14 +68,27 @@ public class RecentItemView extends LinearLayout {
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel weatherModel) {
         if (weatherModel != null) {
+
+            Observation observation = weatherModel.observation;
+            Metric metric = observation.metric;
+
+
             Daily today = weatherModel.today();
+            if (today != null) {
+                mNoticeTv.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                        today.metric.maxTemp, today.metric.minTemp));
+            } else {
+                mNoticeTv.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                        metric.maxTemp, metric.minTemp));
+            }
+
             if (today != null) {
                 long currentTime = System.currentTimeMillis();
                 long sunSetTime = TimeUtils.switchTime(today.sunSet);
                 boolean day = currentTime < sunSetTime;
 
                 Daypart todayPart = day ? today.dayPart : today.nightPart;
-                mTTempTv.setText(String.format("%d/%d℃", today.metric.maxTemp, today.metric.minTemp));
+                mTTempTv.setText(String.format("%d/%d°", today.metric.maxTemp, today.metric.minTemp));
                 if (todayPart != null) mTPhraseTv.setText(todayPart.phraseChar);
 
                 if (weatherModel.aqi > 0) {
@@ -82,7 +102,7 @@ public class RecentItemView extends LinearLayout {
                 Daily tomorrow = weatherModel.tomorrow();
                 if (tomorrow != null) {
                     Daypart tomorrowPart = day ? tomorrow.dayPart : tomorrow.nightPart;
-                    mMTempTv.setText(String.format("%d/%d℃", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
+                    mMTempTv.setText(String.format("%d/%d°", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
                     if (tomorrowPart != null) mMPhraseTv.setText(tomorrowPart.phraseChar);
                 }
             }

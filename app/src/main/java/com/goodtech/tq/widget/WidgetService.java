@@ -196,7 +196,7 @@ public class WidgetService  extends Service {
                 boolean day = currentTime < sunSetTime;
 
                 Daypart todayPart = day ? today.dayPart : today.nightPart;
-                remoteViews.setTextViewText(R.id.tv_temperature_today, String.format("%d/%d℃", today.metric.maxTemp, today.metric.minTemp));
+                remoteViews.setTextViewText(R.id.tv_temperature_today, String.format("%d/%d°", today.metric.maxTemp, today.metric.minTemp));
                 if (todayPart != null) remoteViews.setTextViewText(R.id.tv_weather_today,todayPart.phraseChar);
 
                 if (model.aqi > 0) {
@@ -210,7 +210,7 @@ public class WidgetService  extends Service {
                 Daily tomorrow = model.tomorrow();
                 if (tomorrow != null) {
                     Daypart tomorrowPart = day ? tomorrow.dayPart : tomorrow.nightPart;
-                    remoteViews.setTextViewText(R.id.tv_temperature_morn, String.format("%d/%d℃", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
+                    remoteViews.setTextViewText(R.id.tv_temperature_morn, String.format("%d/%d°", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
                     if (tomorrowPart != null) remoteViews.setTextViewText(R.id.tv_weather_morn, tomorrowPart.phraseChar);
                 }
             }
@@ -227,7 +227,7 @@ public class WidgetService  extends Service {
 
                             remoteViews.setTextViewText(R.id.tv_rh_wrap, String.format("%s风 %d级｜ 湿度%d%%", hourly.wdir_cardinal,
                                     WeatherUtils.windGrade(hourly.metric.wspd), hourly.rh));
-                            remoteViews.setTextViewText(R.id.tv_temperature, String.format("%d℃", hourly.metric.temp));
+                            remoteViews.setTextViewText(R.id.tv_temperature, String.format("%d°", hourly.metric.temp));
                             return;
                         }
                     }
@@ -241,7 +241,7 @@ public class WidgetService  extends Service {
                 remoteViews.setTextViewText(R.id.tv_rh_wrap, String.format("%s风 %d级｜ 湿度%d%%", observation.wdirCardinal,
                         WeatherUtils.windGrade(metric.wspd), observation.rh));
                 remoteViews.setImageViewResource(R.id.iconImgView, ImageUtils.weatherImageRes(observation.wxIcon));
-                remoteViews.setTextViewText(R.id.tv_temperature, String.format("%d℃", metric.temp));
+                remoteViews.setTextViewText(R.id.tv_temperature, String.format("%d°", metric.temp));
                 remoteViews.setTextViewText(R.id.tv_wx_phrase, observation.wxPhrase);
             }
         }
@@ -275,7 +275,7 @@ public class WidgetService  extends Service {
                         if (hourly.metric != null) {
                             remoteViews.setTextViewText(R.id.sTv_rh_wrap, String.format("%s风 %d级｜ 湿度%d%%", hourly.wdir_cardinal,
                                     WeatherUtils.windGrade(hourly.metric.wspd), hourly.rh));
-                            remoteViews.setTextViewText(R.id.sTv_temperature, String.format("%d℃", hourly.metric.temp));
+                            remoteViews.setTextViewText(R.id.sTv_temperature, String.format("%d°", hourly.metric.temp));
                             return;
                         }
                     }
@@ -289,7 +289,7 @@ public class WidgetService  extends Service {
                 remoteViews.setTextViewText(R.id.sTv_rh_wrap, String.format("%s风 %d级｜ 湿度%d%%", observation.wdirCardinal,
                         WeatherUtils.windGrade(metric.wspd), observation.rh));
                 remoteViews.setImageViewResource(R.id.sIconImgView, ImageUtils.weatherImageRes(observation.wxIcon));
-                remoteViews.setTextViewText(R.id.sTv_temperature, String.format("%d℃", metric.temp));
+                remoteViews.setTextViewText(R.id.sTv_temperature, String.format("%d°", metric.temp));
                 remoteViews.setTextViewText(R.id.sTv_wx_phrase, observation.wxPhrase);
             }
         }
