@@ -75,6 +75,8 @@ public class CalendarActivity extends BaseActivity implements
         mAdapter = new HolidayRecyclerAdapter(this, mPresenter.mHolidayList);
         mRecyclerView.setAdapter(mAdapter);
 
+        configHolidays();
+
         initView();
     }
 
@@ -223,15 +225,17 @@ public class CalendarActivity extends BaseActivity implements
     private void configHolidays() {
         mHandler.post(() -> {
             mAdapter.notifyDataSetChanged(mPresenter.mHolidayList);
-            Map<String, Calendar> map = new HashMap<>();
-            for (Holiday holiday : mPresenter.mHolidayList) {
-                for (Holiday.ListDay day : holiday.getList()) {
-                    long date = TimeUtils.longWithDate(day.getDate(), "yyyy-M-d");
-                    map.put(getSchemeCalendar(date, 0xFF40db25, "").toString(),
-                            getSchemeCalendar(date, 0xFF40db25, ""));
+            if (mPresenter.mHolidayList != null) {
+                Map<String, Calendar> map = new HashMap<>();
+                for (Holiday holiday : mPresenter.mHolidayList) {
+                    for (Holiday.ListDay day : holiday.getList()) {
+                        long date = TimeUtils.longWithDate(day.getDate(), "yyyy-M-d");
+                        map.put(getSchemeCalendar(date, 0xFF40db25, "").toString(),
+                                getSchemeCalendar(date, 0xFF40db25, ""));
+                    }
                 }
+                mCalendarView.setSchemeDate(map);
             }
-            mCalendarView.setSchemeDate(map);
         });
     }
 

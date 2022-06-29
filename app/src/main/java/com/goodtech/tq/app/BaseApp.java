@@ -67,8 +67,6 @@ public class BaseApp extends Application {
         //  Activity生命周期监听
         registerLifecycle();
 
-        GMAdManagerHolder.init(this);
-
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
 
@@ -135,6 +133,8 @@ public class BaseApp extends Application {
                 configLocation(activity, getLocation);
             }
         }
+
+        GMAdManagerHolder.init(this);
 
         JPushInterface.setDebugMode(true);
         
