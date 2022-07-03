@@ -2,31 +2,47 @@ package com.goodtech.tq.cityList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.msdk.api.AdError;
+import com.bytedance.msdk.api.v2.GMAdConstant;
+import com.bytedance.msdk.api.v2.GMAdSize;
+import com.bytedance.msdk.api.v2.GMDislikeCallback;
 import com.bytedance.msdk.api.v2.ad.banner.GMBannerAdListener;
 import com.bytedance.msdk.api.v2.ad.banner.GMBannerAdLoadCallback;
+import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAd;
+import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAdLoadCallback;
+import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeExpressAdListener;
+import com.bytedance.msdk.api.v2.ad.nativeAd.GMVideoListener;
 import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.R;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.eventbus.MessageEvent;
+import com.goodtech.tq.fragment.WeatherFragment2;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.manager.AdBannerManager;
+import com.goodtech.tq.manager.AdFeedManager;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.MessageAlert;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
@@ -41,6 +57,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -53,9 +70,6 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        if (mAdBannerManager != null) {
-            mAdBannerManager.onResume();
-        }
     }
 
     @Override
@@ -63,9 +77,6 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mRecyclerViewDragDropManager.cancelDrag();
         MobclickAgent.onPause(this);
         super.onPause();
-        if (mAdBannerManager != null) {
-            mAdBannerManager.onPause();
-        }
     }
 
     @Override
@@ -88,9 +99,10 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mAdapter = null;
         mLayoutManager = null;
 
-        if (mAdBannerManager != null) {
-            mAdBannerManager.destroy();
+        if (mAdFeedManager != null) {
+            mAdFeedManager.destroy();
         }
+        mGMNativeAd = null;
 
         EventBus.getDefault().unregister(this);
 
@@ -130,6 +142,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mCloseBtn = findViewById(R.id.button_close);
         mCancelBtn = findViewById(R.id.button_city_cancel);
         mEditBtn = findViewById(R.id.button_city_edit);
+        mBannerContainer = findViewById(R.id.bannerContainer);
 
         //noinspection ConstantConditions
         mRecyclerView = findViewById(R.id.recycler_city);
@@ -192,10 +205,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
         setClickListener();
 
-        initListener();
         initAdLoader();
-        //  banner
-        configBanner();
+        initNativeExpressAD();
     }
 
     @Override
@@ -301,136 +312,227 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     //广告加载成功并展示
     private boolean mIsLoadedAndShow;
     //广告管理类
-    private AdBannerManager mAdBannerManager;
+    private AdFeedManager mAdFeedManager;
     // banner广告事件的监听
-    private GMBannerAdListener mAdBannerListener;
+    private GMNativeAd mGMNativeAd; //原生广告model
 
-    private void configBanner() {
-        mBannerContainer = this.findViewById(R.id.bannerContainer);
+    private void initAdLoader() {
+        mAdFeedManager = new AdFeedManager(this, new GMNativeAdLoadCallback() {
+            @Override
+            public void onAdLoaded(List<GMNativeAd> ads) {
+                if (ads == null || ads.isEmpty()) {
+                    Log.e(TAG, "on FeedAdLoaded: ad is null!");
+                    //TToast.show(getContext(), "广告加载失败！");
+                    return;
+                }
+                mIsLoaded = true;
+                mGMNativeAd = ads.get(0);
+                if (mGMNativeAd != null && !mIsLoadedAndShow) {
+                    showAd();
+                }
+            }
+
+            @Override
+            public void onAdLoadedFail(AdError adError) {
+                //TToast.show(getContext(), "广告加载失败！");
+                Log.e(TAG, "load feed ad error : " + adError.code + ", " + adError.message);
+            }
+        });
+    }
+
+    private void initNativeExpressAD() {
+        mIsLoaded = false;
+        removeAdView();
+        mAdFeedManager.loadAdWithCallback(Constants.PGE_EXPRESS_POS_ID2, 1, GMAdConstant.TYPE_EXPRESS_AD, DeviceUtils.getScreenWidthDpi(this.getApplicationContext()));
+    }
+
+    /**
+     * 展示原生广告
+     */
+    private void showAd() {
+        if (!mIsLoaded || mAdFeedManager == null || mGMNativeAd == null) {
+            //TToast.show(getContext(), "请先加载广告");
+            // initNativeExpressAD();
+            return;
+        }
+        if (!mGMNativeAd.isReady()) {
+            //TToast.show(getContext(), "广告已经无效，请重新请求");
+            // initNativeExpressAD();
+            return;
+        }
+        mIsLoaded = false;
         mIsLoadedAndShow = true;
-        clearStatus();
-        if (mAdBannerListener != null) {
-            mAdBannerManager.loadAdWithCallback(Constants.PGE_BANNER_POS_ID);
+
+        mBannerContainer.setVisibility(View.VISIBLE);
+        View view = null;
+        if (mGMNativeAd.isExpressAd()) { //模板
+            view = getExpressAdView(mBannerContainer, mGMNativeAd);
+            view.setBackgroundColor(Color.TRANSPARENT);
+        } else {
+            //TToast.show(requireActivity(), "图片展示样式错误");
+        }
+
+        if (view != null) {
+            view.setLayoutParams(new
+                    ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+            mBannerContainer.removeAllViews();
+            mBannerContainer.addView(view);
         }
     }
 
-    private void initAdLoader() {
-        mAdBannerManager = new AdBannerManager(this, new GMBannerAdLoadCallback() {
-            @Override
-            public void onAdFailedToLoad(com.bytedance.msdk.api.AdError adError) {
-                //TToast.show(CityListActivity.this, "广告加载失败");
-                mIsLoaded = false;
-                Log.e(TAG, "load banner ad error : " + adError.code + ", " + adError.message);
-                mBannerContainer.removeAllViews();
-                mAdBannerManager.printLoadFailAdnInfo();// 获取本次waterfall加载中，加载失败的adn错误信息。
+    //渲染模板广告
+    @SuppressWarnings("RedundantCast")
+    private View getExpressAdView(ViewGroup parent, @NonNull final GMNativeAd ad) {
+        final ExpressAdViewHolder adViewHolder;
+        View convertView = null;
+        try {
+            convertView = LayoutInflater.from(this).inflate(R.layout.listitem_ad_native_express, parent, false);
+            adViewHolder = new ExpressAdViewHolder();
+            adViewHolder.mAdContainerView = (FrameLayout) convertView.findViewById(R.id.iv_listitem_express);
+            convertView.setTag(adViewHolder);
+
+            //判断是否存在dislike按钮
+            if (ad.hasDislike()) {
+                ad.setDislikeCallback(this, new GMDislikeCallback() {
+                    @Override
+                    public void onSelected(int position, String value) {
+                        //TToast.show(requireActivity(), "点击 " + value);
+                        //用户选择不喜欢原因后，移除广告展示
+                        removeAdView();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        //TToast.show(requireActivity(), "dislike 点击了取消");
+                        Log.d(TAG, "dislike 点击了取消");
+                    }
+
+                    /**
+                     * 拒绝再次提交
+                     */
+                    @Override
+                    public void onRefuse() {
+
+                    }
+
+                    @Override
+                    public void onShow() {
+
+                    }
+                });
             }
 
-            @Override
-            public void onAdLoaded() {
-                //TToast.show(CityListActivity.this, "广告加载成功");
-                Log.i(TAG, "banner load success ");
-                mIsLoaded = true;
-                if (mIsLoadedAndShow) {
-                    showBannerAd();
+            //设置点击展示回调监听
+            ad.setNativeAdListener(new GMNativeExpressAdListener() {
+                @Override
+                public void onAdClick() {
+                    Log.d(TAG, "onAdClick");
+                    //TToast.show(requireActivity(), "模板广告被点击");
                 }
-                mAdBannerManager.printLoadAdInfo(); //已经加载广告的信息
-            }
-        }, mAdBannerListener);
+
+                @Override
+                public void onAdShow() {
+                    Log.d(TAG, "onAdShow");
+                    //TToast.show(requireActivity(), "模板广告show");
+
+                }
+
+                @Override
+                public void onRenderFail(View view, String msg, int code) {
+                    //TToast.show(requireActivity(), "模板广告渲染失败code=" + code + ",msg=" + msg);
+                    Log.d(TAG, "onRenderFail   code=" + code + ",msg=" + msg);
+
+                }
+
+                // ** 注意点 ** 不要在广告加载成功回调里进行广告view展示，要在onRenderSucces进行广告view展示，否则会导致广告无法展示。
+                @Override
+                public void onRenderSuccess(float width, float height) {
+                    Log.d(TAG, "onRenderSuccess");
+                    //TToast.show(requireActivity(), "模板广告渲染成功:width=" + width + ",height=" + height);
+                    //回调渲染成功后将模板布局添加的父View中
+                    if (adViewHolder.mAdContainerView != null) {
+                        //获取视频播放view,该view SDK内部渲染，在媒体平台可配置视频是否自动播放等设置。
+                        int sWidth;
+                        int sHeight;
+                        /**
+                         * 如果存在父布局，需要先从父布局中移除
+                         */
+                        final View video = ad.getExpressView(); // 获取广告view  如果存在父布局，需要先从父布局中移除
+                        if (width == GMAdSize.FULL_WIDTH && height == GMAdSize.AUTO_HEIGHT) {
+                            sWidth = FrameLayout.LayoutParams.MATCH_PARENT;
+                            sHeight = FrameLayout.LayoutParams.WRAP_CONTENT;
+                        } else {
+                            sWidth = DeviceUtils.getScreenWidth(BaseApp.getInstance());
+                            sHeight = (int) ((sWidth * height) / width);
+                        }
+                        if (video != null) {
+                            /**
+                             * 如果存在父布局，需要先从父布局中移除
+                             */
+                            DeviceUtils.removeFromParent(video);
+                            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(sWidth, sHeight);
+                            adViewHolder.mAdContainerView.removeAllViews();
+                            adViewHolder.mAdContainerView.addView(video, layoutParams);
+                        }
+                    }
+                }
+            });
+
+
+            //视频广告设置播放状态回调（可选）
+            ad.setVideoListener(new GMVideoListener() {
+
+                @Override
+                public void onVideoStart() {
+                    //TToast.show(requireActivity(), "模板广告视频开始播放");
+                    Log.d(TAG, "onVideoStart");
+                }
+
+                @Override
+                public void onVideoPause() {
+                    //TToast.show(requireActivity(), "模板广告视频暂停");
+                    Log.d(TAG, "onVideoPause");
+
+                }
+
+                @Override
+                public void onVideoResume() {
+                    //TToast.show(requireActivity(), "模板广告视频继续播放");
+                    Log.d(TAG, "onVideoResume");
+
+                }
+
+                @Override
+                public void onVideoCompleted() {
+                    //TToast.show(requireActivity(), "模板播放完成");
+                    Log.d(TAG, "onVideoCompleted");
+                }
+
+                @Override
+                public void onVideoError(AdError adError) {
+                    //TToast.show(requireActivity(), "模板广告视频播放出错");
+                    Log.d(TAG, "onVideoError");
+                }
+            });
+
+            ad.render();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return convertView;
     }
 
-    /**
-     * 清除状态
-     */
-    private void clearStatus() {
-        //重置load标识
-        mIsLoaded = false;
-        //清空banner父容器
-        mBannerContainer.removeAllViews();
+    private static class ExpressAdViewHolder {
+        FrameLayout mAdContainerView;
     }
 
-    private void initListener() {
-        
-        mAdBannerListener = new GMBannerAdListener() {
-
-            @Override
-            public void onAdOpened() {
-                Log.d(TAG, "onAdOpened");
-            }
-
-            @Override
-            public void onAdLeftApplication() {
-                Log.d(TAG, "onAdLeftApplication");
-            }
-
-            @Override
-            public void onAdClosed() {
-                Log.d(TAG, "onAdClosed");
-                if (mBannerContainer != null) {
-                    mBannerContainer.removeAllViews();
-                }
-                if (mAdBannerManager != null && mAdBannerManager.getBannerAd() != null) {
-                    mAdBannerManager.getBannerAd().destroy();
-                }
-            }
-
-            @Override
-            public void onAdClicked() {
-                Log.d(TAG, "onAdClicked");
-            }
-
-            @Override
-            public void onAdShow() {
-                Log.d(TAG, "onAdShow");
-                mIsLoaded = false;
-                if (mAdBannerManager != null) {
-                    mAdBannerManager.printShowAdInfo();//已经展示的广告信息
-                }
-            }
-
-            /**
-             * show失败回调。如果show时发现无可用广告（比如广告过期），会触发该回调。
-             * 开发者应该结合自己的广告加载、展示流程，在该回调里进行重新加载。
-             * @param adError showFail的具体原因
-             */
-            @Override
-            public void onAdShowFail(AdError adError) {
-                Log.d(TAG, "onAdShowFail");
-                mIsLoaded = false;
-            }
-        };
-    }
-
-    /**
-     * 展示广告
-     */
-    private void showBannerAd() {
-        /**
-         * 加载成功才能展示
-         */
-        if (mIsLoaded && mAdBannerManager != null) {
-            /**
-             * 在添加banner的View前需要清空父容器
-             */
+    private void removeAdView() {
+        if (mBannerContainer != null) {
             mBannerContainer.removeAllViews();
-            if (mAdBannerManager.getBannerAd() != null) {
-                // 在调用getBannerView之前，可以选择使用isReady进行判断，当前是否有可用广告。
-                if (!mAdBannerManager.getBannerAd().isReady()) {
-                    // //TToast.show(this, "广告已经无效，建议重新请求");
-                    return;
-                }
-                //横幅广告容器的尺寸必须至少与横幅广告一样大。如果您的容器留有内边距，实际上将会减小容器大小。如果容器无法容纳横幅广告，则横幅广告不会展示
-                /**
-                 * mBannerViewAd.getBannerView()一个广告对象只能调用一次，第二次为null
-                 */
-                View view = mAdBannerManager.getBannerAd().getBannerView();
-                if (view != null) {
-                    mBannerContainer.addView(view);
-                } else {
-                    // //TToast.show(this, "请重新加载广告");
-                }
-            }
-        } else {
-            // //TToast.show(this, "请先加载广告");
         }
     }
 

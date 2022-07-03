@@ -15,9 +15,7 @@
             layout="@layout/listitem_ad_icon_source_layout"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
             android:paddingEnd="10dp"
             android:paddingRight="10dp" />
 
@@ -26,9 +24,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/icon_source_layout"
-            android:layout_marginLeft="10dp"
+            
             android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
+            
             android:ellipsize="end"
             android:lineSpacingMultiplier="1"
             android:maxLines="2"
@@ -44,8 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_listitem_ad_desc"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            
+            
             android:orientation="horizontal">
 
             <ImageView
@@ -82,9 +80,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layout_image_group"
-            android:layout_marginLeft="10dp"
+            
             android:layout_marginTop="4dp"
-            android:layout_marginRight="10dp" />
+             />
 
         <!--==== 测试下载状态控制功能 begin ========-->
         <include

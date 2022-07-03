@@ -134,6 +134,11 @@ public class DeviceUtils {
         return metrics.widthPixels;
     }
 
+    public static int getScreenWidthDpi(Context context) {
+        DisplayMetrics metrics = getDisplayMetrics(context);
+        return (int) (metrics.widthPixels / metrics.density);
+    }
+
     /**
      * 返回屏幕尺寸(高)
      *

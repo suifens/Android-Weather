@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.msdk.api.GMAdEcpmInfo;
 import com.bytedance.msdk.api.v2.GMMediationAdSdk;
 import com.bytedance.msdk.api.v2.GMSettingConfigCallback;
@@ -39,6 +41,7 @@ public class AdFeedManager {
     private String mAdUnitId; //广告位
     private int mAdCount; //广告数量
     private int mStyleType; //模板类型，可以不传。以服务端类型为准
+    private int mAdWidth;
 
     /**
      * ------------------------- 以下是必要实现，如果不实现会导致加载广告失败  --------------------------------------
@@ -68,13 +71,14 @@ public class AdFeedManager {
      * @param adCount 广告数量
      * @param styleType 模板类型
      */
-    public void loadAdWithCallback(final String adUnitId, int adCount, int styleType) {
+    public void loadAdWithCallback(final String adUnitId, int adCount, int styleType, int adWidth) {
+        this.mAdWidth = adWidth;
         this.mAdUnitId = adUnitId;
         this.mAdCount = adCount;
         this.mStyleType = styleType;
 
         if (GMMediationAdSdk.configLoadSuccess()) {
-            loadAd(adUnitId, adCount, styleType);
+            loadAd(adUnitId, adCount, styleType, adWidth);
         } else {
             GMMediationAdSdk.registerConfigCallback(mSettingConfigCallback); //不用使用内部类，否则在ondestory中无法移除该回调
         }
@@ -86,15 +90,16 @@ public class AdFeedManager {
      * @param adCount 广告数量
      * @param styleType 模板类型
      */
-    private void loadAd(String adUnitId, int adCount, int styleType) {
+    private void loadAd(String adUnitId, int adCount, int styleType, int adWidth) {
         mGMUnifiedNativeAd = new GMUnifiedNativeAd(mActivity, adUnitId);//模板视频
 
         // 针对Gdt Native自渲染广告，可以自定义gdt logo的布局参数。该参数可选,非必须。
         FrameLayout.LayoutParams gdtNativeAdLogoParams =
                 new FrameLayout.LayoutParams(
-                        DeviceUtils.dip2px(mActivity.getApplicationContext(), 40),
-                        DeviceUtils.dip2px(mActivity.getApplicationContext(), 13),
-                        Gravity.RIGHT | Gravity.TOP); // 例如，放在右上角
+                        // DeviceUtils.dip2px(mActivity.getApplicationContext(), 40),
+                        // DeviceUtils.dip2px(mActivity.getApplicationContext(), 13),
+                        0, 0,
+                        Gravity.TOP|Gravity.START); // 例如，放在右上角
 
 
         GMAdSlotGDTOption.Builder adSlotNativeBuilder = GMAdOptionUtil.getGMAdSlotGDTOption()
@@ -111,7 +116,7 @@ public class AdFeedManager {
                 // 备注
                 // 1:如果是信息流自渲染广告，设置广告图片期望的图片宽高 ，不能为0
                 // 2:如果是信息流模板广告，宽度设置为希望的宽度，高度设置为0(0为高度选择自适应参数)
-                .setImageAdSize((int) DeviceUtils.getScreenWidth(mActivity.getApplicationContext()), 340)// 必选参数 单位dp ，详情见上面备注解释
+                .setImageAdSize(adWidth, 0)// 必选参数 单位dp ，详情见上面备注解释
                 .setAdCount(adCount)//请求广告数量为1到3条
                 .setBidNotify(true)//开启bidding比价结果通知，默认值为false
                 .build();
@@ -137,7 +142,7 @@ public class AdFeedManager {
     private GMSettingConfigCallback mSettingConfigCallback = new GMSettingConfigCallback() {
         @Override
         public void configLoad() {
-            loadAd(mAdUnitId, mAdCount, mStyleType);
+            loadAd(mAdUnitId, mAdCount, mStyleType, mAdWidth);
         }
     };
 

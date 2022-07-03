@@ -137,7 +137,7 @@ public class MainActivity extends BaseActivity {
 
         mHandler.postDelayed(() -> this.startService(new Intent(this, WidgetService.class)), 1000);
 
-        initAdLoader();
+        // initAdLoader();
     }
 
     @Override
@@ -352,6 +352,7 @@ public class MainActivity extends BaseActivity {
         mFragmentList.add(fragment);
         mAdapter = new ViewPagerAdapter(this, mFragmentList);
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setOffscreenPageLimit(5);
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

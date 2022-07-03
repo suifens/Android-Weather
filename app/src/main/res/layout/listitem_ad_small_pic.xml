@@ -13,9 +13,9 @@
             android:id="@+id/ad_contentPanel"
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:layout_marginLeft="10dp"
+            
             android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp">
+            >
 
 
             <ImageView
@@ -61,7 +61,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp" />
+                         />
 
                     <TextView
                         android:id="@+id/tv_listitem_ad_source"
@@ -87,7 +87,6 @@
                         android:layout_alignParentRight="true"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
                         android:clickable="true"
                         android:focusable="true" />
                 </RelativeLayout>
@@ -101,9 +100,7 @@
             layout="@layout/listitem_ad_title_creative_btn_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ad_contentPanel"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_below="@+id/ad_contentPanel" />
 
     </RelativeLayout>
 </com.bytedance.msdk.api.format.TTNativeAdView>
