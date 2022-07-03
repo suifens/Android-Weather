@@ -2,16 +2,19 @@ package com.goodtech.tq;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
 import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 
@@ -52,9 +55,11 @@ public class SplashActivity extends Activity {
 
             SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
 
-            SplashADActivity.redirectTo(this);
-            overridePendingTransition(0, 0);
-            this.finish();
+            // SplashADActivity.redirectTo(this);
+            // overridePendingTransition(0, 0);
+            // this.finish();
+
+            onStartWeather();
 
         } else {
             handler.postDelayed(() -> {
@@ -62,5 +67,20 @@ public class SplashActivity extends Activity {
                 this.finish();
             }, 500);
         }
+    }
+
+    private void onStartWeather() {
+        String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
+        if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")
+                || LocationSpHelper.getCityListAndLocation().size() == 0) {
+            CitySearchActivity.redirectTo(this, true);
+        } else {
+            this.startActivity(new Intent(this, MainActivity.class));
+        }
+
+        SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
+
+        overridePendingTransition(0, 0);
+        this.finish();
     }
 }

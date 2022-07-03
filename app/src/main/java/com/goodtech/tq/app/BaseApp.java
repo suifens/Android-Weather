@@ -213,7 +213,7 @@ public class BaseApp extends Application {
     private void back2App(Activity activity) {
         isRunInBackground = false;
         if (!TextUtils.isEmpty( SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))) {
-            SplashADActivity.redirectToFront(activity);
+            // SplashADActivity.redirectToFront(activity);
             SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
         }
     }
