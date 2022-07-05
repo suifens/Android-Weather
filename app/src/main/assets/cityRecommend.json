@@ -9,12 +9,44 @@
       "pinyin": "bei jing shi"
     },
     {
-      "cid": 10001,
-      "province": "上海市",
-      "city": "上海市",
-      "lat": "31.14",
-      "lon": "121.29",
-      "pinyin": "shang hai shi"
+      "cid": 10440,
+      "province": "山东省",
+      "city": "济南",
+      "lat": "36.40",
+      "lon": "117.00",
+      "pinyin": "ji nan"
+    },
+    {
+      "cid": 10464,
+      "province": "山东省",
+      "city": "青岛",
+      "lat": "36.03",
+      "lon": "120.18",
+      "pinyin": "qing dao"
+    },
+    {
+      "cid": 10141,
+      "province": "河北省",
+      "city": "石家庄",
+      "lat": "38.02",
+      "lon": "114.30",
+      "pinyin": "shi jia zhuang"
+    },
+    {
+      "cid": 10520,
+      "province": "四川省",
+      "city": "成都",
+      "lat": "30.40",
+      "lon": "104.04",
+      "pinyin": "cheng du"
+    },
+    {
+      "cid": 10239,
+      "province": "湖北省",
+      "city": "武汉",
+      "lat": "30.35",
+      "lon": "114.17",
+      "pinyin": "wu han"
     },
     {
       "cid": 10057,
@@ -33,14 +65,6 @@
       "pinyin": "shen "
     },
     {
-      "cid": 10520,
-      "province": "四川省",
-      "city": "成都",
-      "lat": "30.40",
-      "lon": "104.04",
-      "pinyin": "cheng du"
-    },
-    {
       "cid": 10349,
       "province": "江苏省",
       "city": "苏州",
@@ -49,12 +73,20 @@
       "pinyin": "su zhou"
     },
     {
-      "cid": 10620,
-      "province": "重庆市",
-      "city": "重庆市",
-      "lat": "29.35",
-      "lon": "106.33",
-      "pinyin": "zhong qing shi"
+      "cid": 10000,
+      "province": "安徽省",
+      "city": "合肥",
+      "lat": "31.52",
+      "lon": "117.17",
+      "pinyin": "he fei"
+    },
+    {
+      "cid": 10355,
+      "province": "江苏省",
+      "city": "无锡",
+      "lat": "31.34",
+      "lon": "120.18",
+      "pinyin": "wu xi"
     },
     {
       "cid": 10174,
@@ -63,38 +95,6 @@
       "lat": "34.46",
       "lon": "113.40",
       "pinyin": "zheng zhou"
-    },
-    {
-      "cid": 10506,
-      "province": "陕西省",
-      "city": "西安",
-      "lat": "34.17",
-      "lon": "108.57",
-      "pinyin": "xi an"
-    },
-    {
-      "cid": 10022,
-      "province": "福建省",
-      "city": "福州",
-      "lat": "26.05",
-      "lon": "119.18",
-      "pinyin": "fu zhou"
-    },
-    {
-      "cid": 10040,
-      "province": "福建省",
-      "city": "厦门",
-      "lat": "24.27",
-      "lon": "118.06",
-      "pinyin": "xia men"
-    },
-    {
-      "cid": 10239,
-      "province": "湖北省",
-      "city": "武汉",
-      "lat": "30.35",
-      "lon": "114.17",
-      "pinyin": "wu han"
     }
   ]
 }

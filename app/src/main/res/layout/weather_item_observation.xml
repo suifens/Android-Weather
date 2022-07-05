@@ -22,7 +22,6 @@
             android:background="@drawable/bg_circle_black_12">
 
             <LinearLayout
-                android:id="@+id/linear_top"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:gravity="bottom"
@@ -36,7 +35,6 @@
                     app:srcCompat="@drawable/ic_temperature" />
 
                 <TextView
-                    android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -50,9 +48,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:gravity="center_vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_top">
+                android:gravity="center_vertical">
 
                 <com.goodtech.tq.utils.font.AlternateBoldTextView
                     android:id="@+id/tv_min_temp"
@@ -93,7 +89,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/linear_top"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:gravity="bottom"
@@ -106,7 +101,6 @@
                     app:srcCompat="@drawable/ic_sun" />
 
                 <TextView
-                    android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -120,9 +114,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:gravity="center_vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_top">
+                android:gravity="center_vertical">
 
                 <LinearLayout
                     android:layout_width="0dp"

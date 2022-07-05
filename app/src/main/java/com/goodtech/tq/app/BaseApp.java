@@ -212,7 +212,10 @@ public class BaseApp extends Application {
      */
     private void back2App(Activity activity) {
         isRunInBackground = false;
-        if (!TextUtils.isEmpty( SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))) {
+        long interval = SpUtils.getInstance().getLong(LEVEL_TIME, 0L) - System.currentTimeMillis();
+        if (!TextUtils.isEmpty( SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))
+                && interval > 1000 * 60) {
+            //  离开前台1分钟后返回，则显示启动页广告
             SplashADActivity.redirectToFront(activity);
             SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
         }
@@ -221,7 +224,9 @@ public class BaseApp extends Application {
     /**
      * 离开应用 压入后台或者退出应用
      */
+    private static final String LEVEL_TIME = "LEVEL_TIME";
     private void leaveApp(Activity activity) {
+        SpUtils.getInstance().putLong(LEVEL_TIME, System.currentTimeMillis());
         isRunInBackground = true;
     }
 

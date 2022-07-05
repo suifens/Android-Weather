@@ -48,19 +48,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.goodtech.tq.utils.font.AlternateBoldTextView
-                android:id="@+id/alternateBoldTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="20dp"
-                android:text="°"
-                android:textColor="@color/white"
-                android:textSize="36dp"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_temperature"
-                app:layout_constraintStart_toEndOf="@+id/tv_temperature"
-                app:layout_constraintTop_toTopOf="@+id/tv_temperature" />
-
             <TextView
                 android:id="@+id/tv_current"
                 android:layout_width="wrap_content"

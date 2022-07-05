@@ -137,7 +137,7 @@ public class MainActivity extends BaseActivity {
 
         mHandler.postDelayed(() -> this.startService(new Intent(this, WidgetService.class)), 1000);
 
-        // initAdLoader();
+        initAdLoader();
     }
 
     @Override
