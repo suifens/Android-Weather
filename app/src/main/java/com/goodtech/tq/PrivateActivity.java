@@ -68,8 +68,8 @@ public class PrivateActivity extends BaseActivity {
         configWebView(mWebView);
 
         //  设置url
-        String guideUrl = String.format(Constants.URL_PRIVACY, BuildConfig.FLAVOR);
-        mWebView.loadUrl(guideUrl);
+        // String guideUrl = String.format(Constants.URL_PRIVACY, BuildConfig.FLAVOR);
+        mWebView.loadUrl(Constants.URL_PRIVACY);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
