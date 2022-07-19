@@ -242,3 +242,7 @@
 -keep class com.tencent.tgpa.lite.**{*;}
 -keep class com.ihoc.mgpa.deviceid.**{*;}
 -keep class com.tencent.klevin.**{*;}
+
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+

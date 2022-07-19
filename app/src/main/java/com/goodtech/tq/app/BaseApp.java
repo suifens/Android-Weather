@@ -29,6 +29,7 @@ import com.goodtech.tq.utils.TipHelper;
 import com.qq.e.comm.managers.GDTAdSdk;
 import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mmkv.MMKV;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
@@ -155,6 +156,9 @@ public class BaseApp extends Application {
         UMConfigure.init(this, Constants.UM_APP_ID, BuildConfig.FLAVOR, UMConfigure.DEVICE_TYPE_PHONE, "");
         //手动采集选择
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
+
+        /// bug收集
+        CrashReport.initCrashReport(getApplicationContext());
     }
 
     public int appCount = 0;

@@ -644,6 +644,28 @@
 
         <!-- Pangle end================== -->
 
+
+        <!-- Bugly start================== -->
+
+        <!-- 配置APP ID -->
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="70406e73c5" />
+        <!-- 配置APP版本号 -->
+        <meta-data
+            android:name="BUGLY_APP_VERSION"
+            android:value="6.1.1" />
+        <!-- 配置APP渠道号 -->
+        <meta-data
+            android:name="BUGLY_APP_CHANNEL"
+            android:value="37b2e20b-bb28-455a-9290-cb14845919f1" />
+        <!-- 配置Bugly调试模式（true或者false）-->
+        <meta-data
+            android:name="BUGLY_ENABLE_DEBUG"
+            android:value="true" />
+
+        <!-- Bugly end================== -->
+
     </application>
 
 </manifest>
