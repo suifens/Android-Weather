@@ -28,7 +28,8 @@
     <!-- Required -->
     <permission
         android:name="${applicationId}.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"
+        tools:ignore="UniquePermission" />
 
     <!-- Required  一些系统要求的权限，如访问网络等-->
     <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
@@ -47,7 +48,8 @@
     <!--xiaomi_permission_start-->
     <permission
         android:name="${applicationId}.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"
+        tools:ignore="UniquePermission" />
     <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
     <!--xiaomi_permission_end-->
     <!--oppo_permission_start-->
@@ -591,38 +593,38 @@
         <service android:name=".widget.DoubleWidgetService">
         </service>
 
-        <!-- GDT start================== -->
-        <!-- targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值，例如本例中applicationId为"com.qq.e.union.demo"。 -->
-        <provider
-            android:name="com.qq.e.comm.GDTFileProvider"
-            android:authorities="${applicationId}.gdt.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/gdt_file_path" />
-        </provider>
+<!--        &lt;!&ndash; GDT start================== &ndash;&gt;-->
+<!--        &lt;!&ndash; targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值，例如本例中applicationId为"com.qq.e.union.demo"。 &ndash;&gt;-->
+<!--        <provider-->
+<!--            android:name="com.qq.e.comm.GDTFileProvider"-->
+<!--            android:authorities="${applicationId}.gdt.fileprovider"-->
+<!--            android:exported="false"-->
+<!--            android:grantUriPermissions="true">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/gdt_file_path" />-->
+<!--        </provider>-->
 
-        <activity
-            android:name="com.qq.e.ads.PortraitADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.qq.e.ads.LandscapeADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="landscape"
-            tools:replace="android:screenOrientation" />
+<!--        <activity-->
+<!--            android:name="com.qq.e.ads.PortraitADActivity"-->
+<!--            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->
+<!--            android:screenOrientation="portrait" />-->
+<!--        <activity-->
+<!--            android:name="com.qq.e.ads.LandscapeADActivity"-->
+<!--            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->
+<!--            android:screenOrientation="landscape"-->
+<!--            tools:replace="android:screenOrientation" />-->
 
-        <!-- 声明SDK所需要的组件 -->
-        <service
-            android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-        <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
+<!--        &lt;!&ndash; 声明SDK所需要的组件 &ndash;&gt;-->
+<!--        <service-->
+<!--            android:name="com.qq.e.comm.DownloadService"-->
+<!--            android:exported="false" />-->
+<!--        &lt;!&ndash; 请开发者注意字母的大小写，ADActivity，而不是AdActivity &ndash;&gt;-->
 
-        <activity
-            android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-        <!-- GDT end================== -->
+<!--        <activity-->
+<!--            android:name="com.qq.e.ads.ADActivity"-->
+<!--            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
+<!--        &lt;!&ndash; GDT end================== &ndash;&gt;-->
 
 
         <!-- Pangle start================== -->

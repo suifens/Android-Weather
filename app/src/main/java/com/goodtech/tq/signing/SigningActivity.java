@@ -46,7 +46,7 @@ import com.goodtech.tq.views.CommonBottomSheet;
 import com.goodtech.tq.views.InputAlert;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
-import com.qq.e.comm.constants.Sig;
+// import com.qq.e.comm.constants.Sig;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;

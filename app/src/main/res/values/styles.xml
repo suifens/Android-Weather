@@ -7,7 +7,7 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowAnimationStyle">@style/Left_Right_AnimTheme</item>
+<!--        <item name="android:windowAnimationStyle">@style/Left_Right_AnimTheme</item>-->
         <item name="android:windowBackground">@color/colorBackground</item>
     </style>
 

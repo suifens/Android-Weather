@@ -20,10 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bytedance.msdk.adapter.TToast;
-import com.bytedance.msdk.adapter.util.Logger;
 import com.bytedance.msdk.api.AdError;
-import com.bytedance.msdk.api.reward.RewardItem;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdListener;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback;
 import com.goodtech.tq.alarm.JAlarmReceiver;
@@ -48,6 +45,7 @@ import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.widget.DoubleWidgetService;
 import com.goodtech.tq.widget.WidgetService;
 import com.umeng.analytics.MobclickAgent;
 
@@ -57,7 +55,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
@@ -135,7 +132,10 @@ public class MainActivity extends BaseActivity {
             JAlarmReceiver.fetchAlarm(this);
         }
 
-        mHandler.postDelayed(() -> this.startService(new Intent(this, WidgetService.class)), 1000);
+        mHandler.postDelayed(() -> {
+            this.startService(new Intent(this, WidgetService.class));
+            this.startService(new Intent(this, DoubleWidgetService.class));
+        }, 1000);
 
         initAdLoader();
     }
@@ -163,12 +163,12 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
+        // WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
         Log.e(TAG, "onResume: ");
         //  加载广告
         if (!SpUtils.getInstance().getBoolean("hadShowInterstitialAD", false)) {
             if (!mLoadSuccess) {
-                mHandler.postDelayed(this::showAd, 3000);
+                mHandler.postDelayed(this::showAd, 7000);
             }
         }
     }

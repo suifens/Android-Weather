@@ -26,8 +26,6 @@ import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
-import com.qq.e.comm.managers.GDTAdSdk;
-import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mmkv.MMKV;
@@ -94,7 +92,7 @@ public class BaseApp extends Application {
 
         // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
         // GDTAdSdk.init(getApplicationContext(), Constants.APP_ID);
-        GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
+        // GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
 
         Log.e(TAG, "startUsingApp: ");
 

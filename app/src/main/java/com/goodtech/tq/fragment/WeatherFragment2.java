@@ -311,7 +311,6 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         }
     }
 
-
     private DailyListFragment mListFragment;
     private DailyLineFragment mLineFragment;
     private void configViewPager2() {
@@ -350,6 +349,8 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         mGMNativeAd = null;
     }
 
+    // <editor-fold defaultstate="collapsed" desc="广告">
+
     private AdFeedManager mAdFeedManager; //激励视频管理类
 
     private boolean mLoadSuccess; //是否加载成功
@@ -367,6 +368,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                     return;
                 }
                 mLoadSuccess = true;
+
                 mGMNativeAd = ads.get(0);
                 if (mGMNativeAd != null && !mIsLoadedAndShow) {
                     showAd();
@@ -577,4 +579,5 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
             mFeedContainer.removeAllViews();
         }
     }
+    // </editor-fold>
 }

@@ -40,6 +40,7 @@ import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.WeatherUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.Timer;
 
 public class DoubleWidgetService extends Service {
@@ -59,7 +60,11 @@ public class DoubleWidgetService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        updateWidget(DoubleWidgetService.this);
+        // updateWidget(DoubleWidgetService.this);
+        WeatherHttpHelper.getInstance().getBaseUrl(() ->
+                WeatherHttpHelper.getInstance().fetchWeather(Objects.requireNonNull(LocationSpHelper.getLocation()),
+                        (success, weather, errCode) ->
+                                updateWidget(DoubleWidgetService.this)));
 
         checkUpdate();
 

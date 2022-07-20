@@ -64,7 +64,11 @@ public class CityRecommendHeaderView extends LinearLayout {
         mLocationTv = view.findViewById(R.id.tv_location);
         view.findViewById(R.id.layout_location).setOnClickListener(v -> onLocationClick());
         view.findViewById(R.id.btn_location).setOnClickListener(v-> onLocationClick());
-        view.findViewById(R.id.layout_refresh).setOnClickListener(v-> onLocationClick());
+        view.findViewById(R.id.layout_refresh).setOnClickListener(v-> {
+            if (mListener != null) {
+                mListener.onRefreshClick();
+            }
+        });
 
         mRippleLayout = view.findViewById(R.id.ripplelayout_train_main);
 

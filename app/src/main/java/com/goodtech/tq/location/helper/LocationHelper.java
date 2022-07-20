@@ -36,16 +36,12 @@ public class LocationHelper {
         return SingletonHolder.INSTANCE;
     }
 
-    public void startWithDelay(final Context context) {
+    public void startWithDelay(final Activity context) {
 
         stop();
+        TipHelper.showProgressDialog(context);
         Handler mHandler = new Handler(Looper.getMainLooper());
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                start(context);
-            }
-        }, 1000);
+        mHandler.postDelayed(() -> start(context), 500);
     }
 
     public void start(Context context) {

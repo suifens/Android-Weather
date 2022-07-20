@@ -102,7 +102,7 @@ public class WeatherHttpHelper {
 
     public boolean fetchWeather(final CityMode cityMode, final ApiCallback callback) {
         Log.e("TAG", "fetchWeather:  ------------" + cityMode.getMergerName() );
-        if (cityMode != null && !TextUtils.isEmpty(cityMode.getLat()) && !TextUtils.isEmpty(cityMode.getLon())) {
+        if (!TextUtils.isEmpty(cityMode.getLat()) && !TextUtils.isEmpty(cityMode.getLon())) {
             long current = System.currentTimeMillis();
             long lastUpdate = WeatherSpHelper.getLastUpdate(cityMode.getCid());
 

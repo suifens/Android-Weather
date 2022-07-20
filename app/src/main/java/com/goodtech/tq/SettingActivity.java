@@ -17,7 +17,7 @@ import androidx.annotation.RequiresApi;
 
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
-import com.qq.e.comm.managers.setting.GlobalSetting;
+// import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
@@ -140,7 +140,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 boolean show = SpUtils.getInstance().getBoolean(Constants.PERSONALIZED_AD, true);
                 SpUtils.getInstance().putBoolean(Constants.PERSONALIZED_AD, !show);
                 updateAdType(!show);
-                GlobalSetting.setAgreePrivacyStrategy(!show);
+                // GlobalSetting.setAgreePrivacyStrategy(!show);
             }
             break;
             case R.id.switchBtn_reminder: {

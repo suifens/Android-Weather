@@ -60,7 +60,11 @@ public class WidgetService  extends Service {
     public void onCreate() {
         super.onCreate();
 
-        updateWidget(WidgetService.this);
+        // updateWidget(WidgetService.this);
+        WeatherHttpHelper.getInstance().getBaseUrl(() ->
+                WeatherHttpHelper.getInstance().fetchWeather(Objects.requireNonNull(LocationSpHelper.getLocation()),
+                        (success, weather, errCode) ->
+                                updateWidget(WidgetService.this)));
 
         checkUpdate();
 

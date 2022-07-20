@@ -28,7 +28,6 @@ import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.SplashUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
-import com.qq.e.ads.splash.SplashAD;
 
 /**
  * 这是demo工程的入口Activity，在这里会首次调用广点通的SDK。
@@ -38,7 +37,6 @@ import com.qq.e.ads.splash.SplashAD;
 public class SplashADActivity extends Activity {
 
     private static final String TAG = "SplashADActivity";
-    private SplashAD splashAD;
     private TextView skipView;
     private static final String SKIP_TEXT = "点击跳过 %d";
     private static final String EXTRA_BACK = "EXTRA_BACK";
@@ -132,7 +130,7 @@ public class SplashADActivity extends Activity {
                 .build();
 
         //自定义兜底方案 选择使用
-        GMNetworkRequestInfo networkRequestInfo = SplashUtils.getGMNetworkRequestInfo(2);
+        GMNetworkRequestInfo networkRequestInfo = SplashUtils.getGMNetworkRequestInfo();
         //step4:请求广告，调用开屏广告异步请求接口，对请求回调的广告作渲染处理
         mTTSplashAd.loadAd(adSlot, new GMSplashAdLoadCallback() {
             @Override

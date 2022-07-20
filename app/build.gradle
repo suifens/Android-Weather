@@ -155,19 +155,6 @@ static def getTime() {
 }
 
 
-//msdk
-def M_SDK_VERSION = "3.4.0"
-def M_SDK_VERSION_FIX = ".4"
-//pangle 穿山甲
-def PANGLE_SDK_VERSION = "4.5.1.1"
-def PANGLE_ADAPTER_VERSION = ".0"
-//gdt
-def GDT_SDK_VERSION = "4.462.1332"
-def GDT_ADAPTER_VERSION = ".1"
-//baidu
-def BAIDU_SDK_VERSION = "9.21"
-def BAIDU_ADAPTER_VERSION = ".1"
-
 repositories {
     flatDir {
         dirs 'libs'
@@ -251,21 +238,23 @@ dependencies {
 
     /*GroMore广告显示*/
     //GroMore_sdk
-    implementation "com.gromore.cn:gromore-sdk:${M_SDK_VERSION}${M_SDK_VERSION_FIX}"  //groMore sdk
+    implementation "com.gromore.cn:gromore-sdk:3.5.1.0"  //groMore sdk
 
     //GroMore_sdk adapter
-    implementation "com.gromore.cn:gdt-adapter:${GDT_SDK_VERSION}${GDT_ADAPTER_VERSION}"
-    implementation "com.gromore.cn:baidu-adapter:${BAIDU_SDK_VERSION}${BAIDU_ADAPTER_VERSION}"
-    implementation "com.gromore.cn:pangle-adapter:${PANGLE_SDK_VERSION}${PANGLE_ADAPTER_VERSION}"
+    implementation "com.gromore.cn:pangle-adapter:4.6.0.2.0" //穿山甲 adapter
+//    implementation "com.gromore.cn:gdt-adapter:4.470.1340.0"  //gdt adapter
+//    implementation "com.gromore.cn:baidu-adapter:9.22.0" //百度 adapter
+//    implementation "com.gromore.cn:mintegral-adapter:16.1.57.0" //mintegral adapter
 
     //Baidu
-    implementation(name: "Baidu_MobAds_SDK_v${BAIDU_SDK_VERSION}", ext: 'aar')
+//    implementation(name: 'Baidu_MobAds_SDK_v9.22', ext: 'aar')
 
     //pangle
-    implementation(name: "open_ad_sdk_${PANGLE_SDK_VERSION}", ext: 'aar')
+    implementation(name: 'open_ad_sdk_4.6.0.2', ext: 'aar')
 
     //GDT
-    implementation(name: "GDTSDK.unionNormal.${GDT_SDK_VERSION}", ext: 'aar')
+//    implementation(name: 'GDTSDK.unionNormal.4.470.13404', ext: 'aar')
+
 
     implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
 

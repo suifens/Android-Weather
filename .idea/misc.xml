@@ -117,7 +117,7 @@
         <entry key="app/src/main/res/layout/listitem_ad_title_creative_btn_layout.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/listitem_ad_vertical_pic.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/listitem_normal.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/search_header_recommend.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/search_header_recommend.xml" value="0.1" />
         <entry key="app/src/main/res/layout/search_item_city.xml" value="0.1" />
         <entry key="app/src/main/res/layout/segment_share.xml" value="0.1" />
         <entry key="app/src/main/res/layout/share_recycler_bottom.xml" value="0.2660098522167488" />
