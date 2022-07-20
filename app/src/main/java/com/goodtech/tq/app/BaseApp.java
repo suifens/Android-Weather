@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,6 +28,8 @@ import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.widget.DoubleWidgetService;
+import com.goodtech.tq.widget.WidgetService;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mmkv.MMKV;
@@ -117,6 +121,7 @@ public class BaseApp extends Application {
                                 configLocation(activity, getLocation);
                                 break;
                         }
+                        startIntent(activity);
                     } else {
                         switch (permission.name) {
                             case Manifest.permission.ACCESS_FINE_LOCATION:
@@ -124,12 +129,14 @@ public class BaseApp extends Application {
                                 needLocationPerm = false;
                                 break;
                         }
+                        startIntent(activity);
                     }
                 });
             } else {
                 configUM();
                 //  定位
                 configLocation(activity, getLocation);
+                startIntent(activity);
             }
         }
 
@@ -142,6 +149,16 @@ public class BaseApp extends Application {
         Log.e(TAG, "startUsingApp: register id = " + registerId);
         if (!TextUtils.isEmpty(registerId)) {
             BaseApp.getInstance().setJPushRegId(registerId);
+        }
+    }
+
+    private void startIntent(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(activity, WidgetService.class));
+            startForegroundService(new Intent(activity, DoubleWidgetService.class));
+        } else {
+            startService(new Intent(activity, WidgetService.class));
+            startService(new Intent(activity, DoubleWidgetService.class));
         }
     }
 

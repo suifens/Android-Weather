@@ -568,8 +568,7 @@
         <!--alarm_config_end-->
 
         <receiver android:name=".widget.MyWidget"
-            android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -577,12 +576,13 @@
                 android:resource="@xml/appwidget_info" />
         </receiver>
 
-        <service android:name=".widget.WidgetService">
-        </service>
+        <service
+            android:name=".widget.WidgetService"
+            android:enabled="true"
+            android:exported="true" />
 
         <receiver android:name=".widget.MyDoubleWidget"
-            android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -590,10 +590,12 @@
                 android:resource="@xml/appwidget_info_double" />
         </receiver>
 
-        <service android:name=".widget.DoubleWidgetService">
-        </service>
+        <service
+            android:name=".widget.DoubleWidgetService"
+            android:enabled="true"
+            android:exported="true" />
 
-<!--        &lt;!&ndash; GDT start================== &ndash;&gt;-->
+        <!--        &lt;!&ndash; GDT start================== &ndash;&gt;-->
 <!--        &lt;!&ndash; targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值，例如本例中applicationId为"com.qq.e.union.demo"。 &ndash;&gt;-->
 <!--        <provider-->
 <!--            android:name="com.qq.e.comm.GDTFileProvider"-->

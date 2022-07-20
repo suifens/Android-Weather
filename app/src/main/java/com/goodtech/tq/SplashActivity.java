@@ -67,13 +67,6 @@ public class SplashActivity extends Activity {
         if (intent == null) {
             return;
         }
-        //加载开屏广告
-        mSplashContainer.post(this::loadSplashAd);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
@@ -92,10 +85,8 @@ public class SplashActivity extends Activity {
 
             SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
 
-            // SplashADActivity.redirectTo(this);
-            // overridePendingTransition(0, 0);
-            // this.finish();
-            // goToMainActivity();
+            //加载开屏广告
+            mSplashContainer.post(this::loadSplashAd);
 
         } else {
             handler.postDelayed(() -> {

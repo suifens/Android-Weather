@@ -81,6 +81,10 @@ public class TimeUtils {
         return format.format(timeMills);
     }
 
+    public static String getNowTime() {
+        return timeToHHmm(System.currentTimeMillis());
+    }
+
     public static String timeToDay(String strTime, String formatType) {
         long timeMills = longWithDate(strTime, formatType);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd");

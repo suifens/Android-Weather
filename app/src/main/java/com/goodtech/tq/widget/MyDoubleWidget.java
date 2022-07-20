@@ -21,28 +21,6 @@ public class MyDoubleWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         Log.e(TAG, "接受广播");
-
-        String action = intent.getAction();
-        Bundle extras = intent.getExtras();
-        boolean update = extras != null && extras.getBoolean("WidgetUpdate");
-        if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action) || update) {
-
-            String current = TimeUtils.longToString(System.currentTimeMillis(), "MMdd-HH:mm");
-            ToastUtils.showLong(current);
-
-            context.stopService(new Intent(context, DoubleWidgetService.class));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                if (Settings.canDrawOverlays(context)) {
-                    context.startForegroundService(new Intent(context, DoubleWidgetService.class));
-                } else {
-                    context.startService(new Intent(context, DoubleWidgetService.class));
-                }
-            } else  {
-                context.startService(new Intent(context, DoubleWidgetService.class));
-            }
-        }
     }
 
     /**

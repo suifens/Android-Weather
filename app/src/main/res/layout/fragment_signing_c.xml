@@ -179,7 +179,7 @@
             <com.goodtech.tq.utils.font.AlternateBoldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="°"
+                android:text="°C"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16" />
         </LinearLayout>

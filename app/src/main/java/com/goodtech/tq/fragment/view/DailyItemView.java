@@ -62,8 +62,8 @@ public class DailyItemView extends ConstraintLayout {
         if (daily != null) {
             setVisibility(VISIBLE);
             mDayTv.setText(dayString(daily.fcst_valid * 1000, daily.dow));
-            mMaxTempTv.setText(String.format("%d°", daily.metric.maxTemp));
-            mMinTempTv.setText(String.format("%d°", daily.metric.minTemp));
+            mMaxTempTv.setText(String.format("%d°C", daily.metric.maxTemp));
+            mMinTempTv.setText(String.format("%d°C", daily.metric.minTemp));
 
             long currentTime = System.currentTimeMillis();
             long sunSetTime = TimeUtils.switchTime(daily.sunSet);

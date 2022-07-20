@@ -23,7 +23,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdListener;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback;
-import com.goodtech.tq.alarm.JAlarmReceiver;
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.MessageEvent;
@@ -31,7 +30,6 @@ import com.goodtech.tq.fragment.WeatherFragment2;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
-import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.manager.AdInterstitialFullManager;
 import com.goodtech.tq.models.CityMode;
@@ -45,8 +43,6 @@ import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
-import com.goodtech.tq.widget.DoubleWidgetService;
-import com.goodtech.tq.widget.WidgetService;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -124,18 +120,6 @@ public class MainActivity extends BaseActivity {
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         this.registerReceiver(receiver, filter);
-
-//        AlarmManagerUtil.setAlarm(getApplicationContext(), 21);
-
-        String curDay = TimeUtils.timeToDay(System.currentTimeMillis());
-        if (!SpUtils.getInstance().getString("alarmDay", "").equals(curDay)) {
-            JAlarmReceiver.fetchAlarm(this);
-        }
-
-        mHandler.postDelayed(() -> {
-            this.startService(new Intent(this, WidgetService.class));
-            this.startService(new Intent(this, DoubleWidgetService.class));
-        }, 1000);
 
         initAdLoader();
     }
