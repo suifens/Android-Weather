@@ -79,7 +79,6 @@ public class BaseApp extends Application {
             locationService = new LocationService(getApplicationContext());
 
             if (getLocation) {
-                TipHelper.showProgressDialog(activity, true);
                 LocationHelper.getInstance().startWithDelay(activity);
             }
         }
@@ -121,7 +120,6 @@ public class BaseApp extends Application {
                                 configLocation(activity, getLocation);
                                 break;
                         }
-                        startIntent(activity);
                     } else {
                         switch (permission.name) {
                             case Manifest.permission.ACCESS_FINE_LOCATION:
@@ -129,8 +127,8 @@ public class BaseApp extends Application {
                                 needLocationPerm = false;
                                 break;
                         }
-                        startIntent(activity);
                     }
+                    startIntent(activity);
                 });
             } else {
                 configUM();
@@ -235,7 +233,7 @@ public class BaseApp extends Application {
         if (!TextUtils.isEmpty( SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))
                 && interval > 1000 * 60) {
             //  离开前台1分钟后返回，则显示启动页广告
-            SplashADActivity.redirectToFront(activity);
+            activity.startActivity(new Intent(activity, SplashActivity.class));
             SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
         }
     }

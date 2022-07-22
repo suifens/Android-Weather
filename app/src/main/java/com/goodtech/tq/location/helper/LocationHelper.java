@@ -1,5 +1,9 @@
 package com.goodtech.tq.location.helper;
 
+import static com.goodtech.tq.app.BaseApp.FIRST_CHECK;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
@@ -12,13 +16,16 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
+import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 /**
  * com.goodtech.tq.location.service
@@ -27,6 +34,8 @@ public class LocationHelper {
 
     private static final String TAG = "LocationSpHelper";
     private LocationService locationService;
+    //  获取定位时间
+    public static final String LOCATION_TIME = "LOCATION_TIME";
 
     private static class SingletonHolder {
         private static final LocationHelper INSTANCE = new LocationHelper();
@@ -35,20 +44,47 @@ public class LocationHelper {
     public static final LocationHelper getInstance() {
         return SingletonHolder.INSTANCE;
     }
+    private boolean isLocating = false;
 
+    @SuppressLint("CheckResult")
     public void startWithDelay(final Activity context) {
 
+        if (isLocating) {
+            return;
+        }
+
+        RxPermissions rxPermissions = new RxPermissions(context);
+        if (rxPermissions.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
+                && rxPermissions.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            startLocation(context);
+        }
+        //  判断今天是否还能判断定位权限
+        else if (!TimeUtils.isCurrentDay(SpUtils.getInstance().getLong(Constants.TIME_LOCATION_CANCEL, 0L))) {
+            rxPermissions.requestEach(Manifest.permission.ACCESS_FINE_LOCATION
+                    , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
+            {
+                if (permission.granted) {
+                    startLocation(context);
+                } else {
+                    //  取消定位权限判断的时间
+                    SpUtils.getInstance().putLong(Constants.TIME_LOCATION_CANCEL, System.currentTimeMillis());
+                }
+            });
+        }
+    }
+
+    private void startLocation(final Activity context) {
         stop();
         TipHelper.showProgressDialog(context);
         Handler mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(() -> start(context), 500);
     }
 
-    public void start(Context context) {
+    private void start(Context context) {
         start(context, mListener);
     }
 
-    public void start(Context context, BDAbstractLocationListener listener) {
+    private void start(Context context, BDAbstractLocationListener listener) {
         startTicker();
         if (!PermissionUtil.isLocationEnabled(context)) {
             removeTicker();
@@ -200,7 +236,7 @@ public class LocationHelper {
                         sb.append("\ndescribe : ");
                         sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
                     }
-                    Log.e(TAG, "onReceiveLocation: " + sb.toString());
+                    Log.d(TAG, "onReceiveLocation: " + sb.toString());
                 }
             }
         }
@@ -264,6 +300,7 @@ public class LocationHelper {
 
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     protected void removeTicker() {
+        isLocating = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (mHandler.hasCallbacks(mCheckTicker)) {
                 mHandler.removeCallbacks(mCheckTicker);
@@ -285,7 +322,7 @@ public class LocationHelper {
         public void run() {
             long now = SystemClock.uptimeMillis();
             long next = now + (1000 - now % 1000);
-            if (scanCount++ > 5) {
+            if (scanCount++ > 10) {
                 removeTicker();
             } else {
                 mHandler.postAtTime(mCheckTicker, next);

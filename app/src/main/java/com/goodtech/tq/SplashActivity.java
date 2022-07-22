@@ -50,7 +50,7 @@ import java.util.Map;
 
 
 @SuppressLint("CustomSplashScreen")
-public class SplashActivity extends Activity {
+public class SplashActivity extends BaseActivity {
 
     private static final String TAG = "SplashActivity";
     private final Handler handler = new Handler(Looper.getMainLooper());

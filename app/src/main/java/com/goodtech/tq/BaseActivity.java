@@ -1,6 +1,7 @@
 package com.goodtech.tq;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -22,9 +23,13 @@ import androidx.core.content.ContextCompat;
 
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.location.helper.LocationHelper;
+import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.PermissionUtil;
+import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.TipHelper;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,23 +62,20 @@ public class BaseActivity extends AppCompatActivity {
         stationBar.setLayoutParams(bars);
     }
 
+    @SuppressLint("CheckResult")
     @TargetApi(Build.VERSION_CODES.M)
     protected void openLocationPermission(boolean phoneState) {
-        ArrayList<String> lackedPermissions = new ArrayList<>();
-        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            lackedPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            lackedPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-        // 如果需要的权限都已经有了，那么直接调用SDK
-        if (lackedPermissions.size() == 0) {
-            requestLocationPermissions();
-        } else {
-            String[] requestPermissions = new String[lackedPermissions.size()];
-            lackedPermissions.toArray(requestPermissions);
-            ActivityCompat.requestPermissions(this, requestPermissions, PERMISSION_REQUEST_COARSE_LOCATION);
-        }
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions.requestEach(Manifest.permission.ACCESS_FINE_LOCATION
+                , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
+        {
+            if (permission.granted) {
+                LocationHelper.getInstance().startWithDelay(this);
+            } else {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -89,16 +91,13 @@ public class BaseActivity extends AppCompatActivity {
         if (!isLocationEnabled()) {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
-        } else {
-            if (!this.isFinishing()) { //xActivity即为本界面的Activity
-                mHandler.postDelayed(() -> TipHelper.showProgressDialog(this, false), 100);
-            }
+            return;
         }
         LocationHelper.getInstance().startWithDelay(this);
     }
 
     protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 10100;
-    protected boolean checkLocationPermission() {
+    public boolean checkLocationPermission() {
         if (checkPermission()) {
             return false;
         }
@@ -150,9 +149,6 @@ public class BaseActivity extends AppCompatActivity {
         if (!isLocationEnabled()) {
             startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), PERMISSION_REQUEST_COARSE_LOCATION);
         } else {
-            if (!this.isFinishing()) { //xActivity即为本界面的Activity
-                TipHelper.showProgressDialog(this, false);
-            }
             LocationHelper.getInstance().startWithDelay(this);
         }
     }

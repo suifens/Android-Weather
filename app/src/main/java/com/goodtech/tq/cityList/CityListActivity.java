@@ -170,7 +170,6 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                             alert.show();
                         }
                     } else {
-                        TipHelper.showProgressDialog(CityListActivity.this, false);
                         LocationHelper.getInstance().startWithDelay(CityListActivity.this);
                     }
                 }

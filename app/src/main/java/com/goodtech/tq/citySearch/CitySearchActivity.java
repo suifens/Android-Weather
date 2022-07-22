@@ -96,13 +96,12 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (checkPermission()) {
             MessageAlert alert = new MessageAlert(CitySearchActivity.this,
                     (dialog, which) -> {
-                openLocationPermission(false);
+                        openLocationPermission(false);
                     });
             if (!isFinishing()) {
                 alert.show();
             }
         } else {
-            TipHelper.showProgressDialog(CitySearchActivity.this, false);
             LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
         }
     }

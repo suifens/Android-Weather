@@ -187,7 +187,7 @@ public class MainActivity extends BaseActivity {
         super.onStart();
 
         if (TimeUtils.needLocation()) {
-            LocationHelper.getInstance().start(this);
+            LocationHelper.getInstance().startWithDelay(this);
         }
 
         ArrayList<CityMode> cityModes = LocationSpHelper.getCityListAndLocation();

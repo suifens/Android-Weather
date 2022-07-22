@@ -107,7 +107,6 @@
             android:name=".SplashActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashActivityTheme"
             android:windowSoftInputMode="stateHidden"
             tools:ignore="DuplicateActivity,LockedOrientationActivity"
             tools:targetApi="cupcake"

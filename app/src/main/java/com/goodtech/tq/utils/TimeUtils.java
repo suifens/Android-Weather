@@ -168,6 +168,15 @@ public class TimeUtils {
     }
 
     /**
+     * 是否是今天
+     */
+    public static boolean isCurrentDay(long timeMillis) {
+        long zoneTime = getZoneTime(timeMillis);
+        long curZoneTime = getZoneTime(System.currentTimeMillis());
+        return zoneTime == curZoneTime;
+    }
+
+    /**
      * 是否为白天时间 [4:00 ~ 18:00)
      */
     public static boolean isDaytime(long timeMillis) {
