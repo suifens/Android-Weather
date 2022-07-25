@@ -129,9 +129,12 @@ public class JAlarmReceiver extends BroadcastReceiver {
             }
             if (alarmModel != null) {
                 //  建立推送
-                SpUtils.getInstance().putString("alarmDay", TimeUtils.timeToDay(alarmModel.getTime(), "yyyy-MM-dd HH:mm"));
-                JPushHelper.buildLocalNotification(context.getApplicationContext(),
-                        context.getString(R.string.app_name), alarmModel.getTitle());
+                String curDay = TimeUtils.timeToDay(System.currentTimeMillis());
+                if (SpUtils.getInstance().getString("alarmDay", "") != curDay) {
+                    SpUtils.getInstance().putString("alarmDay", TimeUtils.timeToDay(alarmModel.getTime(), "yyyy-MM-dd HH:mm"));
+                    JPushHelper.buildLocalNotification(context.getApplicationContext(),
+                            context.getString(R.string.app_name), alarmModel.getTitle());
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -54,30 +55,24 @@ public class LocationHelper {
         }
 
         RxPermissions rxPermissions = new RxPermissions(context);
-        if (rxPermissions.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
-                && rxPermissions.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            startLocation(context);
-        }
-        //  判断今天是否还能判断定位权限
-        else if (!TimeUtils.isCurrentDay(SpUtils.getInstance().getLong(Constants.TIME_LOCATION_CANCEL, 0L))) {
-            rxPermissions.requestEach(Manifest.permission.ACCESS_FINE_LOCATION
-                    , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
-            {
-                if (permission.granted) {
-                    startLocation(context);
-                } else {
-                    //  取消定位权限判断的时间
-                    SpUtils.getInstance().putLong(Constants.TIME_LOCATION_CANCEL, System.currentTimeMillis());
-                }
-            });
-        }
+        rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION
+                , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(granted ->
+        {
+            if (granted) {
+                BaseApp.getInstance().configLocation(context);
+                startLocation(context);
+            } else {
+                //  取消定位权限判断的时间
+                Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void startLocation(final Activity context) {
         stop();
         TipHelper.showProgressDialog(context);
         Handler mHandler = new Handler(Looper.getMainLooper());
-        mHandler.postDelayed(() -> start(context), 500);
+        mHandler.postDelayed(() -> start(context), 300);
     }
 
     private void start(Context context) {
@@ -104,7 +99,7 @@ public class LocationHelper {
     public void stop() {
         removeTicker();
         locationService = BaseApp.getInstance().locationService;
-        TipHelper.dismissProgressDialog();
+        // TipHelper.dismissProgressDialog();
         if (locationService != null) {
             locationService.unregisterListener(mListener); //注销掉监听
             locationService.stop(); //停止定位服务
@@ -128,7 +123,9 @@ public class LocationHelper {
 
             //保存
             LocationSpHelper.saveWithLocation(location);
-            LocationHelper.getInstance().stop();
+            mHandler.postDelayed(() -> {
+                LocationHelper.getInstance().stop();
+            }, 300);
 
             // TODO Auto-generated method stub
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
@@ -308,7 +305,6 @@ public class LocationHelper {
         } else {
             mHandler.removeCallbacks(mCheckTicker);
         }
-        TipHelper.dismissProgressDialog();
     }
 
     protected void startTicker() {

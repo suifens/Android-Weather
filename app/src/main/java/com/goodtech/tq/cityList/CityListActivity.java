@@ -165,7 +165,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 } else {
                     if (checkPermission()) {
                         MessageAlert alert = new MessageAlert(CityListActivity.this,
-                                (dialog, which) -> openLocationPermission(false));
+                                (dialog, which) -> LocationHelper.getInstance().startWithDelay(CityListActivity.this));
                         if (!isFinishing()) {
                             alert.show();
                         }
@@ -216,6 +216,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         if (event.isSuccessLocation()) {
+            BaseApp.getInstance().startIntent(CityListActivity.this);
             mHandler.postDelayed(() -> {
                 mProvider.getData();
                 mAdapter.notifyDataSetChanged(false);

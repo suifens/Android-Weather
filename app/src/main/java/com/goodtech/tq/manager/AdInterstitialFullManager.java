@@ -12,6 +12,8 @@ import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAd;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback;
 import com.bytedance.msdk.api.v2.slot.GMAdOptionUtil;
 import com.bytedance.msdk.api.v2.slot.GMAdSlotInterstitialFull;
+import com.goodtech.tq.R;
+import com.goodtech.tq.app.BaseApp;
 
 import java.util.HashMap;
 import java.util.List;
@@ -79,21 +81,21 @@ public class AdInterstitialFullManager {
         //Context 必须传activity
         mGMInterstitialFullAd = new GMInterstitialFullAd(mActivity, adUnitId);
 
-        Map<String, String> customData = new HashMap<>();
-        customData.put(GMAdConstant.CUSTOM_DATA_KEY_GDT, "gdt custom data");//目前仅支持gdt
+        // Map<String, String> customData = new HashMap<>();
+        // customData.put(GMAdConstant.CUSTOM_DATA_KEY_GDT, "gdt custom data");//目前仅支持gdt
 
         /**
          * 创建全屏广告请求类型参数GMAdSlotInterstitialFull,具体参数含义参考文档
          */
         GMAdSlotInterstitialFull adSlotInterstitialFull = new GMAdSlotInterstitialFull.Builder()
-                .setGMAdSlotBaiduOption(GMAdOptionUtil.getGMAdSlotBaiduOption().build())
-                .setGMAdSlotGDTOption(GMAdOptionUtil.getGMAdSlotGDTOption().build())
+                // .setGMAdSlotBaiduOption(GMAdOptionUtil.getGMAdSlotBaiduOption().build())
+                // .setGMAdSlotGDTOption(GMAdOptionUtil.getGMAdSlotGDTOption().build())
                 .setImageAdSize(600, 600)  //设置宽高 （插全屏类型下_插屏广告使用）
                 .setVolume(0.5f) //admob 声音配置，与setMuted配合使用
                 .setUserID("user123")//用户id,必传参数 (插全屏类型下_全屏广告使用)
-                .setCustomData(customData)
+                // .setCustomData(customData)
                 .setRewardName("金币") //奖励的名称
-                .setRewardAmount(3)  //奖励的数量
+                .setRewardAmount(1)  //奖励的数量
                 .setOrientation(GMAdConstant.HORIZONTAL)//必填参数，期望视频的播放方向：TTAdConstant.HORIZONTAL 或 TTAdConstant.VERTICAL; (插全屏类型下_全屏广告使用)
                 .setBidNotify(true)//开启bidding比价结果通知，默认值为false
                 .build();
@@ -211,11 +213,11 @@ public class AdInterstitialFullManager {
         if (gmAdEcpmInfo == null) {
             return;
         }
-        // String s = App.getAppContext().getResources().getString(R.string.show_info,
-        //         gmAdEcpmInfo.getAdNetworkRitId(),
-        //         gmAdEcpmInfo.getAdnName(),
-        //         gmAdEcpmInfo.getPreEcpm());
-        // Logger.e(TAG, s);
+        String s = BaseApp.getInstance().getResources().getString(R.string.show_info,
+                gmAdEcpmInfo.getAdNetworkRitId(),
+                gmAdEcpmInfo.getAdnName(),
+                gmAdEcpmInfo.getPreEcpm());
+        Log.e(TAG, s);
     }
 
 }

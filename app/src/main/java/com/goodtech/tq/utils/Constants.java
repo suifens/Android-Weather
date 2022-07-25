@@ -44,6 +44,7 @@ public class Constants {
     public final static String TIME_LOCATION = "location_time";
     /// 定位权限取消时间
     public final static String TIME_LOCATION_CANCEL = "location_time_cancel";
+    public final static String TIME_STATE_CANCEL = "state_time_cancel";
     public final static String TIME_WEATHER = "weather_fetch_time";
     //  个性化广告
     public static final String PERSONALIZED_AD = "personalized advertising";

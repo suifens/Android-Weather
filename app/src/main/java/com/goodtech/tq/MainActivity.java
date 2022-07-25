@@ -23,7 +23,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdListener;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.cityList.CityListActivity;
+import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragment.WeatherFragment2;
@@ -71,6 +73,7 @@ public class MainActivity extends BaseActivity {
     private long mBackTime;
     private boolean mLoadLast;
     private boolean mSigned;    //  是否已签到
+    private boolean isFirstLoad = true;
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
@@ -149,12 +152,12 @@ public class MainActivity extends BaseActivity {
         MobclickAgent.onResume(this);
         // WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
         Log.e(TAG, "onResume: ");
-        //  加载广告
-        if (!SpUtils.getInstance().getBoolean("hadShowInterstitialAD", false)) {
-            if (!mLoadSuccess) {
-                mHandler.postDelayed(this::showAd, 7000);
-            }
-        }
+        // //  加载广告
+        // if (!SpUtils.getInstance().getBoolean("hadShowInterstitialAD", false)) {
+        //     if (!mLoadSuccess) {
+        //         mHandler.postDelayed(this::showAd, 7000);
+        //     }
+        // }
     }
 
     @Override
@@ -186,8 +189,13 @@ public class MainActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
 
-        if (TimeUtils.needLocation()) {
+        // if (TimeUtils.needLocation()) {
+        //     LocationHelper.getInstance().startWithDelay(this);
+        // }
+        if (isFirstLoad) {
             LocationHelper.getInstance().startWithDelay(this);
+            mHandler.postDelayed(this::showAd, 7000);
+            isFirstLoad = false;
         }
 
         ArrayList<CityMode> cityModes = LocationSpHelper.getCityListAndLocation();
@@ -229,7 +237,7 @@ public class MainActivity extends BaseActivity {
         removeTicker();
 
         if (event.isSuccessLocation()) {
-
+            BaseApp.getInstance().startIntent(MainActivity.this);
             CityMode cityMode = LocationSpHelper.getLocation();
             mCityModes.set(0, cityMode);
             reloadWeather(0);
@@ -448,6 +456,7 @@ public class MainActivity extends BaseActivity {
      * 展示广告
      */
     private void showAd() {
+        Log.e(TAG, "showAd: ++++++++++");
         mLoadSuccess = false;
         if (mAdInterstitialFullManager != null) {
             mAdInterstitialFullManager.loadAdWithCallback(Constants.PGE_INT_POS_ID);
@@ -491,6 +500,7 @@ public class MainActivity extends BaseActivity {
                 //在获取到广告后展示,强烈建议在onInterstitialFullCached回调后，展示广告，提升播放体验
                 //该方法直接展示广告，如果展示失败了（如过期），会回调onVideoError()
                 //展示广告，并传入广告展示的场景
+                Log.e(TAG, "showInterFullAd: ++++++++++");
                 mAdInterstitialFullManager.getGMInterstitialFullAd().setAdInterstitialFullListener(mGMInterstitialFullAdListener);
                 mAdInterstitialFullManager.getGMInterstitialFullAd().showAd(this);
                 mAdInterstitialFullManager.printSHowAdInfo();//打印已经展示的广告信息

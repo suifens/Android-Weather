@@ -27,7 +27,6 @@ import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
-import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.widget.DoubleWidgetService;
 import com.goodtech.tq.widget.WidgetService;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -73,14 +72,10 @@ public class BaseApp extends Application {
         DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
     }
 
-    public void configLocation(Activity activity, boolean getLocation) {
+    public void configLocation(Activity activity) {
         if (locationService == null) {
             //  初始化定位sdk，建议在Application中创建
             locationService = new LocationService(getApplicationContext());
-
-            if (getLocation) {
-                LocationHelper.getInstance().startWithDelay(activity);
-            }
         }
     }
 
@@ -89,53 +84,27 @@ public class BaseApp extends Application {
 //    }
 
     @SuppressLint("CheckResult")
-    public void startUsingApp(Activity activity, boolean needPermission, boolean getLocation) {
+    public void startUsingApp(Activity activity) {
 
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
-        // 通过调用此方法初始化 SDK。如果需要在多个进程拉取广告，每个进程都需要初始化 SDK。
-        // GDTAdSdk.init(getApplicationContext(), Constants.APP_ID);
-        // GlobalSetting.setChannel(BuildConfig.BAIDU_CHANNEL);
-
         Log.e(TAG, "startUsingApp: ");
 
-        if (needPermission) {
-            RxPermissions rxPermissions = new RxPermissions(activity);
-            if (SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
-                rxPermissions.requestEach(Manifest.permission.READ_PHONE_STATE
-                        , Manifest.permission.ACCESS_WIFI_STATE
-                        , Manifest.permission.ACCESS_FINE_LOCATION
-                        , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
-                {
-                    SpUtils.getInstance().putBoolean(FIRST_CHECK, false);
-                    if (permission.granted) {
-                        switch (permission.name) {
-                            case Manifest.permission.READ_PHONE_STATE:
-                            case Manifest.permission.ACCESS_WIFI_STATE:
-                                //  配置 UM_APP_ID , 标识
-                                configUM();
-                            break;
-                            case Manifest.permission.ACCESS_FINE_LOCATION:
-                            case Manifest.permission.ACCESS_COARSE_LOCATION:
-                                configLocation(activity, getLocation);
-                                break;
-                        }
-                    } else {
-                        switch (permission.name) {
-                            case Manifest.permission.ACCESS_FINE_LOCATION:
-                            case Manifest.permission.ACCESS_COARSE_LOCATION:
-                                needLocationPerm = false;
-                                break;
-                        }
-                    }
-                    startIntent(activity);
-                });
-            } else {
-                configUM();
-                //  定位
-                configLocation(activity, getLocation);
-                startIntent(activity);
-            }
+        RxPermissions rxPermissions = new RxPermissions(activity);
+        if (SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
+            rxPermissions.request(Manifest.permission.READ_PHONE_STATE
+                    , Manifest.permission.ACCESS_WIFI_STATE).subscribe(granted ->
+            {
+                SpUtils.getInstance().putBoolean(FIRST_CHECK, false);
+                if (granted) {
+                    configUM();
+                }
+            });
+        } else {
+            configUM();
+            //  配置定位
+            configLocation(activity);
+            startIntent(activity);
         }
 
         GMAdManagerHolder.init(this);
@@ -150,13 +119,17 @@ public class BaseApp extends Application {
         }
     }
 
-    private void startIntent(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(new Intent(activity, WidgetService.class));
-            startForegroundService(new Intent(activity, DoubleWidgetService.class));
-        } else {
-            startService(new Intent(activity, WidgetService.class));
-            startService(new Intent(activity, DoubleWidgetService.class));
+    private boolean isServiceStarted = false;
+    public void startIntent(Activity activity) {
+        if (!isServiceStarted) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(new Intent(activity, WidgetService.class));
+                startForegroundService(new Intent(activity, DoubleWidgetService.class));
+            } else {
+                startService(new Intent(activity, WidgetService.class));
+                startService(new Intent(activity, DoubleWidgetService.class));
+            }
+            isServiceStarted = true;
         }
     }
 

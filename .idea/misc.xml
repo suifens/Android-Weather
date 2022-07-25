@@ -92,6 +92,7 @@
         <entry key="app/src/main/res/layout/bottom_list.xml" value="0.35054347826086957" />
         <entry key="app/src/main/res/layout/constraint_item_hourly.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/dialog_input.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/dialog_message.xml" value="0.240625" />
         <entry key="app/src/main/res/layout/fragment_cons_detail.xml" value="0.508833922261484" />
         <entry key="app/src/main/res/layout/fragment_cons_other.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_item.xml" value="0.189209726443769" />

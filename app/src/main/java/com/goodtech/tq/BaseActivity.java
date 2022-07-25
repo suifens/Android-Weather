@@ -62,48 +62,48 @@ public class BaseActivity extends AppCompatActivity {
         stationBar.setLayoutParams(bars);
     }
 
-    @SuppressLint("CheckResult")
-    @TargetApi(Build.VERSION_CODES.M)
-    protected void openLocationPermission(boolean phoneState) {
-        RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.requestEach(Manifest.permission.ACCESS_FINE_LOCATION
-                , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
-        {
-            if (permission.granted) {
-                LocationHelper.getInstance().startWithDelay(this);
-            } else {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_COARSE_LOCATION) {
-            checkOrStartLocation();
-        }
-    }
-
-    protected void checkOrStartLocation() {
-        BaseApp.getInstance().configLocation(this, false);
-        if (!isLocationEnabled()) {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
-            return;
-        }
-        LocationHelper.getInstance().startWithDelay(this);
-    }
-
-    protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 10100;
-    public boolean checkLocationPermission() {
-        if (checkPermission()) {
-            return false;
-        }
-        return isLocationEnabled();
-    }
-
+//     @SuppressLint("CheckResult")
+//     @TargetApi(Build.VERSION_CODES.M)
+//     protected void openLocationPermission(boolean phoneState) {
+//         RxPermissions rxPermissions = new RxPermissions(this);
+//         rxPermissions.requestEach(Manifest.permission.ACCESS_FINE_LOCATION
+//                 , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(permission ->
+//         {
+//             if (permission.granted) {
+//                 LocationHelper.getInstance().startWithDelay(this);
+//             } else {
+//                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                 startActivity(intent);
+//             }
+//         });
+//     }
+//
+//     @Override
+//     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//         if (requestCode == PERMISSION_REQUEST_COARSE_LOCATION) {
+//             checkOrStartLocation();
+//         }
+//     }
+//
+//     protected void checkOrStartLocation() {
+//         BaseApp.getInstance().configLocation(this, false);
+//         if (!isLocationEnabled()) {
+//             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//             startActivity(intent);
+//             return;
+//         }
+//         LocationHelper.getInstance().startWithDelay(this);
+//     }
+//
+//     protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 10100;
+//     public boolean checkLocationPermission() {
+//         if (checkPermission()) {
+//             return false;
+//         }
+//         return isLocationEnabled();
+//     }
+//
     protected boolean checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -123,36 +123,36 @@ public class BaseActivity extends AppCompatActivity {
             return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
         }
     }
-
-    /**
-     * 判断定位服务是否开启
-     * @return true 表示开启
-     */
-    public boolean isLocationEnabled() {
-        int locationMode;
-//        String locationProviders;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            try {
-                locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-//        } else {
-//            locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-//            return !TextUtils.isEmpty(locationProviders);
-//        }
-    }
-
-    protected void requestLocationPermissions() {
-        if (!isLocationEnabled()) {
-            startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), PERMISSION_REQUEST_COARSE_LOCATION);
-        } else {
-            LocationHelper.getInstance().startWithDelay(this);
-        }
-    }
-
+//
+//     /**
+//      * 判断定位服务是否开启
+//      * @return true 表示开启
+//      */
+//     public boolean isLocationEnabled() {
+//         int locationMode;
+// //        String locationProviders;
+// //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//             try {
+//                 locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+//             } catch (Settings.SettingNotFoundException e) {
+//                 e.printStackTrace();
+//                 return false;
+//             }
+//             return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+// //        } else {
+// //            locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+// //            return !TextUtils.isEmpty(locationProviders);
+// //        }
+//     }
+//
+//     protected void requestLocationPermissions() {
+//         if (!isLocationEnabled()) {
+//             startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), PERMISSION_REQUEST_COARSE_LOCATION);
+//         } else {
+//             LocationHelper.getInstance().startWithDelay(this);
+//         }
+//     }
+//
     protected boolean isLocationServicesAvailable(Context context) {
         int locationMode = 0;
         String locationProviders;

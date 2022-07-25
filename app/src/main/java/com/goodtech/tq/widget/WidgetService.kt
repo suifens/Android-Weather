@@ -48,9 +48,7 @@ class WidgetService : LifecycleService() {
         super.onCreate()
         isFirst = true
         LogUtils.e("onCreate: ---------------------")
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         startForeground(Notify_Id, NotificationUtil.createNotification(this, Notify_Id))
-//        }
 
         connManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -129,15 +127,16 @@ class WidgetService : LifecycleService() {
     }
 
     private suspend fun updateRemoteOnce() {
-        WeatherHttpHelper.getInstance().getBaseUrl {
-            WeatherHttpHelper.getInstance()
-                .fetchWeather(
-                    Objects.requireNonNull(LocationSpHelper.getLocation())
-                ) { success: Boolean, weather: WeatherModel?, errCode: ErrorCode? ->
-                    updateWidget(
-                        this@WidgetService
-                    )
+        val location = LocationSpHelper.getLocation()
+        if (location != null) {
+            WeatherHttpHelper.getInstance().getBaseUrl {
+                WeatherHttpHelper.getInstance().fetchWeather(LocationSpHelper.getLocation())
+                { success: Boolean, _: WeatherModel?, _: ErrorCode? ->
+                    if (success) {
+                        updateWidget(this@WidgetService)
+                    }
                 }
+            }
         }
     }
 
@@ -233,7 +232,8 @@ class WidgetService : LifecycleService() {
         }
 
         val intent = Intent(this, SplashActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         remoteViews.setOnClickPendingIntent(R.id.widgetBtn, pendingIntent) //点击跳转
 
         val componentName = ComponentName(this, MyWidget::class.java)

@@ -70,23 +70,22 @@ public class SplashActivity extends BaseActivity {
 
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
-            //  注册
-            BaseApp.getInstance().startUsingApp(this, true, false);
-
-            SpUtils.getInstance().remove(Constants.TIME_LOCATION);
-            SpUtils.getInstance().remove(Constants.TIME_WEATHER);
-            if (!saveVersion.equals("0")) {
-                // LocationSpHelper.saveWithLocation(null);
-                // LocationHelper.getInstance().start(this);
-
-                WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
-                httpHelper.getBaseUrl(httpHelper::fetchCitiesWeather);
-            }
-
-            SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
-
             //加载开屏广告
             mSplashContainer.post(this::loadSplashAd);
+
+            if (LocationSpHelper.getCityListAndLocation().size() != 0) {
+                //  注册
+                BaseApp.getInstance().startUsingApp(this);
+
+                SpUtils.getInstance().remove(Constants.TIME_LOCATION);
+                SpUtils.getInstance().remove(Constants.TIME_WEATHER);
+                if (!saveVersion.equals("0")) {
+                    WeatherHttpHelper httpHelper = new WeatherHttpHelper(getApplicationContext());
+                    httpHelper.getBaseUrl(httpHelper::fetchCitiesWeather);
+                }
+
+                SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
+            }
 
         } else {
             handler.postDelayed(() -> {
@@ -94,6 +93,28 @@ public class SplashActivity extends BaseActivity {
                 this.finish();
             }, 500);
         }
+    }
+
+    /**
+     * 跳转到主页面
+     */
+    private static final String EXTRA_BACK = "EXTRA_BACK";
+    private void goToMainActivity() {
+        // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        // startActivity(intent);
+        // overridePendingTransition(0, 0);
+
+        if (!getIntent().getBooleanExtra(EXTRA_BACK, false)) {
+            if (LocationSpHelper.getCityListAndLocation().size() == 0) {
+                CitySearchActivity.redirectTo(this, true);
+            } else {
+                this.startActivity(new Intent(this, MainActivity.class));
+            }
+        }
+        SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
+
+        mSplashContainer.removeAllViews();
+        this.finish();
     }
 
     @Override
@@ -145,7 +166,7 @@ public class SplashActivity extends BaseActivity {
                 Log.e(TAG, "load splash ad error : " + adError.code + ", " + adError.message);
                 goToMainActivity();
 
-                preloadAds(); // 预加载广告
+                // preloadAds(); // 预加载广告
 
                 // 获取本次waterfall加载中，加载失败的adn错误信息。
                 if (mTTSplashAd != null) {
@@ -209,7 +230,7 @@ public class SplashActivity extends BaseActivity {
 
             goToMainActivity();
 
-            preloadAds(); // 预加载广告
+            // preloadAds(); // 预加载广告
         }
 
         @Override
@@ -217,33 +238,9 @@ public class SplashActivity extends BaseActivity {
             Log.d(TAG, "onAdDismiss");
             goToMainActivity();
 
-            preloadAds(); // 预加载广告
+            // preloadAds(); // 预加载广告
         }
     };
-
-    /**
-     * 跳转到主页面
-     */
-    private static final String EXTRA_BACK = "EXTRA_BACK";
-    private void goToMainActivity() {
-        // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        // startActivity(intent);
-        // overridePendingTransition(0, 0);
-
-        if (!getIntent().getBooleanExtra(EXTRA_BACK, false)) {
-            String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
-            if (!TextUtils.isEmpty(saveVersion) && saveVersion.equals("0")
-                    || LocationSpHelper.getCityListAndLocation().size() == 0) {
-                CitySearchActivity.redirectTo(this, true);
-            } else {
-                this.startActivity(new Intent(this, MainActivity.class));
-            }
-        }
-        SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
-
-        mSplashContainer.removeAllViews();
-        this.finish();
-    }
 
     /**
      * 预加载说明：GroMore内部会根据开发者传入的广告位信息，并行数，时间间隔进行预请求，期间会产生较大的网络负载，因此建议开发者

@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
@@ -116,7 +117,7 @@ public class ApiClient {
 	public void get(String url, JSONObject params, ApiResponseHandler handler) {
 
 		String reqUrl = getCompleteUrl(url);
-		HttpUrl.Builder urlBuilder = HttpUrl.parse(reqUrl).newBuilder();
+		HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(reqUrl)).newBuilder();
 		if (params != null) {
 			Iterator keys = params.keys();
 			while (keys.hasNext()) {

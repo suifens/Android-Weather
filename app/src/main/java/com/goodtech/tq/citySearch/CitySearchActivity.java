@@ -19,6 +19,7 @@ import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.MainActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -84,19 +85,19 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     private void toGetLocation() {
-        if (isStart) {
-            MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
-                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true, true));
-            alert.setCancelListener(((dialog, which)
-                    -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false, false)));
-            alert.show();
-            isStart = false;
-            return;
-        }
+        // if (isStart) {
+        //     MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
+        //             -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true, true));
+        //     alert.setCancelListener(((dialog, which)
+        //             -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false, false)));
+        //     alert.show();
+        //     isStart = false;
+        //     return;
+        // }
         if (checkPermission()) {
             MessageAlert alert = new MessageAlert(CitySearchActivity.this,
                     (dialog, which) -> {
-                        openLocationPermission(false);
+                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
                     });
             if (!isFinishing()) {
                 alert.show();
@@ -114,6 +115,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (getIntent().getBooleanExtra(EXTRA_START, false)) {
             mCancelBtn.setVisibility(View.GONE);
             isStart = true;
+            mHandler.postDelayed(() -> {
+                BaseApp.getInstance().startUsingApp(CitySearchActivity.this);
+            }, 500);
         }
 
         initSearchView();
@@ -192,6 +196,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (event.isSuccessLocation()) {
             mHandler.post(() -> mRecommendHeaderView.updateLocation());
 
+            BaseApp.getInstance().startIntent(CitySearchActivity.this);
+
             if (LocationSpHelper.getLocation() != null && !isRefresh) {
                 if (!CitySearchActivity.this.isFinishing()) {
                     TipHelper.showProgressDialog(this);
@@ -204,7 +210,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                     startActivity(intent);
                     finishToRight();
                     TipHelper.dismissProgressDialog();
-                }, 1000);
+                }, 500);
                 if (mRecommendHeaderView != null) {
                     mRecommendHeaderView.hideSoftInput(this);
                 }
@@ -233,9 +239,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         }
 
         mHandler.postDelayed(() -> {
-            if (isStart) {
-                BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false, false);
-            }
             Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

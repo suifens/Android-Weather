@@ -127,15 +127,16 @@ class DoubleWidgetService : LifecycleService() {
     }
 
     private suspend fun updateRemoteOnce() {
-        WeatherHttpHelper.getInstance().getBaseUrl {
-            WeatherHttpHelper.getInstance()
-                .fetchWeather(
-                    Objects.requireNonNull(LocationSpHelper.getLocation())
-                ) { success: Boolean, weather: WeatherModel?, errCode: ErrorCode? ->
-                    updateWidget(
-                        this@DoubleWidgetService
-                    )
+        val location = LocationSpHelper.getLocation()
+        if (location != null) {
+            WeatherHttpHelper.getInstance().getBaseUrl {
+                WeatherHttpHelper.getInstance().fetchWeather(LocationSpHelper.getLocation())
+                { success: Boolean, _: WeatherModel?, _: ErrorCode? ->
+                    if (success) {
+                        updateWidget(this@DoubleWidgetService)
+                    }
                 }
+            }
         }
     }
 
