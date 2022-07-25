@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 612
-        versionName "6.1.2"
+        versionCode 690
+        versionName "6.9.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -55,7 +55,7 @@ android {
     productFlavors {
         anzhi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"天气预报苹果版", umeng_channel:"anzhi"]
+            manifestPlaceholders=[app_name:"天气预报预知", umeng_channel:"anzhi"]
         }
         baidu {
             buildConfigField 'int', 'BAIDU_CHANNEL', '1'
@@ -75,16 +75,16 @@ android {
         }
         sougou {
             buildConfigField 'int', 'BAIDU_CHANNEL', '4'
-            manifestPlaceholders=[app_name:"天天天气预报", umeng_channel:"sougou"]
+            manifestPlaceholders=[app_name:"天气预报预知", umeng_channel:"sougou"]
         }
-        tuiguang1 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"tuiguang1"]
-        }
-        tuiguang2 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"tuiguang2"]
-        }
+//        tuiguang1 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"tuiguang1"]
+//        }
+//        tuiguang2 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"tuiguang2"]
+//        }
         vivo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '7'
             manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"vivo"]
