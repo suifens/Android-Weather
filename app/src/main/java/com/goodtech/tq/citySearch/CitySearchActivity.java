@@ -26,7 +26,9 @@ import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
+import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.utils.Utils;
 import com.goodtech.tq.views.MessageAlert;
@@ -85,20 +87,16 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     private void toGetLocation() {
-        // if (isStart) {
-        //     MessageAlert alert = new MessageAlert(CitySearchActivity.this, (dialog, which)
-        //             -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, true, true));
-        //     alert.setCancelListener(((dialog, which)
-        //             -> BaseApp.getInstance().startUsingApp(CitySearchActivity.this, false, false)));
-        //     alert.show();
-        //     isStart = false;
-        //     return;
-        // }
         if (checkPermission()) {
             MessageAlert alert = new MessageAlert(CitySearchActivity.this,
                     (dialog, which) -> {
-                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
+                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this, true);
                     });
+            alert.setCancelListener(((dialog, which) -> {
+                //  取消定位权限判断的时间
+                SpUtils.getInstance().putLong(Constants.TIME_LOCATION_CANCEL, System.currentTimeMillis());
+            }));
+
             if (!isFinishing()) {
                 alert.show();
             }

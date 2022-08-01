@@ -49,30 +49,57 @@ public class LocationHelper {
 
     @SuppressLint("CheckResult")
     public void startWithDelay(final Activity context) {
+        startWithDelay(context, false);
+    }
+
+    @SuppressLint("CheckResult")
+    public void startWithDelay(final Activity context, boolean isForce) {
 
         if (isLocating) {
             return;
         }
 
+        long locationTime = SpUtils.getInstance().getLong(Constants.TIME_LOCATION, 0L);
+
         RxPermissions rxPermissions = new RxPermissions(context);
-        rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION
-                , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(granted ->
-        {
-            if (granted) {
-                BaseApp.getInstance().configLocation(context);
+        if (rxPermissions.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
+                || rxPermissions.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+            if (System.currentTimeMillis() - locationTime > 5 * 60 * 1000 || isForce) {
                 startLocation(context);
-            } else {
-                //  取消定位权限判断的时间
-                Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
             }
-        });
+        }
+        else if (!TimeUtils.isCurrentDay(SpUtils.getInstance().getLong(Constants.TIME_LOCATION_CANCEL, 0L))
+                || isForce) {
+
+            rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION
+                    , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(granted ->
+            {
+                if (granted) {
+                    BaseApp.getInstance().configLocation(context);
+                    startLocation(context);
+                } else {
+                    if (isForce) {
+                        Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
+                    }
+                    //  取消定位权限判断的时间
+                    SpUtils.getInstance().putLong(Constants.TIME_LOCATION_CANCEL, System.currentTimeMillis());
+                }
+            });
+        } else {
+            //  取消定位权限判断的时间
+            // Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void startLocation(final Activity context) {
         stop();
         TipHelper.showProgressDialog(context);
         Handler mHandler = new Handler(Looper.getMainLooper());
-        mHandler.postDelayed(() -> start(context), 300);
+        mHandler.postDelayed(() -> {
+            start(context);
+            isLocating = true;
+        }, 300);
     }
 
     private void start(Context context) {
@@ -127,10 +154,12 @@ public class LocationHelper {
                 LocationHelper.getInstance().stop();
             }, 300);
 
+            if (location != null) {
+                SpUtils.getInstance().putLong(Constants.TIME_LOCATION, System.currentTimeMillis());
+            }
+
             // TODO Auto-generated method stub
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
-
-                SpUtils.getInstance().putLong(Constants.TIME_LOCATION, System.currentTimeMillis());
 
                 {
                     int tag = 1;

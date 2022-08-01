@@ -20,7 +20,7 @@ public class IntentReceiver extends BroadcastReceiver {
         if (manager != null) {
             NetworkInfo networkInfo = manager.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isAvailable()) {
-                Toast.makeText(context, "网络连接成功", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context, "网络连接成功", Toast.LENGTH_SHORT).show();
                 if (mDialog != null) mDialog.dismiss();
             } else {
                 Dialog(context);
