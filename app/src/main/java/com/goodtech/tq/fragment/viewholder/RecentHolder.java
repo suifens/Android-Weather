@@ -51,13 +51,13 @@ public class RecentHolder extends RecyclerView.ViewHolder {
                 boolean day = currentTime < sunSetTime;
 
                 Daypart todayPart = day ? today.dayPart : today.nightPart;
-                mTTempTv.setText(String.format("%d/%d°C", today.metric.maxTemp, today.metric.minTemp));
+                mTTempTv.setText(String.format("%d/%d°", today.metric.maxTemp, today.metric.minTemp));
                 if (todayPart != null) mTPhraseTv.setText(todayPart.phraseChar);
 
                 Daily tomorrow = weatherModel.tomorrow();
                 if (tomorrow != null) {
                     Daypart tomorrowPart = day ? tomorrow.dayPart : tomorrow.nightPart;
-                    mMTempTv.setText(String.format("%d/%d°C", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
+                    mMTempTv.setText(String.format("%d/%d°", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
                     if (tomorrowPart != null) mMPhraseTv.setText(tomorrowPart.phraseChar);
                 }
             }

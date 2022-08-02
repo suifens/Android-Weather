@@ -103,9 +103,11 @@
         <entry key="app/src/main/res/layout/fragment_signing_c.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_weather_data.xml" value="0.1894630192502533" />
+        <entry key="app/src/main/res/layout/item_forecast15.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/item_layout01.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/item_layout02.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/item_layout03.xml" value="0.28125" />
+        <entry key="app/src/main/res/layout/layout_forecast_15d.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_weather_notify.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/linear_item_observation.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/list_item.xml" value="0.4036458333333333" />

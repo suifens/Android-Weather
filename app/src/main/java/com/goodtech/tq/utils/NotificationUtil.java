@@ -90,7 +90,7 @@ public class NotificationUtil {
                         views.setTextViewText(R.id.tvWeather, hourly.phraseChar);
 
                         if (hourly.metric != null) {
-                            views.setTextViewText(R.id.tvTemp, String.format("%d°C", hourly.metric.temp));
+                            views.setTextViewText(R.id.tvTemp, String.format("%d°", hourly.metric.temp));
                             return;
                         }
                     }
@@ -102,7 +102,7 @@ public class NotificationUtil {
                 Metric metric = observation.metric;
 
                 views.setImageViewResource(R.id.ivWeather, ImageUtils.weatherImageRes(observation.wxIcon));
-                views.setTextViewText(R.id.tvTemp, String.format("%d°C", metric.temp));
+                views.setTextViewText(R.id.tvTemp, String.format("%d°", metric.temp));
                 views.setTextViewText(R.id.tvWeather, observation.wxPhrase);
             }
         }

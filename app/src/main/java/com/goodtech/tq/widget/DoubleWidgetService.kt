@@ -188,7 +188,7 @@ class DoubleWidgetService : LifecycleService() {
                 val todayPart = if (day) today.dayPart else today.nightPart
                 remoteViews.setTextViewText(
                     R.id.tv_temperature_today,
-                    String.format("%d/%d°C", today.metric.maxTemp, today.metric.minTemp)
+                    String.format("%d/%d°", today.metric.maxTemp, today.metric.minTemp)
                 )
                 if (todayPart != null) remoteViews.setTextViewText(
                     R.id.tv_weather_today,
@@ -208,7 +208,7 @@ class DoubleWidgetService : LifecycleService() {
                     val tomorrowPart = if (day) tomorrow.dayPart else tomorrow.nightPart
                     remoteViews.setTextViewText(
                         R.id.tv_temperature_morn,
-                        String.format("%d/%d°C", tomorrow.metric.maxTemp, tomorrow.metric.minTemp)
+                        String.format("%d/%d°", tomorrow.metric.maxTemp, tomorrow.metric.minTemp)
                     )
                     if (tomorrowPart != null) remoteViews.setTextViewText(
                         R.id.tv_weather_morn,
@@ -235,7 +235,7 @@ class DoubleWidgetService : LifecycleService() {
                             )
                             remoteViews.setTextViewText(
                                 R.id.tv_temperature,
-                                String.format("%d°C", hourly.metric.temp)
+                                String.format("%d°", hourly.metric.temp)
                             )
                             return
                         }
@@ -255,7 +255,7 @@ class DoubleWidgetService : LifecycleService() {
                     R.id.iconImgView,
                     ImageUtils.weatherImageRes(observation.wxIcon)
                 )
-                remoteViews.setTextViewText(R.id.tv_temperature, String.format("%d°C", metric.temp))
+                remoteViews.setTextViewText(R.id.tv_temperature, String.format("%d°", metric.temp))
                 remoteViews.setTextViewText(R.id.tv_wx_phrase, observation.wxPhrase)
             }
         }

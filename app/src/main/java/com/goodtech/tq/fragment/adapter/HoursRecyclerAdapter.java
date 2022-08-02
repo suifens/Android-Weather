@@ -101,7 +101,7 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
                 }
             } else {
                 mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
-                mTemperature.setText(String.format("%d°C", hourly.metric.temp));
+                mTemperature.setText(String.format("%d°", hourly.metric.temp));
             }
         }
     }

@@ -87,5 +87,6 @@
     </string-array>
 
     <string name="show_info">展示的广告信息 ：代码位id = %1$s adnName = %2$s ecpm = %3$s </string>
+    <string name="today">今天</string>
 
 </resources>

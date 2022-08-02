@@ -117,7 +117,7 @@ public class CurrentItemView extends ConstraintLayout {
                         if (hourly.metric != null) {
                             mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", hourly.wdir_cardinal,
                                     WeatherUtils.windGrade(hourly.metric.wspd), hourly.rh));
-                            mTempTv.setText(String.format("%d°C", hourly.metric.temp));
+                            mTempTv.setText(String.format("%d°", hourly.metric.temp));
                             hadSetTemp = true;
                         }
                         mPhraseTv.setText(hourly.phraseChar);
@@ -142,7 +142,7 @@ public class CurrentItemView extends ConstraintLayout {
                     mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", observation.wdirCardinal,
                             WeatherUtils.windGrade(metric.wspd), observation.rh));
                     mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
-                    mTempTv.setText(String.format("%d°C", metric.temp));
+                    mTempTv.setText(String.format("%d°", metric.temp));
                     mPhraseTv.setText(observation.wxPhrase);
                 }
             }

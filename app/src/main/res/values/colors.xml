@@ -24,6 +24,9 @@
     <color name="bg_item_dragging_active_state">#9B9B9B</color>
 
 
+    <color name="color_333">#FF333333</color>
+    <color name="color_666">#FF666666</color>
+    <color name="color_999">#FF999999</color>
     <color name="color_363636">#FF363636</color>
     <color name="color_d8d8d8">#d8d8d8</color>
     <color name="color_979797">#979797</color>

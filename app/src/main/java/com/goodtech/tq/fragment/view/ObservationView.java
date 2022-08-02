@@ -94,14 +94,14 @@ public class ObservationView extends LinearLayout {
                     String sunset = TimeUtils.timeToHHmm(TimeUtils.switchTime(daily.sunSet));
                     mSunriseTimeTv.setText(String.format("日出%s", sunrise));
                     mSunsetTimeTv.setText(String.format("日落%s", sunset));
-                    minTemp = String.format("%d°C", daily.metric.minTemp);
-                    maxTemp = String.format("%d°C", daily.metric.maxTemp);
+                    minTemp = String.format("%d°", daily.metric.minTemp);
+                    maxTemp = String.format("%d°", daily.metric.maxTemp);
                 }
             }
 
             if (minTemp == null) {
-                minTemp = String.format("%d°C", metric.minTemp);
-                maxTemp = String.format("%d°C", metric.maxTemp);
+                minTemp = String.format("%d°", metric.minTemp);
+                maxTemp = String.format("%d°", metric.maxTemp);
             }
             mMinTempTv.setText(minTemp);
             mMaxTempTv.setText(maxTemp);

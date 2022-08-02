@@ -105,8 +105,8 @@ public class TemperatureView extends View {
         int height = getHeight() - textSize * 4;
         int yDay = (int) (height - height * (temperatureDay - minTemp) * 1.0f / (maxTemp - minTemp)) + textSize * 2;
         int yNight = (int) (height - height * (temperatureNight - minTemp) * 1.0f / (maxTemp - minTemp)) + textSize * 2;
-        String dayTemp = temperatureDay + "°C";
-        String nightTemp = temperatureNight + "°C";
+        String dayTemp = temperatureDay + "°";
+        String nightTemp = temperatureNight + "°";
         float widDay = textPaint.measureText(dayTemp);
         float widNight = textPaint.measureText(nightTemp);
         float hei = textPaint.descent() - textPaint.ascent();

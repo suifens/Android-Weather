@@ -203,7 +203,7 @@ class WidgetService : LifecycleService() {
                             )
                             remoteViews.setTextViewText(
                                 R.id.sTv_temperature,
-                                String.format("%d°C", hourly.metric.temp)
+                                String.format("%d°", hourly.metric.temp)
                             )
                             return
                         }
@@ -225,7 +225,7 @@ class WidgetService : LifecycleService() {
                 )
                 remoteViews.setTextViewText(
                     R.id.sTv_temperature,
-                    String.format("%d°C", metric.temp)
+                    String.format("%d°", metric.temp)
                 )
                 remoteViews.setTextViewText(R.id.sTv_wx_phrase, observation.wxPhrase)
             }

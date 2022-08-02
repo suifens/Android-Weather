@@ -5,19 +5,11 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.models.Daily;
-import com.goodtech.tq.models.Hourly;
-import com.goodtech.tq.models.Metric;
-import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.ImageUtils;
-import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.widget.weatherview.WeatherView;
 
 /**
