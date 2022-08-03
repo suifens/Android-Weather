@@ -36,7 +36,7 @@ public abstract class BaseFragment extends Fragment {
      * 初始化界面
      */
     protected void setupCacheViews() {
-        // TODO: 2016/9/7  子类继承重写该方法
+        // TODO:  子类继承重写该方法
     }
 
 
