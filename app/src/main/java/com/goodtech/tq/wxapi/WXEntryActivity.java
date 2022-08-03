@@ -3,7 +3,7 @@ package com.goodtech.tq.wxapi;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.utils.Constants;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;

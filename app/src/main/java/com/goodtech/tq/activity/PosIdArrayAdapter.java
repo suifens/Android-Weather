@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.content.Context;
 import android.view.View;

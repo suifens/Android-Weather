@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 
 import android.app.Activity;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 
+import com.goodtech.tq.R;
 import com.goodtech.tq.views.CircleProgressView;
 import com.goodtech.tq.views.IArcView;
 

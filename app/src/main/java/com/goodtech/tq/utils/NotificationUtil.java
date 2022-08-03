@@ -11,16 +11,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.SparseArray;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.SplashActivity;
-import com.goodtech.tq.helpers.AqiHelper;
-import com.goodtech.tq.models.Daily;
-import com.goodtech.tq.models.Daypart;
+import com.goodtech.tq.activity.SplashActivity;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.Metric;
 import com.goodtech.tq.models.Observation;

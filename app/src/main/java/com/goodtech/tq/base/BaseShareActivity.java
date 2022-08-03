@@ -12,7 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.FileUtils;
-import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.base.share.ShareHelper;
 import com.goodtech.tq.base.share.ShareType;

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
 import com.goodtech.tq.httpClient.ApiResponseHandler;

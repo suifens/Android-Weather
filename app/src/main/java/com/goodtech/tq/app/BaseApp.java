@@ -15,14 +15,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.goodtech.tq.BuildConfig;
-import com.goodtech.tq.MyActivityManager;
-import com.goodtech.tq.SettingActivity;
-import com.goodtech.tq.SplashADActivity;
-import com.goodtech.tq.SplashActivity;
+import com.goodtech.tq.activity.MyActivityManager;
+import com.goodtech.tq.activity.SettingActivity;
+import com.goodtech.tq.activity.SplashADActivity;
+import com.goodtech.tq.activity.SplashActivity;
 import com.goodtech.tq.app.config.GMAdManagerHolder;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.jpush.JPushHelper;
-import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;

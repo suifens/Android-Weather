@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.goodtech.tq.R;
 import com.goodtech.tq.others.widget.WidgetType;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;

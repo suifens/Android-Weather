@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.app.Activity;
 import android.app.ActivityManager;

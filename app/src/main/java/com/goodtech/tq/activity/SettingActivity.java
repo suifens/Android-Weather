@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -15,6 +15,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.RequiresApi;
 
+import com.goodtech.tq.R;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 // import com.qq.e.comm.managers.setting.GlobalSetting;

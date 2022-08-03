@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import com.goodtech.tq.R;
 import com.goodtech.tq.utils.Constants;
 import com.umeng.analytics.MobclickAgent;
 

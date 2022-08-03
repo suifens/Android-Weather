@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#35D5A3"
-    tools:context=".TestActivity">
+    tools:context=".activity.TestActivity">
 
     <com.goodtech.tq.views.CircleProgressView
         android:id="@+id/progress_view"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AgreementActivity">
+    tools:context=".activity.AgreementActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/private_station_bar"

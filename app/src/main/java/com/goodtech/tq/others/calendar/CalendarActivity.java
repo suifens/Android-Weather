@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,7 +19,7 @@ import com.github.gzuliyujiang.wheelpicker.DatePicker;
 import com.github.gzuliyujiang.wheelpicker.annotation.DateMode;
 import com.github.gzuliyujiang.wheelpicker.entity.DateEntity;
 import com.github.gzuliyujiang.wheelpicker.impl.BirthdayFormatter;
-import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.calendar.DayDetail;
 import com.goodtech.tq.models.calendar.Holiday;
@@ -31,7 +30,6 @@ import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

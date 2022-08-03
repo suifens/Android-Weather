@@ -1,17 +1,19 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import com.goodtech.tq.R;
 import com.goodtech.tq.utils.Constants;
 import com.umeng.analytics.MobclickAgent;
 
-public class PrivateListActivity extends BaseActivity {
+public class AgreementActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
@@ -33,22 +35,22 @@ public class PrivateListActivity extends BaseActivity {
         setContentView(R.layout.activity_agreement);
 
         TextView mTitleView = findViewById(R.id.tv_title);
-        if (mTitleView != null) mTitleView.setText(R.string.title_private_list);
+        if (mTitleView != null) mTitleView.setText(R.string.title_agreement);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
 
         mWebView = findViewById(R.id.web_agreement);
         mWebView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
-//        mWebView.setLongClickable(true);
-//        mWebView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                return true;
-//            }
-//        });
+        mWebView.setLongClickable(true);
+        mWebView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
         //  设置url
-        String guideUrl = String.format(Constants.URL_PRIVACY_LIST, BuildConfig.FLAVOR);
+        String guideUrl = Constants.URL_AGREEMENT;
         mWebView.loadUrl(guideUrl);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -72,11 +74,11 @@ public class PrivateListActivity extends BaseActivity {
                 super.onPageFinished(view, url);
             }
 
-//            //  屏蔽超链接，使其不可跳转
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-//                return true;
-//            }
+            //  屏蔽超链接，使其不可跳转
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return true;
+            }
         });
 
         findViewById(R.id.button_back).setOnClickListener(v -> {

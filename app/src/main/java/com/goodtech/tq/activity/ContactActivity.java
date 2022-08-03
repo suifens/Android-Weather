@@ -1,7 +1,8 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.os.Bundle;
 
+import com.goodtech.tq.R;
 import com.umeng.analytics.MobclickAgent;
 
 public class ContactActivity extends BaseActivity {

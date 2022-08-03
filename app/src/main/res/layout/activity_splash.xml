@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/splash_lower"
-    tools:context=".SplashActivity" >
+    tools:context=".activity.SplashActivity" >
 
     <ImageView
         android:id="@+id/splash_holder"

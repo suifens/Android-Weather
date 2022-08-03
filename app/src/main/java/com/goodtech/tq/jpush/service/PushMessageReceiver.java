@@ -2,14 +2,10 @@ package com.goodtech.tq.jpush.service;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.goodtech.tq.MainActivity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.goodtech.tq.activity.MainActivity;
 
 import cn.jpush.android.api.CmdMessage;
 import cn.jpush.android.api.CustomMessage;

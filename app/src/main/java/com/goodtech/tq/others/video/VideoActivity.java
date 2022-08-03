@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.viewpager.widget.ViewPager;
 
-import com.goodtech.tq.BaseActivity;
+import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.others.video.adapter.ListPagerAdapter;
 import com.google.android.material.tabs.TabLayout;

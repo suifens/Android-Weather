@@ -71,7 +71,7 @@
             android:name=".VideoActivity"
             android:exported="false" />
         <activity android:name=".signing.SigningActivity" />
-        <activity android:name=".WidgetSettingActivity" />
+        <activity android:name=".activity.WidgetSettingActivity" />
         <activity android:name=".others.taifeng.TyphoonActivity" />
         <activity android:name=".others.dymovies.DyMoviesActivity" />
         <activity android:name=".others.outbreak.OutbreakActivity" />
@@ -93,7 +93,7 @@
             android:name="UMENG_CHANNEL"
             android:value="${umeng_channel}" /> <!-- <activity -->
         <activity
-            android:name=".SplashActivity"
+            android:name=".activity.SplashActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -107,7 +107,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -119,27 +119,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AgreementActivity"
+            android:name=".activity.AgreementActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".PrivateActivity"
+            android:name=".activity.PrivateActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".PrivateListActivity"
+            android:name=".activity.PrivateListActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".AboutActivity"
+            android:name=".activity.AboutActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ContactActivity"
+            android:name=".activity.ContactActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".activity.SettingActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
@@ -151,7 +151,7 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".PermissionActivity"
+            android:name=".activity.PermissionActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
@@ -163,7 +163,7 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".SplashADActivity"
+            android:name=".activity.SplashADActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.FullScreen"
             tools:ignore="LockedOrientationActivity" />

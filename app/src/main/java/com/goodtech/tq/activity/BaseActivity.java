@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;

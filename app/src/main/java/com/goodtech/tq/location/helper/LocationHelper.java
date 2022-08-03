@@ -1,7 +1,5 @@
 package com.goodtech.tq.location.helper;
 
-import static com.goodtech.tq.app.BaseApp.FIRST_CHECK;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,7 +15,6 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
-import com.goodtech.tq.BaseActivity;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.location.services.LocationService;

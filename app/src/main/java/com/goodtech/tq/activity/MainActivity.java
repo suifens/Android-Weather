@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.activity;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -23,9 +23,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdListener;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback;
+import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.cityList.CityListActivity;
-import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragment.WeatherFragment2;
@@ -42,7 +42,6 @@ import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.IntentReceiver;
-import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.umeng.analytics.MobclickAgent;

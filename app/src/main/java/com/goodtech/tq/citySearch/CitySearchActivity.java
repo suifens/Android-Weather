@@ -15,11 +15,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.goodtech.tq.BaseActivity;
-import com.goodtech.tq.MainActivity;
+import com.goodtech.tq.activity.BaseActivity;
+import com.goodtech.tq.activity.MainActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
-import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
