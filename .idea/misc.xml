@@ -10,19 +10,10 @@
         <entry key="app/src/main/res/drawable-xxhdpi/jpush_demo_selector_switch_btn.xml" value="0.21296296296296297" />
         <entry key="app/src/main/res/drawable/bg_circle_007bff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_00a2ff.xml" value="0.2984375" />
-        <entry key="app/src/main/res/drawable/bg_circle_00c4ff.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/bg_circle_1592f3.xml" value="0.2984375" />
-        <entry key="app/src/main/res/drawable/bg_circle_52a255.xml" value="0.3165" />
-        <entry key="app/src/main/res/drawable/bg_circle_5a9ef2_6.xml" value="0.3165" />
-        <entry key="app/src/main/res/drawable/bg_circle_73d186_9.xml" value="0.3165" />
-        <entry key="app/src/main/res/drawable/bg_circle_black_12.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/bg_circle_black_15.xml" value="0.31145833333333334" />
-        <entry key="app/src/main/res/drawable/bg_circle_black_6.xml" value="0.3165" />
-        <entry key="app/src/main/res/drawable/bg_circle_black_8.xml" value="0.3165" />
-        <entry key="app/src/main/res/drawable/bg_circle_cb5656.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/bg_circle_ff3838.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_white.xml" value="0.3921875" />
-        <entry key="app/src/main/res/drawable/bg_circle_white_12.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/bg_circle_white_15.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_circle_white_6.xml" value="0.3776041666666667" />
         <entry key="app/src/main/res/drawable/bg_radius10_5ecd75.xml" value="0.321875" />
@@ -33,23 +24,17 @@
         <entry key="app/src/main/res/drawable/bg_radius12_black_10.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/drawable/bg_radius4_00c4ff_10.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_radius4_48c7a1.xml" value="0.3260416666666667" />
-        <entry key="app/src/main/res/drawable/bg_radius4_5a9ef2.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/bg_radius4_e05353.xml" value="0.31145833333333334" />
-        <entry key="app/src/main/res/drawable/bg_radius4_f8f8f8.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/bg_radius4_ff4c4c_10.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_radius8_white.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_radius_48c7a1.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/drawable/bg_radius_5a9ef2.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/drawable/bg_radius_e05353.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_radius_e1e4e8.xml" value="0.3921875" />
-        <entry key="app/src/main/res/drawable/bg_stroke12_e05353.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/bg_stroke4_48c7a1.xml" value="0.2984375" />
-        <entry key="app/src/main/res/drawable/bg_stroke_circle_white.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/bg_stroke_e1e4e8.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_stroke_white_50.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/download_confirm_background_confirm.xml" value="0.10677083333333333" />
-        <entry key="app/src/main/res/drawable/gradient_3472f0_19d3fd.xml" value="0.3165" />
-        <entry key="app/src/main/res/drawable/gradient_5049e6_39ceff.xml" value="0.3165" />
         <entry key="app/src/main/res/drawable/gradient_fortune.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/gradient_weather.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/sl_btn_007bff.xml" value="0.2984375" />
@@ -65,12 +50,12 @@
         <entry key="app/src/main/res/layout/activity_about.xml" value="0.17844202898550723" />
         <entry key="app/src/main/res/layout/activity_agreement.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_air_quality.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_calendar.xml" value="0.5989180834621329" />
+        <entry key="app/src/main/res/layout/activity_calendar.xml" value="0.1850238488544391" />
         <entry key="app/src/main/res/layout/activity_city_list.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_city_search.xml" value="0.10462962962962963" />
         <entry key="app/src/main/res/layout/activity_constellation_detail.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_contact.xml" value="0.3307291666666667" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.19630192502532928" />
         <entry key="app/src/main/res/layout/activity_native_express_demo.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_news.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_outbreak.xml" value="0.37604166666666666" />
@@ -78,10 +63,7 @@
         <entry key="app/src/main/res/layout/activity_setting_widget.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/activity_signing.xml" value="0.28229166666666666" />
-        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.4036458333333333" />
-        <entry key="app/src/main/res/layout/activity_splash_ad.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/activity_typhoon.xml" value="0.19630192502532928" />
-        <entry key="app/src/main/res/layout/activity_video.xml" value="0.271286231884058" />
         <entry key="app/src/main/res/layout/activity_web.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_widge.xml" value="0.335" />
         <entry key="app/src/main/res/layout/air_stub_life.xml" value="0.335" />
@@ -93,7 +75,6 @@
         <entry key="app/src/main/res/layout/bottom_list.xml" value="0.35054347826086957" />
         <entry key="app/src/main/res/layout/constraint_item_hourly.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/dialog_input.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/dialog_message.xml" value="0.240625" />
         <entry key="app/src/main/res/layout/fragment_cons_detail.xml" value="0.508833922261484" />
         <entry key="app/src/main/res/layout/fragment_cons_other.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_item.xml" value="0.189209726443769" />
@@ -102,30 +83,13 @@
         <entry key="app/src/main/res/layout/fragment_signing_a.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_signing_b.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment_signing_c.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/fragment_video_pager.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_weather_data.xml" value="0.1894630192502533" />
-        <entry key="app/src/main/res/layout/item_forecast15.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/item_layout01.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/item_layout02.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/item_layout03.xml" value="0.28125" />
-        <entry key="app/src/main/res/layout/item_video.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/layout_forecast_15d.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/layout_video_controller.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/layout_weather_notify.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/linear_item_observation.xml" value="0.24270833333333333" />
-        <entry key="app/src/main/res/layout/list_item.xml" value="0.4036458333333333" />
-        <entry key="app/src/main/res/layout/listitem_ad_download_btn_layout.xml" value="0.4036458333333333" />
-        <entry key="app/src/main/res/layout/listitem_ad_group_pic.xml" value="0.4036458333333333" />
-        <entry key="app/src/main/res/layout/listitem_ad_icon_source_layout.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/listitem_ad_large_pic.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/listitem_ad_large_video.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/listitem_ad_native_express.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/listitem_ad_small_pic.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/listitem_ad_title_creative_btn_layout.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/listitem_ad_vertical_pic.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/listitem_normal.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/search_header_recommend.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/search_header_recommend.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/search_item_city.xml" value="0.1" />
         <entry key="app/src/main/res/layout/segment_share.xml" value="0.1" />
         <entry key="app/src/main/res/layout/share_recycler_bottom.xml" value="0.2660098522167488" />
@@ -134,24 +98,21 @@
         <entry key="app/src/main/res/layout/stub_signing_container_a.xml" value="0.25" />
         <entry key="app/src/main/res/layout/stub_signing_container_b.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/stub_signing_container_c.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/stub_weather_data.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/view_back_bar.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/stub_weather_data.xml" value="0.189209726443769" />
         <entry key="app/src/main/res/layout/view_calendar_holiday.xml" value="0.41403716404812335" />
         <entry key="app/src/main/res/layout/view_city_search.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/view_common_bottom_sheet.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/view_cons_item.xml" value="0.3546195652173913" />
         <entry key="app/src/main/res/layout/view_score.xml" value="0.55" />
-        <entry key="app/src/main/res/layout/weather_daily.xml" value="0.4036458333333333" />
-        <entry key="app/src/main/res/layout/weather_daily_line.xml" value="0.4036458333333333" />
-        <entry key="app/src/main/res/layout/weather_daily_list.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/weather_daily_list.xml" value="0.19022289766970618" />
         <entry key="app/src/main/res/layout/weather_header_btn.xml" value="0.29030797101449274" />
-        <entry key="app/src/main/res/layout/weather_item.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/weather_item.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/weather_item_ad.xml" value="0.3546195652173913" />
-        <entry key="app/src/main/res/layout/weather_item_current.xml" value="0.6518359375" />
-        <entry key="app/src/main/res/layout/weather_item_daily.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/weather_item_current.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/weather_item_daily.xml" value="0.19630192502532928" />
         <entry key="app/src/main/res/layout/weather_item_header.xml" value="0.55" />
-        <entry key="app/src/main/res/layout/weather_item_hours.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/weather_item_line.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/weather_item_hours.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/weather_item_line.xml" value="0.1" />
         <entry key="app/src/main/res/layout/weather_item_observation.xml" value="0.4121338912133891" />
         <entry key="app/src/main/res/layout/weather_item_recent.xml" value="0.35054347826086957" />
         <entry key="app/src/main/res/layout/widget_item.xml" value="0.3098958333333333" />

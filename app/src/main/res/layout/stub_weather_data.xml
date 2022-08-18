@@ -26,6 +26,15 @@
         android:layout_height="120dp"
         android:layout_marginTop="10dp"/>
 
+    <com.goodtech.tq.fragment.view.DailyListItemView
+        android:id="@+id/item_daily_list"
+        android:layout_width="match_parent"
+        android:layout_height="510dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_circle_black_12"
+        />
+
     <FrameLayout
         android:id="@+id/item_ad"
         android:layout_width="match_parent"
@@ -36,41 +45,14 @@
         android:visibility="gone"
         />
 
-    <LinearLayout
+    <com.goodtech.tq.fragment.view.LineTempItemView
+        android:id="@+id/item_line_temp"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:background="@drawable/bg_circle_black_8"
-        >
-
-        <TextView
-            android:id="@+id/tv_daily"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_marginStart="3dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="10天气象变化"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:background="@drawable/bg_circle_5a9ef2_6"
-            />
-
-        <TextView
-            android:id="@+id/tv_line"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_marginEnd="3dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="15天曲线气象预报"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:background="@color/color_clear"
-            />
-
-    </LinearLayout>
+        android:background="@drawable/bg_circle_black_12"
+        />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/dailyViewPager"

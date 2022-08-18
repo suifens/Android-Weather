@@ -17,16 +17,16 @@ android {
         }
     }
 
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 690
         versionName "6.9.0"
         signingConfig signingConfigs.config
-        multiDexEnabled true
+        multiDexEnabled false
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -169,18 +169,18 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation project(':cropimage')
 
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.6.1'
     //noinspection GradleCompatible
     implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     //noinspection GradleCompatible
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     //noinspection GradleCompatible
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 //    implementation 'org.litepal.android:core:1.4.1'
     //网络加载图片工具
     implementation 'com.github.bumptech.glide:glide:4.12.0'
@@ -191,7 +191,7 @@ dependencies {
     //网络请求
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.squareup.okio:okio:2.10.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.9.0'
     //eventbus
     implementation 'org.greenrobot:eventbus:3.2.0'
 
@@ -204,7 +204,7 @@ dependencies {
     //  适配器BaseRecyclerViewAdapterHelper
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     //  android util code
-    implementation 'com.blankj:utilcodex:1.30.6'
+    implementation 'com.blankj:utilcodex:1.31.0'
     //  flex css布局
     implementation 'com.google.android:flexbox:2.0.1'
     //  日历
@@ -216,29 +216,31 @@ dependencies {
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
-    implementation 'com.github.gzu-liyujiang.AndroidPicker:Common:3.1.2'
-    implementation 'com.github.gzu-liyujiang.AndroidPicker:WheelPicker:3.1.2'
+    implementation 'com.github.gzu-liyujiang.AndroidPicker:Common:4.1.7'
+    implementation 'com.github.gzu-liyujiang.AndroidPicker:WheelPicker:4.1.7'
     //微信开放平台，登录
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.4.0'
     //  相机/相册
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
 
-    implementation 'cn.jiguang.sdk:jcore:3.1.2'  // 此处以JCore 2.7.2 版本为例。
-    implementation 'cn.jiguang.sdk:jpush:4.5.0'  // 此处以JPush 4.0.0 版本为例
+    //  极光推送
+    implementation 'cn.jiguang.sdk:jcore:3.3.1'  // 此处以JCore 2.7.2 版本为例。
+    implementation 'cn.jiguang.sdk:jpush:4.8.0'  // 此处以JPush 4.0.0 版本为例
     // 接入华为厂商
-    implementation 'com.huawei.hms:push:6.1.0.300'
-    implementation 'cn.jiguang.sdk.plugin:huawei:4.5.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
-    // 接入 FCM 厂商
-//    implementation 'com.google.firebase:firebase-messaging:21.0.1'
-//    implementation 'cn.jiguang.sdk.plugin:fcm:4.0.0'
+    implementation 'com.huawei.hms:push:6.5.0.300'
+    implementation 'cn.jiguang.sdk.plugin:huawei:4.8.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
     // 接入魅族厂商
-    implementation 'cn.jiguang.sdk.plugin:meizu:4.5.0'
+    implementation 'cn.jiguang.sdk.plugin:meizu:4.8.0'
     // 接入 VIVO 厂商
-    implementation 'cn.jiguang.sdk.plugin:vivo:4.5.0'
+    implementation 'cn.jiguang.sdk.plugin:vivo:4.8.0'
     // 接入 OPPO 厂商
-    implementation 'cn.jiguang.sdk.plugin:oppo:4.5.0'
+    implementation 'cn.jiguang.sdk.plugin:oppo:4.8.0'
+    implementation(name: 'com.heytap.msp_3.1.0', ext: 'aar')
+    //以下为 OPPO 3.1.0 aar需要依赖
+//    implementation 'commons-codec:commons-codec:1.9'
+//    implementation 'androidx.annotation:annotation:1.1.0'
     // 接入小米厂商
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.5.0'
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.8.0'
 
     /*GroMore广告显示*/
     //GroMore_sdk

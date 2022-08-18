@@ -44,6 +44,7 @@ import com.bytedance.msdk.api.v2.ad.nativeAd.GMViewBinder;
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.view.CurrentItemView;
 import com.goodtech.tq.fragment.view.DailyItemView;
+import com.goodtech.tq.fragment.view.DailyListItemView;
 import com.goodtech.tq.fragment.view.HoursItemView;
 import com.goodtech.tq.fragment.view.LineTempItemView;
 import com.goodtech.tq.fragment.view.ObservationView;
@@ -82,7 +83,6 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
     protected SmartRefreshLayout mRefreshLayout;
     protected NestedScrollView mScrollView;
     protected WeatherModel mWeatherModel;
-    protected ViewPager2 mDailyPager;
 
     protected View mStateBarBg;
 
@@ -150,9 +150,9 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
     private RecentItemView mRecentView;
     private HoursItemView mHoursView;
     private FrameLayout mFeedContainer;
-    private TextView mListBtnTv;
-    private TextView mLineBtnTv;
-    
+    private DailyListItemView mDailyListView;
+    private LineTempItemView mLineTempView;
+
     private ObservationView mObservationView;
 
     private void initView(View view) {
@@ -165,34 +165,10 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         mHoursView = view.findViewById(R.id.item_hours);
         mFeedContainer = view.findViewById(R.id.item_ad);
         mObservationView = view.findViewById(R.id.item_observation);
+        mDailyListView = view.findViewById(R.id.item_daily_list);
+        mLineTempView = view.findViewById(R.id.item_line_temp);
 
-        mDailyPager = view.findViewById(R.id.dailyViewPager);
-
-        mListBtnTv = view.findViewById(R.id.tv_daily);
-        mListBtnTv.setOnClickListener(v -> {
-            onSegmentClick(0);
-        });
-        mLineBtnTv = view.findViewById(R.id.tv_line);
-        mLineBtnTv.setOnClickListener(v -> {
-            onSegmentClick(1);
-        });
-
-        configViewPager2();
-
-        onSegmentClick(0);
         initNativeExpressAD();
-    }
-
-    private void onSegmentClick(int index) {
-        if (index == 0) {
-            mDailyPager.setCurrentItem(0, true);
-            mListBtnTv.setBackgroundResource(R.drawable.bg_circle_5a9ef2_6);
-            mLineBtnTv.setBackgroundResource(R.color.color_clear);
-        } else {
-            mDailyPager.setCurrentItem(1, true);
-            mListBtnTv.setBackgroundResource(R.color.color_clear);
-            mLineBtnTv.setBackgroundResource(R.drawable.bg_circle_5a9ef2_6);
-        }
     }
 
     private final WeatherHeaderListener mHeaderListener = new WeatherHeaderListener() {
@@ -300,41 +276,12 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                     mObservationView.setData(mWeatherModel);
                 }
 
-                if (mListFragment != null) {
-                    mListFragment.setData(mWeatherModel);
-                }
-
-                if (mLineFragment != null) {
-                    mLineFragment.setData(mWeatherModel);
+                if (mWeatherModel.dailies != null) {
+                    mDailyListView.setData(mWeatherModel);
+                    mLineTempView.setData(mWeatherModel);
                 }
             });
         }
-    }
-
-    private DailyListFragment mListFragment;
-    private DailyLineFragment mLineFragment;
-    private void configViewPager2() {
-        this.mDailyPager.setUserInputEnabled(false);
-        this.mDailyPager.setOffscreenPageLimit(2);
-        FragmentStateAdapter adapter = new FragmentStateAdapter(this) {
-            @Override
-            public int getItemCount() {
-                return 2;
-            }
-
-            @NonNull
-            @Override
-            public Fragment createFragment(int position) {
-                if (position == 0) {
-                    mListFragment = new DailyListFragment();
-                    return mListFragment;
-                } else {
-                    mLineFragment = new DailyLineFragment();
-                    return mLineFragment;
-                }
-            }
-        };
-        mDailyPager.setAdapter(adapter);
     }
 
     /**

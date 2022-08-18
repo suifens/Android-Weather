@@ -15,7 +15,7 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.LogUtils
 import com.goodtech.tq.R
-import com.goodtech.tq.SplashActivity
+import com.goodtech.tq.activity.SplashActivity
 import com.goodtech.tq.alarm.JAlarmReceiver
 import com.goodtech.tq.helpers.AqiHelper
 import com.goodtech.tq.helpers.LocationSpHelper
