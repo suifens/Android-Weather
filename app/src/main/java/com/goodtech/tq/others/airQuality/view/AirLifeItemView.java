@@ -44,7 +44,7 @@ public class AirLifeItemView extends ConstraintLayout {
             imageView.setImageResource(imgIcon);
         }
 
-        TextView mTitleTv = findViewById(R.id.tv_item_title);
+        mTitleTv = findViewById(R.id.tv_item_title);
         if (mTitleTv != null) {
             mTitleTv.setText(title);
         }
@@ -56,6 +56,12 @@ public class AirLifeItemView extends ConstraintLayout {
     }
 
     private TextView stateTv;
+    private TextView mTitleTv;
+
+    public void setTextColor(int color) {
+        stateTv.setTextColor(color);
+        mTitleTv.setTextColor(color);
+    }
 
     public void setState(String state) {
         stateTv.setText(state);

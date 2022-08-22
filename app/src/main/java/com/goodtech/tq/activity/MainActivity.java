@@ -197,7 +197,7 @@ public class MainActivity extends BaseActivity {
                     LocationHelper.getInstance().startWithDelay(this);
                 }, 500);
             }
-            mHandler.postDelayed(this::showAd, 7000);
+            mHandler.postDelayed(this::showAd, 10000);
             isFirstLoad = false;
         }
 

@@ -80,7 +80,7 @@ public class AirQualityActivity extends BaseActivity {
             if (lifeModel != null) {
                 mHandler.post(() -> {
                     mLifeView.setVisibility(View.VISIBLE);
-                    mLifeView.setupLife(lifeModel);
+                    mLifeView.setupLife(lifeModel, 0);
                 });
             }
         });

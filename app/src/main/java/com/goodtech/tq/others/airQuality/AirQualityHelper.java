@@ -92,7 +92,7 @@ public class AirQualityHelper {
                             JSONObject data = jsonObject.getJSONObject("result").getJSONObject("life");
                             JuheLifeModel model = new Gson().fromJson(String.valueOf(data), new TypeToken<JuheLifeModel>(){ }.getType());
                             if (model != null) {
-//                                WeatherSpHelper.saveJuheAqi(new Gson().toJson(model), cityMode.getCid());
+                               WeatherSpHelper.saveCityLife(String.valueOf(data), cityMode.getCid());
                                 if (callback != null) {
                                     callback.onResponse(model);
                                 }

@@ -8,39 +8,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:gravity="center" >
-
-        <View
-            android:layout_width="12dp"
-            android:layout_height="3dp"
-            android:background="#00A2FF" />
-
-        <TextView
-            android:id="@+id/tv_item_title"
-            android:layout_width="110dp"
-            android:layout_height="26dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="sans-serif-black"
-            android:text="生活服务指数"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="18dp" />
-
-        <View
-            android:layout_width="12dp"
-            android:layout_height="3dp"
-            android:background="#00A2FF" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        >
 
         <com.goodtech.tq.others.airQuality.view.AirLifeItemView
             android:id="@+id/item_dressing"

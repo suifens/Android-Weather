@@ -97,10 +97,10 @@
         />
 
     <ImageButton
-        android:id="@+id/btn_dy_movie"
+        android:id="@+id/btn_sign"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:src="@drawable/icon_cailing"
+        android:src="@drawable/icon_sign"
         android:background="@color/color_clear"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_outbreak"

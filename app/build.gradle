@@ -23,10 +23,10 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 690
-        versionName "6.9.0"
+        versionCode 800
+        versionName "8.0.0"
         signingConfig signingConfigs.config
-        multiDexEnabled false
+        multiDexEnabled true
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -107,7 +107,7 @@ android {
         }
         jinli {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"jinli"]
+            manifestPlaceholders=[app_name:"天气预报-天气纯净版", umeng_channel:"jinli"]
         }
     }
 

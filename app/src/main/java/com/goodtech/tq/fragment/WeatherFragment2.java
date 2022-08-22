@@ -57,6 +57,7 @@ import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.others.airQuality.AirQualityActivity;
+import com.goodtech.tq.others.airQuality.view.AirLifeView;
 import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.others.constellation.ConstellationActivity;
 import com.goodtech.tq.others.dymovies.DyMoviesActivity;
@@ -152,7 +153,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
     private FrameLayout mFeedContainer;
     private DailyListItemView mDailyListView;
     private LineTempItemView mLineTempView;
-
+    private AirLifeView mLifeView;
     private ObservationView mObservationView;
 
     private void initView(View view) {
@@ -167,6 +168,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         mObservationView = view.findViewById(R.id.item_observation);
         mDailyListView = view.findViewById(R.id.item_daily_list);
         mLineTempView = view.findViewById(R.id.item_line_temp);
+        mLifeView = view.findViewById(R.id.view_life);
 
         initNativeExpressAD();
     }
@@ -279,6 +281,10 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                 if (mWeatherModel.dailies != null) {
                     mDailyListView.setData(mWeatherModel);
                     mLineTempView.setData(mWeatherModel);
+                }
+
+                if (mWeatherModel.lifeModel != null) {
+                    mLifeView.setupLife(mWeatherModel.lifeModel, Color.WHITE);
                 }
             });
         }

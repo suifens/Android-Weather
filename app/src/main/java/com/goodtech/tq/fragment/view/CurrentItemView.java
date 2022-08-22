@@ -67,18 +67,18 @@ public class CurrentItemView extends ConstraintLayout {
         mTempTv = view.findViewById(R.id.tv_temperature);
         mPhraseTv = view.findViewById(R.id.tv_wx_phrase);
         mItemsView = view.findViewById(R.id.view_items);
-        //  签到
-        // view.findViewById(R.id.btn_sign).setOnClickListener(v -> {
-        //     if (mListener != null) {
-        //         mListener.onSignIn();
-        //     }
-        // });
-
-        view.findViewById(R.id.btn_dy_movie).setOnClickListener(v -> {
+        // 签到
+        view.findViewById(R.id.btn_sign).setOnClickListener(v -> {
             if (mListener != null) {
-                mListener.onDyMovie();
+                mListener.onSignIn();
             }
         });
+
+        // view.findViewById(R.id.btn_dy_movie).setOnClickListener(v -> {
+        //     if (mListener != null) {
+        //         mListener.onDyMovie();
+        //     }
+        // });
 
         //  出行
         view.findViewById(R.id.btn_outbreak).setOnClickListener(v -> {

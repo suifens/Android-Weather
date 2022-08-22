@@ -141,6 +141,8 @@ public class WeatherHttpHelper {
         //  获取aqi
         AirQualityHelper.fetchAqi(cityMode);
 
+        AirQualityHelper.fetchCityLife(cityMode, null);
+
         ApiClient client = ApiClient.getInstance();
         String url = String.format(WEATHER_API, mBaseUrl, cityMode.getLat(), cityMode.getLon());
 

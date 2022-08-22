@@ -7,6 +7,7 @@ import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.AirQualityModel;
 import com.goodtech.tq.models.JuheAirModel;
+import com.goodtech.tq.models.JuheLifeModel;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.SpUtils;
 import com.google.gson.Gson;
@@ -67,6 +68,13 @@ public class WeatherSpHelper {
             }
         }
 
+        if (weatherModel != null && !TextUtils.isEmpty(getCityLife(cid))) {
+            JuheLifeModel lifeModel = new Gson().fromJson(getCityLife(cid), new TypeToken<JuheLifeModel>(){ }.getType());
+            if (lifeModel != null) {
+                weatherModel.lifeModel = lifeModel;
+            }
+        }
+
         return weatherModel;
     }
 
@@ -90,12 +98,28 @@ public class WeatherSpHelper {
             SpUtils.getInstance().putString(key, jsonObject);
             SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
 
-            EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
+            // EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
         }
     }
 
     public static String getJuheAqi(int cid) {
         String key = String.format("aqi_%d", cid);
+        return SpUtils.getInstance().getString(key, "");
+    }
+
+    public static void saveCityLife(String jsonObject, int cid) {
+        String key = String.format("life_%d", cid);
+        String timeKey = String.format("life_%d_update", cid);
+        if (jsonObject != null) {
+            SpUtils.getInstance().putString(key, jsonObject);
+            SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
+
+            EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
+        }
+    }
+
+    public static String getCityLife(int cid) {
+        String key = String.format("life_%d", cid);
         return SpUtils.getInstance().getString(key, "");
     }
 

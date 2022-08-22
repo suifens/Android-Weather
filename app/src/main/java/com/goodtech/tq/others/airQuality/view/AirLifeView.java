@@ -48,7 +48,18 @@ public class AirLifeView extends ConstraintLayout {
     private AirLifeItemView allergyView;    //过敏指数
     private AirLifeItemView comfortView;    //舒适度指数
 
-    public void setupLife(JuheLifeModel lifeModel) {
+    public void setupLife(JuheLifeModel lifeModel, int color) {
+        if (color != 0) {
+            dressingView.setTextColor(color);
+            sportView.setTextColor(color);
+            umbrellaView.setTextColor(color);
+            fishingView.setTextColor(color);
+            coldView.setTextColor(color);
+            carView.setTextColor(color);
+            conditionerView.setTextColor(color);
+            allergyView.setTextColor(color);
+            comfortView.setTextColor(color);
+        }
         if (lifeModel != null) {
             dressingView.setState(lifeModel.getChuanyi() != null ? lifeModel.getChuanyi().getV() : "");
             sportView.setState(lifeModel.getYundong() != null ? lifeModel.getYundong().getV() : "");

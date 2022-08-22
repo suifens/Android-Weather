@@ -32,6 +32,8 @@ public class WeatherModel {
     //  天气质量
     public int aqi;
 
+    public JuheLifeModel lifeModel;
+
     public boolean needReload() {
         long curTime = System.currentTimeMillis() / 1000;
         return curTime - expireTime > 3600
