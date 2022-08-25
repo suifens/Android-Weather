@@ -88,7 +88,20 @@
         <entry key="app/src/main/res/layout/item_layout01.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/item_layout02.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/item_layout03.xml" value="0.28125" />
+        <entry key="app/src/main/res/layout/layout_video_controller.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/linear_item_observation.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/list_item.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_download_btn_layout.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_group_pic.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_icon_source_layout.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_large_pic.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_large_video.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_native_express.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_small_pic.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_title_creative_btn_layout.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_ad_vertical_pic.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/listitem_normal.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/progress_dialog_loading.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/search_header_recommend.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/search_item_city.xml" value="0.1" />
         <entry key="app/src/main/res/layout/segment_share.xml" value="0.1" />

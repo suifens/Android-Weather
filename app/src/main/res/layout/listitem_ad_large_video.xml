@@ -27,7 +27,7 @@
             android:singleLine="false"
             android:text="劳力士服务中心，清洗保养，更换配件，9秒费用查询"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="16dp" />
 
 
         <com.bytedance.msdk.api.format.TTMediaView

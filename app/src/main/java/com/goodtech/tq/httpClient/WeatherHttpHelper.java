@@ -42,7 +42,7 @@ public class WeatherHttpHelper {
 
     private final Context mContext;
 
-    private String mBaseUrl;
+    private String mBaseUrl = "https://api.weather.com";
 
     @SuppressLint("StaticFieldLeak")
     private static WeatherHttpHelper instance;

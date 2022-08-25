@@ -28,7 +28,7 @@
         android:maxLength="14"
         android:singleLine="true"
         android:text="计策略，才真三国！计策略，才真三国！"
-        android:textSize="18sp" />
+        android:textSize="16dp" />
 
 
     <Button
@@ -45,7 +45,7 @@
         android:padding="3dp"
         android:text="立即下载"
         android:textColor="#3399cc"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <LinearLayout
         android:id="@+id/app_info"
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:textSize="14sp"
+            android:textSize="14dp"
             tools:text="Nidddddddddd" />
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:textSize="14sp"
+            android:textSize="14dp"
             tools:text="Nidddddddddd" />
 
         <TextView
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:textSize="14sp"
+            android:textSize="14dp"
             tools:text="Nidddddddddd" />
 
         <TextView
@@ -86,7 +86,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="#000"
-            android:textSize="14sp"
+            android:textSize="14dp"
             tools:text="Nidddddddddd" />
 
         <TextView
@@ -96,7 +96,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="#000"
-            android:textSize="14sp"
+            android:textSize="14dp"
             tools:text="Nidddddddddd" />
 
         <TextView
@@ -104,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:textSize="14sp"
+            android:textSize="14dp"
             tools:text="Nidddddddddd" />
 
         <TextView
@@ -112,7 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
-            android:textSize="14sp"
+            android:textSize="14dp"
             tools:text="Nidddddddddd" />
     </LinearLayout>
 </RelativeLayout>
