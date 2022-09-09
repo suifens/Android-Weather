@@ -57,14 +57,16 @@
 
         <LinearLayout
             android:id="@+id/layout_address"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="30dp"
             android:orientation="horizontal"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="12dp"
-            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/img_sign">
             
             <ImageView
                 android:id="@+id/img_add"
@@ -77,10 +79,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:text="定位失败"
-                android:textSize="16dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxWidth="220dp"
                 android:textColor="@color/white"
-                />
+                android:textSize="16dp" />
 
             <ImageView
                 android:id="@+id/img_location"

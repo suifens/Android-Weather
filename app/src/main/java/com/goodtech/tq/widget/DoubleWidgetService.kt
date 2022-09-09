@@ -260,12 +260,21 @@ class DoubleWidgetService : LifecycleService() {
             }
         }
 
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, Intent(
-                this,
-                SplashActivity::class.java
-            ), PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(
+                this, 0, Intent(
+                    this,
+                    SplashActivity::class.java
+                ), PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getActivity(
+                this, 0, Intent(
+                    this,
+                    SplashActivity::class.java
+                ), PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
         remoteViews.setOnClickPendingIntent(R.id.widgetBtn, pendingIntent) //点击跳转
 
         val componentName = ComponentName(this, MyDoubleWidget::class.java)

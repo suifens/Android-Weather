@@ -2,7 +2,7 @@ package com.goodtech.tq.helpers;
 
 import android.text.TextUtils;
 
-import com.baidu.location.BDLocation;
+import com.amap.api.location.AMapLocation;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
@@ -25,10 +25,10 @@ public class LocationSpHelper {
     /**
      * 保存当前定位
      */
-    public static void saveWithLocation(BDLocation bdLocation) {
+    public static void saveWithLocation(AMapLocation location) {
         CityMode cityMode = new CityMode();
         cityMode.setLocation(true);
-        if (bdLocation == null || TextUtils.isEmpty(bdLocation.getCity())) {
+        if (location == null || TextUtils.isEmpty(location.getCity())) {
             if (getLocation() != null) {
                 EventBus.getDefault().post(new MessageEvent().setLocation(false));
             }
@@ -36,10 +36,10 @@ public class LocationSpHelper {
         } else {
             cityMode.setListNum(0);
             cityMode.setCid(1000);
-            cityMode.setLat(String.valueOf(bdLocation.getLatitude()));
-            cityMode.setLon(String.valueOf(bdLocation.getLongitude()));
-            cityMode.setCity(bdLocation.getCity());
-            cityMode.setMergerName(String.format("%s %s", bdLocation.getDistrict(), bdLocation.getStreet()));
+            cityMode.setLat(String.valueOf(location.getLatitude()));
+            cityMode.setLon(String.valueOf(location.getLongitude()));
+            cityMode.setCity(location.getCity());
+            cityMode.setMergerName(String.format("%s %s", location.getDistrict(), location.getPoiName()));
             //  获取天气信息
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(BaseApp.getInstance());
             httpHelper.getBaseUrl(() -> httpHelper.fetchWeather(cityMode));

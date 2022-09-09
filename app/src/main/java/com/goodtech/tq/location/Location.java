@@ -1,6 +1,6 @@
 package com.goodtech.tq.location;
 
-import com.baidu.location.BDLocation;
+import com.amap.api.location.AMapLocation;
 
 import java.io.Serializable;
 
@@ -24,8 +24,6 @@ public class Location implements Serializable {
     private String city;
     // 区，县
     private String district;
-    // 获取镇信息
-    private String town;
     // 街道
     private String street;
     //  地址信息
@@ -95,14 +93,6 @@ public class Location implements Serializable {
         this.district = district;
     }
 
-    public String getTown() {
-        return town;
-    }
-
-    public void setTown(String town) {
-        this.town = town;
-    }
-
     public String getStreet() {
         return street;
     }
@@ -119,7 +109,7 @@ public class Location implements Serializable {
         this.addrStr = addrStr;
     }
 
-    public static Location location(BDLocation bdLocation) {
+    public static Location location(AMapLocation bdLocation) {
         Location location = new Location();
         location.latitude = bdLocation.getLatitude();
         location.longitude = bdLocation.getLongitude();
@@ -127,9 +117,8 @@ public class Location implements Serializable {
         location.cityCode = bdLocation.getCityCode();
         location.city = bdLocation.getCity();
         location.district = bdLocation.getDistrict();
-        location.town = bdLocation.getTown();
         location.street = bdLocation.getStreet();
-        location.addrStr = bdLocation.getAddrStr();
+        location.addrStr = bdLocation.getAddress();
         return location;
     }
 

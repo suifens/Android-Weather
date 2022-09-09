@@ -79,13 +79,18 @@
         <activity android:name=".others.calendar.CalendarActivity" />
         <activity android:name=".others.constellation.ConstellationDetailActivity" />
         <activity android:name=".others.constellation.ConstellationActivity" /> <!-- 声明service组件 -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" /> <!-- AK鉴权 -->
+<!--        <service-->
+<!--            android:name="com.baidu.location.f"-->
+<!--            android:enabled="true"-->
+<!--            android:process=":remote" /> &lt;!&ndash; AK鉴权 &ndash;&gt;-->
+<!--        <meta-data-->
+<!--            android:name="com.baidu.lbsapi.API_KEY"-->
+<!--            android:value="MW7mNdpfGlsgjWqD9BGv1jHWlSfTBLOO" /> &lt;!&ndash; value的值填写你在友盟后台申请的应用Appkey &ndash;&gt;-->
+        <!-- 高德key -->
+        <service android:name="com.amap.api.location.APSService" />
         <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="MW7mNdpfGlsgjWqD9BGv1jHWlSfTBLOO" /> <!-- value的值填写你在友盟后台申请的应用Appkey -->
+            android:name="com.amap.api.v2.apikey"
+            android:value="a8a7483b252616116740d4489fae4460"/>
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="595a3b236e27a468630021e8" />

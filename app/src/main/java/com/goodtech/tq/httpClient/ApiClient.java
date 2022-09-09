@@ -34,6 +34,8 @@ package com.goodtech.tq.httpClient;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -114,7 +116,7 @@ public class ApiClient {
 		okHttpClient.newCall(reqBuilder.build()).enqueue(handler);
 	}
 
-	public void get(String url, JSONObject params, ApiResponseHandler handler) {
+	public void get(@NonNull String url, JSONObject params, ApiResponseHandler handler) {
 
 		String reqUrl = getCompleteUrl(url);
 		HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(reqUrl)).newBuilder();

@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:text="星座运势"
+            android:text="星座查询"
             android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold"

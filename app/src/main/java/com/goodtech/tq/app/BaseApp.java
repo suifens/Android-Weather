@@ -22,7 +22,6 @@ import com.goodtech.tq.activity.SplashActivity;
 import com.goodtech.tq.app.config.GMAdManagerHolder;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.jpush.JPushHelper;
-import com.goodtech.tq.location.services.LocationService;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
@@ -35,14 +34,11 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
 import cn.jpush.android.api.JPushInterface;
-import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory;
-import xyz.doikki.videoplayer.player.VideoViewConfig;
-import xyz.doikki.videoplayer.player.VideoViewManager;
+
 
 public class BaseApp extends Application {
     private static final String TAG = "BaseApp";
     protected Handler mHandler = new Handler(Looper.getMainLooper());
-    public LocationService locationService;
     public Vibrator mVibrator;
     //  需要获取phone state权限
     public boolean needStatePerm = true;
@@ -100,13 +96,6 @@ public class BaseApp extends Application {
 
     }
 
-    public void configLocation(Activity activity) {
-        if (locationService == null) {
-            //  初始化定位sdk，建议在Application中创建
-            locationService = new LocationService(getApplicationContext());
-        }
-    }
-
 //    public void configDB() {
 //        DatabaseHelper.getInstance(getApplicationContext()).openDatabase();
 //    }
@@ -118,8 +107,6 @@ public class BaseApp extends Application {
 
         RxPermissions rxPermissions = new RxPermissions(activity);
         if (!SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
-            //  配置定位
-            configLocation(activity);
             startIntent(activity);
         }
         configUM();

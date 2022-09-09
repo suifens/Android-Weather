@@ -146,6 +146,13 @@ public class WeatherHttpHelper {
         ApiClient client = ApiClient.getInstance();
         String url = String.format(WEATHER_API, mBaseUrl, cityMode.getLat(), cityMode.getLon());
 
+        if (url.isEmpty()) {
+            if (callback != null) {
+                callback.onResponse(false, null, null);
+            }
+            return;
+        }
+
         client.get(url, null, new ApiResponseHandler(mContext) {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {

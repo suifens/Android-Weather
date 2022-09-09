@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 810
-        versionName "8.1.0"
+        versionCode 820
+        versionName "8.2.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -165,6 +165,7 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation project(':cropimage')
@@ -261,5 +262,8 @@ dependencies {
     implementation 'xyz.doikki.android.dkplayer:player-exo:3.3.7'
     //  可选，如需要缓存或者抖音预加载功能请引入此库
     implementation 'xyz.doikki.android.dkplayer:videocache:3.3.7'
+
+    //  定位功能
+    implementation 'com.amap.api:location:latest.integration'
 
 }
