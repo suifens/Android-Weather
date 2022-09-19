@@ -28,6 +28,9 @@ public class Constants {
     public static final String UM_APP_ID = "595a3b236e27a468630021e8";
     public static final String UM_APP_CHANNEL = "jinli";
 
+    public static final String BUGLY_APP_ID = "70406e73c5";
+    public static final String BUGLY_APP_CHANNEL = "37b2e20b-bb28-455a-9290-cb14845919f1";
+
     public static final String SP_LOCATION = "sp_location_cur";
     public static final String SP_LOCATION_LIST = "sp_location_list";
 

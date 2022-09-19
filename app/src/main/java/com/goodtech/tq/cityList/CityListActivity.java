@@ -509,6 +509,11 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                     //TToast.show(requireActivity(), "模板广告视频播放出错");
                     Log.d(TAG, "onVideoError");
                 }
+
+                @Override
+                public void onProgressUpdate(long l, long l1) {
+
+                }
             });
 
             ad.render();

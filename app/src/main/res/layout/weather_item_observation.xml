@@ -224,14 +224,13 @@
         <!--        气压-->
         <com.goodtech.tq.views.ObservationItemView
             android:id="@+id/layout_pressure"
-
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_weight="1"
             android:layout_marginStart="7dp"
             app:img_icon="@drawable/ic_pressure"
             app:tv_title="气压"
-            app:tv_unit="豪巴"/>
+            app:tv_unit="毫巴"/>
 
     </LinearLayout>
 

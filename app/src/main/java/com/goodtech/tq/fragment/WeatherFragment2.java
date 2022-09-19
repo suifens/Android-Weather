@@ -59,9 +59,7 @@ import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.manager.AdFeedManager;
 import com.goodtech.tq.models.CityMode;
-import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.news.NewsActivity;
 import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.airQuality.view.AirLifeView;
 import com.goodtech.tq.others.calendar.CalendarActivity;
@@ -535,6 +533,11 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                     //TToast.show(requireActivity(), "模板广告视频播放出错");
                     Log.d(TAG, "onVideoError");
                 }
+
+                @Override
+                public void onProgressUpdate(long l, long l1) {
+
+                }
             });
 
             ad.render();
@@ -681,6 +684,11 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
                 public void onVideoError(AdError adError) {
                     TToast.show(getContext(), "广告视频播放出错");
                     Log.d(TAG, "onVideoError");
+                }
+
+                @Override
+                public void onProgressUpdate(long l, long l1) {
+
                 }
             });
 

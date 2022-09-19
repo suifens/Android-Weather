@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 820
-        versionName "8.2.0"
+        versionCode 830
+        versionName "8.3.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -133,9 +133,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
+            buildConfigField 'boolean', 'DEBUG_MODE', 'false'
         }
         debug {
             signingConfig signingConfigs.config
+            buildConfigField 'boolean', 'DEBUG_MODE', 'true'
         }
     }
 
@@ -245,14 +247,16 @@ dependencies {
 
     /*GroMore广告显示*/
     //GroMore_sdk
-    implementation "com.gromore.cn:gromore-sdk:3.5.1.0"  //groMore sdk
+    implementation "com.gromore.cn:gromore-sdk:3.6.0.2"  //groMore sdk
     //GroMore_sdk adapter
-    implementation "com.gromore.cn:pangle-adapter:4.6.0.2.0" //穿山甲 adapter
+    implementation "com.gromore.cn:pangle-adapter:4.7.1.2.0" //穿山甲 adapter
     //pangle
-    implementation(name: 'open_ad_sdk_4.6.0.2', ext: 'aar')
+    implementation(name: 'open_ad_sdk_4.7.1.2', ext: 'aar')
 
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
     implementation 'com.tencent.bugly:crashreport:latest.release'
+
+// <editor-fold defaultstate="collapsed" desc="视频">
 
     //  必选，内部默认使用系统mediaplayer进行解码
     implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.7'
@@ -262,6 +266,8 @@ dependencies {
     implementation 'xyz.doikki.android.dkplayer:player-exo:3.3.7'
     //  可选，如需要缓存或者抖音预加载功能请引入此库
     implementation 'xyz.doikki.android.dkplayer:videocache:3.3.7'
+
+// </editor-fold>
 
     //  定位功能
     implementation 'com.amap.api:location:latest.integration'

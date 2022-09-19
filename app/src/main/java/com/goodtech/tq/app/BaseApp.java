@@ -106,9 +106,9 @@ public class BaseApp extends Application {
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
         RxPermissions rxPermissions = new RxPermissions(activity);
-        if (!SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
-            startIntent(activity);
-        }
+        // if (!SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
+        //     startIntent(activity);
+        // }
         configUM();
 
         GMAdManagerHolder.init(this);
@@ -148,7 +148,7 @@ public class BaseApp extends Application {
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
 
         /// bug收集
-        CrashReport.initCrashReport(getApplicationContext());
+        CrashReport.initCrashReport(getApplicationContext(), Constants.BUGLY_APP_ID, BuildConfig.DEBUG_MODE);
     }
 
     public int appCount = 0;
