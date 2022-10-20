@@ -205,6 +205,9 @@ public class CalendarActivity extends BaseActivity implements
 
     @SuppressLint("SetTextI18n")
     private void configDayDetail(DayDetail dayDetail) {
+        if (dayDetail == null) {
+            return;
+        }
 
         mHandler.post(() -> {
             int weekOfYear = TimeUtils.getYearWeek(TimeUtils.stringToDate(dayDetail.getDate(), "yyyy-M-d"));

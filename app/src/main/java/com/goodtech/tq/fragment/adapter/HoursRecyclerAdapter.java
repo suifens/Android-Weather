@@ -60,15 +60,17 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
      * item holder
      */
     static class HourlyHolder extends RecyclerView.ViewHolder {
-        private TextView mHour;
-        private ImageView mWeatherIcon;
-        private TextView mTemperature;
+        private final TextView mHour;
+        private final ImageView mWeatherIcon;
+        private final TextView mTemperature;
+        private final TextView mPhraseChar;
 
         HourlyHolder(View view) {
             super(view);
             mHour = view.findViewById(R.id.tv_hour);
             mWeatherIcon = view.findViewById(R.id.img_icon);
             mTemperature = view.findViewById(R.id.tv_temperature);
+            mPhraseChar = view.findViewById(R.id.tv_temp);
         }
 
         @SuppressLint("DefaultLocale")
@@ -94,14 +96,17 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
                 if (hourly.sunrise) {
                     mWeatherIcon.setImageResource(R.drawable.ic_sunrise);
                     mTemperature.setText("日出");
+                    mPhraseChar.setText("");
                 }
                 if (hourly.sunset) {
                     mWeatherIcon.setImageResource(R.drawable.ic_sunset);
                     mTemperature.setText("日落");
+                    mPhraseChar.setText("");
                 }
             } else {
                 mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
                 mTemperature.setText(String.format("%d°", hourly.metric.temp));
+                mPhraseChar.setText(hourly.phraseChar);
             }
         }
     }

@@ -3,6 +3,7 @@ package com.goodtech.tq.fragment.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -72,7 +73,6 @@ public class RecentItemView extends LinearLayout {
             Observation observation = weatherModel.observation;
             Metric metric = observation.metric;
 
-
             Daily today = weatherModel.today();
             if (today != null) {
                 mNoticeTv.setText(String.format("今天：当前%s，最高气温%d°，最低气温%d°", observation.wxPhrase,
@@ -89,7 +89,13 @@ public class RecentItemView extends LinearLayout {
 
                 Daypart todayPart = day ? today.dayPart : today.nightPart;
                 mTTempTv.setText(String.format("%d°/%d°", today.metric.maxTemp, today.metric.minTemp));
-                if (todayPart != null) mTPhraseTv.setText(todayPart.phraseChar);
+                if (todayPart != null) {
+                    if (!todayPart.phraseChar.isEmpty()) {
+                        mTPhraseTv.setText(todayPart.phraseChar);
+                    } else {
+                        mTPhraseTv.setText(observation.wxPhrase);
+                    }
+                }
 
                 if (weatherModel.aqi > 0) {
                     mTQualityTv.setVisibility(VISIBLE);

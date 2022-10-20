@@ -73,6 +73,7 @@ public class MainActivity extends BaseActivity {
     private boolean mLoadLast;
     private boolean mSigned;    //  是否已签到
     private boolean isFirstLoad = true;
+    private boolean isCurrent = false;  //  是否当前页面
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
@@ -163,6 +164,7 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        this.isCurrent = false;
     }
 
     @Override
@@ -188,6 +190,7 @@ public class MainActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
 
+        this.isCurrent = true;
         // if (TimeUtils.needLocation()) {
         //     LocationHelper.getInstance().startWithDelay(this);
         // }
@@ -199,6 +202,10 @@ public class MainActivity extends BaseActivity {
             }
             mHandler.postDelayed(this::showAd, 7000);
             isFirstLoad = false;
+        } else {
+            if (mIsLoadedAndShow && isCurrent) {
+                showInterFullAd();
+            }
         }
 
         ArrayList<CityMode> cityModes = LocationSpHelper.getCityListAndLocation();
@@ -240,10 +247,10 @@ public class MainActivity extends BaseActivity {
         removeTicker();
 
         if (event.isSuccessLocation()) {
-            BaseApp.getInstance().startIntent(MainActivity.this);
             CityMode cityMode = LocationSpHelper.getLocation();
             mCityModes.set(0, cityMode);
             reloadWeather(0);
+            BaseApp.getInstance().startIntent(MainActivity.this);
         }
         if (event.getFetchCId() != 0) {
             for (int i = 0; i < mCityModes.size(); i++) {
@@ -487,7 +494,7 @@ public class MainActivity extends BaseActivity {
             public void onInterstitialFullCached() {
                 mLoadSuccess = true;
                 Log.d(TAG, "onFullVideoCached....缓存成功！");
-                if (mIsLoadedAndShow) {
+                if (mIsLoadedAndShow && isCurrent) {
                     showInterFullAd();
                 }
             }
@@ -507,6 +514,7 @@ public class MainActivity extends BaseActivity {
                 mAdInterstitialFullManager.getGMInterstitialFullAd().setAdInterstitialFullListener(mGMInterstitialFullAdListener);
                 mAdInterstitialFullManager.getGMInterstitialFullAd().showAd(this);
                 mAdInterstitialFullManager.printSHowAdInfo();//打印已经展示的广告信息
+                mIsLoadedAndShow = false;
             } else {
                 // TToast.show(this, "当前广告不满足show的条件");
             }

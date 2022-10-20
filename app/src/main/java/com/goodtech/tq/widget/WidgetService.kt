@@ -26,7 +26,6 @@ import com.goodtech.tq.models.CityMode
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.utils.*
 import kotlinx.coroutines.*
-import java.util.*
 
 const val Notify_Id = 999
 
@@ -71,7 +70,7 @@ class WidgetService : LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    val callback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private val callback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
@@ -87,7 +86,7 @@ class WidgetService : LifecycleService() {
         }
     }
 
-    val netWorkStateReceiver = object : BroadcastReceiver() {
+    private val netWorkStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val activeNetworkInfo = connManager.activeNetworkInfo
             if (activeNetworkInfo != null && activeNetworkInfo.isAvailable) {
@@ -184,6 +183,8 @@ class WidgetService : LifecycleService() {
             } else {
                 remoteViews.setViewVisibility(R.id.img_quality, View.GONE)
             }
+
+            var hadSetTemp = false
             for (hourly in model.hourlies) {
                 if (hourly != null) {
                     val dayHour = TimeUtils.longToString(hourly.fcst_valid * 1000, "MMddHH")
@@ -205,12 +206,13 @@ class WidgetService : LifecycleService() {
                                 R.id.sTv_temperature,
                                 String.format("%d°", hourly.metric.temp)
                             )
-                            return
+                            hadSetTemp = true
+                            break
                         }
                     }
                 }
             }
-            if (model.observation != null) {
+            if (!hadSetTemp && model.observation != null) {
                 val observation = model.observation
                 val metric = observation.metric
                 remoteViews.setTextViewText(

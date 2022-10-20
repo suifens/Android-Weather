@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayout2"
     android:layout_width="wrap_content"
-    android:layout_height="120dp"
+    android:layout_height="140dp"
     android:minWidth="65dp">
 
     <TextView
@@ -23,13 +23,26 @@
         android:id="@+id/img_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_hour"
         app:srcCompat="@drawable/icon36" />
+
+    <TextView
+        android:id="@+id/tv_temp"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:alpha="0.8"
+        android:ellipsize="middle"
+        android:lines="1"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_icon" />
 
     <com.goodtech.tq.utils.font.AlternateBoldTextView
         android:id="@+id/tv_temperature"

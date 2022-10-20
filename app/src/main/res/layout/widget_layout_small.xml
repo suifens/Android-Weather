@@ -56,8 +56,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
+                    android:maxWidth="260dp"
+                    android:lines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -84,8 +87,7 @@
                 <ImageView
                     android:id="@+id/sIconImgView"
                     android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:srcCompat="@drawable/icon36" />
+                    android:layout_height="40dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -98,7 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:textSize="21sp"
+                        android:textSize="21dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -111,7 +113,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -131,7 +133,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
                     android:textColor="@color/white_alpha80"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_current" />
 

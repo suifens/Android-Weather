@@ -32,12 +32,15 @@ public class Hourly implements Parcelable {
     public int pop;
     @SerializedName("precip_type")
     public String precip_type;
+    //  相对湿度
     @SerializedName("rh")
     public int rh;
+    //  紫外线
     @SerializedName("uv_desc")
     public String uv_desc;
     @SerializedName("uv_index")
     public int uv_index;
+    //  风向
     @SerializedName("wdir")
     public int wdir;
     @SerializedName("wdir_cardinal")

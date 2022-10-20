@@ -23,10 +23,12 @@ import com.goodtech.tq.helpers.WeatherSpHelper
 import com.goodtech.tq.httpClient.ErrorCode
 import com.goodtech.tq.httpClient.WeatherHttpHelper
 import com.goodtech.tq.models.CityMode
+import com.goodtech.tq.models.Observation
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.utils.*
 import kotlinx.coroutines.*
 import java.util.*
+
 
 const val Notify_Id_Double = 999
 
@@ -129,6 +131,8 @@ class DoubleWidgetService : LifecycleService() {
     private suspend fun updateRemoteOnce() {
         val location = LocationSpHelper.getLocation()
         if (location != null) {
+            updateWidget(this@DoubleWidgetService)
+
             WeatherHttpHelper.getInstance().getBaseUrl {
                 WeatherHttpHelper.getInstance().fetchWeather(LocationSpHelper.getLocation())
                 { success: Boolean, _: WeatherModel?, _: ErrorCode? ->
@@ -190,10 +194,18 @@ class DoubleWidgetService : LifecycleService() {
                     R.id.tv_temperature_today,
                     String.format("%d/%d°", today.metric.maxTemp, today.metric.minTemp)
                 )
-                if (todayPart != null) remoteViews.setTextViewText(
-                    R.id.tv_weather_today,
-                    todayPart.phraseChar
-                )
+                if (todayPart != null) {
+                    val observation: Observation = model.observation
+                    val phraseChar: String = if (todayPart.phraseChar.isNotEmpty()) {
+                        todayPart.phraseChar
+                    } else {
+                        observation.wxPhrase
+                    }
+                    remoteViews.setTextViewText(
+                        R.id.tv_weather_today,
+                        phraseChar
+                    )
+                }
                 if (model.aqi > 0) {
                     remoteViews.setViewVisibility(R.id.img_quality_today, View.VISIBLE)
                     remoteViews.setImageViewResource(
@@ -216,6 +228,8 @@ class DoubleWidgetService : LifecycleService() {
                     )
                 }
             }
+
+            var hadSetTemp = false
             for (hourly in model.hourlies) {
                 if (hourly != null) {
                     val dayHour = TimeUtils.longToString(hourly.fcst_valid * 1000, "MMddHH")
@@ -237,12 +251,13 @@ class DoubleWidgetService : LifecycleService() {
                                 R.id.tv_temperature,
                                 String.format("%d°", hourly.metric.temp)
                             )
-                            return
+                            hadSetTemp = true
+                            break
                         }
                     }
                 }
             }
-            if (model.observation != null) {
+            if (!hadSetTemp && model.observation != null) {
                 val observation = model.observation
                 val metric = observation.metric
                 remoteViews.setTextViewText(

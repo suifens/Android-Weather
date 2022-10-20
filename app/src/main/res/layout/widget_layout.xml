@@ -56,8 +56,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
+                    android:layout_marginEnd="10dp"
+                    android:lines="1"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
             </LinearLayout>
 
@@ -81,9 +84,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="18°"
                     android:textColor="@color/white"
-                    android:textSize="34sp"
+                    android:textSize="34dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -97,9 +99,8 @@
                         android:id="@+id/tv_wx_phrase"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="多云"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -108,7 +109,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:gravity="center_vertical"
-                        android:text="东风 3级｜ 湿度47%"
                         android:textColor="@color/white"
                         android:textSize="14dp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +145,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/title_today"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -198,7 +198,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/title_tomorrow"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -215,7 +215,7 @@
 
                     <TextView
                         android:id="@+id/tv_weather_morn"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginStart="50dp"

@@ -15,6 +15,7 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.others.widget.WidgetType;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.widget.MyDoubleWidget;
 import com.goodtech.tq.widget.MyWidget;
 import com.umeng.analytics.MobclickAgent;
 
@@ -31,14 +32,6 @@ public class WidgetSettingActivity extends BaseActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-
-    private String tipString = "1.长按“桌面空白处”添加天气小插件，调节不同样式\n" +
-            "2.选择“小部件”或“添加插件”\n" +
-            "3.找到“天气预报”小插件，长按拖动至桌面\n" +
-            "\n" +
-            "*oppo手机需要在桌面“两指捏合”添加小工具/小部件\n" +
-            "*为保证插件及通知功能的正常使用，请在系统中设置\n" +
-            "为允许自动启动(开机启动或后台运行)";
 
     private ToggleButton clearBtn;
     private Button singleBtn;
@@ -98,6 +91,10 @@ public class WidgetSettingActivity extends BaseActivity {
             Intent intent = new Intent(this, MyWidget.class);
             intent.putExtra("WidgetUpdate", true);
             sendBroadcast(intent);
+
+            Intent doubleIntent = new Intent(this, MyDoubleWidget.class);
+            doubleIntent.putExtra("WidgetUpdate", true);
+            sendBroadcast(doubleIntent);
         }
         super.onDestroy();
     }
@@ -178,6 +175,13 @@ public class WidgetSettingActivity extends BaseActivity {
     }
 
     private void configSpannable() {
+        String tipString = "1.长按“桌面空白处”添加天气小插件，调节不同样式\n" +
+                "2.选择“小部件”或“添加插件”\n" +
+                "3.找到“天气预报”小插件，长按拖动至桌面\n" +
+                "\n" +
+                "*oppo手机需要在桌面“两指捏合”添加小工具/小部件\n" +
+                "*为保证插件及通知功能的正常使用，请在系统中设置\n" +
+                "为允许自动启动(开机启动或后台运行)";
         SpannableString spannableString = new SpannableString(tipString);
         String blueString = "“桌面空白处”";
         int agreementStart = tipString.indexOf(blueString);

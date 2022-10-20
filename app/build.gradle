@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 830
-        versionName "8.3.0"
+        versionCode 850
+        versionName "8.5.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -53,62 +53,54 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-        anzhi {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"天气预报预知", umeng_channel:"anzhi"]
-        }
-        baidu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"baidu"]
+        xiaomi {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"xiaomi"]
         }
         huawei {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
             manifestPlaceholders=[app_name:"天气预报纯净版", umeng_channel:"huawei"]
         }
-        meizu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
-            manifestPlaceholders=[app_name:"天气预报苹果版", umeng_channel:"meizu"]
-        }
         oppo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"oppo"]
+            manifestPlaceholders=[app_name:"预知天气预报精准天气", umeng_channel:"oppo"]
         }
-        sougou {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
-            manifestPlaceholders=[app_name:"天气预报预知", umeng_channel:"sougou"]
-        }
-//        tuiguang1 {
-//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-//            manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"tuiguang1"]
-//        }
-//        tuiguang2 {
-//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-//            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"tuiguang2"]
-//        }
         vivo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '7'
             manifestPlaceholders=[app_name:"预知天气预报", umeng_channel:"vivo"]
-        }
-        wdj {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"天气预报苹果版", umeng_channel:"wandoujia"]
-        }
-        xiaomi {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
-            manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"xiaomi"]
         }
         yyb {
             buildConfigField 'int', 'BAIDU_CHANNEL', '9'
             manifestPlaceholders=[app_name:"天气预报", umeng_channel:"yyb"]
         }
-        t360 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"360"]
+        meizu {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+            manifestPlaceholders=[app_name:"天气预报-天气", umeng_channel:"meizu"]
         }
-        jinli {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders=[app_name:"天气预报-天气纯净版", umeng_channel:"jinli"]
+        sougou {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
+            manifestPlaceholders=[app_name:"预知天气预报纯净天气", umeng_channel:"sougou"]
         }
+        anzhi {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+            manifestPlaceholders=[app_name:"预知天气预报苹果纯净版", umeng_channel:"anzhi"]
+        }
+        wdj {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"wandoujia"]
+        }
+        baidu {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"baidu"]
+        }
+//        t360 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"360"]
+//        }
+//        jinli {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            manifestPlaceholders=[app_name:"天气预报-天气纯净版", umeng_channel:"jinli"]
+//        }
     }
 
     def fileArray = []
@@ -247,11 +239,11 @@ dependencies {
 
     /*GroMore广告显示*/
     //GroMore_sdk
-    implementation "com.gromore.cn:gromore-sdk:3.6.0.2"  //groMore sdk
+    implementation "com.gromore.cn:gromore-sdk:3.7.0.3"  //groMore sdk
     //GroMore_sdk adapter
-    implementation "com.gromore.cn:pangle-adapter:4.7.1.2.0" //穿山甲 adapter
+    implementation "com.gromore.cn:pangle-adapter:4.8.0.8.2" //穿山甲 adapter
     //pangle
-    implementation(name: 'open_ad_sdk_4.7.1.2', ext: 'aar')
+    implementation(name: 'open_ad_sdk_4.8.0.8', ext: 'aar')
 
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
     implementation 'com.tencent.bugly:crashreport:latest.release'
