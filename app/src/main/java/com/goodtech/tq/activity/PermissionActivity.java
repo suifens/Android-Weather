@@ -19,8 +19,8 @@ import android.widget.TextView;
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.DeviceUtils;
-import com.goodtech.tq.utils.DisagreeAlert;
-import com.goodtech.tq.utils.DisagreeAlert.DisagreeAlertListener;
+import com.goodtech.tq.views.DisagreeAlert;
+import com.goodtech.tq.views.DisagreeAlert.DisagreeAlertListener;
 import com.goodtech.tq.utils.SpUtils;
 import com.umeng.analytics.MobclickAgent;
 
@@ -31,7 +31,6 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     private static final String agreementStr = "《用户协议》";
     private static final String privateStr = "《隐私政策》";
     private TextView mSpannableTv;
-    private int mCancelTimes;
 
     public static void redirectTo(Context ctx) {
         Intent intent = new Intent(ctx, PermissionActivity.class);
@@ -110,23 +109,36 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.button_agree:
 //                checkAndRequestPermission();
-                onStartWeather();
+                onStartWeather(false);
                 break;
             case R.id.button_disagree: {
-                if (mCancelTimes > 0) {
-                    finish();
-                    return;
-                }
                 DisagreeAlert alert = new DisagreeAlert(PermissionActivity.this,
                         new DisagreeAlertListener() {
                             @Override
                             public void onConfirmClick(View view) {
-                                mCancelTimes += 1;
+                                onStartWeather(false);
                             }
 
                             @Override
                             public void onCancelClick(View view) {
                                 finish();
+                            }
+
+                            @Override
+                            public void onAgreementClick(View view) {
+                                Intent intent = new Intent(PermissionActivity.this, AgreementActivity.class);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onPrivateClick(View view) {
+                                Intent intent = new Intent(PermissionActivity.this, PrivateActivity.class);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onVisitorClick(View view) {
+                                onStartWeather(true);
                             }
                         });
                 if (!isFinishing()) {
@@ -137,9 +149,9 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private static final String TAG = "PermissionActivity";
-    private void onStartWeather() {
+    private void onStartWeather(boolean isVisitor) {
         mHandler.post(() -> {
+            SpUtils.getInstance().setPermissionAgree(!isVisitor);
             SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
             CitySearchActivity.redirectTo(this, true);
             this.finish();

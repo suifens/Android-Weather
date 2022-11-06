@@ -62,18 +62,19 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
+        EventBus.getDefault().unregister(this);
         if (mRecommendHeaderView != null) {
             mRecommendHeaderView.hideSoftInput(this);
             mRecommendHeaderView.onStop();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -118,8 +119,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         }
 
         initSearchView();
-
-        EventBus.getDefault().register(this);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
