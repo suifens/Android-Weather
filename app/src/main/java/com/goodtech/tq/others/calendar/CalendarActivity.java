@@ -114,12 +114,14 @@ public class CalendarActivity extends BaseActivity implements
         }
 
         String yearStr = String.valueOf(year);
-        if (!TextUtils.isEmpty(mPresenter.mHolidayYear) && mPresenter.mHolidayYear.equals(yearStr)) {
-            return;
-        }
-
         ((TextView) findViewById(R.id.tv_year)).setText(yearStr);
         getHolidays(yearStr);
+
+        // if (!TextUtils.isEmpty(mPresenter.mHolidayYear) && mPresenter.mHolidayYear.equals(yearStr)) {
+        //     return;
+        // }
+
+
     }
 
     /**

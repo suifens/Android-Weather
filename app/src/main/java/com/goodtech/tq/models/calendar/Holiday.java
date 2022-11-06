@@ -9,7 +9,7 @@ import java.util.List;
  * 一个简单的bean
  */
 @SuppressWarnings("all")
-public class Holiday implements Serializable {
+public class Holiday implements Serializable, Comparable<Holiday> {
 
     /**
      * name : 中秋节
@@ -148,6 +148,8 @@ public class Holiday implements Serializable {
         this.list = list;
     }
 
+
+
     /**
      * 获取假期时长，status 为 1时 为放假
      */
@@ -159,6 +161,11 @@ public class Holiday implements Serializable {
             }
         }
         return count;
+    }
+
+    @Override
+    public int compareTo(Holiday holiday) {
+        return (int) (this.getDate() - holiday.getDate());
     }
 
     public static class ListDay {

@@ -1,6 +1,7 @@
 package com.goodtech.tq.others.calendar;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.goodtech.tq.httpClient.ApiResponseHandler;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,11 +144,17 @@ public class CalendarPresenter {
 
                     if (count[0] == 12) {
                         if (holidayList.size() > 0) {
-                            Collections.sort(holidayList, (o1, o2) -> Long.compare(o1.getDate(), o2.getDate()));
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                Collections.sort(holidayList, Comparator.comparingLong(Holiday::getDate));
+                            } else {
+                                Collections.sort(holidayList);
+                            }
                             mHolidayList = holidayList;
                             mHolidayMap.put(year, holidayList);
 
                             SpUtils.getInstance().putString(String.format("holiday-%s", year), new Gson().toJson(holidayList));
+                        } else {
+                            mHolidayList = holidayList;
                         }
                         if (callback != null) {
                             callback.onCompletion();

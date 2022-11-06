@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 850
-        versionName "8.5.0"
+        versionCode 860
+        versionName "8.6.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -188,7 +188,7 @@ dependencies {
     implementation 'com.squareup.okio:okio:2.10.0'
     implementation 'com.google.code.gson:gson:2.9.0'
     //eventbus
-    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
 
     implementation 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:1.0.0'
     //  下拉刷新控件
@@ -248,7 +248,7 @@ dependencies {
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
     implementation 'com.tencent.bugly:crashreport:latest.release'
 
-// <editor-fold defaultstate="collapsed" desc="视频">
+    // <editor-fold defaultstate="collapsed" desc="视频">
 
     //  必选，内部默认使用系统mediaplayer进行解码
     implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.7'

@@ -5,7 +5,7 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="40dp"/>
-            <solid android:color="#9900A2FF"/>
+            <solid android:color="@color/color_theme_60"/>
         </shape>
     </item>
     <item android:state_enabled="false">
@@ -17,7 +17,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="40dp"/>
-            <solid android:color="#00A2FF"/>
+            <solid android:color="@color/color_theme"/>
         </shape>
     </item>
 </selector>

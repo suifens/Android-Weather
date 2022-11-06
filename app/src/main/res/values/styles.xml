@@ -30,6 +30,11 @@
         <item name="android:windowEnterAnimation">@anim/download_confirm_dialog_slide_right_in</item>
     </style>
 
+    <style name="PermissionAlertTheme" parent="android:Theme.Dialog">
+<!--        <item name="android:background">@drawable/gradient_disagree</item>-->
+        <item name="android:windowBackground">@drawable/gradient_disagree</item>
+    </style>
+
     <style name="AppTheme.NoActionBar.TransparentStatusBar"/>
 
     <style name="AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"/>

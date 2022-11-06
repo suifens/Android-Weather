@@ -497,6 +497,7 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".activity.BaseActivity" />
 
         <meta-data
             android:name="com.vivo.push.api_key"

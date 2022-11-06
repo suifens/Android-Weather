@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:fontFamily="sans-serif-black"
-                android:textColor="@color/color_00A2ff"
+                android:textColor="@color/color_theme"
                 android:textSize="18dp" />
 
             <TextView

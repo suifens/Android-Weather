@@ -25,13 +25,24 @@
 
 #  EventBus出现 'its super classes have no public methods with the @Subscribe annotation' 的错误
   -keepattributes *Annotation*
-  -keepclassmembers class * {
+  -keepclassmembers class ** {
       @org.greenrobot.eventbus.Subscribe <methods>;
   }
   -keep enum org.greenrobot.eventbus.ThreadMode { *; }
 
+  # Only required if you use AsyncExecutor
+  -keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+      <init>(java.lang.Throwable);
+  }
+
 #  AssertionError (GSON 2.8.6): java.lang.NoSuchFieldException: UNKNOWN
   -keep class com.goodtech.tq.models.** { *; }
+
+#  保存四大组件
+  -keep public class * extends android.app.Application
+  -keep public class * extends android.app.Service
+  -keep public class * extends android.content.BroadcastReceiver
+
 
 #  友盟
   -keep class com.umeng.** {*;}

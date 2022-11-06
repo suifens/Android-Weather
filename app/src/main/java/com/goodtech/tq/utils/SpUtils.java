@@ -17,6 +17,7 @@ import com.goodtech.tq.app.BaseApp;
 public class SpUtils {
 
     public static final String VERSION_APP = "version"; //应用版本号
+    public static final String AGREE_PERMISSION = "agree_permission"; //同意权限
     private static final String TAG = "SpUtils";
     private MMKV preferences;
 
@@ -51,6 +52,16 @@ public class SpUtils {
 
         Log.e(TAG, "updateWithUserId: " + preferences.allKeys().length);
     }
+
+    // <editor-fold defaulted="collapsed" desc="是否同意权限">
+    public boolean isAgreePermission() {
+        return preferences.encode(AGREE_PERMISSION, false);
+    }
+
+    public void setPermissionAgree(boolean isAgree) {
+        preferences.putBoolean(AGREE_PERMISSION, isAgree);
+    }
+    // </editor-fold>
 
     public SpUtils putInt(String key, int value) {
         preferences.encode(key, value);

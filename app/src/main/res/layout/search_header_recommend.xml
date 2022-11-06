@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                app:color="@color/color_00A2ff_80"
+                app:color="@color/color_theme_80"
                 app:duration="3000"
                 app:radius="10dp"
                 app:rippleNums="3"
