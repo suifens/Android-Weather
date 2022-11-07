@@ -20,6 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+
+    -dontobfuscate
+    -dontoptimize
+
   -dontwarn org.apache.http.**
   -dontwarn android.net.http.AndroidHttpClient
 
