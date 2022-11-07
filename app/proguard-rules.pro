@@ -69,6 +69,13 @@
 
   -keep class com.haibin.calendarview.** { *; }
 
+-keep class com.goodtech.tq.others.calendar.view.CustomMonthView {
+    public <init>(android.content.Context);
+}
+-keep class com.goodtech.tq.others.calendar.view.CustomWeekView {
+    public <init>(android.content.Context);
+}
+
   -ignorewarnings
   -keepattributes *Annotation*
   -keepattributes Exceptions
@@ -266,3 +273,6 @@
     -keep class com.amap.api.fence.**{*;}
     -keep class com.loc.**{*;}
     -keep class com.autonavi.aps.amapapi.model.**{*;}
+
+
+    -keep class com.google.gson.** {*;}

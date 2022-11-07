@@ -55,7 +55,7 @@
         <entry key="app/src/main/res/layout/activity_about.xml" value="0.17844202898550723" />
         <entry key="app/src/main/res/layout/activity_agreement.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_air_quality.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_calendar.xml" value="0.1850238488544391" />
+        <entry key="app/src/main/res/layout/activity_calendar.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_city_list.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_city_search.xml" value="0.10462962962962963" />
         <entry key="app/src/main/res/layout/activity_constellation_detail.xml" value="0.28229166666666666" />
@@ -69,6 +69,7 @@
         <entry key="app/src/main/res/layout/activity_setting_widget.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/activity_signing.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/activity_splash.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_typhoon.xml" value="0.19630192502532928" />
         <entry key="app/src/main/res/layout/activity_web.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_widge.xml" value="0.335" />
