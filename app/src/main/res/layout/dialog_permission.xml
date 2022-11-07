@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout4"
-    android:layout_width="match_parent"
-    android:layout_height="320dp"
+    android:layout_width="wrap_content"
+    android:layout_height="300dp"
     android:layout_gravity="center"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
+    android:minWidth="320dp"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -13,7 +12,7 @@
         android:id="@+id/tv_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="25dp"
         android:gravity="center"
         android:text="温馨提示"
         android:textAlignment="center"
@@ -25,22 +24,23 @@
         android:id="@+id/tv_dialog_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:lineSpacingExtra="6dp"
         android:text="@string/msg_permission"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="18dp" />
+        android:textSize="16dp" />
 
     <Button
         android:id="@+id/btn_dialog_confirm"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
         android:background="@drawable/sl_btn_theme"
         android:text="同意并开始使用功能"
         android:textColor="@color/white"
@@ -53,10 +53,10 @@
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="20dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
         android:background="@color/color_clear"
-        android:text="不同意，暂时不适用此功能"
+        android:text="@string/btn_u_disagree_permission"
         android:textColor="#A5A5A5"
         android:textSize="16dp" />
 

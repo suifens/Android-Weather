@@ -48,6 +48,9 @@ import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeExpressAdListener;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMVideoListener;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMViewBinder;
 import com.goodtech.tq.R;
+import com.goodtech.tq.activity.BaseActivity;
+import com.goodtech.tq.activity.MainActivity;
+import com.goodtech.tq.activity.SettingActivity;
 import com.goodtech.tq.fragment.view.CurrentItemView;
 import com.goodtech.tq.fragment.view.DailyItemView;
 import com.goodtech.tq.fragment.view.DailyListItemView;
@@ -70,6 +73,7 @@ import com.goodtech.tq.others.taifeng.TyphoonActivity;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.SpUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -133,7 +137,9 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
             }
         });
 
-        initAdLoader();
+        if (SpUtils.getInstance().isAgreePermission()) {
+            initAdLoader();
+        }
     }
 
     @Override
@@ -176,7 +182,9 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         mLineTempView = view.findViewById(R.id.item_line_temp);
         mLifeView = view.findViewById(R.id.view_life);
 
-        initNativeExpressAD();
+        if (SpUtils.getInstance().isAgreePermission()) {
+            initNativeExpressAD();
+        }
     }
 
     private final WeatherHeaderListener mHeaderListener = new WeatherHeaderListener() {
@@ -222,6 +230,11 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         @Override
         public void onSignIn() {
             if (getActivity() != null) {
+                if (!SpUtils.getInstance().isAgreePermission()) {
+                    ((BaseActivity) requireActivity()).showPermissionDialog(requireActivity(), view ->
+                            SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0));
+                    return;
+                }
                 SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0);
             }
         }

@@ -3,6 +3,7 @@ package com.goodtech.tq.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,8 +31,10 @@ import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.views.PermissionAlert;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,6 +64,37 @@ public class BaseActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(stationBar.getLayoutParams());
         bars.height = bars.height + DeviceUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
+    }
+
+    public void showPermissionDialog(Activity activity, View.OnClickListener confirmListener) {
+        new PermissionAlert(this, new PermissionAlert.PermissionAlertListener() {
+            @Override
+            public void onConfirmClick(View view) {
+                SpUtils.getInstance().setPermissionAgree(true);
+                BaseApp.getInstance().startUsingApp(activity);
+
+                if (confirmListener != null) {
+                    confirmListener.onClick(view);
+                }
+            }
+
+            @Override
+            public void onCancelClick(View view) {
+
+            }
+
+            @Override
+            public void onAgreementClick(View view) {
+                Intent intent = new Intent(activity, AgreementActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onPrivateClick(View view) {
+                Intent intent = new Intent(activity, PrivateActivity.class);
+                startActivity(intent);
+            }
+        }).show();
     }
 
 //     @SuppressLint("CheckResult")

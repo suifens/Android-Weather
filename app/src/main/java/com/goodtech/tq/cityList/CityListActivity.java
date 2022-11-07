@@ -38,6 +38,7 @@ import com.goodtech.tq.manager.AdFeedManager;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.MessageAlert;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
@@ -99,8 +100,6 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         }
         mGMNativeAd = null;
 
-        EventBus.getDefault().unregister(this);
-
         super.onDestroy();
     }
 
@@ -129,7 +128,6 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_list);
-        EventBus.getDefault().register(this);
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
@@ -158,15 +156,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                     EventBus.getDefault().post(new MessageEvent().setCityIndex(position));
                     finishToRight();
                 } else {
-                    if (checkPermission()) {
-                        MessageAlert alert = new MessageAlert(CityListActivity.this,
-                                (dialog, which) -> LocationHelper.getInstance().startWithDelay(CityListActivity.this, true));
-                        if (!isFinishing()) {
-                            alert.show();
-                        }
-                    } else {
-                        LocationHelper.getInstance().startWithDelay(CityListActivity.this);
-                    }
+                    toGetLocation();
                 }
             }
 
@@ -199,13 +189,22 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
         setClickListener();
 
-        initAdLoader();
-        initNativeExpressAD();
+        if (SpUtils.getInstance().isAgreePermission()) {
+            initAdLoader();
+            initNativeExpressAD();
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -215,6 +214,9 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             mHandler.postDelayed(() -> {
                 mProvider.getData();
                 mAdapter.notifyDataSetChanged(false);
+
+                EventBus.getDefault().post(new MessageEvent().setCityIndex(0));
+                finishToRight();
             }, 100);
         }
         TipHelper.dismissProgressDialog();
@@ -294,6 +296,22 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 mProvider.resetData();
                 setEdit(false);
                 break;
+        }
+    }
+
+    private void toGetLocation() {
+        if (!SpUtils.getInstance().isAgreePermission()) {
+            showPermissionDialog(this, view -> toGetLocation());
+            return;
+        }
+        if (checkPermission()) {
+            MessageAlert alert = new MessageAlert(CityListActivity.this,
+                    (dialog, which) -> LocationHelper.getInstance().startWithDelay(CityListActivity.this, true));
+            if (!isFinishing()) {
+                alert.show();
+            }
+        } else {
+            LocationHelper.getInstance().startWithDelay(CityListActivity.this);
         }
     }
 

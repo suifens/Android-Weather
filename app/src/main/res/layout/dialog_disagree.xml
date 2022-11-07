@@ -30,10 +30,11 @@
         android:gravity="center"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:lineSpacingExtra="6dp"
         android:text="@string/msg_disagree"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="18dp" />
+        android:textSize="16dp" />
 
     <Button
         android:id="@+id/btn_dialog_confirm"
@@ -69,7 +70,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:background="@color/color_clear"
-        android:text="退出APP"
+        android:text="@string/btn_u_sign_out"
         android:textColor="#A5A5A5"
         android:textSize="16dp" />
 

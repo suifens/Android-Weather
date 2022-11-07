@@ -6,9 +6,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,7 +36,7 @@ public class PermissionAlert extends AlertDialog implements View.OnClickListener
     }
 
     public PermissionAlert(Context context, PermissionAlertListener listener) {
-        super(context);
+        super(context, R.style.PermissionAlertTheme);
         mContext = context;
         mListener = listener;
     }
@@ -54,16 +56,12 @@ public class PermissionAlert extends AlertDialog implements View.OnClickListener
     private void configSpannable() {
         String permissionStr = mContext.getString(R.string.msg_permission);
         SpannableString spannableString = new SpannableString(permissionStr);
-        String agreementStr = mContext.getString(R.string.title_agreement);
+        String agreementStr = mContext.getString(R.string.agreement_title);
         int agreementStart = permissionStr.indexOf(agreementStr);
         int agreementEnd = agreementStart + agreementStr.length();
-        String privateStr = mContext.getString(R.string.title_private);
+        String privateStr = mContext.getString(R.string.private_title);
         int privateStart = permissionStr.indexOf(privateStr);
         int privateEnd = privateStart + privateStr.length();
-        ForegroundColorSpan agreementColorSp = new ForegroundColorSpan(Color.parseColor("#42A0FB"));
-        spannableString.setSpan(agreementColorSp, agreementStart, agreementEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        ForegroundColorSpan privateColorSp = new ForegroundColorSpan(Color.parseColor("#42A0FB"));
-        spannableString.setSpan(privateColorSp, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
@@ -84,6 +82,21 @@ public class PermissionAlert extends AlertDialog implements View.OnClickListener
             }
         };
         spannableString.setSpan(privateClickable, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        spannableString.setSpan(new UnderlineSpan() {
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                ds.setColor(mContext.getResources().getColor(R.color.color_theme));//设置颜色
+                ds.setUnderlineText(false);//去掉下划线
+            }
+        }, agreementStart, agreementEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        spannableString.setSpan(new UnderlineSpan() {
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                ds.setColor(mContext.getResources().getColor(R.color.color_theme));//设置颜色
+                ds.setUnderlineText(false);//去掉下划线
+            }
+        }, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
         mMessageTv.setMovementMethod(LinkMovementMethod.getInstance());
         mMessageTv.setText(spannableString);

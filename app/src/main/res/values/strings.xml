@@ -33,10 +33,13 @@
 
     <string name="permission_title1">感谢您选择预知天气预报APP\n感谢您使用预知天气！我们深知个人信息对您的重要性,并会尽全力保护您的个人信息安全。在您使用预知天气预报提供的服务前，请仔细阅读《隐私政策》及《用户协议》内容,我们将严格按照前述政策，为您提供更好的服务。若您是14岁以下未成年人，请您务必要求您的监护人仔细阅读本协议，并在征得您的监护人同意的前提下使用我们的产品。如您同意该隐私政策,请点击"同意"并开始使用我们的产品及服务。如您对本政策内容有任何疑问、意见或建议,您可以通过邮箱app@1goodtech.com与我们联系。</string>
     <string name="permission_title2">为了保证您可以正常使用预知天气预报的各项基本工具,我们将根据您使用的不同功能，可能会分别向您申请以下一项或多项权限</string>
-    <string name="msg_disagree">游客模式不会收集您的个人信息，但可能导致部分功能无法使用，同意《隐私政策》《用户协议》，体验精准天气预报，同城时景等功能！</string>
-    <string name="msg_permission">若您想使用此功能，需要您同意《隐私政策》和《服务协议》</string>
+    <string name="msg_disagree">游客模式不会收集您的个人信息，但可能导致部分功能无法使用，同意《隐私政策》《用户协议》，体验精准天气预报等功能！</string>
+    <string name="msg_permission">若您想使用此功能，需要您同意《隐私政策》和《用户协议》</string>
     <string name="private_title">《隐私政策》</string>
     <string name="agreement_title">《用户协议》</string>
+    <string name="btn_u_disagree"><u>不同意</u></string>
+    <string name="btn_u_disagree_permission"><u>不同意，暂时不适用此功能</u></string>
+    <string name="btn_u_sign_out"><u>退出APP</u></string>
 
     <!-- 后端错误码 -->
     <string name="SUCCESS">请求成功！</string>

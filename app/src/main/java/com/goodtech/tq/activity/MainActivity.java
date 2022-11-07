@@ -42,6 +42,7 @@ import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.IntentReceiver;
+import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.umeng.analytics.MobclickAgent;
@@ -100,22 +101,16 @@ public class MainActivity extends BaseActivity {
 
         //  跳转到设置页面
         findViewById(R.id.img_setting).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-            startActivity(intent);
+            if (!SpUtils.getInstance().isAgreePermission()) {
+                showPermissionDialog(this, view ->
+                        startActivity(new Intent(MainActivity.this, SettingActivity.class)));
+                return;
+            }
+            startActivity(new Intent(MainActivity.this, SettingActivity.class));
         });
 
         findViewById(R.id.img_sign).setOnClickListener(v -> {
-            CityMode cityMode = mCityModes.get(mCurrIndex);
-            WeatherModel weatherModel = null;
-            if (cityMode.getCid() != 0) {
-                weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getCid());
-            }
-            if (weatherModel != null) {
-                SigningActivity.redirectTo(MainActivity.this,
-                        weatherModel.hourlies.get(0),
-                        cityMode,
-                        0);
-            }
+            onSignClick();
         });
 
         configViewPager();
@@ -200,7 +195,10 @@ public class MainActivity extends BaseActivity {
                     LocationHelper.getInstance().startWithDelay(this);
                 }, 500);
             }
-            mHandler.postDelayed(this::showAd, 7000);
+
+            if (SpUtils.getInstance().isAgreePermission()) {
+                mHandler.postDelayed(this::showAd, 7000);
+            }
             isFirstLoad = false;
         } else {
             if (mIsLoadedAndShow && isCurrent) {
@@ -449,6 +447,24 @@ public class MainActivity extends BaseActivity {
             mSignTipV.setVisibility(View.GONE);
         } else {
             mSignTipV.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void onSignClick() {
+        if (!SpUtils.getInstance().isAgreePermission()) {
+            showPermissionDialog(this, view -> onSignClick());
+            return;
+        }
+        CityMode cityMode = mCityModes.get(mCurrIndex);
+        WeatherModel weatherModel = null;
+        if (cityMode.getCid() != 0) {
+            weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getCid());
+        }
+        if (weatherModel != null) {
+            SigningActivity.redirectTo(MainActivity.this,
+                    weatherModel.hourlies.get(0),
+                    cityMode,
+                    0);
         }
     }
 

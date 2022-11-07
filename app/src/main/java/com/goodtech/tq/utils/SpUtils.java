@@ -55,7 +55,8 @@ public class SpUtils {
 
     // <editor-fold defaulted="collapsed" desc="是否同意权限">
     public boolean isAgreePermission() {
-        return preferences.encode(AGREE_PERMISSION, false);
+        boolean isAgree = preferences.decodeBool(AGREE_PERMISSION);
+        return isAgree;
     }
 
     public void setPermissionAgree(boolean isAgree) {

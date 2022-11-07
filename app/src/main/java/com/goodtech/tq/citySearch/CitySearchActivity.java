@@ -15,9 +15,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.activity.MainActivity;
-import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
@@ -87,6 +87,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     private void toGetLocation() {
+        if (!SpUtils.getInstance().isAgreePermission()) {
+            showPermissionDialog(this, view -> toGetLocation());
+            return;
+        }
         if (checkPermission()) {
             MessageAlert alert = new MessageAlert(CitySearchActivity.this,
                     (dialog, which) -> {
@@ -113,9 +117,11 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (getIntent().getBooleanExtra(EXTRA_START, false)) {
             mCancelBtn.setVisibility(View.GONE);
             isStart = true;
-            mHandler.postDelayed(() -> {
-                BaseApp.getInstance().startUsingApp(CitySearchActivity.this);
-            }, 500);
+            if (SpUtils.getInstance().isAgreePermission()) {
+                mHandler.postDelayed(() -> {
+                    BaseApp.getInstance().startUsingApp(CitySearchActivity.this);
+                }, 500);
+            }
         }
 
         initSearchView();
