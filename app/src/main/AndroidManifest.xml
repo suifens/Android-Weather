@@ -68,13 +68,14 @@
         android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         tools:replace="android:label,android:icon,android:theme,android:networkSecurityConfig,android:allowBackup">
         <activity
-            android:name=".VideoActivity"
+            android:name=".others.video.VideoActivity"
             android:exported="false" />
         <activity android:name=".signing.SigningActivity" />
         <activity android:name=".activity.WidgetSettingActivity" />
         <activity android:name=".others.taifeng.TyphoonActivity" />
         <activity android:name=".others.dymovies.DyMoviesActivity" />
         <activity android:name=".others.outbreak.OutbreakActivity" />
+        <activity android:name=".others.test.MyTestActivity"/>
         <activity android:name=".others.airQuality.AirQualityActivity" />
         <activity android:name=".others.calendar.CalendarActivity" />
         <activity android:name=".others.constellation.ConstellationDetailActivity" />

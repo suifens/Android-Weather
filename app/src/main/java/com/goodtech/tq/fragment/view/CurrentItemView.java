@@ -87,6 +87,13 @@ public class CurrentItemView extends ConstraintLayout {
             }
         });
 
+        //  智商测试
+        view.findViewById(R.id.btn_iq_test).setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onIQTest(1);
+            }
+        });
+
         // mSignTipV = view.findViewById(R.id.view_sign_tip);
     }
 

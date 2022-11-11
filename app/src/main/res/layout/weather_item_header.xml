@@ -126,4 +126,29 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/item_depression"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_depression" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/title_depression"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+
 </LinearLayout>

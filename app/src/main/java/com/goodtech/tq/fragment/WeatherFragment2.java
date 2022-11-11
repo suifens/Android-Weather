@@ -25,15 +25,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.Glide;
 import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.TToast;
-import com.bytedance.msdk.api.UIUtils;
 import com.bytedance.msdk.api.nativeAd.TTNativeAdAppInfo;
 import com.bytedance.msdk.api.nativeAd.TTViewBinder;
 import com.bytedance.msdk.api.v2.GMAdConstant;
@@ -49,10 +45,7 @@ import com.bytedance.msdk.api.v2.ad.nativeAd.GMVideoListener;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMViewBinder;
 import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
-import com.goodtech.tq.activity.MainActivity;
-import com.goodtech.tq.activity.SettingActivity;
 import com.goodtech.tq.fragment.view.CurrentItemView;
-import com.goodtech.tq.fragment.view.DailyItemView;
 import com.goodtech.tq.fragment.view.DailyListItemView;
 import com.goodtech.tq.fragment.view.HoursItemView;
 import com.goodtech.tq.fragment.view.LineTempItemView;
@@ -67,9 +60,9 @@ import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.airQuality.view.AirLifeView;
 import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.others.constellation.ConstellationActivity;
-import com.goodtech.tq.others.dymovies.DyMoviesActivity;
 import com.goodtech.tq.others.outbreak.OutbreakActivity;
 import com.goodtech.tq.others.taifeng.TyphoonActivity;
+import com.goodtech.tq.others.test.MyTestActivity;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
@@ -86,7 +79,7 @@ import java.util.Set;
 /**
  * A fragment representing a list of Items.
  */
-public class WeatherFragment2 extends BaseFragment implements OnRefreshListener {
+public class WeatherFragment2 extends BaseFragment implements OnRefreshListener, WeatherHeaderListener {
 
     private static final String TAG = "WeatherFragment2";
     protected SmartRefreshLayout mRefreshLayout;
@@ -109,6 +102,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         super.setupCacheViews();
         mRefreshLayout = (SmartRefreshLayout) mCacheView;
         mScrollView = mCacheView.findViewById(R.id.scroll_view);
+
     }
 
     public void setStateBar(View stateBar) {
@@ -173,7 +167,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         mContainerView = view.findViewById(R.id.weatherContainer);
         mContainerView.setVisibility(View.INVISIBLE);
         mCurrentView = view.findViewById(R.id.item_current);
-        mCurrentView.setItemListener(mHeaderListener);
+        mCurrentView.setItemListener(this);
         mRecentView = view.findViewById(R.id.item_recent);
         mHoursView = view.findViewById(R.id.item_hours);
         mFeedContainer = view.findViewById(R.id.item_ad);
@@ -181,80 +175,21 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
         mDailyListView = view.findViewById(R.id.item_daily_list);
         mLineTempView = view.findViewById(R.id.item_line_temp);
         mLifeView = view.findViewById(R.id.view_life);
+        view.findViewById(R.id.btn_mental_health).setOnClickListener(v -> {
+            onMentalHealth();
+        });
+        view.findViewById(R.id.btn_eq_test).setOnClickListener(v -> {
+            onEQTest();
+        });
+        view.findViewById(R.id.btn_iq_test_2).setOnClickListener(v -> {
+            onIQTest(2);
+        });
+
 
         if (SpUtils.getInstance().isAgreePermission()) {
             initNativeExpressAD();
         }
     }
-
-    private final WeatherHeaderListener mHeaderListener = new WeatherHeaderListener() {
-        @Override
-        public void onTyphoon() {
-            if (getActivity() != null) {
-                Intent intent = new Intent(getActivity(), TyphoonActivity.class);
-                getActivity().startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onAirQuality() {
-            if (getActivity() != null) {
-                AirQualityActivity.redirectTo(getActivity(), mCityMode, mWeatherModel.aqi);
-            }
-        }
-
-        @Override
-        public void onCalendar() {
-            if (getActivity() != null) {
-                Intent intent = new Intent(getActivity(), CalendarActivity.class);
-                getActivity().startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onFortune() {
-            if (getActivity() != null) {
-                Intent intent = new Intent(getActivity(), ConstellationActivity.class);
-                getActivity().startActivity(intent);
-            }
-        }
-
-        // @Override
-        // public void onNews() {
-        //     if (getActivity() != null) {
-        //         Intent intent = new Intent(getActivity(), NewsActivity.class);
-        //         requireActivity().startActivity(intent);
-        //     }
-        // }
-
-        @Override
-        public void onSignIn() {
-            if (getActivity() != null) {
-                if (!SpUtils.getInstance().isAgreePermission()) {
-                    ((BaseActivity) requireActivity()).showPermissionDialog(requireActivity(), view ->
-                            SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0));
-                    return;
-                }
-                SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0);
-            }
-        }
-
-        @Override
-        public void onOutbreakTravel() {
-            if (getActivity() != null) {
-                Intent intent = new Intent(getActivity(), OutbreakActivity.class);
-                getActivity().startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onDyMovie() {
-            if (getActivity() != null) {
-                Intent intent = new Intent(getActivity(), DyMoviesActivity.class);
-                getActivity().startActivity(intent);
-            }
-        }
-    };
 
     @Override
     public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
@@ -319,6 +254,114 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener 
             mAdFeedManager.destroy();
         }
         mGMNativeAd = null;
+    }
+
+    @Override
+    public void onTyphoon() {
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), TyphoonActivity.class);
+            getActivity().startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onAirQuality() {
+        if (getActivity() != null) {
+            AirQualityActivity.redirectTo(getActivity(), mCityMode, mWeatherModel.aqi);
+        }
+    }
+
+    @Override
+    public void onCalendar() {
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), CalendarActivity.class);
+            getActivity().startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onFortune() {
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), ConstellationActivity.class);
+            getActivity().startActivity(intent);
+        }
+    }
+
+    // @Override
+    // public void onNews() {
+    //     if (getActivity() != null) {
+    //         Intent intent = new Intent(getActivity(), NewsActivity.class);
+    //         requireActivity().startActivity(intent);
+    //     }
+    // }
+
+    @Override
+    public void onSignIn() {
+        if (getActivity() != null) {
+            if (!SpUtils.getInstance().isAgreePermission()) {
+                ((BaseActivity) requireActivity()).showPermissionDialog(requireActivity(), view ->
+                        SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0));
+                return;
+            }
+            SigningActivity.redirectTo(getActivity(), mWeatherModel.hourlies.get(0), mCityMode, 0);
+        }
+    }
+
+    @Override
+    public void onOutbreakTravel() {
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), OutbreakActivity.class);
+            getActivity().startActivity(intent);
+        }
+    }
+
+    // @Override
+    // public void onDyMovie() {
+    //     if (getActivity() != null) {
+    //         Intent intent = new Intent(getActivity(), DyMoviesActivity.class);
+    //         getActivity().startActivity(intent);
+    //     }
+    // }
+
+
+    @Override
+    public void onDepressionTest() {
+        if (getActivity() != null) {
+            MyTestActivity.redirectTo(getActivity(),
+                    "https://static.xinli001.com/cp/index.html#/detail/353?channelId=4693",
+                    "抑郁测试",
+                    "Test_Depression");
+        }
+    }
+
+    @Override
+    public void onIQTest(int location) {
+        if (getActivity() != null) {
+            MyTestActivity.redirectTo(getActivity(),
+                    "https://static.xinli001.com/cp/index.html#/detail/806?channelId=4693",
+                    "智商测试",
+                    "Test_IQ_" + location);
+        }
+    }
+
+    @Override
+    public void onMentalHealth() {
+        if (getActivity() != null) {
+            MyTestActivity.redirectTo(getActivity(),
+                    "https://hd.yixinli.xin/cp/index.html#/index?channelId=4693",
+                    "心理测试",
+                    "Test_Mental_Health");
+        }
+    }
+
+    @Override
+    public void onEQTest() {
+        if (getActivity() != null) {
+            MyTestActivity.redirectTo(getActivity(),
+                    "https://static.xinli001.com/cp/index.html#/detail/153?channelId=4693",
+                    "情商测试",
+                    "Test_EQ");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="广告">
