@@ -17,6 +17,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.RequiresApi;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.others.test.MyTestActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 // import com.qq.e.comm.managers.setting.GlobalSetting;
@@ -95,8 +96,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
                 break;
             case R.id.layout_private_list: {
-                Intent intent = new Intent(SettingActivity.this, PrivateListActivity.class);
-                startActivity(intent);
+                MyTestActivity.redirectTo(this,
+                        "https://app.yiguxm.com/privacy/yuzhiyinsiqingdan.html",
+                        getResources().getString(R.string.title_private_list),
+                        "");
             }
                 break;
             case R.id.layout_praise:
