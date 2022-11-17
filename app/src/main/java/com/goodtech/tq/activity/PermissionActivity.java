@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
+import com.goodtech.tq.others.test.PrivacyWebActivity;
+import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.views.DisagreeAlert;
 import com.goodtech.tq.views.DisagreeAlert.DisagreeAlertListener;
@@ -73,8 +75,10 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Intent intent = new Intent(PermissionActivity.this, AgreementActivity.class);
-                startActivity(intent);
+                PrivacyWebActivity.redirectTo(PermissionActivity.this,
+                        Constants.URL_AGREEMENT,
+                        getResources().getString(R.string.title_agreement),
+                        "Agreement");
             }
         };
         spannableString.setSpan(clickableSpan, agreementStart, agreementEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -82,8 +86,10 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         ClickableSpan privateClickable = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Intent intent = new Intent(PermissionActivity.this, PrivateActivity.class);
-                startActivity(intent);
+                PrivacyWebActivity.redirectTo(PermissionActivity.this,
+                        Constants.URL_PRIVACY,
+                        getResources().getString(R.string.title_private),
+                        "Privacy");
             }
         };
         spannableString.setSpan(privateClickable, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -126,14 +132,18 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
 
                             @Override
                             public void onAgreementClick(View view) {
-                                Intent intent = new Intent(PermissionActivity.this, AgreementActivity.class);
-                                startActivity(intent);
+                                PrivacyWebActivity.redirectTo(PermissionActivity.this,
+                                        Constants.URL_AGREEMENT,
+                                        getResources().getString(R.string.title_agreement),
+                                        "Agreement");
                             }
 
                             @Override
                             public void onPrivateClick(View view) {
-                                Intent intent = new Intent(PermissionActivity.this, PrivateActivity.class);
-                                startActivity(intent);
+                                PrivacyWebActivity.redirectTo(PermissionActivity.this,
+                                        Constants.URL_PRIVACY,
+                                        getResources().getString(R.string.title_private),
+                                        "Privacy");
                             }
 
                             @Override

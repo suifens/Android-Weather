@@ -44,19 +44,6 @@ public class BaseWebActivity extends BaseActivity {
         mWebView = findViewById(R.id.web_activity);
 
         configWebView(mWebView);
-
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-                super.doUpdateVisitedHistory(view, url, isReload);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                TipHelper.dismissProgressDialog();
-            }
-        });
     }
 
     @Override

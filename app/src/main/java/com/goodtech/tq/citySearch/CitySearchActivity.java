@@ -30,7 +30,7 @@ import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.utils.Utils;
-import com.goodtech.tq.views.MessageAlert;
+import com.goodtech.tq.views.LocationAlert;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -92,7 +92,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             return;
         }
         if (checkPermission()) {
-            MessageAlert alert = new MessageAlert(CitySearchActivity.this,
+            LocationAlert alert = new LocationAlert(CitySearchActivity.this,
                     (dialog, which) -> {
                         LocationHelper.getInstance().startWithDelay(CitySearchActivity.this, true);
                     });

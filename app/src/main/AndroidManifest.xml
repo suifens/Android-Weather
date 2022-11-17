@@ -76,6 +76,7 @@
         <activity android:name=".others.dymovies.DyMoviesActivity" />
         <activity android:name=".others.outbreak.OutbreakActivity" />
         <activity android:name=".others.test.MyTestActivity"/>
+        <activity android:name=".others.test.PrivacyWebActivity"/>
         <activity android:name=".others.airQuality.AirQualityActivity" />
         <activity android:name=".others.calendar.CalendarActivity" />
         <activity android:name=".others.constellation.ConstellationDetailActivity" />
@@ -124,18 +125,6 @@
                 <category android:name="jpush.testCategory" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.AgreementActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".activity.PrivateActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".activity.PrivateListActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activity.AboutActivity"
             android:screenOrientation="portrait"

@@ -41,6 +41,7 @@
     <string name="btn_u_disagree"><u>不同意</u></string>
     <string name="btn_u_disagree_permission"><u>不同意，暂时不适用此功能</u></string>
     <string name="btn_u_sign_out"><u>退出APP</u></string>
+    <string name="dialog_private_title">温馨提示</string>
 
     <!-- 后端错误码 -->
     <string name="SUCCESS">请求成功！</string>

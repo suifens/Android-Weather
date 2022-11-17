@@ -99,7 +99,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 MyTestActivity.redirectTo(this,
                         "https://app.yiguxm.com/privacy/yuzhiyinsiqingdan.html",
                         getResources().getString(R.string.title_private_list),
-                        "");
+                        "Privacy_List");
             }
                 break;
             case R.id.layout_praise:

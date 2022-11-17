@@ -1,11 +1,9 @@
 package com.goodtech.tq.views;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
@@ -15,7 +13,12 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.goodtech.tq.R;
 
-public class MessageAlert extends AlertDialog implements View.OnClickListener {
+public class LocationAlert extends AlertDialog implements View.OnClickListener {
+
+    private TextView mTitleTv;
+    private TextView mMessageTv;
+    private Button mCancelBtn;
+    private Button mConfirmBtn;
 
     private CharSequence mTitle;
     private CharSequence mMessage;
@@ -28,18 +31,12 @@ public class MessageAlert extends AlertDialog implements View.OnClickListener {
     private int mCancelBg;
     private int mConfirmTextColor;
     private int mCancelTextColor;
-    private boolean mDismissAfterClick = true;
 
     private OnClickListener mConfirmListener;
     private OnClickListener mCancelListener;
 
-    public MessageAlert(Context context) {
-        super(context, R.style.MyDialog);
-        setCanceledOnTouchOutside(false);
-    }
-
-    public MessageAlert(Context context, OnClickListener confirmListener) {
-        super(context, R.style.MyDialog);
+    public LocationAlert(Context context, OnClickListener confirmListener) {
+        super(context);
         mConfirmListener = confirmListener;
         setCanceledOnTouchOutside(false);
         setCancelable(true);
@@ -48,66 +45,58 @@ public class MessageAlert extends AlertDialog implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_message);
-        ImageView mLogoImgV = findViewById(R.id.img_dialog_logo);
-        TextView mTitleTv = findViewById(R.id.tv_dialog_title);
-        TextView mMessageTv = findViewById(R.id.tv_dialog_message);
-        Button mCancelBtn = findViewById(R.id.btn_dialog_cancel);
+        setContentView(R.layout.dialog_location);
+        mTitleTv = findViewById(R.id.tv_dialog_title);
+        mMessageTv = findViewById(R.id.tv_dialog_message);
+        mCancelBtn = findViewById(R.id.btn_dialog_cancel);
         if (mCancelBtn != null) mCancelBtn.setOnClickListener(this);
-        Button mConfirmBtn = findViewById(R.id.btn_dialog_confirm);
+        mConfirmBtn = findViewById(R.id.btn_dialog_confirm);
         if (mConfirmBtn != null) mConfirmBtn.setOnClickListener(this);
 
-        if (mMessage != null && mMessage.length() > 0) {
-            mMessageTv.setVisibility(View.VISIBLE);
-            mMessageTv.setText(mMessage);
-        } else {
-            mMessageTv.setVisibility(View.GONE);
-        }
-
-        if (mTitle != null && mTitle.length() > 0) {
-            mTitleTv.setVisibility(View.VISIBLE);
-            mTitleTv.setText(mTitle);
-        } else {
-            mTitleTv.setVisibility(View.GONE);
-        }
-
-        if (mImageId != 0) {
-            mLogoImgV.setVisibility(View.VISIBLE);
-            mLogoImgV.setImageResource(mImageId);
-        } else {
-            mLogoImgV.setVisibility(View.GONE);
-        }
-
-        if (mCancelText != null) {
-            mCancelBtn.setText(mCancelText);
-        }
-
-        if (mConfirmText != null) {
-            mConfirmBtn.setText(mConfirmText);
-        }
-
-        if (mConfirmBg != 0) {
-            mConfirmBtn.setBackgroundResource(mConfirmBg);
-        }
-
-        if (mCancelBg != 0) {
-            mCancelBtn.setBackgroundResource(mCancelBg);
-        }
-
-        if (mConfirmTextColor != 0) {
-            mConfirmBtn.setTextColor(mConfirmTextColor);
-        }
-
-        if (mCancelTextColor != 0) {
-            mCancelBtn.setTextColor(mCancelTextColor);
-        }
-        mCancelBtn.setVisibility(mCancelable ? View.VISIBLE : View.GONE);
+//        if (mMessage != null && mMessage.length() > 0) {
+//            mMessageTv.setVisibility(View.VISIBLE);
+//            mMessageTv.setText(mMessage);
+//        } else {
+//            mMessageTv.setVisibility(View.GONE);
+//        }
+//
+//        if (mTitle != null && mTitle.length() > 0) {
+//            mTitleTv.setVisibility(View.VISIBLE);
+//            mTitleTv.setText(mTitle);
+//        } else {
+//            mTitleTv.setVisibility(View.GONE);
+//        }
+//
+//        if (mCancelText != null) {
+//            mCancelBtn.setText(mCancelText);
+//        }
+//
+//        if (mConfirmText != null) {
+//            mConfirmBtn.setText(mConfirmText);
+//        }
+//
+//        if (mConfirmBg != 0) {
+//            mConfirmBtn.setBackgroundResource(mConfirmBg);
+//        }
+//
+//        if (mCancelBg != 0) {
+//            mCancelBtn.setBackgroundResource(mCancelBg);
+//        }
+//
+//        if (mConfirmTextColor != 0) {
+//            mConfirmBtn.setTextColor(mConfirmTextColor);
+//        }
+//
+//        if (mCancelTextColor != 0) {
+//            mCancelBtn.setTextColor(mCancelTextColor);
+//        }
+//
+//        mCancelBtn.setVisibility(mCancelable ? View.VISIBLE : View.GONE);
     }
 
     public void setTitle(@StringRes int titleId) {
         setTitle(getContext().getString(titleId));
     }
-
     public void setTitle(@Nullable CharSequence title) {
         this.mTitle = title;
     }
@@ -115,18 +104,16 @@ public class MessageAlert extends AlertDialog implements View.OnClickListener {
     public void setMessage(@StringRes int messageId) {
         setMessage(getContext().getString(messageId));
     }
-
     public void setMessage(@Nullable CharSequence message) {
         this.mMessage = message;
     }
 
     /**
-     * 取消按钮文案
+     *  取消按钮文案
      */
     public void setCancelText(@StringRes int textId) {
         setCancelText(getContext().getString(textId));
     }
-
     public void setCancelText(@Nullable CharSequence text) {
         this.mCancelText = text;
     }
@@ -134,18 +121,17 @@ public class MessageAlert extends AlertDialog implements View.OnClickListener {
     public void setCancelBackground(int bgRes) {
         this.mCancelBg = bgRes;
     }
-
+    
     public void setCancelTextColor(int color) {
         this.mCancelTextColor = color;
     }
 
     /**
-     * 确定按钮文案
+     *  确定按钮文案
      */
     public void setConfirmText(@StringRes int textId) {
         setConfirmText(getContext().getString(textId));
     }
-
     public void setConfirmText(@Nullable CharSequence text) {
         this.mConfirmText = text;
     }
@@ -153,7 +139,7 @@ public class MessageAlert extends AlertDialog implements View.OnClickListener {
     public void setConfirmBackground(int bgRes) {
         this.mConfirmBg = bgRes;
     }
-
+    
     public void setConfirmTextColor(int color) {
         this.mConfirmTextColor = color;
     }
@@ -180,29 +166,23 @@ public class MessageAlert extends AlertDialog implements View.OnClickListener {
         this.mCancelable = cancelable;
     }
 
-    /**
-     * 点击后是否自动dismiss
-     */
-    public void setDismissAfterClick(boolean dismissAfterClick) {
-        this.mDismissAfterClick = dismissAfterClick;
-    }
-
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_dialog_cancel:
+            case R.id.btn_dialog_cancel: {
                 if (mCancelListener != null) {
                     mCancelListener.onClick(this, 0);
                 }
-                if (mDismissAfterClick) this.dismiss();
+                this.dismiss();
+            }
                 break;
 
-            case R.id.btn_dialog_confirm:
+            case R.id.btn_dialog_confirm: {
                 if (mConfirmListener != null) {
                     mConfirmListener.onClick(this, 1);
                 }
-                if (mDismissAfterClick) this.dismiss();
+                this.dismiss();
+            }
                 break;
         }
     }

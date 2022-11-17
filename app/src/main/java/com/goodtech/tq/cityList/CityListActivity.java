@@ -40,7 +40,7 @@ import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
-import com.goodtech.tq.views.MessageAlert;
+import com.goodtech.tq.views.LocationAlert;
 import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
@@ -305,7 +305,7 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
             return;
         }
         if (checkPermission()) {
-            MessageAlert alert = new MessageAlert(CityListActivity.this,
+            LocationAlert alert = new LocationAlert(CityListActivity.this,
                     (dialog, which) -> LocationHelper.getInstance().startWithDelay(CityListActivity.this, true));
             if (!isFinishing()) {
                 alert.show();

@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.others.test.PrivacyWebActivity;
+import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.umeng.analytics.MobclickAgent;
 
@@ -47,14 +49,18 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.tv_agreement: {
-                Intent intent = new Intent(this, AgreementActivity.class);
-                startActivity(intent);
+                PrivacyWebActivity.redirectTo(this,
+                        Constants.URL_AGREEMENT,
+                        getResources().getString(R.string.title_agreement),
+                        "Agreement");
             }
                 break;
 
             case R.id.tv_private: {
-                Intent intent = new Intent(this, PrivateActivity.class);
-                startActivity(intent);
+                PrivacyWebActivity.redirectTo(this,
+                        Constants.URL_PRIVACY,
+                        getResources().getString(R.string.title_private),
+                        "Privacy");
             }
                 break;
         }

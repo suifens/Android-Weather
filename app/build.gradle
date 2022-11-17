@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 890
-        versionName "8.9.0"
+        versionCode 900
+        versionName "9.0.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -93,14 +93,6 @@ android {
             buildConfigField 'int', 'BAIDU_CHANNEL', '1'
             manifestPlaceholders=[app_name:"天气预报", umeng_channel:"baidu"]
         }
-//        t360 {
-//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-//            manifestPlaceholders=[app_name:"天气预报", umeng_channel:"360"]
-//        }
-//        jinli {
-//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-//            manifestPlaceholders=[app_name:"天气预报-天气纯净版", umeng_channel:"jinli"]
-//        }
     }
 
     def fileArray = []

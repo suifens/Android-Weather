@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.location.helper.LocationHelper;
+import com.goodtech.tq.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.PermissionUtil;
@@ -85,14 +86,18 @@ public class BaseActivity extends AppCompatActivity {
 
             @Override
             public void onAgreementClick(View view) {
-                Intent intent = new Intent(activity, AgreementActivity.class);
-                startActivity(intent);
+                PrivacyWebActivity.redirectTo(activity,
+                        Constants.URL_AGREEMENT,
+                        getResources().getString(R.string.title_agreement),
+                        "Agreement");
             }
 
             @Override
             public void onPrivateClick(View view) {
-                Intent intent = new Intent(activity, PrivateActivity.class);
-                startActivity(intent);
+                PrivacyWebActivity.redirectTo(activity,
+                        Constants.URL_PRIVACY,
+                        getResources().getString(R.string.title_private),
+                        "Privacy");
             }
         }).show();
     }

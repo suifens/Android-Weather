@@ -18,9 +18,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.activity.AgreementActivity;
-import com.goodtech.tq.activity.PermissionActivity;
-import com.goodtech.tq.activity.PrivateActivity;
 
 public class DisagreeAlert extends AlertDialog implements View.OnClickListener {
 
