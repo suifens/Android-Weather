@@ -233,9 +233,9 @@ dependencies {
 
     /*GroMore广告显示*/
     //GroMore_sdk
-    implementation "com.gromore.cn:gromore-sdk:3.7.0.3"  //groMore sdk
+    implementation "com.gromore.cn:gromore-sdk:3.8.0.1"  //groMore sdk
     //GroMore_sdk adapter
-    implementation "com.gromore.cn:pangle-adapter:4.8.0.8.2" //穿山甲 adapter
+    implementation "com.gromore.cn:pangle-adapter:4.8.0.8.4" //穿山甲 adapter
     //pangle
     implementation(name: 'open_ad_sdk_4.8.0.8', ext: 'aar')
 

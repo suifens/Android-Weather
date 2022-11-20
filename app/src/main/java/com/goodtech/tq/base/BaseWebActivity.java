@@ -53,16 +53,6 @@ public class BaseWebActivity extends BaseActivity {
             MobclickAgent.onPageStart(mChannel);
             MobclickAgent.onResume(this);
         }
-
-        if (!TextUtils.isEmpty(mUrl)) {
-            if (mWebView.getUrl() != null) {
-                mWebView.reload();
-            } else {
-                TipHelper.showProgressDialog(this);
-                mWebView.loadUrl(mUrl);
-            }
-        }
-
     }
 
     @Override

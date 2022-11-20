@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import androidx.core.util.TimeUtils;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.base.BaseWebActivity;
@@ -29,6 +32,8 @@ public class MyTestActivity extends BaseWebActivity {
         ctx.startActivity(intent);
     }
 
+    private String actionUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +50,7 @@ public class MyTestActivity extends BaseWebActivity {
                     return false;
                 }
                 try {
+                    actionUrl = url;
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent);
                 } catch (Exception e) {
@@ -63,6 +69,20 @@ public class MyTestActivity extends BaseWebActivity {
                 TipHelper.dismissProgressDialog();
             }
         });
+
+        if (!TextUtils.isEmpty(mUrl)) {
+            TipHelper.showProgressDialog(this);
+            mWebView.loadUrl(mUrl);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!TextUtils.isEmpty(actionUrl) && actionUrl.startsWith("alipays:")) {
+            mHandler.post(() -> mWebView.goBack());
+            actionUrl = null;
+        }
     }
 
     @Override
