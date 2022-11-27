@@ -328,6 +328,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     public void onDepressionTest() {
         if (getActivity() != null) {
             MyTestActivity.redirectTo(getActivity(),
+                    // "https://hd.yixinli.xin/cp/index.html#/detail/353?channelId=4718",
                     "https://static.xinli001.com/cp/index.html#/detail/353?channelId=4693",
                     "抑郁测试",
                     "Test_Depression");
@@ -338,6 +339,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     public void onIQTest(int location) {
         if (getActivity() != null) {
             MyTestActivity.redirectTo(getActivity(),
+                    // "https://hd.yixinli.xin/cp/index.html#/detail/806?channelId=4718",
                     "https://static.xinli001.com/cp/index.html#/detail/806?channelId=4693",
                     "智商测试",
                     "Test_IQ_" + location);
@@ -348,6 +350,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     public void onMentalHealth() {
         if (getActivity() != null) {
             MyTestActivity.redirectTo(getActivity(),
+                    // "https://hd.yixinli.xin/cp/index.html#/index?channelId=4718",
                     "https://hd.yixinli.xin/cp/index.html#/index?channelId=4693",
                     "心理测试",
                     "Test_Mental_Health");
@@ -358,6 +361,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     public void onEQTest() {
         if (getActivity() != null) {
             MyTestActivity.redirectTo(getActivity(),
+                    // "https://hd.yixinli.xin/cp/index.html#/detail/153?channelId=4718",
                     "https://static.xinli001.com/cp/index.html#/detail/153?channelId=4693",
                     "情商测试",
                     "Test_EQ");

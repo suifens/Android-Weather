@@ -18,13 +18,20 @@ import android.widget.TextView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
+import com.goodtech.tq.eventbus.MessageEvent;
+import com.goodtech.tq.helpers.LocationSpHelper;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
+import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.DisagreeAlert;
 import com.goodtech.tq.views.DisagreeAlert.DisagreeAlertListener;
 import com.goodtech.tq.utils.SpUtils;
 import com.umeng.analytics.MobclickAgent;
+
+import org.greenrobot.eventbus.EventBus;
 
 @SuppressLint("NonConstantResourceId")
 public class PermissionActivity extends BaseActivity implements View.OnClickListener {
@@ -163,9 +170,36 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         mHandler.post(() -> {
             SpUtils.getInstance().setPermissionAgree(!isVisitor);
             SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
-            CitySearchActivity.redirectTo(this, true);
-            this.finish();
+            if (isVisitor) {
+                showVisitor();
+            } else {
+                CitySearchActivity.redirectTo(this, true);
+                this.finish();
+            }
         });
+    }
+
+    //  游客
+    private void showVisitor() {
+        TipHelper.showProgressDialog(this);
+        CityMode cityMode = new CityMode();
+        cityMode.setCid(10000);
+        cityMode.setMergerName("北京");
+        cityMode.setCity("北京");
+        cityMode.setLat("39.55");
+        cityMode.setLon("116.24");
+        cityMode.setPinyin("Beijing");
+        LocationSpHelper.addCity(cityMode);
+
+        WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
+        helper.getBaseUrl(() -> helper.fetchWeather(cityMode));
+        EventBus.getDefault().post(new MessageEvent().addCity(true));
+
+        Intent intent = new Intent(PermissionActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+
+        mHandler.postDelayed(this::finish, 300);
     }
 
     @Override

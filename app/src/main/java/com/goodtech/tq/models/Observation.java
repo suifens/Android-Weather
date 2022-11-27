@@ -31,7 +31,6 @@ public class Observation implements Parcelable {
     //  0
     @SerializedName("uv_index")
     public int uvIndex;  //  紫外线指数
-
     //  69
     @SerializedName("wdir")
     public int wdir;

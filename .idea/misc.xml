@@ -13,7 +13,9 @@
         <entry key="app/src/main/res/drawable/bg_circle_007bff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_00a2ff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_1592f3.xml" value="0.2984375" />
+        <entry key="app/src/main/res/drawable/bg_circle_52a255.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/bg_circle_black_15.xml" value="0.31145833333333334" />
+        <entry key="app/src/main/res/drawable/bg_circle_cb5656.xml" value="0.2095" />
         <entry key="app/src/main/res/drawable/bg_circle_ff3838.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_circle_white.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_circle_white_15.xml" value="0.3921875" />
@@ -35,9 +37,11 @@
         <entry key="app/src/main/res/drawable/bg_radius_e05353.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/bg_radius_e1e4e8.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_stroke4_48c7a1.xml" value="0.2984375" />
+        <entry key="app/src/main/res/drawable/bg_stroke_e05353.xml" value="0.264" />
         <entry key="app/src/main/res/drawable/bg_stroke_e1e4e8.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_stroke_white_50.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/download_confirm_background_confirm.xml" value="0.10677083333333333" />
+        <entry key="app/src/main/res/drawable/gradient_3472f0_19d3fd.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/gradient_disagree.xml" value="0.279" />
         <entry key="app/src/main/res/drawable/gradient_fortune.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/gradient_weather.xml" value="0.2984375" />
@@ -58,7 +62,7 @@
         <entry key="app/src/main/res/layout/activity_agreement.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_air_quality.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_base_web.xml" value="0.3885416666666667" />
-        <entry key="app/src/main/res/layout/activity_calendar.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_calendar.xml" value="0.21910112359550563" />
         <entry key="app/src/main/res/layout/activity_city_list.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_city_search.xml" value="0.10462962962962963" />
         <entry key="app/src/main/res/layout/activity_constellation_detail.xml" value="0.28229166666666666" />
@@ -68,7 +72,7 @@
         <entry key="app/src/main/res/layout/activity_news.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_outbreak.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_permission.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.2206726960430598" />
+        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_setting_widget.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/activity_signing.xml" value="0.28229166666666666" />
@@ -84,6 +88,7 @@
         <entry key="app/src/main/res/layout/air_stub_value.xml" value="0.375" />
         <entry key="app/src/main/res/layout/bottom_list.xml" value="0.35054347826086957" />
         <entry key="app/src/main/res/layout/constraint_item_hourly.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/custom_week_bar.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/dialog_disagree.xml" value="0.5120803833007812" />
         <entry key="app/src/main/res/layout/dialog_input.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/dialog_message.xml" value="0.3885416666666667" />
@@ -126,7 +131,7 @@
         <entry key="app/src/main/res/layout/stub_signing_container_a.xml" value="0.25" />
         <entry key="app/src/main/res/layout/stub_signing_container_b.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/stub_signing_container_c.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/stub_weather_data.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/stub_weather_data.xml" value="0.369024658203125" />
         <entry key="app/src/main/res/layout/view_calendar_holiday.xml" value="0.41403716404812335" />
         <entry key="app/src/main/res/layout/view_city_search.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/view_common_bottom_sheet.xml" value="0.37604166666666666" />

@@ -97,7 +97,14 @@ public class MainActivity extends BaseActivity {
 //        findViewById(R.id.scroll_background).setOnTouchListener((v, event) -> true);
 
         //  点击地址，跳转到城市列表
-        findViewById(R.id.layout_address).setOnClickListener(v -> CityListActivity.redirectTo(MainActivity.this));
+        findViewById(R.id.layout_address).setOnClickListener(v -> {
+            if (!SpUtils.getInstance().isAgreePermission()) {
+                showPermissionDialog(this, view ->
+                        CityListActivity.redirectTo(MainActivity.this));
+                return;
+            }
+            CityListActivity.redirectTo(MainActivity.this);
+        });
 
         //  跳转到设置页面
         findViewById(R.id.img_setting).setOnClickListener(v -> {
@@ -119,7 +126,9 @@ public class MainActivity extends BaseActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         this.registerReceiver(receiver, filter);
 
-        initAdLoader();
+        if (SpUtils.getInstance().isAgreePermission()) {
+            initAdLoader();
+        }
     }
 
     @Override
