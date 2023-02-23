@@ -29,6 +29,7 @@ import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeExpressAdListener;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMVideoListener;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.R;
+import com.goodtech.tq.ad.AdFeedActivity;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.citySearch.viewholder.CityHolder;
@@ -58,7 +59,7 @@ import java.util.List;
 /**
  *
  */
-public class CityListActivity extends BaseActivity implements View.OnClickListener {
+public class CityListActivity extends AdFeedActivity implements View.OnClickListener {
 
     private static final String TAG = "CityListActivity";
 
@@ -341,7 +342,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
                 mIsLoaded = true;
                 mGMNativeAd = ads.get(0);
                 if (mGMNativeAd != null && !mIsLoadedAndShow) {
-                    showAd();
+                    boolean isShow = showAd(mBannerContainer, mAdFeedManager, true, mGMNativeAd);
+                    mIsLoaded = !isShow;
                 }
             }
 
@@ -359,196 +361,8 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
         mAdFeedManager.loadAdWithCallback(Constants.PGE_EXPRESS_POS_ID2, 1, GMAdConstant.TYPE_EXPRESS_AD, DeviceUtils.getScreenWidthDpi(this.getApplicationContext()));
     }
 
-    /**
-     * 展示原生广告
-     */
-    private void showAd() {
-        if (!mIsLoaded || mAdFeedManager == null || mGMNativeAd == null) {
-            //TToast.show(getContext(), "请先加载广告");
-            // initNativeExpressAD();
-            return;
-        }
-        if (!mGMNativeAd.isReady()) {
-            //TToast.show(getContext(), "广告已经无效，请重新请求");
-            // initNativeExpressAD();
-            return;
-        }
-        mIsLoaded = false;
-        mIsLoadedAndShow = true;
-
-        mBannerContainer.setVisibility(View.VISIBLE);
-        View view = null;
-        if (mGMNativeAd.isExpressAd()) { //模板
-            view = getExpressAdView(mBannerContainer, mGMNativeAd);
-            view.setBackgroundColor(Color.TRANSPARENT);
-        } else {
-            //TToast.show(requireActivity(), "图片展示样式错误");
-        }
-
-        if (view != null) {
-            view.setLayoutParams(new
-                    ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT));
-            mBannerContainer.removeAllViews();
-            mBannerContainer.addView(view);
-        }
-    }
-
-    //渲染模板广告
-    @SuppressWarnings("RedundantCast")
-    private View getExpressAdView(ViewGroup parent, @NonNull final GMNativeAd ad) {
-        final ExpressAdViewHolder adViewHolder;
-        View convertView = null;
-        try {
-            convertView = LayoutInflater.from(this).inflate(R.layout.listitem_ad_native_express, parent, false);
-            adViewHolder = new ExpressAdViewHolder();
-            adViewHolder.mAdContainerView = (FrameLayout) convertView.findViewById(R.id.iv_listitem_express);
-            convertView.setTag(adViewHolder);
-
-            //判断是否存在dislike按钮
-            if (ad.hasDislike()) {
-                ad.setDislikeCallback(this, new GMDislikeCallback() {
-                    @Override
-                    public void onSelected(int position, String value) {
-                        //TToast.show(requireActivity(), "点击 " + value);
-                        //用户选择不喜欢原因后，移除广告展示
-                        removeAdView();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        //TToast.show(requireActivity(), "dislike 点击了取消");
-                        Log.d(TAG, "dislike 点击了取消");
-                    }
-
-                    /**
-                     * 拒绝再次提交
-                     */
-                    @Override
-                    public void onRefuse() {
-
-                    }
-
-                    @Override
-                    public void onShow() {
-
-                    }
-                });
-            }
-
-            //设置点击展示回调监听
-            ad.setNativeAdListener(new GMNativeExpressAdListener() {
-                @Override
-                public void onAdClick() {
-                    Log.d(TAG, "onAdClick");
-                    //TToast.show(requireActivity(), "模板广告被点击");
-                }
-
-                @Override
-                public void onAdShow() {
-                    Log.d(TAG, "onAdShow");
-                    //TToast.show(requireActivity(), "模板广告show");
-
-                }
-
-                @Override
-                public void onRenderFail(View view, String msg, int code) {
-                    //TToast.show(requireActivity(), "模板广告渲染失败code=" + code + ",msg=" + msg);
-                    Log.d(TAG, "onRenderFail   code=" + code + ",msg=" + msg);
-
-                }
-
-                // ** 注意点 ** 不要在广告加载成功回调里进行广告view展示，要在onRenderSucces进行广告view展示，否则会导致广告无法展示。
-                @Override
-                public void onRenderSuccess(float width, float height) {
-                    Log.d(TAG, "onRenderSuccess");
-                    //TToast.show(requireActivity(), "模板广告渲染成功:width=" + width + ",height=" + height);
-                    //回调渲染成功后将模板布局添加的父View中
-                    if (adViewHolder.mAdContainerView != null) {
-                        //获取视频播放view,该view SDK内部渲染，在媒体平台可配置视频是否自动播放等设置。
-                        int sWidth;
-                        int sHeight;
-                        /**
-                         * 如果存在父布局，需要先从父布局中移除
-                         */
-                        final View video = ad.getExpressView(); // 获取广告view  如果存在父布局，需要先从父布局中移除
-                        if (width == GMAdSize.FULL_WIDTH && height == GMAdSize.AUTO_HEIGHT) {
-                            sWidth = FrameLayout.LayoutParams.MATCH_PARENT;
-                            sHeight = FrameLayout.LayoutParams.WRAP_CONTENT;
-                        } else {
-                            sWidth = DeviceUtils.getScreenWidth(BaseApp.getInstance());
-                            sHeight = (int) ((sWidth * height) / width);
-                        }
-                        if (video != null) {
-                            /**
-                             * 如果存在父布局，需要先从父布局中移除
-                             */
-                            DeviceUtils.removeFromParent(video);
-                            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(sWidth, sHeight);
-                            adViewHolder.mAdContainerView.removeAllViews();
-                            adViewHolder.mAdContainerView.addView(video, layoutParams);
-                        }
-                    }
-                }
-            });
-
-
-            //视频广告设置播放状态回调（可选）
-            ad.setVideoListener(new GMVideoListener() {
-
-                @Override
-                public void onVideoStart() {
-                    //TToast.show(requireActivity(), "模板广告视频开始播放");
-                    Log.d(TAG, "onVideoStart");
-                }
-
-                @Override
-                public void onVideoPause() {
-                    //TToast.show(requireActivity(), "模板广告视频暂停");
-                    Log.d(TAG, "onVideoPause");
-
-                }
-
-                @Override
-                public void onVideoResume() {
-                    //TToast.show(requireActivity(), "模板广告视频继续播放");
-                    Log.d(TAG, "onVideoResume");
-
-                }
-
-                @Override
-                public void onVideoCompleted() {
-                    //TToast.show(requireActivity(), "模板播放完成");
-                    Log.d(TAG, "onVideoCompleted");
-                }
-
-                @Override
-                public void onVideoError(AdError adError) {
-                    //TToast.show(requireActivity(), "模板广告视频播放出错");
-                    Log.d(TAG, "onVideoError");
-                }
-
-                @Override
-                public void onProgressUpdate(long l, long l1) {
-
-                }
-            });
-
-            ad.render();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return convertView;
-    }
-
-    private static class ExpressAdViewHolder {
-        FrameLayout mAdContainerView;
-    }
-
-    private void removeAdView() {
+    @Override
+    protected void removeAdView() {
         if (mBannerContainer != null) {
             mBannerContainer.removeAllViews();
         }

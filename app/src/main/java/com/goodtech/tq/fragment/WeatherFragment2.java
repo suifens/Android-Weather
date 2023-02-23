@@ -18,7 +18,7 @@ import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.v2.GMAdConstant;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAd;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAdLoadCallback;
-import com.goodtech.tq.AdFeedFragment;
+import com.goodtech.tq.ad.AdFeedFragment;
 import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.fragment.view.CurrentItemView;
@@ -36,7 +36,6 @@ import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.airQuality.view.AirLifeView;
 import com.goodtech.tq.others.calendar.CalendarActivity;
 import com.goodtech.tq.others.constellation.ConstellationActivity;
-import com.goodtech.tq.others.outbreak.OutbreakActivity;
 import com.goodtech.tq.others.taifeng.TyphoonActivity;
 import com.goodtech.tq.others.test.MyTestActivity;
 import com.goodtech.tq.signing.SigningActivity;
@@ -395,9 +394,11 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
     protected void removeAdView(GMNativeAd ad) {
         if (mFeedContainer != null && mGMNativeAd == ad) {
             mFeedContainer.removeAllViews();
+            mFeedContainer.setVisibility(View.GONE);
         }
         if (mFeedContainer2 != null && mGMNativeAd2 == ad) {
             mFeedContainer2.removeAllViews();
+            mFeedContainer2.setVisibility(View.GONE);
         }
     }
 

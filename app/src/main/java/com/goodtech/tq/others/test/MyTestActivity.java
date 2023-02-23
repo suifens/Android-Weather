@@ -41,7 +41,7 @@ public class MyTestActivity extends BaseWebActivity {
         mUrl = getIntent().getStringExtra(EXTRA_LINK);
         mChannel = getIntent().getStringExtra(EXTRA_CHANNEL);
 
-        findViewById(R.id.button_back).setOnClickListener(v -> onBackClick());
+        findViewById(R.id.button_back).setOnClickListener(v -> finish());
 
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -85,28 +85,28 @@ public class MyTestActivity extends BaseWebActivity {
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            onBackClick();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+    // @Override
+    // public boolean onKeyDown(int keyCode, KeyEvent event) {
+    //     if (keyCode == KeyEvent.KEYCODE_BACK) {
+    //         onBackClick();
+    //         return true;
+    //     }
+    //     return super.onKeyDown(keyCode, event);
+    // }
 
     private void onBackClick() {
-        if (mWebView.canGoBack()) {
-            MessageAlert alert = new MessageAlert(this);
-            alert.setCancelable(true);
-            alert.setTitle(R.string.dialog_private_title);
-            alert.setMessage("是否确定退出测试？");
-            alert.setConfirmListener((dialog, which) -> {
-                finish();
-            });
-            alert.show();
-        } else {
-            finish();
-        }
+        // if (mWebView.canGoBack()) {
+        //     MessageAlert alert = new MessageAlert(this);
+        //     alert.setCancelable(true);
+        //     alert.setTitle(R.string.dialog_private_title);
+        //     alert.setMessage("是否确定退出测试？");
+        //     alert.setConfirmListener((dialog, which) -> {
+        //         finish();
+        //     });
+        //     alert.show();
+        // } else {
+        //     finish();
+        // }
     }
 
 }

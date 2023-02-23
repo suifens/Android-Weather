@@ -1,4 +1,4 @@
-package com.goodtech.tq;
+package com.goodtech.tq.ad;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -35,11 +35,10 @@ import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeCustomVideoReporter;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeExpressAdListener;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMVideoListener;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMViewBinder;
+import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.BaseFragment;
 import com.goodtech.tq.manager.AdFeedManager;
 import com.goodtech.tq.utils.DeviceUtils;
-
-
 
 import java.util.ArrayList;
 import java.util.List;
