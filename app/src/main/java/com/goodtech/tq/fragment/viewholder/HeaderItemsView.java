@@ -59,9 +59,9 @@ public class HeaderItemsView extends LinearLayout {
         //     }
         // });
 
-        findViewById(R.id.item_depression).setOnClickListener(v -> {
+        findViewById(R.id.item_sign).setOnClickListener(v -> {
             if (listener != null) {
-                listener.onDepressionTest();
+                listener.onSignIn();
             }
         });
     }

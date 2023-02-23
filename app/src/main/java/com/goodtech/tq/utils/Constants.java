@@ -21,6 +21,7 @@ public class Constants {
     public static final String PGE_SPLASH_POS_ID = "102214996";  //开屏广告id
     public static final String PGE_BANNER_POS_ID = "102072557";  //banner id
     public static final String PGE_EXPRESS_POS_ID = "102215979";  //动态信息流 id
+    public static final String PGE_EXPRESS_POS_ID3 = "102273983";  //动态信息流 id
     public static final String PGE_EXPRESS_POS_ID2 = "102091323";  //动态信息流 id
     public static final String PGE_NEWS_POS_ID = "6032151594725662";  //上文下图信息流 id
     public static final String PGE_INT_POS_ID = "102214995";  //插屏广告 id

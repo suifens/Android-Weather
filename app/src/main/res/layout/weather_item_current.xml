@@ -95,10 +95,10 @@
         android:gravity="bottom">
 
         <ImageView
-            android:id="@+id/btn_iq_test"
+            android:id="@+id/btn_dache"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_iq_1"
+            app:srcCompat="@drawable/pic_dache"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -108,10 +108,10 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/btn_sign"
+            android:id="@+id/btn_meituan"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:src="@drawable/icon_sign"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pic_meituan"
             android:background="@color/color_clear"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_outbreak"
@@ -123,10 +123,10 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/btn_outbreak"
-            android:layout_width="88dp"
-            android:layout_height="32dp"
-            android:src="@drawable/icon_yiqing"
+            android:id="@+id/btn_eleme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pic_eleme"
             android:background="@color/color_clear"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
