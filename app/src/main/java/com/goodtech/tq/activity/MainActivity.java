@@ -206,7 +206,7 @@ public class MainActivity extends BaseActivity {
             }
 
             if (SpUtils.getInstance().isAgreePermission()) {
-                mHandler.postDelayed(this::showAd, 7000);
+                mHandler.postDelayed(this::showAd, 5000);
             }
             isFirstLoad = false;
         } else {

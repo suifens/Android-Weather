@@ -329,7 +329,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         if (getActivity() != null) {
             MyTestActivity.redirectTo(getActivity(),
                     // "https://hd.yixinli.xin/cp/index.html#/detail/353?channelId=4718",
-                    "https://static.xinli001.com/cp/index.html#/detail/353?channelId=4693",
+                    "https://static.xinli001.com/cp/index.html#/detail/514?channelId=4693",
                     "抑郁测试",
                     "Test_Depression");
         }
@@ -340,7 +340,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
         if (getActivity() != null) {
             MyTestActivity.redirectTo(getActivity(),
                     // "https://hd.yixinli.xin/cp/index.html#/detail/806?channelId=4718",
-                    "https://static.xinli001.com/cp/index.html#/detail/806?channelId=4693",
+                    "https://static.xinli001.com/cp/index.html#/detail/458?channelId=4693",
                     "智商测试",
                     "Test_IQ_" + location);
         }
@@ -405,6 +405,7 @@ public class WeatherFragment2 extends BaseFragment implements OnRefreshListener,
     private void initNativeExpressAD() {
         mLoadSuccess = false;
         removeAdView();
+        Log.e(TAG, "initNativeExpressAD: ++++ " + System.currentTimeMillis());
         mAdFeedManager.loadAdWithCallback(Constants.PGE_EXPRESS_POS_ID, 1, GMAdConstant.IMAGE_MODE_SMALL_IMG, ((int) DeviceUtils.getScreenWidthDpi(requireActivity()) - 28));
     }
 

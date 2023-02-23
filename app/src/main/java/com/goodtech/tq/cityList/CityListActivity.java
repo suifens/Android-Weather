@@ -189,10 +189,10 @@ public class CityListActivity extends BaseActivity implements View.OnClickListen
 
         setClickListener();
 
-        if (SpUtils.getInstance().isAgreePermission()) {
-            initAdLoader();
-            initNativeExpressAD();
-        }
+        // if (SpUtils.getInstance().isAgreePermission()) {
+        //     initAdLoader();
+        //     initNativeExpressAD();
+        // }
     }
 
     @Override

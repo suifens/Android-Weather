@@ -41,10 +41,13 @@
         <entry key="app/src/main/res/drawable/bg_stroke_e1e4e8.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/bg_stroke_white_50.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/download_confirm_background_confirm.xml" value="0.10677083333333333" />
+        <entry key="app/src/main/res/drawable/gradient_007bff_00c4ff.xml" value="0.23" />
         <entry key="app/src/main/res/drawable/gradient_3472f0_19d3fd.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/gradient_disagree.xml" value="0.279" />
         <entry key="app/src/main/res/drawable/gradient_fortune.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/gradient_weather.xml" value="0.2984375" />
+        <entry key="app/src/main/res/drawable/ic_download_confirm_close.xml" value="0.23" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.23" />
         <entry key="app/src/main/res/drawable/sl_btn_007bff.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/sl_btn_1aff4c4c_4.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/sl_btn_3764e1.xml" value="0.3921875" />
@@ -54,6 +57,7 @@
         <entry key="app/src/main/res/drawable/sl_btn_theme.xml" value="0.3921875" />
         <entry key="app/src/main/res/drawable/sl_btn_theme_10.xml" value="0.279" />
         <entry key="app/src/main/res/drawable/sl_font_segment.xml" value="0.3921875" />
+        <entry key="app/src/main/res/drawable/sl_indicator_white.xml" value="0.23" />
         <entry key="app/src/main/res/drawable/sl_rdobtn_guide_page.xml" value="0.2984375" />
         <entry key="app/src/main/res/layout-v21/fragment_signing_a.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout-v21/fragment_signing_b.xml" value="0.28229166666666666" />
@@ -72,7 +76,7 @@
         <entry key="app/src/main/res/layout/activity_news.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_outbreak.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_permission.xml" value="0.37604166666666666" />
-        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_setting.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_setting_widget.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/activity_signing.xml" value="0.28229166666666666" />
@@ -91,6 +95,7 @@
         <entry key="app/src/main/res/layout/custom_week_bar.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/dialog_disagree.xml" value="0.5120803833007812" />
         <entry key="app/src/main/res/layout/dialog_input.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/dialog_location.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/dialog_message.xml" value="0.3885416666666667" />
         <entry key="app/src/main/res/layout/dialog_permission.xml" value="0.3619791666666667" />
         <entry key="app/src/main/res/layout/fragment_cons_detail.xml" value="0.508833922261484" />
@@ -144,7 +149,7 @@
         <entry key="app/src/main/res/layout/weather_item_current.xml" value="0.22" />
         <entry key="app/src/main/res/layout/weather_item_daily.xml" value="0.19630192502532928" />
         <entry key="app/src/main/res/layout/weather_item_header.xml" value="0.55" />
-        <entry key="app/src/main/res/layout/weather_item_hours.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/weather_item_hours.xml" value="0.375" />
         <entry key="app/src/main/res/layout/weather_item_line.xml" value="0.1" />
         <entry key="app/src/main/res/layout/weather_item_observation.xml" value="0.4121338912133891" />
         <entry key="app/src/main/res/layout/weather_item_recent.xml" value="0.35054347826086957" />

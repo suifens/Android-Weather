@@ -17,13 +17,13 @@ public class Constants {
     public static final String INT_POS_ID = "5093513867007822";  //插屏广告 id
 
     //  穿山甲广告位ID
-    public static final String PGE_APP_ID = "5168917"; //应用ID
-    public static final String PGE_SPLASH_POS_ID = "102082421";  //开屏广告id
+    public static final String PGE_APP_ID = "5353290"; //应用ID
+    public static final String PGE_SPLASH_POS_ID = "102214996";  //开屏广告id
     public static final String PGE_BANNER_POS_ID = "102072557";  //banner id
-    public static final String PGE_EXPRESS_POS_ID = "102212879";  //动态信息流 id
+    public static final String PGE_EXPRESS_POS_ID = "102215979";  //动态信息流 id
     public static final String PGE_EXPRESS_POS_ID2 = "102091323";  //动态信息流 id
     public static final String PGE_NEWS_POS_ID = "6032151594725662";  //上文下图信息流 id
-    public static final String PGE_INT_POS_ID = "102212393";  //插屏广告 id
+    public static final String PGE_INT_POS_ID = "102214995";  //插屏广告 id
 
     public static final String UM_APP_ID = "595a3b236e27a468630021e8";
     public static final String UM_APP_CHANNEL = "jinli";

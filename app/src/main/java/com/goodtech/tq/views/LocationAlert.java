@@ -52,46 +52,6 @@ public class LocationAlert extends AlertDialog implements View.OnClickListener {
         if (mCancelBtn != null) mCancelBtn.setOnClickListener(this);
         mConfirmBtn = findViewById(R.id.btn_dialog_confirm);
         if (mConfirmBtn != null) mConfirmBtn.setOnClickListener(this);
-
-//        if (mMessage != null && mMessage.length() > 0) {
-//            mMessageTv.setVisibility(View.VISIBLE);
-//            mMessageTv.setText(mMessage);
-//        } else {
-//            mMessageTv.setVisibility(View.GONE);
-//        }
-//
-//        if (mTitle != null && mTitle.length() > 0) {
-//            mTitleTv.setVisibility(View.VISIBLE);
-//            mTitleTv.setText(mTitle);
-//        } else {
-//            mTitleTv.setVisibility(View.GONE);
-//        }
-//
-//        if (mCancelText != null) {
-//            mCancelBtn.setText(mCancelText);
-//        }
-//
-//        if (mConfirmText != null) {
-//            mConfirmBtn.setText(mConfirmText);
-//        }
-//
-//        if (mConfirmBg != 0) {
-//            mConfirmBtn.setBackgroundResource(mConfirmBg);
-//        }
-//
-//        if (mCancelBg != 0) {
-//            mCancelBtn.setBackgroundResource(mCancelBg);
-//        }
-//
-//        if (mConfirmTextColor != 0) {
-//            mConfirmBtn.setTextColor(mConfirmTextColor);
-//        }
-//
-//        if (mCancelTextColor != 0) {
-//            mCancelBtn.setTextColor(mCancelTextColor);
-//        }
-//
-//        mCancelBtn.setVisibility(mCancelable ? View.VISIBLE : View.GONE);
     }
 
     public void setTitle(@StringRes int titleId) {
