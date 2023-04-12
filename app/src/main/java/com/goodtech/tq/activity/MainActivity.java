@@ -156,12 +156,6 @@ public class MainActivity extends BaseActivity {
         MobclickAgent.onResume(this);
         // WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
         Log.e(TAG, "onResume: ");
-        // //  加载广告
-        // if (!SpUtils.getInstance().getBoolean("hadShowInterstitialAD", false)) {
-        //     if (!mLoadSuccess) {
-        //         mHandler.postDelayed(this::showAd, 7000);
-        //     }
-        // }
     }
 
     @Override
@@ -205,7 +199,9 @@ public class MainActivity extends BaseActivity {
                 }, 500);
             }
 
-            if (SpUtils.getInstance().isAgreePermission()) {
+            long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(Constants.PGE_INT_POS_ID, 0L);
+            if (SpUtils.getInstance().isAgreePermission()
+                    && interval > 1000 * 60 * 30) {
                 mHandler.postDelayed(this::showAd, 5000);
             }
             isFirstLoad = false;
@@ -521,6 +517,7 @@ public class MainActivity extends BaseActivity {
                 Log.d(TAG, "onFullVideoCached....缓存成功！");
                 if (mIsLoadedAndShow && isCurrent) {
                     showInterFullAd();
+                    SpUtils.getInstance().putLong(Constants.PGE_INT_POS_ID, System.currentTimeMillis());
                 }
             }
         });

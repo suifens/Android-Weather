@@ -206,9 +206,9 @@ public class BaseApp extends Application {
      */
     private void back2App(Activity activity) {
         isRunInBackground = false;
-        long interval = SpUtils.getInstance().getLong(LEVEL_TIME, 0L) - System.currentTimeMillis();
+        long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(LEVEL_TIME, 0L);
         if (!TextUtils.isEmpty( SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))
-                && interval > 1000 * 60) {
+                && Math.abs(interval) > 1000 * 60 * 30) {
             //  离开前台1分钟后返回，则显示启动页广告
             activity.startActivity(new Intent(activity, SplashActivity.class));
             SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
