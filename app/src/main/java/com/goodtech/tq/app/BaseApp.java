@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -126,7 +127,7 @@ public class BaseApp extends Application {
     private boolean isServiceStarted = false;
     public void startIntent(Activity activity) {
         if (!isServiceStarted) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(activity)) {
                 startForegroundService(new Intent(activity, WidgetService.class));
                 startForegroundService(new Intent(activity, DoubleWidgetService.class));
             } else {

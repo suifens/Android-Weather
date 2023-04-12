@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.SparseArray;
 import android.widget.RemoteViews;
 
@@ -119,7 +120,7 @@ public class NotificationUtil {
      */
     private static NotificationCompat.Builder initBaseBuilder(Context context, String title, String content, int icon) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             channel.canBypassDnd();//可否绕过请勿打扰模式
             channel.enableLights(true); // 闪光

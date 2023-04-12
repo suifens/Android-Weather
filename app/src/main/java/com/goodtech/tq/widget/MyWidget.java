@@ -30,7 +30,7 @@ public class MyWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         Log.e(TAG, "widget  onEnabled 状态");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
             context.startForegroundService(new Intent(context, WidgetService.class));
         } else  {
             context.startService(new Intent(context, WidgetService.class));
@@ -46,13 +46,8 @@ public class MyWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // super.onUpdate(context, appWidgetManager, appWidgetIds);
         Log.e(TAG, "widget  onUpdate 状态");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            if (Settings.canDrawOverlays(context)) {
-                context.startForegroundService(new Intent(context, WidgetService.class));
-            } else {
-                context.startService(new Intent(context, WidgetService.class));
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
+            context.startForegroundService(new Intent(context, WidgetService.class));
         } else  {
             context.startService(new Intent(context, WidgetService.class));
         }
