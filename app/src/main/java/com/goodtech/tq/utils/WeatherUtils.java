@@ -42,5 +42,27 @@ public class WeatherUtils {
         }
     }
 
+    public static int getRainfall(String weather) {
+        if (weather.contains("暴雨") || weather.contains("暴雪")) {
+            return 100;
+        }
+        if (weather.contains("大雨") || weather.contains("大雪")) {
+            return 90;
+        }
+        if (weather.contains("中雨") || weather.contains("中雪")) {
+            return 80;
+        }
+        if (weather.contains("阵雨") || weather.contains("阵雪")) {
+            return 50;
+        }
+        if (weather.contains("雨") || weather.contains("雪")) {
+            return 70;
+        }
+        if (weather.contains("阴")) {
+            return 20;
+        }
+        return 0;
+    }
+
 
 }

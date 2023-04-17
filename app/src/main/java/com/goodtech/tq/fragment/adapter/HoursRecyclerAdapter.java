@@ -13,11 +13,14 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
+import com.goodtech.tq.utils.WeatherUtils;
+import com.goodtech.tq.utils.font.AlternateBoldTextView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
 public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdapter.HourlyHolder> {
 
     private List mList;
@@ -65,12 +68,15 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
         private final TextView mTemperature;
         private final TextView mPhraseChar;
 
+        private final AlternateBoldTextView mRainTv;
+
         HourlyHolder(View view) {
             super(view);
             mHour = view.findViewById(R.id.tv_hour);
             mWeatherIcon = view.findViewById(R.id.img_icon);
             mTemperature = view.findViewById(R.id.tv_temperature);
             mPhraseChar = view.findViewById(R.id.tv_temp);
+            mRainTv = view.findViewById(R.id.tv_rain);
         }
 
         @SuppressLint("DefaultLocale")
@@ -96,17 +102,28 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
                 if (hourly.sunrise) {
                     mWeatherIcon.setImageResource(R.drawable.ic_sunrise);
                     mTemperature.setText("日出");
-                    mPhraseChar.setText("");
+                    setupPhrase("");
                 }
                 if (hourly.sunset) {
                     mWeatherIcon.setImageResource(R.drawable.ic_sunset);
                     mTemperature.setText("日落");
-                    mPhraseChar.setText("");
+                    setupPhrase("");
                 }
             } else {
                 mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
                 mTemperature.setText(String.format("%d°", hourly.metric.temp));
-                mPhraseChar.setText(hourly.getPhraseChar());
+                setupPhrase(hourly.getPhraseChar());
+            }
+        }
+
+        private void setupPhrase(String phrase) {
+            mPhraseChar.setText(phrase);
+            int rainfall = WeatherUtils.getRainfall(phrase);
+            if (rainfall > 0) {
+                mRainTv.setText(rainfall + "%");
+                mRainTv.setVisibility(View.VISIBLE);
+            } else {
+                mRainTv.setVisibility(View.GONE);
             }
         }
     }

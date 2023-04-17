@@ -1,119 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="510dp">
+    android:layout_height="510dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-<!--    <View-->
-<!--        android:id="@+id/line_two"-->
-<!--        android:layout_width="0.2dp"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_gravity="right"-->
-<!--        android:background="#28ffffff" />-->
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_week"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="今天"
+        android:textColor="#FFFFFF"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:text="12/07"
+        android:textColor="#FFFFFF"
+        android:textSize="12dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_marginTop="6dp"
         android:orientation="vertical">
-
-
-        <TextView
-            android:id="@+id/tv_week"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:text="今天"
-            android:textColor="#FFFFFF"
-            android:textSize="16dp" />
-
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="center"
-            android:text="12/07"
-            android:textColor="#FFFFFF"
-            android:textSize="12dp" />
 
         <ImageView
             android:id="@+id/iv_day_weather"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="10dp"
             android:src="@drawable/icon3" />
 
-        <TextView
-            android:id="@+id/tv_day_weather"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:autoSizeMinTextSize="10dp"
-            android:autoSizeTextType="uniform"
-            android:ellipsize="middle"
-            android:gravity="center"
-            android:lines="1"
-            android:singleLine="true"
-            android:text="大部分地区多云"
-            android:textColor="@color/white"
-            android:textSize="14dp" />
-
         <com.goodtech.tq.utils.font.AlternateBoldTextView
-            android:id="@+id/tv_day_temp"
+            android:id="@+id/tv_day_rain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="-4dp"
             android:gravity="center"
             android:singleLine="true"
             android:text="29°"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
+            android:textColor="@color/color_8ee8ff"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
 
-        <com.goodtech.tq.widget.weatherview.TemperatureView
-            android:id="@+id/ttv_day"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp" />
+    </LinearLayout>
 
-        <com.goodtech.tq.utils.font.AlternateBoldTextView
-            android:id="@+id/tv_night_temp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="29°"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
+    <TextView
+        android:id="@+id/tv_day_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:autoSizeMinTextSize="10dp"
+        android:autoSizeTextType="uniform"
+        android:ellipsize="middle"
+        android:gravity="center"
+        android:lines="1"
+        android:singleLine="true"
+        android:text="大部分地区多云"
+        android:textColor="@color/white"
+        android:textSize="14dp" />
+
+    <com.goodtech.tq.utils.font.AlternateBoldTextView
+        android:id="@+id/tv_day_temp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="29°"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <com.goodtech.tq.widget.weatherview.TemperatureView
+        android:id="@+id/ttv_day"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_weight="1" />
+
+    <com.goodtech.tq.utils.font.AlternateBoldTextView
+        android:id="@+id/tv_night_temp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="29°"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_marginBottom="2dp"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/iv_night_weather"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginBottom="4dp"
             android:src="@drawable/icon3" />
 
-        <TextView
-            android:id="@+id/tv_night_weather"
+        <com.goodtech.tq.utils.font.AlternateBoldTextView
+            android:id="@+id/tv_night_rain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="5dp"
-            android:lines="1"
-            android:autoSizeMinTextSize="10dp"
-            android:autoSizeTextType="uniform"
-            android:ellipsize="middle"
+            android:layout_height="18dp"
+            android:layout_marginTop="-4dp"
             android:gravity="center"
             android:singleLine="true"
-            android:text="晴"
-            android:textColor="@color/white"
-            android:textSize="14dp" />
+            android:text="29°"
+            android:textColor="@color/color_8ee8ff"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_night_weather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="5dp"
+        android:autoSizeMinTextSize="10dp"
+        android:autoSizeTextType="uniform"
+        android:ellipsize="middle"
+        android:gravity="center"
+        android:lines="1"
+        android:singleLine="true"
+        android:text="晴"
+        android:textColor="@color/white"
+        android:textSize="14dp" />
 
-</FrameLayout>
+</LinearLayout>

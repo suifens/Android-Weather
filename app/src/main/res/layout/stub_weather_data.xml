@@ -24,7 +24,7 @@
     <com.goodtech.tq.fragment.view.HoursItemView
         android:id="@+id/item_hours"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="155dp"
         android:layout_marginTop="10dp"/>
 
     <FrameLayout

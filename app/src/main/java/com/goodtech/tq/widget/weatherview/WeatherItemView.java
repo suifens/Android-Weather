@@ -1,5 +1,6 @@
 package com.goodtech.tq.widget.weatherview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,9 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.utils.font.AlternateBoldTextView;
 
-
+@SuppressLint("SetTextI18n")
 public class WeatherItemView extends LinearLayout {
 
     private View rootView;
@@ -25,6 +27,9 @@ public class WeatherItemView extends LinearLayout {
     private TemperatureView ttvTemp;
     private ImageView ivDayWeather;
     private ImageView ivNightWeather;
+
+    private AlternateBoldTextView tvDayRain;
+    private AlternateBoldTextView tvNightRain;
 
     public WeatherItemView(Context context) {
         this(context, null);
@@ -47,6 +52,8 @@ public class WeatherItemView extends LinearLayout {
         tvNightWeather = (TextView) rootView.findViewById(R.id.tv_night_weather);
         tvDayTemp = rootView.findViewById(R.id.tv_day_temp);
         tvNightTemp = rootView.findViewById(R.id.tv_night_temp);
+        tvDayRain = rootView.findViewById(R.id.tv_day_rain);
+        tvNightRain = rootView.findViewById(R.id.tv_night_rain);
         ttvTemp = (TemperatureView) rootView.findViewById(R.id.ttv_day);
         ivDayWeather = (ImageView) rootView.findViewById(R.id.iv_day_weather);
         ivNightWeather = (ImageView) rootView.findViewById(R.id.iv_night_weather);
@@ -78,13 +85,29 @@ public class WeatherItemView extends LinearLayout {
     }
 
     public void setDayWeather(String dayWeather) {
-        if (tvDayWeather != null)
+        if (tvDayWeather != null) {
             tvDayWeather.setText(dayWeather);
+            int rainfall = WeatherUtils.getRainfall(dayWeather);
+            if (rainfall > 0) {
+                tvDayRain.setText(rainfall + "%");
+                tvDayRain.setVisibility(VISIBLE);
+            } else {
+                tvDayRain.setVisibility(GONE);
+            }
+        }
     }
 
     public void setNightWeather(String nightWeather) {
-        if (tvNightWeather != null)
+        if (tvNightWeather != null) {
             tvNightWeather.setText(nightWeather);
+            int rainfall = WeatherUtils.getRainfall(nightWeather);
+            if (rainfall > 0) {
+                tvNightRain.setText(rainfall + "%");
+                tvNightRain.setVisibility(VISIBLE);
+            } else {
+                tvNightRain.setVisibility(GONE);
+            }
+        }
     }
 
     public void setDayTemp(int dayTemp) {
