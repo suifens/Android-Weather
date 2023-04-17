@@ -125,7 +125,7 @@ public class HoursItemView extends LinearLayout {
                     curHourly.fcst_valid = System.currentTimeMillis() / 1000;
                     curHourly.metric = metric;
                     curHourly.icon_cd = observation.wxIcon;
-                    curHourly.phraseChar = observation.wxPhrase;
+                    curHourly.phraseChar = observation.getWxPhrase();
                     hourlies.add(curHourly);
                 }
             }

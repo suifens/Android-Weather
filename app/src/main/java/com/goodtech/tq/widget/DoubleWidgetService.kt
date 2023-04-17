@@ -196,10 +196,10 @@ class DoubleWidgetService : LifecycleService() {
                 )
                 if (todayPart != null) {
                     val observation: Observation = model.observation
-                    val phraseChar: String = if (todayPart.phraseChar.isNotEmpty()) {
-                        todayPart.phraseChar
+                    val phraseChar: String = if (todayPart.getPhraseChar().isNotEmpty()) {
+                        todayPart.getPhraseChar()
                     } else {
-                        observation.wxPhrase
+                        observation.getWxPhrase()
                     }
                     remoteViews.setTextViewText(
                         R.id.tv_weather_today,
@@ -224,7 +224,7 @@ class DoubleWidgetService : LifecycleService() {
                     )
                     if (tomorrowPart != null) remoteViews.setTextViewText(
                         R.id.tv_weather_morn,
-                        tomorrowPart.phraseChar
+                        tomorrowPart.getPhraseChar()
                     )
                 }
             }
@@ -239,7 +239,7 @@ class DoubleWidgetService : LifecycleService() {
                             R.id.iconImgView,
                             ImageUtils.weatherImageRes(hourly.icon_cd)
                         )
-                        remoteViews.setTextViewText(R.id.tv_wx_phrase, hourly.phraseChar)
+                        remoteViews.setTextViewText(R.id.tv_wx_phrase, hourly.getPhraseChar())
                         if (hourly.metric != null) {
                             remoteViews.setTextViewText(
                                 R.id.tv_rh_wrap, String.format(
@@ -271,7 +271,7 @@ class DoubleWidgetService : LifecycleService() {
                     ImageUtils.weatherImageRes(observation.wxIcon)
                 )
                 remoteViews.setTextViewText(R.id.tv_temperature, String.format("%d°", metric.temp))
-                remoteViews.setTextViewText(R.id.tv_wx_phrase, observation.wxPhrase)
+                remoteViews.setTextViewText(R.id.tv_wx_phrase, observation.getWxPhrase())
             }
         }
 

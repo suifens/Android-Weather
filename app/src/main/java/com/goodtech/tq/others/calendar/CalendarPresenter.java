@@ -58,7 +58,8 @@ public class CalendarPresenter {
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 try {
                     if (success) {
-                        if (!jsonObject.isNull("result")) {
+                        if (!jsonObject.isNull("result")
+                                && jsonObject.getJSONObject("result").isNull("data")) {
                             JSONObject data = jsonObject.getJSONObject("result").getJSONObject("data");
                             DayDetail model = new Gson().fromJson(String.valueOf(data), new TypeToken<DayDetail>() {
                             }.getType());

@@ -49,6 +49,11 @@ public class Hourly implements Parcelable {
     public boolean sunrise;
     public boolean sunset;
 
+    public String getPhraseChar() {
+        if (icon_cd == 26) return "阴天";
+        return phraseChar;
+    }
+
     @Override
     public String toString() {
         return "Hourly {" + "\n" +

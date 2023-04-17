@@ -75,10 +75,10 @@ public class RecentItemView extends LinearLayout {
 
             Daily today = weatherModel.today();
             if (today != null) {
-                mNoticeTv.setText(String.format("今天：当前%s，最高气温%d°，最低气温%d°", observation.wxPhrase,
+                mNoticeTv.setText(String.format("今天：当前%s，最高气温%d°，最低气温%d°", observation.getWxPhrase(),
                         today.metric.maxTemp, today.metric.minTemp));
             } else {
-                mNoticeTv.setText(String.format("今天：当前%s，最高气温%d°，最低气温%d°", observation.wxPhrase,
+                mNoticeTv.setText(String.format("今天：当前%s，最高气温%d°，最低气温%d°", observation.getWxPhrase(),
                         metric.maxTemp, metric.minTemp));
             }
 
@@ -90,10 +90,10 @@ public class RecentItemView extends LinearLayout {
                 Daypart todayPart = day ? today.dayPart : today.nightPart;
                 mTTempTv.setText(String.format("%d°/%d°", today.metric.maxTemp, today.metric.minTemp));
                 if (todayPart != null) {
-                    if (!todayPart.phraseChar.isEmpty()) {
-                        mTPhraseTv.setText(todayPart.phraseChar);
+                    if (!todayPart.getPhraseChar().isEmpty()) {
+                        mTPhraseTv.setText(todayPart.getPhraseChar());
                     } else {
-                        mTPhraseTv.setText(observation.wxPhrase);
+                        mTPhraseTv.setText(observation.getWxPhrase());
                     }
                 }
 
@@ -109,7 +109,7 @@ public class RecentItemView extends LinearLayout {
                 if (tomorrow != null) {
                     Daypart tomorrowPart = day ? tomorrow.dayPart : tomorrow.nightPart;
                     mMTempTv.setText(String.format("%d°/%d°", tomorrow.metric.maxTemp, tomorrow.metric.minTemp));
-                    if (tomorrowPart != null) mMPhraseTv.setText(tomorrowPart.phraseChar);
+                    if (tomorrowPart != null) mMPhraseTv.setText(tomorrowPart.getPhraseChar());
                 }
             }
         }

@@ -463,12 +463,12 @@ public class WeatherView extends HorizontalScrollView {
 
                 itemView.setDayTemp(model.metric.maxTemp);
                 if (model.dayPart != null) {
-                    itemView.setDayWeather(model.dayPart.phraseChar);
+                    itemView.setDayWeather(model.dayPart.getPhraseChar());
                     itemView.setDayImg(ImageUtils.weatherImageRes(model.dayPart.iconCd));
                 }
                 itemView.setNightTemp(model.metric.minTemp);
                 if (model.nightPart != null) {
-                    itemView.setNightWeather(model.nightPart.phraseChar);
+                    itemView.setNightWeather(model.nightPart.getPhraseChar());
                     itemView.setNightImg(ImageUtils.weatherImageRes(model.nightPart.iconCd));
                 }
                 // itemView.setAirLevel(model.getAirLevel());

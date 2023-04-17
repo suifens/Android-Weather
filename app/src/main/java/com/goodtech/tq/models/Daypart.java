@@ -33,6 +33,12 @@ public class Daypart implements Parcelable {
     //  局部多云
     @SerializedName("phrase_32char")
     public String phraseChar;
+
+    public String getPhraseChar() {
+        if (iconCd == 26) return "阴天";
+        return phraseChar;
+    }
+
     //  "rain"
     @SerializedName("precip_type")
     public String precipType;

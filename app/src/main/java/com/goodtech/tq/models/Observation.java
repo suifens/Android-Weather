@@ -42,6 +42,11 @@ public class Observation implements Parcelable {
     @SerializedName("wx_phrase")
     public String wxPhrase;
 
+    public String getWxPhrase() {
+        if (wxIcon == 26) return "阴天";
+        return wxPhrase;
+    }
+
     @Override
     public String toString() {
         return "Observation {" + "\n" +

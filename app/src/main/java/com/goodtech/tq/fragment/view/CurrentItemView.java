@@ -120,7 +120,7 @@ public class CurrentItemView extends ConstraintLayout {
                             mTempTv.setText(String.format("%d°", hourly.metric.temp));
                             hadSetTemp = true;
                         }
-                        mPhraseTv.setText(hourly.phraseChar);
+                        mPhraseTv.setText(hourly.getPhraseChar());
                     }
                 }
             }
@@ -131,10 +131,10 @@ public class CurrentItemView extends ConstraintLayout {
 
                 // Daily today = model.today();
                 // if (today != null) {
-                //     mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                //     mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.getWxPhrase(),
                 //             today.metric.maxTemp, today.metric.minTemp));
                 // } else {
-                //     mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.wxPhrase,
+                //     mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.getWxPhrase(),
                 //             metric.maxTemp, metric.minTemp));
                 // }
 
@@ -143,7 +143,7 @@ public class CurrentItemView extends ConstraintLayout {
                             WeatherUtils.windGrade(metric.wspd), observation.rh));
                     mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
                     mTempTv.setText(String.format("%d°", metric.temp));
-                    mPhraseTv.setText(observation.wxPhrase);
+                    mPhraseTv.setText(observation.getWxPhrase());
                 }
             }
 

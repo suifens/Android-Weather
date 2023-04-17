@@ -84,7 +84,7 @@ public class NotificationUtil {
                     if (dayHour.equals(current)) {
                         //
                         views.setImageViewResource(R.id.ivWeather, ImageUtils.weatherImageRes(hourly.icon_cd));
-                        views.setTextViewText(R.id.tvWeather, hourly.phraseChar);
+                        views.setTextViewText(R.id.tvWeather, hourly.getPhraseChar());
 
                         if (hourly.metric != null) {
                             views.setTextViewText(R.id.tvTemp, String.format("%d°", hourly.metric.temp));
@@ -100,7 +100,7 @@ public class NotificationUtil {
 
                 views.setImageViewResource(R.id.ivWeather, ImageUtils.weatherImageRes(observation.wxIcon));
                 views.setTextViewText(R.id.tvTemp, String.format("%d°", metric.temp));
-                views.setTextViewText(R.id.tvWeather, observation.wxPhrase);
+                views.setTextViewText(R.id.tvWeather, observation.getWxPhrase());
             }
         }
         
