@@ -112,7 +112,7 @@ public class AdFeedManager {
                 .setGMAdSlotBaiduOption(GMAdOptionUtil.getGMAdSlotBaiduOption().build())//百度相关的配置
                 .setGMAdSlotGDTOption(adSlotNativeBuilder.build())//gdt相关的配置
                 .setAdmobNativeAdOptions(GMAdOptionUtil.getAdmobNativeAdOptions())//admob相关配置
-                .setAdStyleType(styleType)//必传，表示请求的模板广告还是原生广告，AdSlot.TYPE_EXPRESS_AD：模板广告 ； AdSlot.TYPE_NATIVE_AD：原生广告
+                // .setAdStyleType(styleType)//必传，表示请求的模板广告还是原生广告，AdSlot.TYPE_EXPRESS_AD：模板广告 ； AdSlot.TYPE_NATIVE_AD：原生广告
                 // 备注
                 // 1:如果是信息流自渲染广告，设置广告图片期望的图片宽高 ，不能为0
                 // 2:如果是信息流模板广告，宽度设置为希望的宽度，高度设置为0(0为高度选择自适应参数)

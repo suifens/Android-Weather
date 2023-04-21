@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
 
+import com.bumptech.glide.Glide;
 import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.v2.GMAdConstant;
 import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAd;
@@ -27,9 +28,11 @@ import com.goodtech.tq.fragment.view.HoursItemView;
 import com.goodtech.tq.fragment.view.LineTempItemView;
 import com.goodtech.tq.fragment.view.ObservationView;
 import com.goodtech.tq.fragment.view.RecentItemView;
+import com.goodtech.tq.helpers.BtnLinkHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.manager.AdFeedManager;
+import com.goodtech.tq.models.BtnLinkModel;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.models.WeatherModel;
@@ -204,7 +207,7 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
                 if (mWeatherModel.hourlies != null) {
                     mHoursView.setHourlies(mWeatherModel);
                 }
-                
+
                 if (mCityMode != null) {
                     mObservationView.setData(mWeatherModel);
                 }
@@ -286,25 +289,46 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
 
     @Override
     public void onTaxi() {
+        String link = "https://kzurl10.cn/Z9Nks";
+        String title = "免费打车券";
+        BtnLinkModel model = BtnLinkHelper.getBtnLink("AD_1");
+        if (model != null) {
+            link = model.getH5link();
+            title = model.getTempType();
+        }
         MyTestActivity.redirectTo(requireActivity(),
-                "https://kzurl10.cn/Z9Nks",
-                "免费打车券",
+                link,
+                title,
                 "DaChe");
     }
 
     @Override
     public void onMeituan() {
+        String link = "https://kurl04.cn/ZRSxc";
+        String title = "美团大额券";
+        BtnLinkModel model = BtnLinkHelper.getBtnLink("AD_2");
+        if (model != null) {
+            link = model.getH5link();
+            title = model.getTempType();
+        }
         MyTestActivity.redirectTo(requireActivity(),
-                "https://kurl04.cn/ZRSxc",
-                "美团大额券",
+                link,
+                title,
                 "MeiTuan");
     }
 
     @Override
     public void onEleme() {
+        String link = "https://kzurl05.cn/ZRJjc";
+        String title = "饿了么大红包";
+        BtnLinkModel model = BtnLinkHelper.getBtnLink("AD_3");
+        if (model != null) {
+            link = model.getH5link();
+            title = model.getTempType();
+        }
         MyTestActivity.redirectTo(requireActivity(),
-                "https://kzurl05.cn/ZRJjc",
-                "饿了么大红包",
+                link,
+                title,
                 "Eleme");
     }
 

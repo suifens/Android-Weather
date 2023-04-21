@@ -12,9 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.bumptech.glide.Glide;
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.viewholder.HeaderItemsView;
+import com.goodtech.tq.helpers.BtnLinkHelper;
 import com.goodtech.tq.listener.WeatherHeaderListener;
+import com.goodtech.tq.models.BtnLinkModel;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.models.Metric;
@@ -59,6 +62,10 @@ public class CurrentItemView extends ConstraintLayout {
 
     private WeatherHeaderListener mListener;
 
+    private ImageView mTaxiImgV;
+    private ImageView mMeituanImgV;
+    private ImageView mElemeImgV;
+
     @SuppressLint("DefaultLocale")
     protected void initData() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.weather_item_current, this, true);
@@ -69,24 +76,39 @@ public class CurrentItemView extends ConstraintLayout {
         mItemsView = view.findViewById(R.id.view_items);
         mWarningBtn = view.findViewById(R.id.warningBtn);
         // 打车
+        mTaxiImgV = view.findViewById(R.id.btn_dache);
         view.findViewById(R.id.btn_dache).setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onTaxi();
             }
         });
+        BtnLinkModel taxiModel = BtnLinkHelper.getBtnLink("AD_1");
+        if (taxiModel != null) {
+            Glide.with(getContext()).load(taxiModel.getImgPath()).placeholder(R.drawable.pic_dache).into(mTaxiImgV);
+        }
 
+        mMeituanImgV = view.findViewById(R.id.btn_meituan);
         view.findViewById(R.id.btn_meituan).setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onMeituan();
             }
         });
+        BtnLinkModel meituanModel = BtnLinkHelper.getBtnLink("AD_2");
+        if (meituanModel != null) {
+            Glide.with(getContext()).load(meituanModel.getImgPath()).placeholder(R.drawable.pic_meituan).into(mMeituanImgV);
+        }
 
         //
+        mElemeImgV = view.findViewById(R.id.btn_eleme);
         view.findViewById(R.id.btn_eleme).setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onEleme();
             }
         });
+        BtnLinkModel elemeModel = BtnLinkHelper.getBtnLink("AD_3");
+        if (elemeModel != null) {
+            Glide.with(getContext()).load(elemeModel.getImgPath()).placeholder(R.drawable.pic_eleme).into(mElemeImgV);
+        }
 
         view.findViewById(R.id.warningBtn).setOnClickListener(v -> {
             if (mListener != null) {

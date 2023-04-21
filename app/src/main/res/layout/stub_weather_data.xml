@@ -40,7 +40,7 @@
     <com.goodtech.tq.fragment.view.DailyListItemView
         android:id="@+id/item_daily_list"
         android:layout_width="match_parent"
-        android:layout_height="510dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         />
