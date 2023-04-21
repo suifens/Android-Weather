@@ -34,6 +34,8 @@ public class WeatherModel {
 
     public JuheLifeModel lifeModel;
 
+    public JuheAlarmModel alarmModel;
+
     public boolean needReload() {
         long curTime = System.currentTimeMillis() / 1000;
         return curTime - expireTime > 3600

@@ -5,11 +5,12 @@ import android.text.TextUtils;
 
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.models.AirQualityModel;
 import com.goodtech.tq.models.JuheAirModel;
+import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.models.JuheLifeModel;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.TimeUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -17,25 +18,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * com.goodtech.tq.helpers
  */
 @SuppressLint("DefaultLocale")
 public class WeatherSpHelper {
-
-    /**
-     * 保存当前定位
-     */
-//    @SuppressLint("DefaultLocale")
-//    public static void saveWeather(WeatherModel weatherModel, int cid) {
-//        String key = String.format("weather_%d", cid);
-//        if (weatherModel != null) {
-//            Gson gson = new Gson();
-//            String json = gson.toJson(weatherModel);
-//            SpUtils.getInstance().putString(key, json);
-//        }
-//    }
-
     public static void saveWeather(JSONObject jsonObject, int cid) {
         String key = String.format("weather_%d", cid);
         String timeKey = String.format("weather_%d_update", cid);
@@ -75,6 +64,13 @@ public class WeatherSpHelper {
             }
         }
 
+        if (weatherModel != null && !TextUtils.isEmpty(getAlarm(cid))) {
+            ArrayList<JuheAlarmModel> list = new Gson().fromJson(getAlarm(cid), new TypeToken<ArrayList<JuheAlarmModel>>() {}.getType());
+            if (list != null && list.size() > 0) {
+                weatherModel.alarmModel = list.get(0);
+            }
+        }
+
         return weatherModel;
     }
 
@@ -97,8 +93,6 @@ public class WeatherSpHelper {
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject);
             SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
-
-            // EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
         }
     }
 
@@ -126,6 +120,20 @@ public class WeatherSpHelper {
     public static void deleteWeatherModel(int cid) {
         String key = String.format("weather_%d", cid);
         SpUtils.getInstance().remove(key);
+    }
+
+    public static void saveAlarm(int cid, String jsonObject) {
+        String dayTime = TimeUtils.timeToDay(System.currentTimeMillis());
+        String key = String.format("alarm_%d_%s", cid, dayTime);
+        if (jsonObject != null) {
+            SpUtils.getInstance().putString(key, jsonObject);
+        }
+    }
+
+    public static String getAlarm(int cid) {
+        String dayTime = TimeUtils.timeToDay(System.currentTimeMillis());
+        String key = String.format("alarm_%d_%s", cid, dayTime);
+        return SpUtils.getInstance().getString(key, "");
     }
 
 }

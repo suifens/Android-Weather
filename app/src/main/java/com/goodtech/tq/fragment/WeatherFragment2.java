@@ -31,6 +31,7 @@ import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.manager.AdFeedManager;
 import com.goodtech.tq.models.CityMode;
+import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.others.airQuality.AirQualityActivity;
 import com.goodtech.tq.others.airQuality.view.AirLifeView;
@@ -42,6 +43,8 @@ import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.views.AlarmPopup;
+import com.lxj.xpopup.XPopup;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -57,6 +60,7 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
     protected SmartRefreshLayout mRefreshLayout;
     protected NestedScrollView mScrollView;
     protected WeatherModel mWeatherModel;
+    protected JuheAlarmModel mAlarmModel;
 
     protected View mStateBarBg;
 
@@ -176,6 +180,7 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
     public void changeWeather(WeatherModel model, CityMode cityMode) {
         this.mWeatherModel = model;
         this.mCityMode = cityMode;
+        this.mAlarmModel = model.alarmModel;
         updateData();
     }
 
@@ -194,7 +199,7 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
 
                 mContainerView.setVisibility(View.VISIBLE);
 
-                mCurrentView.setData(mWeatherModel);
+                mCurrentView.setData(mWeatherModel, mAlarmModel);
                 mRecentView.setData(mWeatherModel);
                 if (mWeatherModel.hourlies != null) {
                     mHoursView.setHourlies(mWeatherModel);
@@ -303,6 +308,17 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
                 "Eleme");
     }
 
+    @Override
+    public void onWarningBtn() {
+        if (mAlarmModel != null) {
+            AlarmPopup popup = new AlarmPopup(requireActivity());
+            popup.setupData(mAlarmModel);
+            new XPopup.Builder(requireActivity())
+                    .isDestroyOnDismiss(true)
+                    .asCustom(popup)
+                    .show();
+        }
+    }
 
     // @Override
     // public void onDyMovie() {

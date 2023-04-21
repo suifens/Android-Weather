@@ -237,12 +237,12 @@ dependencies {
 
     /*GroMore广告显示*/
     //GroMore_sdk
-    implementation "com.gromore.cn:gromore-sdk:4.0.0.1"  //groMore sdk
+    implementation "com.gromore.cn:gromore-sdk:4.1.0.4"  //groMore sdk
     //GroMore_sdk adapter
-    implementation "com.gromore.cn:pangle-adapter:5.1.0.2.0" //穿山甲 adapter
+    implementation "com.gromore.cn:pangle-adapter:5.1.0.2.3" //穿山甲 adapter
     //pangle
     implementation(name: 'open_ad_sdk_5.1.0.2', ext: 'aar')
-    implementation(name: 'Baidu_MobAds_SDK_v9.26', ext: 'aar')
+    implementation(name: 'Baidu_MobAds_SDK_v9.27', ext: 'aar')
 
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
     implementation 'com.tencent.bugly:crashreport:latest.release'
@@ -262,5 +262,8 @@ dependencies {
 
     //  定位功能
     implementation 'com.amap.api:location:latest.integration'
+
+    //  弹窗
+    implementation 'com.github.li-xiaojun:XPopup:2.9.16'
 
 }

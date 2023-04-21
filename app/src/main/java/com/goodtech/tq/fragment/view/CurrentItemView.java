@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,8 +15,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.viewholder.HeaderItemsView;
 import com.goodtech.tq.listener.WeatherHeaderListener;
-import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
+import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.models.Metric;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
@@ -53,11 +54,10 @@ public class CurrentItemView extends ConstraintLayout {
     //天气状态
     public TextView mPhraseTv;
     //提醒
-    // public TextView mNotice;
+    public ImageButton mWarningBtn;
     public HeaderItemsView mItemsView;
 
     private WeatherHeaderListener mListener;
-    // public View mSignTipV;
 
     @SuppressLint("DefaultLocale")
     protected void initData() {
@@ -67,6 +67,7 @@ public class CurrentItemView extends ConstraintLayout {
         mTempTv = view.findViewById(R.id.tv_temperature);
         mPhraseTv = view.findViewById(R.id.tv_wx_phrase);
         mItemsView = view.findViewById(R.id.view_items);
+        mWarningBtn = view.findViewById(R.id.warningBtn);
         // 打车
         view.findViewById(R.id.btn_dache).setOnClickListener(v -> {
             if (mListener != null) {
@@ -87,6 +88,12 @@ public class CurrentItemView extends ConstraintLayout {
             }
         });
 
+        view.findViewById(R.id.warningBtn).setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onWarningBtn();
+            }
+        });
+
         // mSignTipV = view.findViewById(R.id.view_sign_tip);
     }
 
@@ -104,9 +111,16 @@ public class CurrentItemView extends ConstraintLayout {
      * 数据赋值
      */
     @SuppressLint("DefaultLocale")
-    public void setData(WeatherModel model) {
+    public void setData(WeatherModel model, JuheAlarmModel alarmModel) {
         if (model != null) {
             setVisibility(VISIBLE);
+
+            if (alarmModel != null) {
+                mWarningBtn.setVisibility(VISIBLE);
+            } else {
+                mWarningBtn.setVisibility(INVISIBLE);
+            }
+
             boolean hadSetTemp = false;
             String current = TimeUtils.longToString(System.currentTimeMillis(), "MMddHH");
             for (Hourly hourly : model.hourlies) {
@@ -128,15 +142,6 @@ public class CurrentItemView extends ConstraintLayout {
             if (model.observation != null) {
                 Observation observation = model.observation;
                 Metric metric = observation.metric;
-
-                // Daily today = model.today();
-                // if (today != null) {
-                //     mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.getWxPhrase(),
-                //             today.metric.maxTemp, today.metric.minTemp));
-                // } else {
-                //     mNotice.setText(String.format("今天：当前%s，最高气温%dºC，最低气温%dºC", observation.getWxPhrase(),
-                //             metric.maxTemp, metric.minTemp));
-                // }
 
                 if (!hadSetTemp) {
                     mWind_rh.setText(String.format("%s风 %d级｜ 湿度%d%%", observation.wdirCardinal,

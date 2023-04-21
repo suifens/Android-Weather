@@ -20,4 +20,6 @@ public interface WeatherHeaderListener {
     //  饿了吗
     void onEleme();
 
+    void onWarningBtn();
+
 }

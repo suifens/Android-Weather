@@ -6,12 +6,15 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.citySearch.CityHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.listener.CompletionListener;
+import com.goodtech.tq.models.CityCodeMode;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Hourly;
+import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.others.airQuality.AirQualityHelper;
@@ -21,6 +24,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -107,7 +111,7 @@ public class WeatherHttpHelper {
             return false;
         }
 
-        Log.e("TAG", "fetchWeather:  ------------" + cityMode.getMergerName() );
+        Log.e("TAG", "fetchWeather:  ------------" + cityMode.getMergerName());
         if (!TextUtils.isEmpty(cityMode.getLat()) && !TextUtils.isEmpty(cityMode.getLon())) {
             long current = System.currentTimeMillis();
             long lastUpdate = WeatherSpHelper.getLastUpdate(cityMode.getCid());
@@ -120,12 +124,8 @@ public class WeatherHttpHelper {
                     needUpdate = true;
                 }
             }
-//            if (needUpdate) {
-                getWeather(cityMode, callback);
-                return true;
-//            } else {
-//                return false;
-//            }
+            getWeather(cityMode, callback);
+            return true;
         }
         return false;
     }
@@ -142,6 +142,8 @@ public class WeatherHttpHelper {
         AirQualityHelper.fetchAqi(cityMode);
 
         AirQualityHelper.fetchCityLife(cityMode, null);
+        //  获取提醒
+        getAlarm(cityMode);
 
         ApiClient client = ApiClient.getInstance();
         String url = String.format(WEATHER_API, mBaseUrl, cityMode.getLat(), cityMode.getLon());
@@ -213,6 +215,46 @@ public class WeatherHttpHelper {
         }
 
         return model;
+    }
+
+    public void getAlarm(final CityMode cityMode) {
+        if (cityMode == null || TextUtils.isEmpty(cityMode.getCity())) {
+            return;
+        }
+
+        String province_code = null;
+        String city_code = null;
+        ArrayList<CityCodeMode> list = CityHelper.getCityCodes(mContext);
+        for (CityCodeMode cityCodeMode : list) {
+            if (cityCodeMode.getCity_name().contains(cityMode.getCity())) {
+                province_code = cityCodeMode.getProvince_code();
+                city_code = cityCodeMode.getCity_code();
+                break;
+            }
+        }
+
+        if (TextUtils.isEmpty(province_code) || TextUtils.isEmpty(city_code)) {
+            return;
+        }
+
+        JuHeHelper.getInstance().fetchJuheAlarm(province_code, city_code, new ApiResponseHandler() {
+            @Override
+            public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
+                try {
+                    if (success) {
+                        if (!jsonObject.isNull("result")) {
+                            JSONArray data = jsonObject.getJSONArray("result");
+                            ArrayList<JuheAlarmModel> list = new Gson().fromJson(String.valueOf(data), new TypeToken<ArrayList<JuheAlarmModel>>() {}.getType());
+                            if (list != null && list.size() > 0) {
+                                WeatherSpHelper.saveAlarm(cityMode.getCid(), String.valueOf(data));
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }
