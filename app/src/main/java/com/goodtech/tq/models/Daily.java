@@ -3,6 +3,7 @@ package com.goodtech.tq.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.goodtech.tq.utils.TimeUtils;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -58,6 +59,10 @@ public class Daily implements Parcelable {
                 "sunRise = " + sunRise + "\n" +
                 "sunSet = " + sunSet + "\n" +
                 '}';
+    }
+
+    public String getTime() {
+        return TimeUtils.longToString(fcst_valid * 1000, "MM月dd日");
     }
 
 

@@ -123,7 +123,7 @@ public class WeatherSpHelper {
     }
 
     public static void saveAlarm(int cid, String jsonObject) {
-        String dayTime = TimeUtils.timeToDay(System.currentTimeMillis());
+        String dayTime = TimeUtils.longToString(System.currentTimeMillis(), "MM-dd");
         String key = String.format("alarm_%d_%s", cid, dayTime);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject);
@@ -131,9 +131,24 @@ public class WeatherSpHelper {
     }
 
     public static String getAlarm(int cid) {
-        String dayTime = TimeUtils.timeToDay(System.currentTimeMillis());
+        String dayTime = TimeUtils.longToString(System.currentTimeMillis(), "MM-dd");
         String key = String.format("alarm_%d_%s", cid, dayTime);
         return SpUtils.getInstance().getString(key, "");
     }
+
+    // <editor-fold defaultstate="collapsed" desc="昨天天气处理">
+    public static void saveCurrentDay(String jsonObject, int cid) {
+        String dayTime = TimeUtils.longToString(System.currentTimeMillis(), "MM-dd");
+        String key = String.format("weather_%d_%s", cid, dayTime);
+        if (jsonObject != null) {
+            SpUtils.getInstance().putString(key, jsonObject);
+        }
+    }
+
+    public static String getYesterdayWeather(int cid) {
+        String key = String.format("weather_%d_%s", cid, TimeUtils.getYesterday());
+        return SpUtils.getInstance().getString(key, "");
+    }
+    // </editor-fold>
 
 }

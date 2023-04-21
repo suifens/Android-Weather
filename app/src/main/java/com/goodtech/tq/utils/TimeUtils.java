@@ -132,6 +132,11 @@ public class TimeUtils {
         }
     }
 
+    public static String getYesterday() {
+        long yesterday = System.currentTimeMillis() - getDayMillis();
+        return longToString(yesterday, "MM月dd日");
+    }
+
     /**
      * 获取年份
      */
@@ -188,6 +193,10 @@ public class TimeUtils {
 
     public static long getHourMillis() {
         return 60 * 60 * 1000;
+    }
+
+    public static long getDayMillis() {
+        return 60 * 60 * 1000 * 24;
     }
 
     public static String getWeek(String time) {

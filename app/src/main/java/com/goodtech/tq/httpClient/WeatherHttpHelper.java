@@ -161,6 +161,7 @@ public class WeatherHttpHelper {
                 if (success) {
                     WeatherSpHelper.saveWeather(jsonObject, cityMode.getCid());
                     WeatherModel model = parseWeatherJson(jsonObject, cityMode.getCid());
+
                     if (callback != null) {
                         callback.onResponse(true, model, errCode);
                     }
@@ -198,6 +199,30 @@ public class WeatherHttpHelper {
 
             model.dailies = new Gson().fromJson(forecasts, new TypeToken<List<Daily>>() {
             }.getType());
+
+            String todayStr = TimeUtils.longToString(System.currentTimeMillis(), "MM月dd日");
+            String yesterdayStr = TimeUtils.getYesterday();
+            boolean needAddDay = true;
+            for (Daily forecast : model.dailies) {
+                String time = forecast.getTime();
+                if (time.equals(yesterdayStr)) {
+                    needAddDay = false;
+                }
+                if (time.equals(todayStr)) {
+                    WeatherSpHelper.saveCurrentDay(new Gson().toJson(forecast), cid);
+                    break;
+                }
+            }
+            if (needAddDay) {
+                String yesterdayWeather = WeatherSpHelper.getYesterdayWeather(cid);
+                if (yesterdayWeather != null && !TextUtils.isEmpty(yesterdayWeather)) {
+                    Daily daily = new Gson().fromJson(yesterdayWeather, new TypeToken<Daily>() {
+                    }.getType());
+                    if (daily != null) {
+                        model.dailies.add(0, daily);
+                    }
+                }
+            }
         }
 
         //
