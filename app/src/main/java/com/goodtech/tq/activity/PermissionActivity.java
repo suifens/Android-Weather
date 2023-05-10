@@ -183,11 +183,11 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     private void showVisitor() {
         TipHelper.showProgressDialog(this);
         CityMode cityMode = new CityMode();
-        cityMode.setCid(10000);
-        cityMode.setMergerName("北京");
-        cityMode.setCity("北京");
-        cityMode.setLat("39.55");
-        cityMode.setLon("116.24");
+        cityMode.setCid(110100);
+        cityMode.setMergerName("北京市");
+        cityMode.setCity("北京市");
+        cityMode.setLat("39.904989");
+        cityMode.setLon("116.405285");
         cityMode.setPinyin("Beijing");
         LocationSpHelper.addCity(cityMode);
 

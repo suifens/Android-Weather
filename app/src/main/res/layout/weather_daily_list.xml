@@ -9,7 +9,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_1"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
 
     <View
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_2"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
 
     <View
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_3"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
 
     <View
         android:layout_width="match_parent"
@@ -51,7 +51,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_4"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
 
     <View
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_5"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
 
     <View
         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_6"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
 
     <View
         android:layout_width="match_parent"
@@ -93,7 +93,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_7"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
 
     <View
         android:layout_width="match_parent"
@@ -107,7 +107,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_8"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -120,7 +120,7 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_9"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -133,6 +133,23 @@
     <com.goodtech.tq.fragment.view.DailyItemView
         android:id="@+id/item_daily_10"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="54dp" />
+    <View
+        android:id="@+id/line_11"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        android:alpha="0.2"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        android:visibility="gone"
+        />
+
+    <com.goodtech.tq.fragment.view.DailyItemView
+        android:id="@+id/item_daily_11"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:visibility="gone"
+        />
 
 </LinearLayout>

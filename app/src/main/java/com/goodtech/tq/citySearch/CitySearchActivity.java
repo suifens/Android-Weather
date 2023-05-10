@@ -240,6 +240,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             mRecommendHeaderView.hideSoftInput(this);
         }
 
+        TipHelper.showProgressDialog(this);
         mHandler.postDelayed(() -> {
             Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -120,7 +120,7 @@ public class NotificationUtil {
      */
     private static NotificationCompat.Builder initBaseBuilder(Context context, String title, String content, int icon) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             channel.canBypassDnd();//可否绕过请勿打扰模式
             channel.enableLights(true); // 闪光

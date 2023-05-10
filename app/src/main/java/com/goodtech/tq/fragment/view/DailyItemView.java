@@ -21,6 +21,7 @@ import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.WeatherUtils;
+import com.goodtech.tq.utils.font.AlternateBoldTextView;
 
 
 /**
@@ -47,6 +48,8 @@ public class DailyItemView extends ConstraintLayout {
     public ImageView mIconImgV;
     public TextView mMaxTempTv;
     public TextView mMinTempTv;
+
+    private AlternateBoldTextView mRainTv;
     
     @SuppressLint("DefaultLocale")
     protected void initData() {
@@ -55,6 +58,7 @@ public class DailyItemView extends ConstraintLayout {
         mMinTempTv = view.findViewById(R.id.tv_min_temp);
         mDayTv = view.findViewById(R.id.tv_day_of_week);
         mIconImgV = view.findViewById(R.id.img_icon);
+        mRainTv = view.findViewById(R.id.tv_rain);
     }
 
     @SuppressLint("DefaultLocale")
@@ -74,10 +78,23 @@ public class DailyItemView extends ConstraintLayout {
                 Observation observation = model.observation;
                 if (observation != null) {
                     mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
+                    updateRain(observation.getWxPhrase());
                 }
             } else {
                 mIconImgV.setImageResource(ImageUtils.weatherImageRes(dayPart.iconCd));
+                updateRain(dayPart.getPhraseChar());
             }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateRain(String phrase) {
+        int rainfall = WeatherUtils.getRainfall(phrase);
+        if (rainfall > 0) {
+            mRainTv.setText(rainfall + "%");
+            mRainTv.setVisibility(VISIBLE);
+        } else {
+            mRainTv.setVisibility(GONE);
         }
     }
 

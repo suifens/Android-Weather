@@ -62,9 +62,11 @@ public class CurrentItemView extends ConstraintLayout {
 
     private WeatherHeaderListener mListener;
 
-    private ImageView mTaxiImgV;
-    private ImageView mMeituanImgV;
-    private ImageView mElemeImgV;
+    private ImageView mHandle_1;
+    private View mView_2;
+    private ImageView mHandle_2;
+    private View mView_3;
+    private ImageView mHandle_3;
 
     @SuppressLint("DefaultLocale")
     protected void initData() {
@@ -76,38 +78,53 @@ public class CurrentItemView extends ConstraintLayout {
         mItemsView = view.findViewById(R.id.view_items);
         mWarningBtn = view.findViewById(R.id.warningBtn);
         // 打车
-        mTaxiImgV = view.findViewById(R.id.btn_dache);
-        view.findViewById(R.id.btn_dache).setOnClickListener(v -> {
+        mHandle_1 = view.findViewById(R.id.btn_handle_1);
+        mHandle_1.setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onTaxi();
             }
         });
         BtnLinkModel taxiModel = BtnLinkHelper.getBtnLink("AD_1");
         if (taxiModel != null) {
-            Glide.with(getContext()).load(taxiModel.getImgPath()).placeholder(R.drawable.pic_dache).into(mTaxiImgV);
+            mHandle_1.setVisibility(View.VISIBLE);
+            Glide.with(getContext()).load(taxiModel.getImgPath()).placeholder(R.drawable.pic_dache).into(mHandle_1);
+        } else {
+            mHandle_1.setVisibility(View.GONE);
         }
 
-        mMeituanImgV = view.findViewById(R.id.btn_meituan);
-        view.findViewById(R.id.btn_meituan).setOnClickListener(v -> {
+        mHandle_2 = view.findViewById(R.id.btn_handle_2);
+        mView_2 = view.findViewById(R.id.view_handle_2);
+        mHandle_2.setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onMeituan();
             }
         });
         BtnLinkModel meituanModel = BtnLinkHelper.getBtnLink("AD_2");
         if (meituanModel != null) {
-            Glide.with(getContext()).load(meituanModel.getImgPath()).placeholder(R.drawable.pic_meituan).into(mMeituanImgV);
+            mHandle_2.setVisibility(View.VISIBLE);
+            mView_2.setVisibility(View.VISIBLE);
+            Glide.with(getContext()).load(meituanModel.getImgPath()).placeholder(R.drawable.pic_meituan).into(mHandle_2);
+        } else {
+            mHandle_2.setVisibility(View.GONE);
+            mView_2.setVisibility(View.GONE);
         }
 
         //
-        mElemeImgV = view.findViewById(R.id.btn_eleme);
-        view.findViewById(R.id.btn_eleme).setOnClickListener(v -> {
+        mHandle_3 = view.findViewById(R.id.btn_handle_3);
+        mView_3 = view.findViewById(R.id.view_handle_3);
+        mHandle_3.setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onEleme();
             }
         });
         BtnLinkModel elemeModel = BtnLinkHelper.getBtnLink("AD_3");
         if (elemeModel != null) {
-            Glide.with(getContext()).load(elemeModel.getImgPath()).placeholder(R.drawable.pic_eleme).into(mElemeImgV);
+            mHandle_3.setVisibility(View.VISIBLE);
+            mView_3.setVisibility(View.VISIBLE);
+            Glide.with(getContext()).load(elemeModel.getImgPath()).placeholder(R.drawable.pic_eleme).into(mHandle_3);
+        } else {
+            mHandle_3.setVisibility(View.GONE);
+            mView_3.setVisibility(View.GONE);
         }
 
         view.findViewById(R.id.warningBtn).setOnClickListener(v -> {
@@ -133,11 +150,11 @@ public class CurrentItemView extends ConstraintLayout {
      * 数据赋值
      */
     @SuppressLint("DefaultLocale")
-    public void setData(WeatherModel model, JuheAlarmModel alarmModel) {
+    public void setData(WeatherModel model) {
         if (model != null) {
             setVisibility(VISIBLE);
 
-            if (alarmModel != null) {
+            if (model.alarmModel != null) {
                 mWarningBtn.setVisibility(VISIBLE);
             } else {
                 mWarningBtn.setVisibility(INVISIBLE);

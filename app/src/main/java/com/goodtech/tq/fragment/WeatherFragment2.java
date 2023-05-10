@@ -63,7 +63,6 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
     protected SmartRefreshLayout mRefreshLayout;
     protected NestedScrollView mScrollView;
     protected WeatherModel mWeatherModel;
-    protected JuheAlarmModel mAlarmModel;
 
     protected View mStateBarBg;
 
@@ -183,7 +182,6 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
     public void changeWeather(WeatherModel model, CityMode cityMode) {
         this.mWeatherModel = model;
         this.mCityMode = cityMode;
-        this.mAlarmModel = model.alarmModel;
         updateData();
     }
 
@@ -202,7 +200,7 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
 
                 mContainerView.setVisibility(View.VISIBLE);
 
-                mCurrentView.setData(mWeatherModel, mAlarmModel);
+                mCurrentView.setData(mWeatherModel);
                 mRecentView.setData(mWeatherModel);
                 if (mWeatherModel.hourlies != null) {
                     mHoursView.setHourlies(mWeatherModel);
@@ -291,7 +289,7 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
     public void onTaxi() {
         String link = "https://kzurl10.cn/Z9Nks";
         String title = "免费打车券";
-        BtnLinkModel model = BtnLinkHelper.getBtnLink("AD_1");
+        BtnLinkModel model = BtnLinkHelper.getBtnLink(0);
         if (model != null) {
             link = model.getH5link();
             title = model.getTempType();
@@ -306,7 +304,7 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
     public void onMeituan() {
         String link = "https://kurl04.cn/ZRSxc";
         String title = "美团大额券";
-        BtnLinkModel model = BtnLinkHelper.getBtnLink("AD_2");
+        BtnLinkModel model = BtnLinkHelper.getBtnLink(1);
         if (model != null) {
             link = model.getH5link();
             title = model.getTempType();
@@ -321,7 +319,7 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
     public void onEleme() {
         String link = "https://kzurl05.cn/ZRJjc";
         String title = "饿了么大红包";
-        BtnLinkModel model = BtnLinkHelper.getBtnLink("AD_3");
+        BtnLinkModel model = BtnLinkHelper.getBtnLink(2);
         if (model != null) {
             link = model.getH5link();
             title = model.getTempType();
@@ -334,9 +332,9 @@ public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListene
 
     @Override
     public void onWarningBtn() {
-        if (mAlarmModel != null) {
+        if (mWeatherModel != null && mWeatherModel.alarmModel != null) {
             AlarmPopup popup = new AlarmPopup(requireActivity());
-            popup.setupData(mAlarmModel);
+            popup.setupData(mWeatherModel.alarmModel);
             new XPopup.Builder(requireActivity())
                     .isDestroyOnDismiss(true)
                     .asCustom(popup)

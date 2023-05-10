@@ -5,19 +5,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.Daily;
-import com.goodtech.tq.models.Daypart;
-import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.ImageUtils;
-import com.goodtech.tq.utils.TimeUtils;
 
 
 /**
@@ -50,6 +44,9 @@ public class DailyListItemView extends ConstraintLayout {
     private DailyItemView mDailyView8;
     private DailyItemView mDailyView9;
     private DailyItemView mDailyView10;
+
+    private DailyItemView mDailyView11;
+    private View mLine;
     
     @SuppressLint("DefaultLocale")
     protected void initData() {
@@ -64,16 +61,17 @@ public class DailyListItemView extends ConstraintLayout {
         mDailyView8 = view.findViewById(R.id.item_daily_8);
         mDailyView9 = view.findViewById(R.id.item_daily_9);
         mDailyView10 = view.findViewById(R.id.item_daily_10);
+        mDailyView11 = view.findViewById(R.id.item_daily_11);
+        mLine = view.findViewById(R.id.line_11);
     }
 
     @SuppressLint("DefaultLocale")
     public void setData(WeatherModel model) {
-        if (model == null) {
+        if (model == null || model.dailies == null) {
             return;
         }
 
-        for (int i = 0; i < 10; i++) {
-            if (model.dailies != null && model.dailies.size() > i) {
+        for (int i = 0; i < model.dailies.size(); i++) {
                 Daily daily = model.dailies.get(i);
                 switch (i) {
                     case 0:
@@ -106,8 +104,13 @@ public class DailyListItemView extends ConstraintLayout {
                     case 9:
                         mDailyView10.setData(model, daily);
                         break;
+                    case 10: {
+                        mLine.setVisibility(View.VISIBLE);
+                        mDailyView11.setVisibility(View.VISIBLE);
+                        mDailyView11.setData(model, daily);
+                    }
+                        break;
                 }
-            }
         }
     }
 

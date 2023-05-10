@@ -12,6 +12,7 @@ import com.goodtech.tq.models.calendar.DayDetail;
 import com.goodtech.tq.models.calendar.Holiday;
 import com.goodtech.tq.utils.SpUtils;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -57,10 +58,10 @@ public class CalendarPresenter {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 try {
-                    if (success) {
-                        if (!jsonObject.isNull("result")
-                                && jsonObject.getJSONObject("result").isNull("data")) {
-                            JSONObject data = jsonObject.getJSONObject("result").getJSONObject("data");
+                    if (success && !jsonObject.isNull("result")) {
+                        JSONObject result = jsonObject.getJSONObject("result");
+                        if (!result.isNull("data")) {
+                            JSONObject data = result.getJSONObject("data");
                             DayDetail model = new Gson().fromJson(String.valueOf(data), new TypeToken<DayDetail>() {
                             }.getType());
                             if (model != null) {

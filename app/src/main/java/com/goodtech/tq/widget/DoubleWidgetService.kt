@@ -4,16 +4,17 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.*
+import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import android.os.IBinder
+import android.provider.Settings
 import android.view.View
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.blankj.utilcode.util.LogUtils
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.SplashActivity
 import com.goodtech.tq.alarm.JAlarmReceiver
@@ -49,10 +50,18 @@ class DoubleWidgetService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         isFirst = true
-        LogUtils.e("onCreate: ---------------------")
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        startForeground(Notify_Id_Double, NotificationUtil.createNotification(this, Notify_Id_Double))
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                Notify_Id_Double,
+                NotificationUtil.createNotification(this, Notify_Id_Double),
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+            )
+        } else {
+            startForeground(
+                Notify_Id_Double,
+                NotificationUtil.createNotification(this, Notify_Id_Double)
+            )
+        }
 
         connManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -79,29 +88,46 @@ class DoubleWidgetService : LifecycleService() {
     object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
-            LogUtils.d("network available。。。。")
             updateRemote()
         }
 
         override fun onLost(network: Network) {
             super.onLost(network)
-            LogUtils.d("network unavailable。。。。")
             intervalJob?.cancel()
             intervalJob = null
         }
     }
 
-    val netWorkStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+    private val netWorkStateReceiver = object : BroadcastReceiver() {
+        private val BOOT_ACTION_DOUBLE = "android.intent.action.BOOT_COMPLETED_DOUBLE"
+        override fun onReceive(context: Context, intent: Intent) {
+            if (BOOT_ACTION_DOUBLE == intent.action) {
+                //开启Service
+                openService(context)
+            }
+
             val activeNetworkInfo = connManager.activeNetworkInfo
             if (activeNetworkInfo != null && activeNetworkInfo.isAvailable) {
-                LogUtils.d("network available。。。。")
                 updateRemote()
             } else {
-                LogUtils.d("network unavailable。。。。")
                 intervalJob?.cancel()
                 intervalJob = null
             }
+        }
+    }
+
+    /***
+     * 启动Service的方法
+     *
+     * @param context
+     */
+    private fun openService(context: Context) {
+        val newIntent = Intent(context, DoubleWidgetService::class.java)
+        //判断当前编译的版本是否高于等于 Android8.0 或 26 以上的版本
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
+            context.startForegroundService(newIntent)
+        } else {
+            context.startService(newIntent)
         }
     }
 
@@ -112,10 +138,8 @@ class DoubleWidgetService : LifecycleService() {
             return
         }
         intervalJob = lifecycleScope.launch(Dispatchers.IO + CoroutineExceptionHandler { _, _ ->
-            LogUtils.e("WidgetService: 异常...")
         }) {
             while (isActive) {
-                LogUtils.d("intervalJob run")
                 updateRemoteOnce()
 
                 val curDay = TimeUtils.timeToDay(System.currentTimeMillis())
@@ -305,6 +329,5 @@ class DoubleWidgetService : LifecycleService() {
         } else {
             unregisterReceiver(netWorkStateReceiver)
         }
-        LogUtils.e("onDestroy: ---------------------")
     }
 }

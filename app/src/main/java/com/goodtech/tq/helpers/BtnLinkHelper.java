@@ -38,15 +38,13 @@ public class BtnLinkHelper {
                             String startTime = jsonObject.getString("startTime");
                             long time = TimeUtils.string2Millis(startTime, "yyyy-MM-dd");
                             long lastTime = SpUtils.getInstance().getLong("btn_update_time", 0L);
-                            if (time > lastTime && !jsonObject.isNull("imgList")) {
-                                JsonArray list = new Gson().fromJson((String) jsonObject.get("imgList"), JsonArray.class);
-                                List<BtnLinkModel> data = new Gson().fromJson(list, new TypeToken<List<BtnLinkModel>>() {
-                                }.getType());
-                                if (data != null) {
-                                    for (BtnLinkModel linkModel : data) {
-                                        String key = String.format("btn_link_%s", linkModel.getUsingType());
-                                        SpUtils.getInstance().putString(key, new Gson().toJson(linkModel));
-                                    }
+                            if (time > lastTime) {
+                                SpUtils.getInstance().putLong("btn_update_time", time);
+                                if (!jsonObject.isNull("imgList")) {
+                                    JSONArray list = jsonObject.getJSONArray("imgList");
+                                    SpUtils.getInstance().putString("btn_links", String.valueOf(list));
+                                } else {
+                                    SpUtils.getInstance().putString("btn_links", "");
                                 }
                             }
                         }
@@ -67,5 +65,15 @@ public class BtnLinkHelper {
 
         BtnLinkModel model = new Gson().fromJson(linkStr, new TypeToken<BtnLinkModel>(){ }.getType());
         return model;
+    }
+
+    public static BtnLinkModel getBtnLink(int index) {
+        String linkStr = SpUtils.getInstance().getString("btn_links", "");
+        List<BtnLinkModel> data = new Gson().fromJson(String.valueOf(linkStr), new TypeToken<List<BtnLinkModel>>() {
+        }.getType());
+        if (data != null && data.size() > index) {
+            return data.get(index);
+        }
+        return null;
     }
 }
