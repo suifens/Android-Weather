@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.bytedance.msdk.api.AdError;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdListener;
 import com.bytedance.msdk.api.v2.ad.interstitialFull.GMInterstitialFullAdLoadCallback;
@@ -32,6 +34,10 @@ import com.goodtech.tq.fragment.WeatherFragment2;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
+import com.goodtech.tq.httpClient.ApiResponseHandler;
+import com.goodtech.tq.httpClient.ErrorCode;
+import com.goodtech.tq.httpClient.JuHeHelper;
+import com.goodtech.tq.listener.CompletionListener;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.manager.AdInterstitialFullManager;
 import com.goodtech.tq.models.CityMode;
@@ -45,11 +51,14 @@ import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.views.popup.UpdatePopup;
+import com.lxj.xpopup.XPopup;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +149,7 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    protected void backAction(){
+    protected void backAction() {
         long current = System.currentTimeMillis();
         if (current - mBackTime < 2 * 1000) {
             finish();
@@ -198,12 +207,15 @@ public class MainActivity extends BaseActivity {
                     LocationHelper.getInstance().startWithDelay(this);
                 }, 500);
             }
+            /// 判断新版本
+            fetchNewVersion(() -> {
+                long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(Constants.PGE_INT_POS_ID, 0L);
+                if (SpUtils.getInstance().isAgreePermission()
+                        && interval > 1000 * 60 * 30) {
+                    mHandler.postDelayed(this::showAd, 5000);
+                }
+            });
 
-            long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(Constants.PGE_INT_POS_ID, 0L);
-            if (SpUtils.getInstance().isAgreePermission()
-                    && interval > 1000 * 60 * 30) {
-                mHandler.postDelayed(this::showAd, 5000);
-            }
             isFirstLoad = false;
         } else {
             if (mIsLoadedAndShow && isCurrent) {
@@ -445,6 +457,7 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 设置签到状态
+     *
      * @param signedIn 是否已签到
      */
     private void setSignedIn(boolean signedIn) {
@@ -472,6 +485,66 @@ public class MainActivity extends BaseActivity {
                     0);
         }
     }
+
+    // <editor-folder desc="判断是否需要更新app">
+
+    private void fetchNewVersion(CompletionListener listener) {
+        JuHeHelper.getInstance().fetchNewVersion(new ApiResponseHandler() {
+            @Override
+            public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
+                Log.e(TAG, "onResponse: " + jsonObject.toString());
+                try {
+                    if (success) {
+
+                        if (!jsonObject.isNull("data")) {
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String version = data.getString("newVersion");
+                            String[] versionTemp = version.split("\\.");
+                            String curVersion = AppUtils.getAppVersionName();
+                            String[] curTemp = curVersion.split("\\.");
+                            boolean needUpdate = false;
+                            for (int i = 0; i < versionTemp.length; i++) {
+                                if (Integer.parseInt(versionTemp[i]) > Integer.parseInt(curTemp[i])) {
+                                    needUpdate = true;
+                                    break;
+                                }
+                            }
+                            if (needUpdate
+                                    && System.currentTimeMillis() - SpUtils.getInstance().getLong(version, 0L) > 2 * 24 * 60 * 60 * 1000) {
+                                showUpdatePopup(version);
+                                return;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (listener != null) listener.onCompletion();
+            }
+        });
+    }
+
+    private void showUpdatePopup(String version) {
+        SpUtils.getInstance().putLong(version, System.currentTimeMillis());
+
+        UpdatePopup popup = new UpdatePopup(this);
+        popup.setupVersion(version, () -> {
+            Uri uri = Uri.parse("market://details?id=" + getPackageName());
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                //要调起的应用不存在时的处理
+                Toast.makeText(this, "未能跳转到应用商店", Toast.LENGTH_SHORT).show();
+            }
+        });
+        new XPopup.Builder(this)
+                .isDestroyOnDismiss(false)
+                .asCustom(popup)
+                .show();
+    }
+
+    // </editor-folder>
 
 
     /**

@@ -27,6 +27,8 @@ public class Constants {
     public static final String PGE_NEWS_POS_ID = "6032151594725662";  //上文下图信息流 id
     public static final String PGE_INT_POS_ID = "102214995";  //插屏广告 id
 
+    public static final String TIME_UPLOAD = "time_upload";  //更新时间
+
     public static final String UM_APP_ID = "595a3b236e27a468630021e8";
     public static final String UM_APP_CHANNEL = "jinli";
 

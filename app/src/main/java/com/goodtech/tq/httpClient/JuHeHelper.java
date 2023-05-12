@@ -24,6 +24,8 @@ public class JuHeHelper {
     public final static String JUHE_AIR_QUALITY = "http://web.juhe.cn/environment/air/cityair?city=%s&key=a23dce468957d0748adf7969a42ff219";
     //  城市空气PM2.5指数
     public final static String JUHE_AIR_PM = "http://web.juhe.cn/environment/air/pm?city=%s&key=a23dce468957d0748adf7969a42ff219";
+    
+    public final static String UPDATE_URL = "https://app.yiguxm.com/chunjing/yuzhi_banbenqingqiu.json";
 
     private Context mContext;
 
@@ -49,6 +51,12 @@ public class JuHeHelper {
             url = url + String.format("&type=%s", type);
         }
         client.get(url, null, handler);
+    }
+
+    /// 获取更新信息
+    public void fetchNewVersion(ApiResponseHandler handler) {
+        ApiClient client = ApiClient.getInstance();
+        client.get(UPDATE_URL, null, handler);
     }
 
     public void fetchFortune(String consName, String type, ApiResponseHandler handler) {

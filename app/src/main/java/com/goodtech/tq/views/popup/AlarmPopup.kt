@@ -1,4 +1,4 @@
-package com.goodtech.tq.views
+package com.goodtech.tq.views.popup
 
 import android.annotation.SuppressLint
 import android.content.Context
