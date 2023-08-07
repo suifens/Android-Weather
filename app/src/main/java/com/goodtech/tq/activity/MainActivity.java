@@ -210,9 +210,10 @@ public class MainActivity extends BaseActivity {
             /// 判断新版本
             fetchNewVersion(() -> {
                 long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(Constants.PGE_INT_POS_ID, 0L);
-                if (SpUtils.getInstance().isAgreePermission()
-                        && interval > 1000 * 60 * 30) {
-                    mHandler.postDelayed(this::showAd, 5000);
+                if (SpUtils.getInstance().isAgreePermission()) {
+//                        && interval > 1000 * 60 * 30) {
+                    showAd();
+                    mHandler.postDelayed(this::showInterFullAd, 5000);
                 }
             });
 
@@ -600,7 +601,7 @@ public class MainActivity extends BaseActivity {
      * 展示广告
      */
     private void showInterFullAd() {
-        if (mLoadSuccess && mAdInterstitialFullManager != null) {
+        if (mIsLoadedAndShow && mLoadSuccess && mAdInterstitialFullManager != null) {
             if (mAdInterstitialFullManager.getGMInterstitialFullAd() != null && mAdInterstitialFullManager.getGMInterstitialFullAd().isReady()) {
                 //在获取到广告后展示,强烈建议在onInterstitialFullCached回调后，展示广告，提升播放体验
                 //该方法直接展示广告，如果展示失败了（如过期），会回调onVideoError()
