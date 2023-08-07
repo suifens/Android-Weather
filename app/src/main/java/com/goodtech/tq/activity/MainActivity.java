@@ -212,7 +212,7 @@ public class MainActivity extends BaseActivity {
                 long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(Constants.PGE_INT_POS_ID, 0L);
                 if (SpUtils.getInstance().isAgreePermission()) {
 //                        && interval > 1000 * 60 * 30) {
-                    showAd();
+                    mHandler.postDelayed(this::showAd, 500);
                     mHandler.postDelayed(this::showInterFullAd, 5000);
                 }
             });
