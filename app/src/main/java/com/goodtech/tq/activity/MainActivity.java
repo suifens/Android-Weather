@@ -218,7 +218,7 @@ public class MainActivity extends BaseActivity {
 
             isFirstLoad = false;
         } else {
-            if (mIsLoadedAndShow && isCurrent) {
+            if (mIsLoadedAndShow) {
                 showInterFullAd();
             }
         }

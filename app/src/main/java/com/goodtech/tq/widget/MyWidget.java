@@ -10,6 +10,8 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.TimeUtils;
 
 public class MyWidget extends AppWidgetProvider {
@@ -30,11 +32,7 @@ public class MyWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         Log.e(TAG, "widget  onEnabled 状态");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
-            context.startForegroundService(new Intent(context, WidgetService.class));
-        } else  {
-            context.startService(new Intent(context, WidgetService.class));
-        }
+        BaseApp.getInstance().startService(context);
     }
 
     /**
@@ -46,11 +44,7 @@ public class MyWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // super.onUpdate(context, appWidgetManager, appWidgetIds);
         Log.e(TAG, "widget  onUpdate 状态");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
-            context.startForegroundService(new Intent(context, WidgetService.class));
-        } else  {
-            context.startService(new Intent(context, WidgetService.class));
-        }
+        BaseApp.getInstance().startService(context);
     }
 
     /**

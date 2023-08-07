@@ -10,7 +10,9 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 
@@ -32,11 +34,7 @@ public class MyDoubleWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         Log.e(TAG, "widget  onEnabled 状态");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
-            context.startForegroundService(new Intent(context, DoubleWidgetService.class));
-        } else  {
-            context.startService(new Intent(context, DoubleWidgetService.class));
-        }
+        BaseApp.getInstance().startService(context);
         SpUtils.getInstance().putBoolean(Constants.WIDGET_DOUBLE, true);
     }
 
@@ -49,11 +47,7 @@ public class MyDoubleWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         Log.e(TAG, "widget  onUpdate 状态");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
-            context.startForegroundService(new Intent(context, DoubleWidgetService.class));
-        } else  {
-            context.startService(new Intent(context, DoubleWidgetService.class));
-        }
+        BaseApp.getInstance().startService(context);
     }
 
     /**

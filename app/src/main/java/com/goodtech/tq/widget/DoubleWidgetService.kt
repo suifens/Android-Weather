@@ -9,7 +9,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import android.os.IBinder
-import android.provider.Settings
 import android.view.View
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
@@ -18,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.SplashActivity
 import com.goodtech.tq.alarm.JAlarmReceiver
+import com.goodtech.tq.app.BaseApp
 import com.goodtech.tq.helpers.AqiHelper
 import com.goodtech.tq.helpers.LocationSpHelper
 import com.goodtech.tq.helpers.WeatherSpHelper
@@ -122,13 +122,7 @@ class DoubleWidgetService : LifecycleService() {
      * @param context
      */
     private fun openService(context: Context) {
-        val newIntent = Intent(context, DoubleWidgetService::class.java)
-        //判断当前编译的版本是否高于等于 Android8.0 或 26 以上的版本
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(context)) {
-            context.startForegroundService(newIntent)
-        } else {
-            context.startService(newIntent)
-        }
+        BaseApp.getInstance().startService(context)
     }
 
     private var intervalJob: Job? = null
@@ -318,7 +312,6 @@ class DoubleWidgetService : LifecycleService() {
 
         val componentName = ComponentName(this, MyDoubleWidget::class.java)
         AppWidgetManager.getInstance(this).updateAppWidget(componentName, remoteViews)
-
     }
 
 

@@ -232,30 +232,10 @@ dependencies {
     // 接入小米厂商
     implementation 'cn.jiguang.sdk.plugin:xiaomi:4.9.0'
 
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+
     //<editor-fold desc="广告">
-//    /*GroMore广告显示*/
-//    //GroMore_sdk
-//    implementation "com.gromore.cn:gromore-sdk:4.1.0.4"  //groMore sdk
-//    //GroMore_sdk adapter
-//    implementation "com.gromore.cn:pangle-adapter:5.1.0.2.3" //穿山甲 adapter
-//    //pangle
-//    implementation(name: 'open_ad_sdk_5.1.0.2', ext: 'aar')
-//    implementation(name: 'Baidu_MobAds_SDK_v9.27', ext: 'aar')
-//
-//    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
-//    implementation 'com.tencent.bugly:crashreport:latest.release'
-//
-//    //为保证兼容性 建议使用广告SDK版本
-//    implementation 'com.pangle.cn:ads-sdk-pro:5.3.0.5'
-//    implementation('com.pangle.cn:pangrowth-sdk:3.9.0.0') {
-//        exclude group: 'com.pangle.cn', module: 'partner-live-sdk'
-//        exclude group: 'com.pangle.cn', module: 'pangrowth-novel-sdk'
-//        exclude group: 'com.pangle.cn', module: 'pangrowth-game-sdk'
-//        exclude group: 'com.pangle.cn', module: 'pangrowth-luckycat-sdk'
-//        exclude group: 'com.pangle.cn', module: 'pangrowth-reward-sdk'
-//        exclude group: 'com.pangle.cn', module: 'partner-luckycat-api-sdk'
-//        exclude group: 'com.pangle.cn', module: 'pangrowth-luckycat-api'
-//    }
 
     //GroMore_sdk
     implementation "by.gm_mediation.com:gromore-sdk:4.3.0.0"  //groMore sdk

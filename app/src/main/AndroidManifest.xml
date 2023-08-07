@@ -285,7 +285,8 @@
         <activity
             android:name="cn.jpush.android.service.JNotifyActivity"
             android:exported="true"
-            android:taskAffinity="jpush.custom">
+            android:taskAffinity="jpush.custom"
+            tools:replace="android:taskAffinity">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.JNotifyActivity" />
 
@@ -325,7 +326,8 @@
             android:enabled="true"
             android:exported="true"
             android:taskAffinity="jpush.custom"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:taskAffinity">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DActivity" />
 

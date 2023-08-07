@@ -5,6 +5,7 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 
+import com.bytedance.msdk.api.TTMediationAdSdk;
 import com.bytedance.msdk.api.v2.GMAdConfig;
 import com.bytedance.msdk.api.v2.GMAdConstant;
 import com.bytedance.msdk.api.v2.GMMediationAdSdk;
@@ -36,7 +37,8 @@ public class GMAdManagerHolder {
     //step1:接入网盟广告sdk的初始化操作，详情见接入文档和穿山甲平台说明
     private static void doInit(@NonNull Context context) {
         if (!sInit) {
-            GMMediationAdSdk.initialize(context, buildV2Config(context));
+            GMMediationAdSdk.init(context, buildV2Config(context));
+            GMMediationAdSdk.startUp();
             sInit = true;
         }
     }

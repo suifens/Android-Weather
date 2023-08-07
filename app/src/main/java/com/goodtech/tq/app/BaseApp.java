@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,10 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.bytedance.msdk.api.TTMediationAdSdk;
+import com.bytedance.sdk.openadsdk.TTAdConfig;
+import com.bytedance.sdk.openadsdk.TTAdConstant;
+import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.activity.MyActivityManager;
 import com.goodtech.tq.activity.SettingActivity;
@@ -25,6 +30,7 @@ import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.jpush.JPushHelper;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.widget.DoubleWidgetService;
 import com.goodtech.tq.widget.WidgetService;
@@ -114,6 +120,35 @@ public class BaseApp extends Application {
 
         GMAdManagerHolder.init(this);
 
+        //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
+//        TTAdSdk.init(this,
+//                new TTAdConfig.Builder()
+//                        .appId(Constants.PGE_APP_ID)//xxxxxxx为穿山甲媒体平台注册的应用ID
+//                        .useTextureView(true) //默认使用SurfaceView播放视频广告,当有SurfaceView冲突的场景，可以使用TextureView
+//                        .appName("APP测试媒体")
+//                        .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)//落地页主题
+//                        .allowShowNotify(true) //是否允许sdk展示通知栏提示,若设置为false则会导致通知栏不显示下载进度
+//                        .debug(true) //测试阶段打开，可以通过日志排查问题，上线时去除该调用
+//                        .directDownloadNetworkType(TTAdConstant.NETWORK_STATE_WIFI) //允许直接下载的网络状态集合,没有设置的网络下点击下载apk会有二次确认弹窗，弹窗中会披露应用信息
+//                        .supportMultiProcess(false) //是否支持多进程，true支持
+////                        .asyncInit(true) //是否异步初始化sdk,设置为true可以减少SDK初始化耗时。3450版本开始废弃~~
+//                        //.httpStack(new MyOkStack3())//自定义网络库，demo中给出了okhttp3版本的样例，其余请自行开发或者咨询工作人员。
+//                        .build(),
+//                new TTAdSdk.InitCallback() {
+//                    @Override
+//                    public void success() {
+//                        Log.e(TAG, "TTAdSdk success:");
+//                    }
+//
+//                    @Override
+//                    public void fail(int i, String s) {
+//                        Log.e(TAG, "TTAdSdk fail:");
+//                    }
+//                });
+        //如果明确某个进程不会使用到广告SDK，可以只针对特定进程初始化广告SDK的content
+        //if (PROCESS_NAME_XXXX.equals(processName)) {
+        //   TTAdSdk.init(context, config);
+        //}
         JPushInterface.setDebugMode(true);
         
         //  极光推送 register id
@@ -127,14 +162,18 @@ public class BaseApp extends Application {
     private boolean isServiceStarted = false;
     public void startIntent(Activity activity) {
         if (!isServiceStarted) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(activity)) {
-                startForegroundService(new Intent(activity, WidgetService.class));
-                startForegroundService(new Intent(activity, DoubleWidgetService.class));
-            } else {
-                startService(new Intent(activity, WidgetService.class));
-                startService(new Intent(activity, DoubleWidgetService.class));
-            }
+            startService(activity);
             isServiceStarted = true;
+        }
+    }
+
+    public void startService(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && PermissionUtil.canDrawOverlays(context)) {
+            startForegroundService(new Intent(context, WidgetService.class));
+            startForegroundService(new Intent(context, DoubleWidgetService.class));
+        } else {
+            startService(new Intent(context, WidgetService.class));
+            startService(new Intent(context, DoubleWidgetService.class));
         }
     }
 
