@@ -55,7 +55,7 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  */
-public class WeatherFragment2 extends AdFeedFragment implements OnRefreshListener, WeatherHeaderListener {
+public class WeatherFragment extends AdFeedFragment implements OnRefreshListener, WeatherHeaderListener {
 
     private static final String TAG = "WeatherFragment2";
     protected SmartRefreshLayout mRefreshLayout;

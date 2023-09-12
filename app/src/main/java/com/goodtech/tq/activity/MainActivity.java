@@ -30,7 +30,7 @@ import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.MessageEvent;
-import com.goodtech.tq.fragment.WeatherFragment2;
+import com.goodtech.tq.fragment.WeatherFragment;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
@@ -303,7 +303,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void addFragment() {
-        WeatherFragment2 fragment = new WeatherFragment2();
+        WeatherFragment fragment = new WeatherFragment();
         fragment.setStateBar(findViewById(R.id.station_bg_view));
         mFragmentList.add(fragment);
     }
@@ -327,7 +327,7 @@ public class MainActivity extends BaseActivity {
             if (cityMode.getCid() != 0) {
                 WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.getCid());
                 if (mFragmentList.size() > index) {
-                    WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(index);
+                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(index);
                     fragment.changeWeather(model, cityMode);
                 }
                 if (index == mCurrIndex) {
@@ -365,7 +365,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void configViewPager() {
-        WeatherFragment2 fragment = new WeatherFragment2();
+        WeatherFragment fragment = new WeatherFragment();
         fragment.setStateBar(findViewById(R.id.station_bg_view));
         mFragmentList.add(fragment);
         mAdapter = new ViewPagerAdapter(this, mFragmentList);
@@ -430,7 +430,7 @@ public class MainActivity extends BaseActivity {
                 changeBg(weatherModel);
 
                 if (mFragmentList.size() > position) {
-                    WeatherFragment2 fragment = (WeatherFragment2) mFragmentList.get(position);
+                    WeatherFragment fragment = (WeatherFragment) mFragmentList.get(position);
                     fragment.changeWeather(weatherModel, cityMode);
                     // fragment.reloadNativeAD();
                 }

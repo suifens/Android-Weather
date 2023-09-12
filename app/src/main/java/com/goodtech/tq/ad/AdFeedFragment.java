@@ -115,8 +115,6 @@ public class AdFeedFragment extends BaseFragment {
             adViewHolder.mAdContainerView = (FrameLayout) convertView.findViewById(R.id.iv_listitem_express);
             convertView.setTag(adViewHolder);
 
-
-
             //判断是否存在dislike按钮
             if (ad.hasDislike()) {
 

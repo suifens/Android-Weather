@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 1030
-        versionName "10.3.0"
+        versionCode 1031
+        versionName "10.3.1"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
