@@ -191,7 +191,7 @@
 # MSDK混淆
 -keep class bykvm*.** { *; }
 -keep class com.bytedance.msdk.adapter.**{ public *; }
--keep class com.bytedance.msdk.api.** {
+-keep class com.bytedance.sdk.openadsdk.** {
  public *;
 }
 

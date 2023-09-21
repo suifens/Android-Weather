@@ -14,13 +14,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
 
-import com.bytedance.msdk.api.AdError;
-import com.bytedance.msdk.api.v2.GMAdConstant;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAd;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAdLoadCallback;
-import com.goodtech.tq.ad.AdFeedFragment;
+import com.blankj.utilcode.util.DeviceUtils;
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
+import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
+import com.goodtech.tq.ad.AdFeedFragment;
 import com.goodtech.tq.fragment.view.CurrentItemView;
 import com.goodtech.tq.fragment.view.DailyListItemView;
 import com.goodtech.tq.fragment.view.HoursItemView;
@@ -30,7 +30,6 @@ import com.goodtech.tq.fragment.view.RecentItemView;
 import com.goodtech.tq.helpers.BtnLinkHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.WeatherHeaderListener;
-import com.goodtech.tq.manager.AdFeedManager;
 import com.goodtech.tq.models.BtnLinkModel;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
@@ -42,15 +41,12 @@ import com.goodtech.tq.others.taifeng.TyphoonActivity;
 import com.goodtech.tq.others.test.MyTestActivity;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.views.popup.AlarmPopup;
 import com.lxj.xpopup.XPopup;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -106,10 +102,6 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
                 }
             }
         });
-
-        if (SpUtils.getInstance().isAgreePermission()) {
-            initAdLoader();
-        }
     }
 
     @Override
@@ -121,10 +113,10 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
             initView(inflate);
             mHadLoad = true;
             updateData();
-        }
 
-        if (mGMNativeAd != null) {
-            mGMNativeAd.resume();
+            if (SpUtils.getInstance().isAgreePermission()) {
+                mHandler.postDelayed(this::initAdLoader, 300);
+            }
         }
     }
 
@@ -187,14 +179,22 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
         if (mHadLoad && mCurrentView != null && mWeatherModel != null) {
             mHandler.post(() -> {
 
-                if (showAd(mFeedContainer, mAdFeedManager, mLoadSuccess, mIsLoadedAndShow, mGMNativeAd)) {
-                    mLoadSuccess = false;
-                    mIsLoadedAndShow = true;
+                if (mLoadSuccess && mGMNativeAd != null && !mIsLoadedAndShow && mFeedContainer != null) {
+                    mIsLoadedAndShow = showAd(mFeedContainer, true, false, mGMNativeAd);
                 }
-                if (showAd(mFeedContainer2, mAdFeedManager2, mLoadSuccess2, mIsLoadedAndShow2, mGMNativeAd2)) {
-                    mLoadSuccess2 = false;
-                    mIsLoadedAndShow2 = true;
+
+                if (mLoadSuccess2 && mGMNativeAd2 != null && !mIsLoadedAndShow2 && mFeedContainer2 != null) {
+                    mIsLoadedAndShow2 = showAd(mFeedContainer2, true, false, mGMNativeAd2);
                 }
+
+//                if (showAd(mFeedContainer, mLoadSuccess, mIsLoadedAndShow, mGMNativeAd)) {
+//                    mLoadSuccess = false;
+//                    mIsLoadedAndShow = true;
+//                }
+//                if (showAd(mFeedContainer2, mLoadSuccess2, mIsLoadedAndShow2, mGMNativeAd2)) {
+//                    mLoadSuccess2 = false;
+//                    mIsLoadedAndShow2 = true;
+//                }
 
                 mContainerView.setVisibility(View.VISIBLE);
 
@@ -226,10 +226,8 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mAdFeedManager != null) {
-            mAdFeedManager.destroy();
-        }
-        mGMNativeAd = null;
+        removeAdView(mGMNativeAd);
+        removeAdView(mGMNativeAd2);
     }
 
     @Override
@@ -340,80 +338,42 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
         }
     }
 
-    // @Override
-    // public void onDyMovie() {
-    //     if (getActivity() != null) {
-    //         Intent intent = new Intent(getActivity(), DyMoviesActivity.class);
-    //         getActivity().startActivity(intent);
-    //     }
-    // }
-
     // <editor-fold defaultstate="collapsed" desc="广告">
-
-    private AdFeedManager mAdFeedManager; //激励视频管理类
-    private AdFeedManager mAdFeedManager2; //激励视频管理类
 
     private boolean mLoadSuccess; //是否加载成功
     private boolean mLoadSuccess2; //是否加载成功
     private boolean mIsLoadedAndShow;//广告加载成功并展示
     private boolean mIsLoadedAndShow2;//广告加载成功并展示
 
-    private GMNativeAd mGMNativeAd; //原生广告model
-    private GMNativeAd mGMNativeAd2; //原生广告model
+    private TTFeedAd mGMNativeAd; //原生广告model
+    private TTFeedAd mGMNativeAd2; //原生广告model
 
     private void initAdLoader() {
-        mAdFeedManager = new AdFeedManager(requireActivity(), new GMNativeAdLoadCallback() {
-            @Override
-            public void onAdLoaded(List<GMNativeAd> ads) {
-                if (ads == null || ads.isEmpty()) {
-                    Log.e(TAG, "on FeedAdLoaded: ad is null!");
-                    //TToast.show(getContext(), "广告加载失败！");
-                    return;
-                }
+
+        int width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(28);
+        if (!mLoadSuccess || mGMNativeAd == null) {
+            loadFeedAd(Constants.PGE_EXPRESS_POS_ID, width, (data, errorMsg) -> {
                 mLoadSuccess = true;
-
-                mGMNativeAd = ads.get(0);
-                if (mGMNativeAd != null && !mIsLoadedAndShow) {
-                    boolean isShow = showAd(mFeedContainer, mAdFeedManager, true, false, mGMNativeAd);
-                    if (isShow) {
-                        mLoadSuccess = false;
-                        mIsLoadedAndShow = true;
+                if (data != null) {
+                    mGMNativeAd = data;
+                    if (!mIsLoadedAndShow && mFeedContainer != null) {
+                        mIsLoadedAndShow = showAd(mFeedContainer, true, false, mGMNativeAd);
                     }
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onAdLoadedFail(AdError adError) {
-                //TToast.show(getContext(), "广告加载失败！");
-                Log.e(TAG, "load feed ad error : " + adError.code + ", " + adError.message);
-            }
-        });
-        mAdFeedManager2 = new AdFeedManager(requireActivity(), new GMNativeAdLoadCallback() {
-            @Override
-            public void onAdLoaded(List<GMNativeAd> ads) {
-                if (ads == null || ads.isEmpty()) {
-                    Log.e(TAG, "on FeedAdLoaded: ad is null!");
-                    //TToast.show(getContext(), "广告加载失败！");
-                    return;
-                }
+        if (!mLoadSuccess2 || mGMNativeAd2 == null) {
+            loadFeedAd(Constants.PGE_EXPRESS_POS_ID3, width, (data, errorMsg) -> {
                 mLoadSuccess2 = true;
-
-                mGMNativeAd2 = ads.get(0);
-                if (mGMNativeAd2 != null && !mIsLoadedAndShow2) {
-                    boolean isShow = showAd(mFeedContainer2, mAdFeedManager2, true, false, mGMNativeAd2);
-                    if (isShow) {
-                        mLoadSuccess2 = false;
-                        mIsLoadedAndShow2 = true;
+                if (data != null) {
+                    mGMNativeAd2 = data;
+                    if (!mIsLoadedAndShow2 && mFeedContainer2 != null) {
+                        mIsLoadedAndShow2 = showAd(mFeedContainer2, true, false, mGMNativeAd2);
                     }
                 }
-            }
-
-            @Override
-            public void onAdLoadedFail(AdError adError) {
-                //TToast.show(getContext(), "广告加载失败！");
-                Log.e(TAG, "load feed ad error : " + adError.code + ", " + adError.message);
-            }
-        });
+            });
+        }
     }
 
     private void initNativeExpressAD() {
@@ -422,19 +382,18 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
         mFeedContainer.removeAllViews();
         mFeedContainer2.removeAllViews();
         Log.e(TAG, "initNativeExpressAD: ++++ " + System.currentTimeMillis());
-        mAdFeedManager.loadAdWithCallback(Constants.PGE_EXPRESS_POS_ID3, 1, GMAdConstant.IMAGE_MODE_SMALL_IMG, ((int) DeviceUtils.getScreenWidthDpi(requireActivity()) - 28));
-        mAdFeedManager2.loadAdWithCallback(Constants.PGE_EXPRESS_POS_ID, 1, GMAdConstant.IMAGE_MODE_SMALL_IMG, ((int) DeviceUtils.getScreenWidthDpi(requireActivity()) - 28));
     }
 
-    @Override
-    protected void removeAdView(GMNativeAd ad) {
+    protected void removeAdView(TTFeedAd ad) {
         if (mFeedContainer != null && mGMNativeAd == ad) {
             mFeedContainer.removeAllViews();
             mFeedContainer.setVisibility(View.GONE);
+            mGMNativeAd.destroy();
         }
         if (mFeedContainer2 != null && mGMNativeAd2 == ad) {
             mFeedContainer2.removeAllViews();
             mFeedContainer2.setVisibility(View.GONE);
+            mGMNativeAd.destroy();
         }
     }
 

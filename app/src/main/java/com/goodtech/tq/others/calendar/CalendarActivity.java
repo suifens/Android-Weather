@@ -15,32 +15,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bytedance.msdk.api.AdError;
-import com.bytedance.msdk.api.TToast;
-import com.bytedance.msdk.api.v2.GMAdConstant;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAd;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAdLoadCallback;
+import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.github.gzuliyujiang.wheelpicker.DatePicker;
 import com.github.gzuliyujiang.wheelpicker.annotation.DateMode;
 import com.github.gzuliyujiang.wheelpicker.entity.DateEntity;
 import com.github.gzuliyujiang.wheelpicker.impl.BirthdayFormatter;
 import com.goodtech.tq.R;
 import com.goodtech.tq.ad.AdFeedActivity;
-import com.goodtech.tq.manager.AdFeedManager;
 import com.goodtech.tq.models.calendar.DayDetail;
 import com.goodtech.tq.models.calendar.Holiday;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
-import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CalendarActivity extends AdFeedActivity implements
@@ -88,10 +81,6 @@ public class CalendarActivity extends AdFeedActivity implements
         configHolidays();
 
         initView();
-
-        if (SpUtils.getInstance().isAgreePermission()) {
-            initAdLoader();
-        }
     }
 
     private boolean firstLoad = true;
@@ -109,7 +98,7 @@ public class CalendarActivity extends AdFeedActivity implements
                 updateHoliday(System.currentTimeMillis());
 
                 if (SpUtils.getInstance().isAgreePermission()) {
-                    initNativeExpressAD();
+                    initAdLoader();
                 }
 
             }, 200);
@@ -125,10 +114,9 @@ public class CalendarActivity extends AdFeedActivity implements
 
     @Override
     public void onDestroy() {
-        if (mAdFeedManager != null) {
-            mAdFeedManager.destroy();
+        if (mGMNativeAd != null) {
+            mGMNativeAd.destroy();
         }
-        mGMNativeAd = null;
 
         super.onDestroy();
     }
@@ -306,45 +294,20 @@ public class CalendarActivity extends AdFeedActivity implements
     private boolean mIsLoaded;
     //广告加载成功并展示
     private boolean mIsLoadedAndShow;
-    //广告管理类
-    private AdFeedManager mAdFeedManager;
     // banner广告事件的监听
-    private GMNativeAd mGMNativeAd; //原生广告model
+    private TTFeedAd mGMNativeAd; //原生广告model
 
     private void initAdLoader() {
-        mAdFeedManager = new AdFeedManager(this, new GMNativeAdLoadCallback() {
-            @Override
-            public void onAdLoaded(List<GMNativeAd> ads) {
-                if (ads == null || ads.isEmpty()) {
-                    //TToast.show(getContext(), "广告加载失败！");
-                    return;
-                }
-                mIsLoaded = true;
-                mGMNativeAd = ads.get(0);
-                if (mGMNativeAd != null && !mIsLoadedAndShow) {
-                    boolean isShow = showAd(mFeedContainer, mAdFeedManager, true, mGMNativeAd);
+        loadFeedAd(Constants.PGE_CALENDAR_POS_ID, DeviceUtils.getScreenWidthDpi(this.getApplicationContext()), (data, errorMsg) -> {
+            mIsLoaded = true;
+            if (data != null) {
+                mGMNativeAd = data;
+                if (!mIsLoadedAndShow) {
+                    boolean isShow = showAd(mFeedContainer, true, false, mGMNativeAd);
                     mIsLoaded = !isShow;
                 }
             }
-
-            @Override
-            public void onAdLoadedFail(AdError adError) {
-                TToast.show(getBaseContext(), "广告加载失败！");
-            }
         });
-    }
 
-    private void initNativeExpressAD() {
-        mIsLoaded = false;
-        mAdFeedManager.loadAdWithCallback(Constants.PGE_CALENDAR_POS_ID, 1, GMAdConstant.TYPE_EXPRESS_AD, DeviceUtils.getScreenWidthDpi(this.getApplicationContext()));
     }
-
-    @Override
-    protected void removeAdView() {
-        if (mFeedContainer != null) {
-            mFeedContainer.removeAllViews();
-            mFeedContainer.setVisibility(View.GONE);
-        }
-    }
-
 }

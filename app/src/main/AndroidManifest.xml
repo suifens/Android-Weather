@@ -54,12 +54,7 @@
     <!-- oppo_permission_start -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" /> <!-- oppo_permission_end -->
-    <!-- 必要权限，解决安全风险漏洞，发送和注册广播事件需要调用带有传递权限的接口 -->
-    <permission
-        android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN"
-        android:protectionLevel="signature" />
 
-    <uses-permission android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN" /> <!-- 如果有视频相关的广告且使用textureView播放，请务必添加，否则黑屏 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--
  高于Android 11的系统上，如果应用的 targetSdkVersion >= 30 ，推荐增加以下权限声明
@@ -561,6 +556,8 @@
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback" />
+
+        <!-- Pangle ===== -->
         <provider
             android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
             android:authorities="${applicationId}.TTFileProvider"

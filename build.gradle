@@ -5,9 +5,11 @@ buildscript {
         kotlin_version = '1.7.20'
     }
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
         google()
         maven { url "https://dl.google.com/dl/android/maven2/" }
-        jcenter()
         mavenLocal()
         mavenCentral()
 
@@ -35,10 +37,11 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
         google()
-        mavenCentral()
         maven {url "https://dl.google.com/dl/android/maven2/"}
-        jcenter()
         mavenLocal()
         mavenCentral()
 
