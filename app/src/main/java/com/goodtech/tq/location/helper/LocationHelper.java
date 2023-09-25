@@ -11,18 +11,28 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
+import com.blankj.utilcode.util.PermissionUtils;
+import com.blankj.utilcode.util.UtilsTransActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.views.popup.TopTitlePopup;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
+import com.lxj.xpopup.enums.PopupPosition;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import java.util.List;
 
 /**
  * com.goodtech.tq.location.service
@@ -42,10 +52,14 @@ public class LocationHelper {
     private static class SingletonHolder {
         private static final LocationHelper INSTANCE = new LocationHelper();
     }
-    private LocationHelper () {}
+
+    private LocationHelper() {
+    }
+
     public static final LocationHelper getInstance() {
         return SingletonHolder.INSTANCE;
     }
+
     private boolean isLocating = false;
 
     @SuppressLint("CheckResult")
@@ -69,13 +83,21 @@ public class LocationHelper {
             if (System.currentTimeMillis() - locationTime > 5 * 60 * 1000 || isForce) {
                 startLocation(context);
             }
-        }
-        else if (!TimeUtils.isCurrentDay(SpUtils.getInstance().getLong(Constants.TIME_LOCATION_CANCEL, 0L))
+        } else if (!TimeUtils.isCurrentDay(SpUtils.getInstance().getLong(Constants.TIME_LOCATION_CANCEL, 0L))
                 || isForce) {
+
+            BasePopupView popupView = new XPopup.Builder(context)
+                    .isDestroyOnDismiss(true)
+                    .popupPosition(PopupPosition.Top)
+                    .hasShadowBg(false)
+                    .hasStatusBarShadow(false)
+                    .asCustom(new TopTitlePopup(context));
+            popupView.show();
 
             rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION
                     , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(granted ->
             {
+                popupView.dismiss();
                 if (granted) {
                     startLocation(context);
                 } else {
@@ -108,8 +130,8 @@ public class LocationHelper {
     }
 
     private void configClient() {
-        AMapLocationClient.updatePrivacyShow(mContext,true,true);
-        AMapLocationClient.updatePrivacyAgree(mContext,true);
+        AMapLocationClient.updatePrivacyShow(mContext, true, true);
+        AMapLocationClient.updatePrivacyAgree(mContext, true);
         try {
             mLocationClient = new AMapLocationClient(mContext);
             //设置定位回调监听
@@ -163,7 +185,7 @@ public class LocationHelper {
      * 定位结果回调，重写onReceiveLocation方法，可以直接拷贝如下代码到自己工程中修改
      *
      */
-    private AMapLocationListener mLocationListener = new AMapLocationListener(){
+    private AMapLocationListener mLocationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation location) {
 
@@ -217,6 +239,7 @@ public class LocationHelper {
     };
 
     protected Handler mHandler = new Handler(Looper.getMainLooper());
+
     protected void removeTicker() {
         isLocating = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
