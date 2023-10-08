@@ -113,7 +113,9 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
             initView(inflate);
             mHadLoad = true;
             updateData();
-
+        }
+        if (isFirstLoad) {
+            isFirstLoad = false;
             if (SpUtils.getInstance().isAgreePermission()) {
                 mHandler.postDelayed(this::initAdLoader, 300);
             }
@@ -350,7 +352,7 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
 
     private void initAdLoader() {
 
-        int width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(28);
+        int width = SizeUtils.px2dp(ScreenUtils.getScreenWidth()) - 28;
         if (!mLoadSuccess || mGMNativeAd == null) {
             loadFeedAd(Constants.PGE_EXPRESS_POS_ID, width, (data, errorMsg) -> {
                 mLoadSuccess = true;

@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.github.gzuliyujiang.wheelpicker.DatePicker;
 import com.github.gzuliyujiang.wheelpicker.annotation.DateMode;
@@ -298,7 +300,8 @@ public class CalendarActivity extends AdFeedActivity implements
     private TTFeedAd mGMNativeAd; //原生广告model
 
     private void initAdLoader() {
-        loadFeedAd(Constants.PGE_CALENDAR_POS_ID, DeviceUtils.getScreenWidthDpi(this.getApplicationContext()), (data, errorMsg) -> {
+        int width = SizeUtils.px2dp(ScreenUtils.getScreenWidth());
+        loadFeedAd(Constants.PGE_CALENDAR_POS_ID, width, (data, errorMsg) -> {
             mIsLoaded = true;
             if (data != null) {
                 mGMNativeAd = data;

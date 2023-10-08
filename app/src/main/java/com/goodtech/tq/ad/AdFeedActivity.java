@@ -28,7 +28,7 @@ public class AdFeedActivity extends BaseActivity {
         // 1、创建AdSlot对象 */
         AdSlot adSlot = new AdSlot.Builder()
                 .setCodeId(codeId)
-                .setImageAcceptedSize(width, UIUtils.dp2px(this, 340)) // 单位px
+                .setExpressViewAcceptedSize(width, 0) // 单位px
                 .setAdCount(1) // 请求广告数量为1到3条 （优先采用平台配置的数量）
                 .build();
 

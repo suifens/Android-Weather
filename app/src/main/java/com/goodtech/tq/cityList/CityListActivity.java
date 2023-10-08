@@ -277,10 +277,10 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
     }
 
     private void toGetLocation() {
-        if (!SpUtils.getInstance().isAgreePermission()) {
-            showPermissionDialog(this, view -> toGetLocation());
-            return;
-        }
+//        if (!SpUtils.getInstance().isAgreePermission()) {
+//            showPermissionDialog(this, view -> toGetLocation());
+//            return;
+//        }
         if (checkPermission()) {
             LocationAlert alert = new LocationAlert(CityListActivity.this,
                     (dialog, which) -> LocationHelper.getInstance().startWithDelay(CityListActivity.this, true));
