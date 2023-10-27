@@ -14,7 +14,7 @@ public class JuHeHelper {
 
     //  新闻头条
     public final static String JUHE_TOUTIAO = "http://v.juhe.cn/toutiao/index?key=927352c7b578ec641b4bac8799b5d40b";
-    //  运势
+    //  
     public final static String JUHE_FORTUNE = "http://web.juhe.cn/constellation/getAll?consName=%s&type=%s&key=a31e488d8a2cf98b0ad401625bbe7892";
 
     public final static String JUHE_DAY_DETAIL = "http://v.juhe.cn/calendar/day?date=%s&key=3fb26fed72acf7a7e4154d3a55f196c7";

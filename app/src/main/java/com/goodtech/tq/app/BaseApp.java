@@ -63,7 +63,6 @@ public class BaseApp extends Application {
             e.printStackTrace();
         }
 
-        TTAdManagerHolder.init(this);
         //  MMKV 存储配置
         MMKV.initialize(this);
         //  Activity生命周期监听
@@ -104,6 +103,8 @@ public class BaseApp extends Application {
 
     @SuppressLint("CheckResult")
     public void startUsingApp(Activity activity) {
+
+        TTAdManagerHolder.init(this);
 
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 

@@ -7,7 +7,7 @@ public interface WeatherHeaderListener {
     void onAirQuality();
     //  万年历
     void onCalendar();
-    //  星座运势
+    //  星座
     void onFortune();
     // //  新闻点击
     // void onNews();
