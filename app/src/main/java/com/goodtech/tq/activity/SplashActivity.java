@@ -151,7 +151,7 @@ public class SplashActivity extends BaseActivity {
             }
 
             @Override
-            public void onSplashLoadSuccess() {
+            public void onSplashLoadSuccess(CSJSplashAd csjSplashAd) {
                 Log.d("TAG", "splash load success");
             }
 
