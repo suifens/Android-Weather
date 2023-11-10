@@ -6,6 +6,7 @@ import android.widget.FrameLayout;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.sdk.openadsdk.AdSlot;
+import com.bytedance.sdk.openadsdk.TTAdDislike;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
@@ -22,7 +23,7 @@ import java.util.List;
  * com.goodtech.tq
  */
 public class AdFeedFragment extends BaseFragment {
-    
+
     protected void loadFeedAd(String codeId, int width, DataCallback<TTFeedAd> callback) {
         // 1、创建AdSlot对象 */
         AdSlot adSlot = new AdSlot.Builder()
@@ -64,6 +65,8 @@ public class AdFeedFragment extends BaseFragment {
             Log.i("TAG", "请先加载广告或等待广告加载完毕后再调用show方法");
             return;
         }
+
+        mTTFeedAd.setDislikeCallback(requireActivity(), getDislikeCallback(feedContainer));
         // 5、展示广告 
         MediationNativeManager manager = mTTFeedAd.getMediationManager();
         if (manager != null) {
@@ -121,6 +124,26 @@ public class AdFeedFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    private TTAdDislike.DislikeInteractionCallback getDislikeCallback(FrameLayout feedContainer) {
+        return new TTAdDislike.DislikeInteractionCallback() {
+            @Override
+            public void onShow() {
+
+            }
+
+            @Override
+            public void onSelected(int i, String s, boolean b) {
+                // 用户点击dislike后回调
+                feedContainer.removeAllViews();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        };
     }
 
     protected TTAdNative.FeedAdListener getFeedAdListener(DataCallback<TTFeedAd> callback) {

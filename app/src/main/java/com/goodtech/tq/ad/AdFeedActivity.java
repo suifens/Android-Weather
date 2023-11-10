@@ -5,6 +5,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.bytedance.sdk.openadsdk.AdSlot;
+import com.bytedance.sdk.openadsdk.DislikeInfo;
+import com.bytedance.sdk.openadsdk.FilterWord;
+import com.bytedance.sdk.openadsdk.TTAdDislike;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
@@ -23,6 +26,7 @@ import java.util.List;
 public class AdFeedActivity extends BaseActivity {
 
     protected static final String TAG = "AdFeedActivity";
+    private FrameLayout mFeedContainer;
 
     protected void loadFeedAd(String codeId, int width, DataCallback<TTFeedAd> callback) {
         // 1、创建AdSlot对象 */
@@ -54,6 +58,7 @@ public class AdFeedActivity extends BaseActivity {
         loadSuccess = false;
         isLoadedAndShow = true;
 
+        mFeedContainer = feedContainer;
         feedContainer.setVisibility(View.VISIBLE);
         showFeedAd(feedContainer, feedAd);
         return true;
@@ -64,6 +69,7 @@ public class AdFeedActivity extends BaseActivity {
             Log.i("TAG", "请先加载广告或等待广告加载完毕后再调用show方法");
             return;
         }
+        mTTFeedAd.setDislikeCallback(this, getDislikeCallback());
         // 5、展示广告 
         MediationNativeManager manager = mTTFeedAd.getMediationManager();
         if (manager != null) {
@@ -94,9 +100,9 @@ public class AdFeedActivity extends BaseActivity {
                     }
                 });
                 mTTFeedAd.render(); // 调用render方法进行渲染，在onRenderSuccess中展示广告
-
-            } else {                   // --- 自渲染feed流广告
-
+            }
+            else {
+                // --- 自渲染feed流广告
                 // 自渲染广告返回的是广告素材，开发者自己将其渲染成view
                 View feedView = FeedAdUtils.getFeedAdFromFeedInfo(mTTFeedAd, this, null, new TTNativeAd.AdInteractionListener() {
                     @Override
@@ -123,6 +129,26 @@ public class AdFeedActivity extends BaseActivity {
         }
     }
 
+    private TTAdDislike.DislikeInteractionCallback getDislikeCallback() {
+        return new TTAdDislike.DislikeInteractionCallback() {
+            @Override
+            public void onShow() {
+
+            }
+
+            @Override
+            public void onSelected(int i, String s, boolean b) {
+                // 用户点击dislike后回调
+                mFeedContainer.removeAllViews();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        };
+    }
+
     protected TTAdNative.FeedAdListener getFeedAdListener(DataCallback<TTFeedAd> callback) {
         return new TTAdNative.FeedAdListener() {
             @Override
@@ -141,5 +167,73 @@ public class AdFeedActivity extends BaseActivity {
                 }
             }
         };
+    }
+
+    private void bindDislikeAction(FrameLayout feedContainer, final TTFeedAd ad, boolean isCustomDislike) {
+        if (isCustomDislike) {
+            // 使用自定义Dislike
+            final DislikeInfo dislikeInfo = ad.getDislikeInfo();
+            if (dislikeInfo == null || dislikeInfo.getFilterWords() == null || dislikeInfo.getFilterWords().isEmpty()) {
+                return;
+            }
+            final DislikeDialog dislikeDialog = new DislikeDialog(this, dislikeInfo);
+            dislikeDialog.setOnDislikeItemClick(new DislikeDialog.OnDislikeItemClick() {
+                @Override
+                public void onItemClick(FilterWord filterWord) {
+//                    mData.remove(ad);
+//                    notifyDataSetChanged();
+                    feedContainer.removeAllViews();
+                }
+            });
+            ad.setDislikeDialog(dislikeDialog);
+//            dislike.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    dislikeDialog.show();
+//                }
+//            });
+        } else {
+            // 使用默认Dislike
+
+            final TTAdDislike ttAdDislike = ad.getDislikeDialog(this);
+            if (ttAdDislike != null) {
+
+                ad.getDislikeDialog(this).setDislikeInteractionCallback(new TTAdDislike.DislikeInteractionCallback() {
+                    @Override
+                    public void onShow() {
+
+                    }
+
+                    @Override
+                    public void onSelected(int position, String value, boolean enforce) {
+                        if (enforce) {
+
+//                            mData.remove(ad);
+//                            notifyDataSetChanged();
+//                            if (enforce) {
+//                                TToast.show(mContext, "FeedListActivity 原生信息流 sdk强制移除View ");
+//                            }
+                            feedContainer.removeAllViews();
+                            return;
+                        }
+//                        mData.remove(ad);
+//                        notifyDataSetChanged();
+                        feedContainer.removeAllViews();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+            }
+//            dislike.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (ttAdDislike != null)
+//                        ttAdDislike.showDislikeDialog();
+//                }
+//            });
+        }
     }
 }

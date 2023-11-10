@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1034
-        versionName "10.3.4"
+        versionCode 1035
+        versionName "10.3.5"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -63,7 +63,15 @@ android {
         }
         oppo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            manifestPlaceholders = [app_name: "预知天气预报", umeng_channel: "oppo"]
+            manifestPlaceholders = [app_name: "预知天气预报纯净版", umeng_channel: "oppo"]
+        }
+        oppo1 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            manifestPlaceholders = [app_name: "一古天气预报", umeng_channel: "oppo"]
+        }
+        oppo2 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            manifestPlaceholders = [app_name: "一古预知天气预报", umeng_channel: "oppo"]
         }
         vivo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '7'
