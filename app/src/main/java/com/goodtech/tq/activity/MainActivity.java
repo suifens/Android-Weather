@@ -135,10 +135,6 @@ public class MainActivity extends BaseActivity {
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         this.registerReceiver(receiver, filter);
-
-        if (SpUtils.getInstance().isAgreePermission()) {
-            initAdLoader();
-        }
     }
 
     @Override
@@ -210,8 +206,7 @@ public class MainActivity extends BaseActivity {
                 long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(Constants.PGE_INT_POS_ID, 0L);
                 if (SpUtils.getInstance().isAgreePermission()) {
 //                        && interval > 1000 * 60 * 30) {
-                    mHandler.postDelayed(this::showAd, 500);
-                    mHandler.postDelayed(this::showInterFullAd, 5000);
+                    mHandler.postDelayed(this::initAdLoader, 5000);
                 }
             });
 
@@ -568,7 +563,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initAdLoader() {
-
+        mLoadSuccess = false;
         adNativeLoader = TTAdSdk.getAdManager().createAdNative(this);
         AdSlot adSlot = new AdSlot.Builder()
                 .setCodeId(Constants.PGE_INT_POS_ID)
