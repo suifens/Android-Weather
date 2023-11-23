@@ -43,7 +43,7 @@ public class MyActivityManager {
         ActivityManager activityManager = (ActivityManager) BaseApp.getInstance().getSystemService(Context.ACTIVITY_SERVICE);
         List groundActivity = activityManager.getRunningTasks(1);
         RunningTaskInfo sTaskInfo = (RunningTaskInfo) groundActivity.get(0);
-        Log.e("TAG", "getBaseActivityName: " + sTaskInfo.baseActivity.getClassName());
+//        Log.e("TAG", "getBaseActivityName: " + sTaskInfo.baseActivity.getClassName());
         return sTaskInfo.baseActivity.getClassName();
     }
 }

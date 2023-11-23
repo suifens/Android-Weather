@@ -183,9 +183,8 @@ public class ConstellationDetailActivity extends BaseActivity implements View.On
         JuHeHelper.getInstance().fetchFortune(mConsEnum.name, type, new ApiResponseHandler() {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
-                Log.e(TAG, "onResponse: " + jsonObject.toString());
                 try {
-                    if (success) {
+                    if (jsonObject != null && success) {
                         switch (type) {
                             case "today": {
                                 ConsDayMode model = new Gson().fromJson(String.valueOf(jsonObject), new TypeToken<ConsDayMode>() {

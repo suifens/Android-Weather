@@ -82,7 +82,7 @@ public class AlarmService extends Service {
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 try {
                     if (success) {
-                        if (!jsonObject.isNull("result")) {
+                        if (jsonObject != null && !jsonObject.isNull("result")) {
                             JSONArray data = jsonObject.getJSONArray("result");
                             ArrayList<JuheAlarmModel> list = new Gson().fromJson(String.valueOf(data), new TypeToken<ArrayList<JuheAlarmModel>>() {}.getType());
                             checkAlarmModels(list);

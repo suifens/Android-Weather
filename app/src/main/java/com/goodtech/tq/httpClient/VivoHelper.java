@@ -77,7 +77,7 @@ public class VivoHelper {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 try {
-                    if (success && !jsonObject.isNull("data")) {
+                    if (success && jsonObject != null && !jsonObject.isNull("data")) {
                         JSONObject data = jsonObject.getJSONObject("data");
                         VivoModel model = new Gson().fromJson(String.valueOf(data), new TypeToken<VivoModel>() {
                         }.getType());

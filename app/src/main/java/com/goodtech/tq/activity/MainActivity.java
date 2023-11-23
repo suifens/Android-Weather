@@ -486,11 +486,9 @@ public class MainActivity extends BaseActivity {
         JuHeHelper.getInstance().fetchNewVersion(new ApiResponseHandler() {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
-                Log.e(TAG, "onResponse: " + jsonObject.toString());
                 try {
                     if (success) {
-
-                        if (!jsonObject.isNull("data")) {
+                        if (jsonObject != null && !jsonObject.isNull("data")) {
                             JSONObject data = jsonObject.getJSONObject("data");
                             String version = data.getString("newVersion");
                             String[] versionTemp = version.split("\\.");

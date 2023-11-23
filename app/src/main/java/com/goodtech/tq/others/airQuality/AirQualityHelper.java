@@ -43,7 +43,7 @@ public class AirQualityHelper {
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 try {
                     if (success) {
-                        if (!jsonObject.isNull("result")) {
+                        if (jsonObject != null && !jsonObject.isNull("result")) {
                             JSONObject data = jsonObject.getJSONObject("result").getJSONObject("realtime");
                             JuheAirModel model = new Gson().fromJson(String.valueOf(data), new TypeToken<JuheAirModel>(){ }.getType());
                             if (model != null) {
@@ -88,7 +88,7 @@ public class AirQualityHelper {
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 try {
                     if (success) {
-                        if (!jsonObject.isNull("result")) {
+                        if (jsonObject != null && !jsonObject.isNull("result")) {
                             JSONObject data = jsonObject.getJSONObject("result").getJSONObject("life");
                             JuheLifeModel model = new Gson().fromJson(String.valueOf(data), new TypeToken<JuheLifeModel>(){ }.getType());
                             if (model != null) {
