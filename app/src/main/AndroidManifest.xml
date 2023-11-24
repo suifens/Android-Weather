@@ -56,6 +56,7 @@
     <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" /> <!-- oppo_permission_end -->
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <!--
  高于Android 11的系统上，如果应用的 targetSdkVersion >= 30 ，推荐增加以下权限声明
        （SDK将通过此权限正常触发广告行为，并保证广告的正确投放。此权限需要在用户隐私文档中声明)
@@ -63,6 +64,9 @@
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
+
+    <!--    读取oaid 设备注册和深度链接：跨APP标识设备-->
+    <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
 
     <application
         android:name=".app.BaseApp"

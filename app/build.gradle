@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1035
-        versionName "10.3.5"
+        versionCode 1040
+        versionName "10.4.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -55,54 +55,67 @@ android {
     productFlavors {
         xiaomi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "xiaomi"]
         }
         huawei {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
             manifestPlaceholders = [app_name: "天气预报纯净版", umeng_channel: "huawei"]
         }
         oppo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
             manifestPlaceholders = [app_name: "预知天气预报纯净版", umeng_channel: "oppo"]
         }
         oppo1 {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
             manifestPlaceholders = [app_name: "一古天气预报", umeng_channel: "oppo"]
         }
         oppo2 {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
             manifestPlaceholders = [app_name: "一古预知天气预报", umeng_channel: "oppo"]
         }
         vivo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '7'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"vivo"'
             manifestPlaceholders = [app_name: "预知天气预报", umeng_channel: "vivo"]
         }
         yyb {
             buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "yyb"]
         }
         meizu {
             buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"meizu"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "meizu"]
         }
         kupai {
             buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"kupai"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "kupai"]
         }
         anzhi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"anzhi"'
             manifestPlaceholders = [app_name: "天气预报苹果版", umeng_channel: "anzhi"]
         }
         wdj {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"wandoujia"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "wandoujia"]
         }
         baidu {
             buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"baidu"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "baidu"]
         }
         flavor360 {
             buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"360"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "360"]
         }
     }
@@ -263,6 +276,11 @@ dependencies {
     implementation(name: 'GDTSDK.unionNormal.4.542.1412', ext: 'aar')
     //ks 快手
     implementation(name: 'kssdk-ad-3.3.53', ext: 'aar')
+
+    //  增长参谋广告
+    implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:6.14.2'
+    //埋点开发工具
+//    debugImplementation 'com.bytedance.applog:RangersAppLog-DevTools:2.2.3'
 
     //</editor-fold>
 

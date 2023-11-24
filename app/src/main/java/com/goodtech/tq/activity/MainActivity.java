@@ -17,16 +17,22 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.blankj.utilcode.util.AppUtils;
+import com.bytedance.applog.AppLog;
+import com.bytedance.applog.InitConfig;
+import com.bytedance.applog.alink.IALinkListener;
+import com.bytedance.applog.util.UriConstants;
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.TTAdConstant;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTFullScreenVideoAd;
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot;
+import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.cityList.CityListActivity;
@@ -63,6 +69,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
@@ -91,6 +98,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initAppLog();
+
         mAddressTv = findViewById(R.id.tv_address);
         mViewPager = findViewById(R.id.viewpager_main);
         mBgImgView = findViewById(R.id.img_background);
@@ -135,6 +145,101 @@ public class MainActivity extends BaseActivity {
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         this.registerReceiver(receiver, filter);
+    }
+
+    private void initAppLog() {
+        /* 初始化开始，appid和渠道，appid如不清楚请联系客户成功经理
+         * 注意第二个参数 channel 不能为空
+         */
+        final InitConfig config = new InitConfig(Constants.PGE_APP_LOG_ID, BuildConfig.UMENG_CHANNEL);
+        //上报地址
+        config.setUriConfig (UriConstants.DEFAULT);
+        // 加密开关，SDK 5.5.1 及以上版本支持，false 为关闭加密，上线前建议设置为 true
+        AppLog.setEncryptAndCompress(true);
+        //日志开关，debug阶段建议开启
+        config.setLogEnable(true);
+        AppLog.setALinkListener(new IALinkListener() {
+            @Override
+            public void onALinkData(@Nullable Map<String, String> map, @Nullable Exception e) {
+                //空实现，不需要处理
+            }
+
+            @Override
+            public void onAttributionData(@Nullable Map<String, String> map, @Nullable Exception e) {
+                //空实现，不需要处理
+            }
+        });
+        /**
+         * 用于获取用户唯一性bd_did
+         * @description
+         */
+        AppLog.addDataObserver(new com.bytedance.applog.IDataObserver() {
+            /**
+             * 本地的id数据加载结果通知
+             */
+            @Override
+            public void onIdLoaded(String s, String s1, String s2) {
+
+            }
+
+            /**
+             * 通知注册结果，以及id变化情况
+             * 仅主进程会被调用
+             */
+            @Override
+            public void onRemoteIdGet(boolean b, String s, String s1, String s2, String s3, String s4, String s5) {
+                String bd_did = AppLog.getDid();
+            }
+
+            /**
+             * Config拉取数据，和本地数据对比有变化的通知
+             * 仅主进程会被调用
+             */
+            @Override
+            public void onRemoteConfigGet(boolean b, JSONObject jsonObject) {
+
+            }
+
+            /**
+             * server拉取AbConfig数据，和本地数据对比有变化的通知
+             * 仅主进程会被调用
+//             * @param changed 是否和本地缓存有所不同
+//             * @param abConfig server返回新abConfig内容
+             */
+            @Override
+            public void onRemoteAbConfigGet(boolean b, JSONObject jsonObject) {
+                Log.i("---测试---返回全部进组信息",""+ jsonObject.toString());
+            }
+
+            /**
+             *  Vid变化通知
+             */
+            @Override
+            public void onAbVidsChange(String s, String s1) {
+
+            }
+
+        });
+        config.setAutoStart(true);
+        //全埋点开关，默认不开启
+        config.setAutoTrackEnabled(false);
+        /*
+         * 针对联调管理功能更新SDK初始化配置，
+         * 因此在集成SDK的时候必须开启延迟深度链接能力
+         */
+        config.enableDeferredALink();
+        /*
+         * 为确保合规，集成SDK后，会在获得用户授权之后进行SDK的初始化并开始采集信息，
+         * 请确保您采集用户信息前已得到用户的授权
+         * 补偿延迟对启动事件的数据影响，如不采用此方式初始化，会对设备ID获取率有影响，
+         * 进而影响归因结果
+         */
+        AppLog.init(this, config, MainActivity.this);
+        /**
+         * 非常重要！！！会直接影响归因结果，必须设置
+         * @description 而且建议在初始化后设置，否则可能不生效
+         */
+        AppLog.setHeaderInfo("csj_attribution",1);
     }
 
     @Override

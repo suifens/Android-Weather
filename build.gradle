@@ -20,6 +20,10 @@ buildscript {
         maven {
             url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_support/"
         }
+        //  增长参谋
+        maven {
+            url 'https://artifact.bytedance.com/repository/Volcengine/'
+        }
 
         maven {url 'https://developer.huawei.com/repo/'}
         maven { url 'https://jitpack.io' }
