@@ -16,6 +16,7 @@ import com.bytedance.sdk.openadsdk.CSJAdError;
 import com.bytedance.sdk.openadsdk.CSJSplashAd;
 import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
+import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.citySearch.CitySearchActivity;
@@ -119,7 +120,7 @@ public class SplashActivity extends BaseActivity {
      */
     private void loadSplashAd() {
         //设置不支持小窗模式
-        String mAdUnitId = Constants.PGE_SPLASH_POS_ID;
+        String mAdUnitId = BuildConfig.PGE_SPLASH_POS_ID;
         /** 2、创建TTAdNative对象 */
         TTAdNative adNativeLoader = TTAdSdk.getAdManager().createAdNative(this);
 

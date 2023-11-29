@@ -10,6 +10,7 @@ import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.bytedance.sdk.openadsdk.TTCustomController;
 import com.bytedance.sdk.openadsdk.mediation.init.MediationConfigUserInfoForSegment;
 import com.bytedance.sdk.openadsdk.mediation.init.MediationPrivacyConfig;
+import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.utils.Constants;
 
 import java.util.HashMap;
@@ -69,7 +70,7 @@ public class TTAdManagerHolder {
                 /**
                  * 注：需要替换成在媒体平台申请的appID ，切勿直接复制
                  */
-                .appId(Constants.PGE_APP_ID)
+                .appId(BuildConfig.PGE_APP_ID)
                 .appName(AppUtils.getAppName())
                 /**
                  * 上线前需要关闭debug开关，否则会影响性能

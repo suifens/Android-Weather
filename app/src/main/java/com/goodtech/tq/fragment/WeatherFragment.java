@@ -18,6 +18,7 @@ import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
+import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.ad.AdFeedFragment;
@@ -354,7 +355,7 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
 
         int width = SizeUtils.px2dp(ScreenUtils.getScreenWidth()) - 28;
         if (!mLoadSuccess || mGMNativeAd == null) {
-            loadFeedAd(Constants.PGE_EXPRESS_POS_ID, width, (data, errorMsg) -> {
+            loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID, width, (data, errorMsg) -> {
                 mLoadSuccess = true;
                 if (data != null) {
                     mGMNativeAd = data;
@@ -366,7 +367,7 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
         }
 
         if (!mLoadSuccess2 || mGMNativeAd2 == null) {
-            loadFeedAd(Constants.PGE_EXPRESS_POS_ID3, width, (data, errorMsg) -> {
+            loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID3, width, (data, errorMsg) -> {
                 mLoadSuccess2 = true;
                 if (data != null) {
                     mGMNativeAd2 = data;

@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity {
         /* 初始化开始，appid和渠道，appid如不清楚请联系客户成功经理
          * 注意第二个参数 channel 不能为空
          */
-        final InitConfig config = new InitConfig(Constants.PGE_APP_LOG_ID, BuildConfig.UMENG_CHANNEL);
+        final InitConfig config = new InitConfig(BuildConfig.PGE_APP_LOG_ID, BuildConfig.UMENG_CHANNEL);
         //上报地址
         config.setUriConfig (UriConstants.DEFAULT);
         // 加密开关，SDK 5.5.1 及以上版本支持，false 为关闭加密，上线前建议设置为 true
@@ -308,7 +308,7 @@ public class MainActivity extends BaseActivity {
             }
             /// 判断新版本
             fetchNewVersion(() -> {
-                long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(Constants.PGE_INT_POS_ID, 0L);
+                long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(BuildConfig.PGE_INT_POS_ID, 0L);
                 if (SpUtils.getInstance().isAgreePermission()) {
 //                        && interval > 1000 * 60 * 30) {
                     mHandler.postDelayed(this::initAdLoader, 5000);
@@ -661,7 +661,7 @@ public class MainActivity extends BaseActivity {
         Log.e(TAG, "showAd: ++++++++++");
         mLoadSuccess = false;
 //        if (mAdInterstitialFullManager != null) {
-//            mAdInterstitialFullManager.loadAdWithCallback(Constants.PGE_INT_POS_ID);
+//            mAdInterstitialFullManager.loadAdWithCallback(BuildConfig.PGE_INT_POS_ID);
 //        }
     }
 
@@ -669,7 +669,7 @@ public class MainActivity extends BaseActivity {
         mLoadSuccess = false;
         adNativeLoader = TTAdSdk.getAdManager().createAdNative(this);
         AdSlot adSlot = new AdSlot.Builder()
-                .setCodeId(Constants.PGE_INT_POS_ID)
+                .setCodeId(BuildConfig.PGE_INT_POS_ID)
                 .setOrientation(TTAdConstant.ORIENTATION_VERTICAL)//设置横竖屏方向
                 .setMediationAdSlot(new MediationAdSlot.Builder()
                         .setMuted(true)//是否静音
@@ -700,7 +700,7 @@ public class MainActivity extends BaseActivity {
                 mTTFullScreenVideoAd = ad;
                 if (mIsLoadedAndShow && isCurrent) {
                     showInterFullAd();
-                    SpUtils.getInstance().putLong(Constants.PGE_INT_POS_ID, System.currentTimeMillis());
+                    SpUtils.getInstance().putLong(BuildConfig.PGE_INT_POS_ID, System.currentTimeMillis());
                 }
             }
         });

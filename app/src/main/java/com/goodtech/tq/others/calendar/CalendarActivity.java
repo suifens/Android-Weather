@@ -22,6 +22,7 @@ import com.github.gzuliyujiang.wheelpicker.DatePicker;
 import com.github.gzuliyujiang.wheelpicker.annotation.DateMode;
 import com.github.gzuliyujiang.wheelpicker.entity.DateEntity;
 import com.github.gzuliyujiang.wheelpicker.impl.BirthdayFormatter;
+import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
 import com.goodtech.tq.ad.AdFeedActivity;
 import com.goodtech.tq.models.calendar.DayDetail;
@@ -301,7 +302,7 @@ public class CalendarActivity extends AdFeedActivity implements
 
     private void initAdLoader() {
         int width = SizeUtils.px2dp(ScreenUtils.getScreenWidth());
-        loadFeedAd(Constants.PGE_CALENDAR_POS_ID, width, (data, errorMsg) -> {
+        loadFeedAd(BuildConfig.PGE_CALENDAR_POS_ID, width, (data, errorMsg) -> {
             mIsLoaded = true;
             if (data != null) {
                 mGMNativeAd = data;

@@ -35,6 +35,14 @@ android {
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
 
+        buildConfigField 'String', 'PGE_APP_ID', '"5353290"'    //应用ID
+        buildConfigField 'String', 'PGE_APP_LOG_ID', '"437522"' //增长参谋id
+        buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102214996"' //开屏广告id
+        buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102215979"'  //24小时动态信息流 id
+        buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102273983"' //动态信息流 id
+        buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102274243"' //日历动态信息流 id
+        buildConfigField 'String', 'PGE_INT_POS_ID', '"102214995"'  //插屏广告 id
+
 //        广告应用ID
 //        buildConfigField 'String', 'PGE_APP_ID', '5353290'
         manifestPlaceholders = [JPUSH_PKGNAME : applicationId,
@@ -62,6 +70,14 @@ android {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
             buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
             manifestPlaceholders = [app_name: "天气预报纯净版", umeng_channel: "huawei"]
+
+            buildConfigField 'String', 'PGE_APP_ID', '"5168917"'    //应用ID
+            buildConfigField 'String', 'PGE_APP_LOG_ID', '"337877"' //增长参谋id
+            buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102499123"' //开屏广告id
+            buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102498279"'  //24小时动态信息流 id
+            buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102498280"' //动态信息流 id
+            buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102499124"' //日历动态信息流 id
+            buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
         }
         oppo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'

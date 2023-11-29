@@ -117,7 +117,7 @@ public class BaseApp extends Application {
         //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
 //        TTAdSdk.init(this,
 //                new TTAdConfig.Builder()
-//                        .appId(Constants.PGE_APP_ID)//xxxxxxx为穿山甲媒体平台注册的应用ID
+//                        .appId(BuildConfig.PGE_APP_ID)//xxxxxxx为穿山甲媒体平台注册的应用ID
 //                        .useTextureView(true) //默认使用SurfaceView播放视频广告,当有SurfaceView冲突的场景，可以使用TextureView
 //                        .appName("APP测试媒体")
 //                        .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)//落地页主题
