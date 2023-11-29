@@ -18,6 +18,7 @@ public class Constants {
 
     //  穿山甲广告位ID
     public static final String PGE_APP_ID = "5353290"; //应用ID
+    public static final String PGE_APP_LOG_ID = "437522"; //增长参谋id
     public static final String PGE_SPLASH_POS_ID = "102214996";  //开屏广告id
     public static final String PGE_BANNER_POS_ID = "102072557";  //banner id
     public static final String PGE_EXPRESS_POS_ID = "102215979";  //动态信息流 id

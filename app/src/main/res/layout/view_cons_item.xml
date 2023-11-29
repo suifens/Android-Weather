@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:fontFamily="sans-serif-medium"
-        android:text="整体运势"
+        android:text="整体"
         android:textColor="@color/color_e7a139"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/img_item_icon"

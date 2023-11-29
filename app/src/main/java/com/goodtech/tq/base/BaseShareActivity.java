@@ -18,6 +18,10 @@ import com.goodtech.tq.base.share.ShareHelper;
 import com.goodtech.tq.base.share.ShareType;
 import com.goodtech.tq.utils.ImageTools;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.views.popup.TopTitlePopup;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
+import com.lxj.xpopup.enums.PopupPosition;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 
@@ -55,12 +59,27 @@ public class BaseShareActivity extends BaseActivity {
         if (mRxPermissions == null) {
             return;
         }
-        mRxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(granted -> {
-                    if (granted) {
-                        startShare(shareType);
-                    }
-                });
+        if (mRxPermissions.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            startShare(shareType);
+        } else {
+            TopTitlePopup popup = new TopTitlePopup(this);
+            popup.setupData("请允许天气预报使用读写权限", "使用分享功能，我们需要将您的图片先储存手机文件中，如果您拒绝，也不会影响您使用产品的其他功能");
+            BasePopupView popupView = new XPopup.Builder(this)
+                    .isDestroyOnDismiss(true)
+                    .popupPosition(PopupPosition.Top)
+                    .hasShadowBg(false)
+                    .hasStatusBarShadow(false)
+                    .asCustom(popup);
+            popupView.show();
+
+            mRxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .subscribe(granted -> {
+                        popupView.dismiss();
+                        if (granted) {
+                            startShare(shareType);
+                        }
+                    });
+        }
     }
 
     protected void startShare(final ShareType shareType) {
@@ -85,6 +104,7 @@ public class BaseShareActivity extends BaseActivity {
     }
 
     protected String mShareImgPath;
+
     protected void shareImage(Bitmap saveBitmap, ShareType shareType) {
         if (mShareHelper == null) {
             mShareHelper = new ShareHelper(BaseShareActivity.this);

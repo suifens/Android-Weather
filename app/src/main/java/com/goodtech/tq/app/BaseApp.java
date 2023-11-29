@@ -1,6 +1,5 @@
 package com.goodtech.tq.app;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
@@ -12,20 +11,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.bytedance.msdk.api.TTMediationAdSdk;
-import com.bytedance.sdk.openadsdk.TTAdConfig;
-import com.bytedance.sdk.openadsdk.TTAdConstant;
-import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.activity.MyActivityManager;
 import com.goodtech.tq.activity.SettingActivity;
-import com.goodtech.tq.activity.SplashADActivity;
 import com.goodtech.tq.activity.SplashActivity;
-import com.goodtech.tq.app.config.GMAdManagerHolder;
+import com.goodtech.tq.ad.TTAdManagerHolder;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.jpush.JPushHelper;
 import com.goodtech.tq.signing.SigningActivity;
@@ -69,6 +62,7 @@ public class BaseApp extends Application {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+
         //  MMKV 存储配置
         MMKV.initialize(this);
         //  Activity生命周期监听
@@ -110,6 +104,8 @@ public class BaseApp extends Application {
     @SuppressLint("CheckResult")
     public void startUsingApp(Activity activity) {
 
+        TTAdManagerHolder.init(this);
+
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
         RxPermissions rxPermissions = new RxPermissions(activity);
@@ -118,12 +114,10 @@ public class BaseApp extends Application {
         // }
         configUM();
 
-        GMAdManagerHolder.init(this);
-
         //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
 //        TTAdSdk.init(this,
 //                new TTAdConfig.Builder()
-//                        .appId(Constants.PGE_APP_ID)//xxxxxxx为穿山甲媒体平台注册的应用ID
+//                        .appId(BuildConfig.PGE_APP_ID)//xxxxxxx为穿山甲媒体平台注册的应用ID
 //                        .useTextureView(true) //默认使用SurfaceView播放视频广告,当有SurfaceView冲突的场景，可以使用TextureView
 //                        .appName("APP测试媒体")
 //                        .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)//落地页主题
@@ -222,7 +216,6 @@ public class BaseApp extends Application {
             public void onActivityStopped(Activity activity) {
                 appCount--;
                 if (appCount == 0 && !(activity instanceof SplashActivity
-                        || activity instanceof SplashADActivity
                         || activity instanceof SettingActivity
                         || activity instanceof SigningActivity)) {
                     //应用进入后台 需要做的操作

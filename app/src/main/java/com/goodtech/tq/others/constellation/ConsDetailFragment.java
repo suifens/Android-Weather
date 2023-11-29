@@ -77,7 +77,7 @@ public class ConsDetailFragment extends BaseFragment {
                 mFriendTv.setText(mConsModel.QFriend);
                 mColorTv.setText(mConsModel.color);
                 mNumberTv.setText("" + mConsModel.number);
-                mConsItemView.setData(R.drawable.ic_all, "整体运势", mConsModel.summary);
+                mConsItemView.setData(R.drawable.ic_all, "整体", mConsModel.summary);
             }
         });
     }

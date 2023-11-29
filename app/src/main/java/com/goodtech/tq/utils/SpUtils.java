@@ -49,8 +49,6 @@ public class SpUtils {
                 old_man.edit().clear().apply();
             }
         }
-
-        Log.e(TAG, "updateWithUserId: " + preferences.allKeys().length);
     }
 
     // <editor-fold defaulted="collapsed" desc="是否同意权限">

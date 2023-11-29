@@ -17,6 +17,8 @@ public abstract class BaseFragment extends Fragment {
 
     protected View mCacheView;
 
+    protected Boolean isFirstLoad = true;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

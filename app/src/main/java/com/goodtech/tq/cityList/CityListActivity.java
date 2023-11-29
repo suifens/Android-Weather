@@ -2,32 +2,17 @@ package com.goodtech.tq.cityList;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bytedance.msdk.api.AdError;
-import com.bytedance.msdk.api.v2.GMAdConstant;
-import com.bytedance.msdk.api.v2.GMAdSize;
-import com.bytedance.msdk.api.v2.GMDislikeCallback;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAd;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeAdLoadCallback;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMNativeExpressAdListener;
-import com.bytedance.msdk.api.v2.ad.nativeAd.GMVideoListener;
-import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.ad.AdFeedActivity;
 import com.goodtech.tq.app.BaseApp;
@@ -35,10 +20,7 @@ import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.location.helper.LocationHelper;
-import com.goodtech.tq.manager.AdFeedManager;
 import com.goodtech.tq.models.CityMode;
-import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.LocationAlert;
@@ -54,7 +36,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -96,11 +77,6 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
         mAdapter = null;
         mLayoutManager = null;
 
-        if (mAdFeedManager != null) {
-            mAdFeedManager.destroy();
-        }
-        mGMNativeAd = null;
-
         super.onDestroy();
     }
 
@@ -136,7 +112,7 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
         mCloseBtn = findViewById(R.id.button_close);
         mCancelBtn = findViewById(R.id.button_city_cancel);
         mEditBtn = findViewById(R.id.button_city_edit);
-        mBannerContainer = findViewById(R.id.bannerContainer);
+//        mBannerContainer = findViewById(R.id.bannerContainer);
 
         //noinspection ConstantConditions
         mRecyclerView = findViewById(R.id.recycler_city);
@@ -301,10 +277,10 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
     }
 
     private void toGetLocation() {
-        if (!SpUtils.getInstance().isAgreePermission()) {
-            showPermissionDialog(this, view -> toGetLocation());
-            return;
-        }
+//        if (!SpUtils.getInstance().isAgreePermission()) {
+//            showPermissionDialog(this, view -> toGetLocation());
+//            return;
+//        }
         if (checkPermission()) {
             LocationAlert alert = new LocationAlert(CityListActivity.this,
                     (dialog, which) -> LocationHelper.getInstance().startWithDelay(CityListActivity.this, true));
@@ -313,58 +289,6 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
             }
         } else {
             LocationHelper.getInstance().startWithDelay(CityListActivity.this);
-        }
-    }
-
-    /**
-     * banner
-     */
-
-    private FrameLayout mBannerContainer;
-    //广告是否加载成功了
-    private boolean mIsLoaded;
-    //广告加载成功并展示
-    private boolean mIsLoadedAndShow;
-    //广告管理类
-    private AdFeedManager mAdFeedManager;
-    // banner广告事件的监听
-    private GMNativeAd mGMNativeAd; //原生广告model
-
-    private void initAdLoader() {
-        mAdFeedManager = new AdFeedManager(this, new GMNativeAdLoadCallback() {
-            @Override
-            public void onAdLoaded(List<GMNativeAd> ads) {
-                if (ads == null || ads.isEmpty()) {
-                    Log.e(TAG, "on FeedAdLoaded: ad is null!");
-                    //TToast.show(getContext(), "广告加载失败！");
-                    return;
-                }
-                mIsLoaded = true;
-                mGMNativeAd = ads.get(0);
-                if (mGMNativeAd != null && !mIsLoadedAndShow) {
-                    boolean isShow = showAd(mBannerContainer, mAdFeedManager, true, mGMNativeAd);
-                    mIsLoaded = !isShow;
-                }
-            }
-
-            @Override
-            public void onAdLoadedFail(AdError adError) {
-                //TToast.show(getContext(), "广告加载失败！");
-                Log.e(TAG, "load feed ad error : " + adError.code + ", " + adError.message);
-            }
-        });
-    }
-
-    private void initNativeExpressAD() {
-        mIsLoaded = false;
-        removeAdView();
-        mAdFeedManager.loadAdWithCallback(Constants.PGE_EXPRESS_POS_ID2, 1, GMAdConstant.TYPE_EXPRESS_AD, DeviceUtils.getScreenWidthDpi(this.getApplicationContext()));
-    }
-
-    @Override
-    protected void removeAdView() {
-        if (mBannerContainer != null) {
-            mBannerContainer.removeAllViews();
         }
     }
 

@@ -98,7 +98,7 @@ public class JAlarmReceiver extends BroadcastReceiver {
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 try {
                     if (success) {
-                        if (!jsonObject.isNull("result")) {
+                        if (jsonObject != null && !jsonObject.isNull("result")) {
                             JSONArray data = jsonObject.getJSONArray("result");
                             ArrayList<JuheAlarmModel> list = new Gson().fromJson(String.valueOf(data), new TypeToken<ArrayList<JuheAlarmModel>>() {}.getType());
                             checkAlarmModels(context, list);

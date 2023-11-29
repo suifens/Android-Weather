@@ -21,10 +21,10 @@ android {
 
     defaultConfig {
         applicationId "com.goodtech.tq"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1031
-        versionName "10.3.1"
+        versionCode 1040
+        versionName "10.4.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -35,6 +35,16 @@ android {
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
 
+        buildConfigField 'String', 'PGE_APP_ID', '"5353290"'    //应用ID
+        buildConfigField 'String', 'PGE_APP_LOG_ID', '"437522"' //增长参谋id
+        buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102214996"' //开屏广告id
+        buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102215979"'  //24小时动态信息流 id
+        buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102273983"' //动态信息流 id
+        buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102274243"' //日历动态信息流 id
+        buildConfigField 'String', 'PGE_INT_POS_ID', '"102214995"'  //插屏广告 id
+
+//        广告应用ID
+//        buildConfigField 'String', 'PGE_APP_ID', '5353290'
         manifestPlaceholders = [JPUSH_PKGNAME : applicationId,
                                 JPUSH_APPKEY  : "e2416540f4d3f0081fbef6df", //JPush 上注册的包名对应的 Appkey.
                                 JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
@@ -53,46 +63,75 @@ android {
     productFlavors {
         xiaomi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "xiaomi"]
         }
         huawei {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
             manifestPlaceholders = [app_name: "天气预报纯净版", umeng_channel: "huawei"]
+
+            buildConfigField 'String', 'PGE_APP_ID', '"5168917"'    //应用ID
+            buildConfigField 'String', 'PGE_APP_LOG_ID', '"337877"' //增长参谋id
+            buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102499123"' //开屏广告id
+            buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102498279"'  //24小时动态信息流 id
+            buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102498280"' //动态信息流 id
+            buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102499124"' //日历动态信息流 id
+            buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
         }
         oppo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            manifestPlaceholders = [app_name: "预知天气预报", umeng_channel: "oppo"]
+            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+            manifestPlaceholders = [app_name: "预知天气预报纯净版", umeng_channel: "oppo"]
+        }
+        oppo1 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+            manifestPlaceholders = [app_name: "一古天气预报", umeng_channel: "oppo"]
+        }
+        oppo2 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+            manifestPlaceholders = [app_name: "一古预知天气预报", umeng_channel: "oppo"]
         }
         vivo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '7'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"vivo"'
             manifestPlaceholders = [app_name: "预知天气预报", umeng_channel: "vivo"]
         }
         yyb {
             buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "yyb"]
         }
         meizu {
             buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"meizu"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "meizu"]
         }
         kupai {
             buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"kupai"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "kupai"]
         }
         anzhi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"anzhi"'
             manifestPlaceholders = [app_name: "天气预报苹果版", umeng_channel: "anzhi"]
         }
         wdj {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"wandoujia"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "wandoujia"]
         }
         baidu {
             buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"baidu"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "baidu"]
         }
         flavor360 {
             buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"360"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "360"]
         }
     }
@@ -235,67 +274,29 @@ dependencies {
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
     implementation 'com.tencent.bugly:crashreport:latest.release'
 
-    //<editor-fold desc="广告">
-
-    //GroMore_sdk
-    implementation "by.gm_mediation.com:gromore-sdk:4.3.0.0"  //groMore sdk
-
-    //GroMore_sdk adapter
-    implementation "by.gm_mediation.com:gdt-adapter:4.530.1400.1"  //gdt adapter
-    implementation "by.gm_mediation.com:ks-adapter:3.3.44.1"  //ks adapter
     def support_version = "28.0.0" //建议使用的26以上的support库版本，建议使用28最新的即可。
     // supprot库依赖，SDK内部依赖如下support，请确保添加
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:recyclerview-v7:$support_version"
-    implementation "by.gm_mediation.com:baidu-adapter:9.29.1" //百度 adapter
-//    implementation "by.gm_mediation.com:mintegral-adapter:16.4.47.0" //mintegral adapter
-//    implementation "by.gm_mediation.com:admob-adapter:17.2.0.44" // admob adapter
-//    implementation "by.gm_mediation.com:unity-adapter:4.3.0.12" //unity adapter
-//    implementation "by.gm_mediation.com:sigmob-adapter:4.11.0.1" //sigmob adapter
-//    implementation "by.gm_mediation.com:klevin-adapter:2.11.0.3.6" //klevin 游可赢 adapter
-    implementation "by.gm_mediation.com:pangle-adapter:5.3.0.5.1" //穿山甲 adapter
+
+    //<editor-fold desc="广告">
+
+    implementation "com.pangle.cn:mediation-sdk:5.7.0.5"  //融合SDK
+    implementation "com.pangle.cn:mediation-ks-adapter:3.3.53.1"//ks adapter 快手
+    implementation "com.pangle.cn:mediation-gdt-adapter:4.542.1412.1" //gdt adapter 优汇量
+    implementation "com.pangle.cn:mediation-baidu-adapter:9.3223.1"//baidu adapter
 
     //Baidu
-    implementation(name: 'Baidu_MobAds_SDK_v9.29', ext: 'aar')
-
-    //unity
-//    implementation(name: 'unity-ads-4.3.0', ext: 'aar')
-
-    //pangle
-    implementation(name: 'open_ad_sdk_5.3.0.5', ext: 'aar')
-
+    implementation(name: 'Baidu_MobAds_SDK_v9.3223', ext: 'aar')
     //GDT 优汇量
-    implementation(name: 'GDTSDK.unionNormal.4.530.1400', ext: 'aar')
-
-    //admob
-//    implementation 'com.google.android.gms:play-services-ads:17.2.0'
-
+    implementation(name: 'GDTSDK.unionNormal.4.542.1412', ext: 'aar')
     //ks 快手
-    implementation(name: 'kssdk-ad-3.3.44', ext: 'aar')
+    implementation(name: 'kssdk-ad-3.3.53', ext: 'aar')
 
-    //sigmob
-//    implementation(name: 'windAd-4.11.0', ext: 'aar')
-//    implementation(name: 'windAd-common-1.4.4', ext: 'aar')
-
-    //klevin 游可赢
-//    implementation(name: 'klevinSDK_2.11.0.3', ext: 'aar')
-
-    //mintegral
-//    implementation("com.mbridge.msdk.support:videojs:16.4.47")
-//    implementation("com.mbridge.msdk.support:mbjscommon:16.4.47")
-//    implementation("com.mbridge.msdk.support:playercommon:16.4.47")
-//    implementation("com.mbridge.msdk.support:reward:16.4.47")
-//    implementation("com.mbridge.msdk.support:videocommon:16.4.47")
-//    implementation("com.mbridge.msdk.support:chinasame:16.4.47")
-//    implementation("com.mbridge.msdk.support:interstitialvideo:16.4.47")
-//    implementation("com.mbridge.msdk.support:mbnative:16.4.47")
-//    implementation("com.mbridge.msdk.support:nativeex:16.4.47")
-//    implementation("com.mbridge.msdk.support:mbnativeadvanced:16.4.47")
-//    implementation("com.mbridge.msdk.support:interstitial:16.4.47")
-//    implementation("com.mbridge.msdk.support:mbbanner:16.4.47")
-//    implementation("com.mbridge.msdk.support:mbsplash:16.4.47")
-//    implementation("com.mbridge.msdk.support:mbbid:16.4.47")
-//    implementation("com.mbridge.msdk.support:newinterstitial:16.4.47")
+    //  增长参谋广告
+    implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:6.14.2'
+    //埋点开发工具
+//    debugImplementation 'com.bytedance.applog:RangersAppLog-DevTools:2.2.3'
 
     //</editor-fold>
 
@@ -314,7 +315,6 @@ dependencies {
 
     //  定位功能
     implementation 'com.amap.api:location:latest.integration'
-
     //  弹窗
     implementation 'com.github.li-xiaojun:XPopup:2.9.19'
 

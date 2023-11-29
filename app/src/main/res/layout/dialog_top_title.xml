@@ -15,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/titleTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-black"
@@ -24,6 +25,7 @@
             android:layout_marginBottom="4dp"/>
 
         <TextView
+            android:id="@+id/messageTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="为了提供更贴近您兴趣的本地天气信息服务，我们需要获取您设备的所在区域信息。不授权不影响您使用APP。"
