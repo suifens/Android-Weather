@@ -11,15 +11,11 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
-import com.blankj.utilcode.util.PermissionUtils;
-import com.blankj.utilcode.util.UtilsTransActivity;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.PermissionUtil;
@@ -31,8 +27,6 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.enums.PopupPosition;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
-import java.util.List;
 
 /**
  * com.goodtech.tq.location.service
