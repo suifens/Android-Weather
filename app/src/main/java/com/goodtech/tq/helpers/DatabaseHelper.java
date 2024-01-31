@@ -95,8 +95,21 @@ public class DatabaseHelper {
         name = name.replace(" ", "");
         name = name.replace("%", "");
 
-        String sql = String.format("select * from city where mergerName like '%%%s%%'", name);
-        Cursor cursor = mDatabase.rawQuery(sql, null);
+//        String sql = String.format("select * from city where mergerName like '%%%s%%'", name);
+
+        // 构建查询语句
+        StringBuilder query = new StringBuilder("SELECT *, (LENGTH(mergerName) - LENGTH(REPLACE(mergerName, '" + name.charAt(0) + "', '')))");
+        for (int i = 1; i < name.length(); i++) {
+            query.append("+ (LENGTH(mergerName) - LENGTH(REPLACE(mergerName, '").append(name.charAt(i)).append("', ''))) ");
+        }
+        query.append("AS match_count FROM city WHERE ");
+        for (int i = 0; i < name.length(); i++) {
+            query.append("mergerName LIKE '%").append(name.charAt(i)).append("%' OR ");
+        }
+        query = new StringBuilder(query.substring(0, query.length() - 4));  // 去除最后一个OR
+        query.append(" ORDER BY match_count DESC");
+
+        Cursor cursor = mDatabase.rawQuery(String.valueOf(query), null);
 
         ArrayList<CityMode> list = new ArrayList<>();
         if (cursor == null) {
