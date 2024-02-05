@@ -124,6 +124,7 @@ public class WeatherHttpHelper {
                     needUpdate = true;
                 }
             }
+//            new Thread(() -> getWeather(cityMode, callback));
             getWeather(cityMode, callback);
             return true;
         }

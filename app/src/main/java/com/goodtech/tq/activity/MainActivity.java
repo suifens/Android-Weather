@@ -45,6 +45,7 @@ import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.JuHeHelper;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.CompletionListener;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
@@ -265,7 +266,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        // WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
+//        WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
         Log.e(TAG, "onResume: ");
     }
 
@@ -297,20 +298,11 @@ public class MainActivity extends BaseActivity {
         super.onStart();
 
         this.isCurrent = true;
-        // if (TimeUtils.needLocation()) {
-        //     LocationHelper.getInstance().startWithDelay(this);
-        // }
         if (isFirstLoad) {
-            if (LocationSpHelper.getLocation() != null) {
-                mHandler.postDelayed(() -> {
-                    LocationHelper.getInstance().startWithDelay(this);
-                }, 500);
-            }
             /// 判断新版本
             fetchNewVersion(() -> {
                 long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(BuildConfig.PGE_INT_POS_ID, 0L);
                 if (SpUtils.getInstance().isAgreePermission()) {
-//                        && interval > 1000 * 60 * 30) {
                     mHandler.postDelayed(this::initAdLoader, 5000);
                 }
             });
@@ -320,6 +312,10 @@ public class MainActivity extends BaseActivity {
             if (mIsLoadedAndShow) {
                 showInterFullAd();
             }
+        }
+
+        if (LocationSpHelper.getLocation() != null) {
+            LocationHelper.getInstance().startWithDelay(this);
         }
 
         ArrayList<CityMode> cityModes = LocationSpHelper.getCityListAndLocation();
@@ -361,6 +357,7 @@ public class MainActivity extends BaseActivity {
         removeTicker();
 
         if (event.isSuccessLocation()) {
+            /// 定位成功
             CityMode cityMode = LocationSpHelper.getLocation();
             mCityModes.set(0, cityMode);
             reloadWeather(0);
@@ -419,7 +416,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void reloadWeather(final int index) {
-
         mHandler.post(() -> {
             CityMode cityMode = mCityModes.get(index);
             if (cityMode.getCid() != 0) {
@@ -468,7 +464,6 @@ public class MainActivity extends BaseActivity {
         mFragmentList.add(fragment);
         mAdapter = new ViewPagerAdapter(this, mFragmentList);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setOffscreenPageLimit(5);
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

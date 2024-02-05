@@ -68,6 +68,9 @@ public class LocationHelper {
     }
 
     @SuppressLint("CheckResult")
+    /**
+     * isForce 是否强制定位
+     */
     public void startWithDelay(final Activity context, boolean isForce) {
 
         if (isLocating) {
@@ -123,10 +126,8 @@ public class LocationHelper {
             configClient();
             return;
         }
-        mHandler.postDelayed(() -> {
-            start(context);
-            isLocating = true;
-        }, 300);
+//        mHandler.post(() -> isLocating = start(context));
+        isLocating = start(context);
     }
 
     private void configClient() {
@@ -142,17 +143,17 @@ public class LocationHelper {
             //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
             mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
 
-            start(mContext);
+            isLocating = start(mContext);
         } catch (Exception e) {
 
         }
     }
 
-    private void start(Context context) {
+    private Boolean start(Context context) {
         startTicker();
         if (!PermissionUtil.isLocationEnabled(context)) {
             removeTicker();
-            return;
+            return false;
         }
         if (mLocationClient != null) {
             if (context.getClass() == Activity.class) {
@@ -170,7 +171,9 @@ public class LocationHelper {
             mLocationClient.setLocationOption(mLocationOption);
             //启动定位
             mLocationClient.startLocation();
+            return true;
         }
+        return false;
     }
 
     public void stop() {

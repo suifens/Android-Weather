@@ -62,11 +62,6 @@ public class LocationSpHelper {
         }
 
         return null;
-//
-//        CityMode cityMode = new CityMode();
-//        cityMode.location = true;
-//        cityMode.getCid() = 0;
-//        return cityMode;
     }
 
     public static void setCityList(ArrayList<CityMode> cityList) {

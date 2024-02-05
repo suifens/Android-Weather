@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1040
-        versionName "10.4.0"
+        versionCode 1200
+        versionName "12.0.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -66,6 +66,11 @@ android {
             buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "xiaomi"]
         }
+        xiaomi1 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
+            manifestPlaceholders = [app_name: "预知天气预报", umeng_channel: "xiaomi"]
+        }
         huawei {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
             buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
@@ -82,18 +87,18 @@ android {
         oppo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
             buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
-            manifestPlaceholders = [app_name: "预知天气预报纯净版", umeng_channel: "oppo"]
+            manifestPlaceholders = [app_name: "一古天气预报", umeng_channel: "oppo"]
         }
         oppo1 {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
             buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
-            manifestPlaceholders = [app_name: "一古天气预报", umeng_channel: "oppo"]
+            manifestPlaceholders = [app_name: "一古预知天气预报软件", umeng_channel: "oppo"]
         }
-        oppo2 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
-            manifestPlaceholders = [app_name: "一古预知天气预报", umeng_channel: "oppo"]
-        }
+//        oppo2 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+//            manifestPlaceholders = [app_name: "一古预知天气预报", umeng_channel: "oppo"]
+//        }
         vivo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '7'
             buildConfigField 'String', 'UMENG_CHANNEL', '"vivo"'
@@ -103,6 +108,11 @@ android {
             buildConfigField 'int', 'BAIDU_CHANNEL', '9'
             buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "yyb"]
+        }
+        yyb1 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
+            manifestPlaceholders = [app_name: "预知天气预报", umeng_channel: "yyb"]
         }
         meizu {
             buildConfigField 'int', 'BAIDU_CHANNEL', '13'
@@ -117,7 +127,7 @@ android {
         anzhi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
             buildConfigField 'String', 'UMENG_CHANNEL', '"anzhi"'
-            manifestPlaceholders = [app_name: "天气预报苹果版", umeng_channel: "anzhi"]
+            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "anzhi"]
         }
         wdj {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
@@ -133,6 +143,11 @@ android {
             buildConfigField 'int', 'BAIDU_CHANNEL', '1'
             buildConfigField 'String', 'UMENG_CHANNEL', '"360"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "360"]
+        }
+        honor {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"honor"'
+            manifestPlaceholders = [app_name: "预知天气预报", umeng_channel: "honor"]
         }
     }
 
@@ -281,17 +296,17 @@ dependencies {
 
     //<editor-fold desc="广告">
 
-    implementation "com.pangle.cn:mediation-sdk:5.7.0.5"  //融合SDK
-    implementation "com.pangle.cn:mediation-ks-adapter:3.3.53.1"//ks adapter 快手
-    implementation "com.pangle.cn:mediation-gdt-adapter:4.542.1412.1" //gdt adapter 优汇量
-    implementation "com.pangle.cn:mediation-baidu-adapter:9.3223.1"//baidu adapter
+    implementation "com.pangle.cn:mediation-sdk:5.9.0.8"  //融合SDK
+    implementation "com.pangle.cn:mediation-ks-adapter:3.3.57.0"//ks adapter 快手
+    implementation "com.pangle.cn:mediation-gdt-adapter:4.561.1431.0" //gdt adapter 优汇量
+    implementation "com.pangle.cn:mediation-baidu-adapter:9.332.0"//baidu adapter
 
     //Baidu
-    implementation(name: 'Baidu_MobAds_SDK_v9.3223', ext: 'aar')
+    implementation(name: 'Baidu_MobAds_SDK_v9.324', ext: 'aar')
     //GDT 优汇量
-    implementation(name: 'GDTSDK.unionNormal.4.542.1412', ext: 'aar')
+    implementation(name: 'GDTSDK.unionNormal.4.550.1420', ext: 'aar')
     //ks 快手
-    implementation(name: 'kssdk-ad-3.3.53', ext: 'aar')
+    implementation(name: 'kssdk-ad-3.3.55.2', ext: 'aar')
 
     //  增长参谋广告
     implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:6.14.2'

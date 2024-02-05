@@ -2,14 +2,9 @@ package com.goodtech.tq.views.popup
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.goodtech.tq.R
-import com.lxj.xpopup.core.DrawerPopupView
-import com.lxj.xpopup.core.PositionPopupView
 import android.widget.TextView
 import com.goodtech.tq.R
-import com.lxj.xpopup.core.DrawerPopupView
 import com.lxj.xpopup.core.PositionPopupView
-import kotlinx.android.synthetic.main.item_layout01.view.title
 
 /**
  */
