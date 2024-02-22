@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".others.airQuality.AirQualityActivity">
+    tools:context=".modules.others.airQuality.AirQualityActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context=".others.airQuality.AirQualityActivity">
+        tools:context=".modules.others.airQuality.AirQualityActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -67,7 +67,7 @@
 
             </LinearLayout>
 
-            <com.goodtech.tq.others.airQuality.view.AirLifeView
+            <com.goodtech.tq.modules.others.airQuality.view.AirLifeView
                 android:id="@+id/view_life"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

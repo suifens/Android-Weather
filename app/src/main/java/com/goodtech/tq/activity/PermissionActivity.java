@@ -22,7 +22,7 @@ import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
-import com.goodtech.tq.others.test.PrivacyWebActivity;
+import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TipHelper;

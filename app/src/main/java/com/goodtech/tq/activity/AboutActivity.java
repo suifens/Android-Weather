@@ -1,12 +1,11 @@
 package com.goodtech.tq.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.others.test.PrivacyWebActivity;
+import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.umeng.analytics.MobclickAgent;

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">InsaitLib</string>
+    <string name="button_cancel">取消</string>
+    <string name="button_ok">确定</string>
+    <string name="button_know">知道了</string>
+
+    <string name="gender_unknown">未知</string>
+    <string name="gender_male">男</string>
+    <string name="gender_female">女</string>
+</resources>

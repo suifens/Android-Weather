@@ -1,0 +1,13 @@
+
+C
+java:S5411t"(Use a primitive boolean expression here.(¨Ÿüôüÿÿÿÿ
+`
+java:S2259"IA "NullPointerException" could be thrown; "mGMNativeAd" is nullable here.(¾¡Ô
+7
+java:S1170S"!Make this final field static too.(™¬È
+n
+java:S3776³"RRefactor this method to reduce its Cognitive Complexity from 22 to the 15 allowed.(ÜİÃÛùÿÿÿÿ
+R	java:S125¿"<This block of commented-out lines of code should be removed.(ÖŠú’
+R	java:S125Š"<This block of commented-out lines of code should be removed.(×¸ãŸ
+i
+java:S3776à"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(Æê¯È

@@ -17,7 +17,7 @@ import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.others.airQuality.AirQualityHelper;
+import com.goodtech.tq.modules.others.airQuality.AirQualityHelper;
 import com.goodtech.tq.utils.TimeUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

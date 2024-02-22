@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:background="@drawable/bg_circle_black_12" >
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_1"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -20,7 +20,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_2"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -34,7 +34,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_3"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -48,7 +48,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_4"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -62,7 +62,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_5"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -76,7 +76,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_6"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -90,7 +90,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_7"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -104,7 +104,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_8"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -117,7 +117,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_9"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -130,7 +130,7 @@
         android:layout_marginEnd="14dp"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_10"
         android:layout_width="match_parent"
         android:layout_height="54dp" />
@@ -145,7 +145,7 @@
         android:visibility="gone"
         />
 
-    <com.goodtech.tq.fragment.view.DailyItemView
+    <com.goodtech.tq.modules.weather.holder.DailyItemView
         android:id="@+id/item_daily_11"
         android:layout_width="match_parent"
         android:layout_height="54dp"

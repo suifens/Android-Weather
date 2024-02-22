@@ -44,8 +44,6 @@ public class LineTempItemView extends LinearLayout {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.weather_item_line, this, true);
         weatherView = view.findViewById(R.id.weather_view);
 
-        //画折线
-//        weatherView.setLineType(WeatherView.LINE_TYPE_DISCOUNT);
         //画曲线(已修复不圆滑问题)
         weatherView.setLineType(WeatherView.LINE_TYPE_CURVE);
 

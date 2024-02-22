@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.modules.weather.holder.DailyItemView;
 
 
 /**

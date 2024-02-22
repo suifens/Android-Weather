@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.fragment.view.DailyItemView;
+import com.goodtech.tq.modules.weather.holder.DailyItemView;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
 

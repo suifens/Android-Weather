@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.widget.NestedScrollView;
 
-import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
@@ -34,14 +33,13 @@ import com.goodtech.tq.listener.WeatherHeaderListener;
 import com.goodtech.tq.models.BtnLinkModel;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.others.airQuality.AirQualityActivity;
-import com.goodtech.tq.others.airQuality.view.AirLifeView;
-import com.goodtech.tq.others.calendar.CalendarActivity;
-import com.goodtech.tq.others.constellation.ConstellationActivity;
-import com.goodtech.tq.others.taifeng.TyphoonActivity;
-import com.goodtech.tq.others.test.MyTestActivity;
-import com.goodtech.tq.signing.SigningActivity;
-import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.modules.others.airQuality.AirQualityActivity;
+import com.goodtech.tq.modules.others.airQuality.view.AirLifeView;
+import com.goodtech.tq.modules.others.calendar.CalendarActivity;
+import com.goodtech.tq.modules.others.constellation.ConstellationActivity;
+import com.goodtech.tq.modules.others.taifeng.TyphoonActivity;
+import com.goodtech.tq.modules.others.test.MyTestActivity;
+import com.goodtech.tq.modules.signing.SigningActivity;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.views.popup.AlarmPopup;
 import com.lxj.xpopup.XPopup;
@@ -59,15 +57,15 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
     protected NestedScrollView mScrollView;
     protected WeatherModel mWeatherModel;
 
+    protected CityMode mCityMode;
     protected View mStateBarBg;
 
-    protected CityMode mCityMode;
 
     protected boolean mHadLoad;
 
     @Override
     protected int getViewLayoutRes() {
-        return R.layout.fragment_weather;
+        return R.layout.fragment_weather_2;
     }
 
     @Override

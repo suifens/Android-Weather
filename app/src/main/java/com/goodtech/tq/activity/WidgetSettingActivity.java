@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.others.widget.WidgetType;
+import com.goodtech.tq.modules.others.widget.WidgetType;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.widget.MyDoubleWidget;

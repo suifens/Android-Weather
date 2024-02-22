@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.goodtech.tq.others.video.VerticalViewPager
+    <com.goodtech.tq.modules.others.video.VerticalViewPager
         android:id="@+id/vvpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

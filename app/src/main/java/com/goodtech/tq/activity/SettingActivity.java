@@ -3,7 +3,6 @@ package com.goodtech.tq.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -17,7 +16,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.RequiresApi;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.others.test.MyTestActivity;
+import com.goodtech.tq.modules.others.test.MyTestActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 // import com.qq.e.comm.managers.setting.GlobalSetting;

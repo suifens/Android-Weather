@@ -1,0 +1,39 @@
+
+?
+java:S1604­"(Make this anonymous inner class a lambda(¡íèã
+U
+java:S1118":Add a private constructor to hide the implicit public one.(ô¡”øÿÿÿÿ
+Y
+java:S1155]">Use isEmpty() to check whether the collection is empty or not.(™‰Àõıÿÿÿÿ
+G
+java:S1874^",Remove this use of "with"; it is deprecated.(Ã±šõùÿÿÿÿ
+Z
+java:S1155¸">Use isEmpty() to check whether the collection is empty or not.(™‰Àõıÿÿÿÿ
+C
+java:S1874¹",Remove this use of "with"; it is deprecated.(™ò¾ç
+H
+java:S1874ï",Remove this use of "with"; it is deprecated.(Ø€Œºÿÿÿÿÿ
+H
+java:S1874ò",Remove this use of "with"; it is deprecated.(ÈüÉÒıÿÿÿÿ
+H
+java:S1874õ",Remove this use of "with"; it is deprecated.(²†öîÿÿÿÿÿ
+D
+java:S1172û"-Remove this unused method parameter "parent".(ŠçıÔ
+Z
+java:S1155¡">Use isEmpty() to check whether the collection is empty or not.(™‰Àõıÿÿÿÿ
+H
+java:S1874¢",Remove this use of "with"; it is deprecated.(×ƒÛ­øÿÿÿÿ
+n
+java:S3776§"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(ÙÉÑœûÿÿÿÿ
+H
+java:S1874Û",Remove this use of "with"; it is deprecated.(› øÿÿÿÿ
+i	java:S116¯"SRename this field "app_info" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÇŒ”ˆ
+n	java:S116°"SRename this field "app_name" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(â‚¦ßÿÿÿÿÿ
+l	java:S116±"VRename this field "author_name" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ˆşÅˆ
+r	java:S116²"WRename this field "package_size" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(óĞÇğùÿÿÿÿ
+p	java:S116³"ZRename this field "permissions_url" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÅÀù
+w	java:S116´"\Rename this field "privacy_agreement" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ş˜Í„ûÿÿÿÿ
+m	java:S116µ"WRename this field "version_name" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¡²ºÊ
+t	java:S116¶"^Rename this field "permissions_content" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¹­“Â
+â
+java:S6541§"ÅA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 65 to 64, Complexity from 17 to 14, Nesting Level from 3 to 2, Number of Variables from 12 to 6.(ÙÉÑœûÿÿÿÿ

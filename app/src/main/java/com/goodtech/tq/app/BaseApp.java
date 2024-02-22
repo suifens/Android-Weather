@@ -21,7 +21,7 @@ import com.goodtech.tq.activity.SplashActivity;
 import com.goodtech.tq.ad.TTAdManagerHolder;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.jpush.JPushHelper;
-import com.goodtech.tq.signing.SigningActivity;
+import com.goodtech.tq.modules.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;

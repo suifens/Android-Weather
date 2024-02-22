@@ -14,17 +14,9 @@
         android:layout_marginTop="80dp"
         app:srlClassicsSpinnerStyle="Translate" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scroll_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <ViewStub
-            android:id="@+id/stub_weather_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout="@layout/stub_weather_data" />
-
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="match_parent" />
 
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

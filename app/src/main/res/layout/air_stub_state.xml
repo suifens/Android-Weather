@@ -36,28 +36,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" >
 
-        <com.goodtech.tq.others.airQuality.view.AirStateItemView
+        <com.goodtech.tq.modules.others.airQuality.view.AirStateItemView
             android:layout_width="match_parent"
             android:layout_height="80dp"
             app:img_item="@drawable/ic_tip1"
             app:tv_item_title="户外活动后及时洗澡"
             app:tv_state="要清除您在室外沾到的花粉，请洗澡并更换衣物。" />
 
-        <com.goodtech.tq.others.airQuality.view.AirStateItemView
+        <com.goodtech.tq.modules.others.airQuality.view.AirStateItemView
             android:layout_width="match_parent"
             android:layout_height="80dp"
             app:img_item="@drawable/ic_tip2"
             app:tv_item_title="尽量减少室内花粉量"
             app:tv_state="请关闭窗户，并使用空调或 HEPA 净化器过滤过敏原。" />
 
-        <com.goodtech.tq.others.airQuality.view.AirStateItemView
+        <com.goodtech.tq.modules.others.airQuality.view.AirStateItemView
             android:layout_width="match_parent"
             android:layout_height="80dp"
             app:img_item="@drawable/ic_tip3"
             app:tv_item_title="查询天气情况"
             app:tv_state="了解风况等天气条件何时会增加花粉含量，以便做好准备。" />
 
-        <com.goodtech.tq.others.airQuality.view.AirStateItemView
+        <com.goodtech.tq.modules.others.airQuality.view.AirStateItemView
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginBottom="20dp"

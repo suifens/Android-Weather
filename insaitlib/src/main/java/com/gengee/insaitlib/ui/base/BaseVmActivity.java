@@ -1,0 +1,73 @@
+package com.gengee.insaitlib.ui.base;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewbinding.ViewBinding;
+
+import com.blankj.utilcode.util.BarUtils;
+import com.gengee.insaitlib.R;
+import com.gengee.insaitlib.ui.dialog.LoadingDialog;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+
+public abstract class BaseVmActivity<T extends ViewBinding, V extends ViewModel> extends BindingActivity<T> {
+
+    protected V viewModel;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void init() {
+        viewModel = new ViewModelProvider(this).get(getViewModelClass());
+//        autoBindView();
+        super.init();
+    }
+
+    private void autoBindView() {
+        Class<T> vClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        try {
+            Method inflate = vClass.getMethod("inflate", LayoutInflater.class);
+            mBinding = (T) inflate.invoke(null,getLayoutInflater());
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Class<V> getViewModelClass() {
+        Class<V> xClass = (Class<V>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        return xClass;
+    }
+
+    @Override
+    public T bindView() {
+
+        return null;
+    }
+}
+

@@ -1,0 +1,39 @@
+
+K
+java:S1066Í"/Merge this if statement with the enclosing one.(ï§ª™øÿÿÿÿ
+g	java:S117¾"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¨¢¸Ÿ
+t
+java:S1450ˆ"]Remove the "adNativeLoader" field and declare it as a local variable in the relevant methods.(¢Ò…
+q
+java:S1450["VRemove the "mSigned" field and declare it as a local variable in the relevant methods.( ˜óªşÿÿÿÿ
+Q	java:S125t"<This block of commented-out lines of code should be removed.(œ˜£ç
+H
+java:S1602Š",Remove useless curly braces around statement(÷ŸæÛşÿÿÿÿ
+R
+java:S1874‘";Remove this use of "CONNECTIVITY_ACTION"; it is deprecated.(ù­ĞÛ
+
+java:S1186´"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(‘ù¤ûùÿÿÿÿ
+
+java:S1186Æ"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(—Â«øÿÿÿÿ
+
+java:S1186Ù"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(£ÿÏ ÿÿÿÿÿ
+Q
+java:S1854¾":Remove this useless assignment to local variable "bd_did".(¨¢¸Ÿ
+B
+java:S1481¾"+Remove this unused "bd_did" local variable.(¨¢¸Ÿ
+R	java:S125‹"<This block of commented-out lines of code should be removed.(ì©‡Í
+N
+java:S1135˜"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ
+I
+java:S1481®"-Remove this unused "interval" local variable.(Ùèñıùÿÿÿÿ
+D
+java:S1185Ó"(Remove this method to simply inherit it.(ø´´øÿÿÿÿ
+D
+java:S1185â"(Remove this method to simply inherit it.(™Î«şÿÿÿÿ
+W	java:S125"<This block of commented-out lines of code should be removed.(„É¸Êıÿÿÿÿ
+n
+java:S3776Ç"RRefactor this method to reduce its Cognitive Complexity from 24 to the 15 allowed.(Éé’µøÿÿÿÿ
+R	java:S125"<This block of commented-out lines of code should be removed.(û°¾ú
+R	java:S125İ"<This block of commented-out lines of code should be removed.(ùŒğ˜
+G
+java:S1144"+Remove this unused private "showAd" method.(èÑ£Áşÿÿÿÿ
