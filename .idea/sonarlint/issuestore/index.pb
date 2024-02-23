@@ -33,3 +33,9 @@ l
 app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
 e
 5app/src/main/java/com/goodtech/tq/ad/FeedAdUtils.java,9/f/9fc9d7664180cf220f88b8a8ecf8eb494895d5a6
+P
+ app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
+k
+;app/src/main/java/com/goodtech/tq/ad/TTAdManagerHolder.java,a/e/ae9417245c2e26d4e4cc0535432371032bca7f27
+n
+>app/src/main/java/com/goodtech/tq/activity/SplashActivity.java,1/5/15b5334994e57229ba6ab7f4c5f29513b3a730b6

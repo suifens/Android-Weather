@@ -1,0 +1,30 @@
+
+P
+java:S1118":Add a private constructor to hide the implicit public one.( ·±Ù
+Q	java:S125,"<This block of commented-out lines of code should be removed.(ÇÕÂ
+P
+java:S18746"5Remove this use of "isInitSuccess"; it is deprecated.(ˆ×àÿÿÿÿÿ
+I
+java:S1172C".Remove this unused method parameter "context".(œãªûÿÿÿÿ
+C
+java:S1185n"(Remove this method to simply inherit it.(·½öúıÿÿÿÿ
+>
+java:S1185s"(Remove this method to simply inherit it.(ßË³
+>
+java:S1185x"(Remove this method to simply inherit it.(¨Ú›É
+>
+java:S1185}"(Remove this method to simply inherit it.(¶ôƒ
+D
+java:S1185‚"(Remove this method to simply inherit it.(Õ˜Š…ùÿÿÿÿ
+>
+java:S1185‡"(Remove this method to simply inherit it.(šËÛ/
+?
+java:S1185"(Remove this method to simply inherit it.(ÃæŠ³
+D
+java:S1185•"(Remove this method to simply inherit it.(†ß¯¸ÿÿÿÿÿ
+D
+java:S1185œ"(Remove this method to simply inherit it.(³ó’‡ÿÿÿÿÿ
+P
+java:S1144Z":Remove this unused private "getUserInfoForSegment" method.(Ú²¥Ó
+U
+java:S1144j":Remove this unused private "getTTCustomController" method.(ÎÔ·›ùÿÿÿÿ
