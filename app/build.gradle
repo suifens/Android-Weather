@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1200
-        versionName "12.0.0"
+        versionCode 1211
+        versionName "12.1.1"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -207,7 +207,7 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
     implementation fileTree(dir: 'libs', include: '*.jar')
@@ -296,17 +296,17 @@ dependencies {
 
     //<editor-fold desc="广告">
 
-    implementation "com.pangle.cn:mediation-sdk:5.9.0.8"  //融合SDK
+    implementation "com.pangle.cn:mediation-sdk:5.9.2.8"  //融合SDK
     implementation "com.pangle.cn:mediation-ks-adapter:3.3.57.0"//ks adapter 快手
-    implementation "com.pangle.cn:mediation-gdt-adapter:4.561.1431.0" //gdt adapter 优汇量
-    implementation "com.pangle.cn:mediation-baidu-adapter:9.332.0"//baidu adapter
+    implementation "com.pangle.cn:mediation-gdt-adapter:4.562.1432.0" //gdt adapter 优汇量
+    implementation "com.pangle.cn:mediation-baidu-adapter:9.332.1"//baidu adapter
 
     //Baidu
-    implementation(name: 'Baidu_MobAds_SDK_v9.324', ext: 'aar')
+    implementation(name: 'Baidu_MobAds_SDK_v9.332', ext: 'aar')
     //GDT 优汇量
-    implementation(name: 'GDTSDK.unionNormal.4.550.1420', ext: 'aar')
+    implementation(name: 'GDTSDK.unionNormal.4.562.1432', ext: 'aar')
     //ks 快手
-    implementation(name: 'kssdk-ad-3.3.55.2', ext: 'aar')
+    implementation(name: 'kssdk-ad-3.3.57', ext: 'aar')
 
     //  增长参谋广告
     implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:6.14.2'

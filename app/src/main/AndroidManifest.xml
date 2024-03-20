@@ -68,6 +68,9 @@
     <!--    读取oaid 设备注册和深度链接：跨APP标识设备-->
     <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
 
+    <!-- Android 13版本适配，细化存储权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
     <application
         android:name=".app.BaseApp"
         android:allowBackup="true"

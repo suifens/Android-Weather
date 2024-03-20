@@ -17,6 +17,7 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.base.share.ShareHelper;
 import com.goodtech.tq.base.share.ShareType;
 import com.goodtech.tq.utils.ImageTools;
+import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.popup.TopTitlePopup;
 import com.lxj.xpopup.XPopup;
@@ -56,30 +57,12 @@ public class BaseShareActivity extends BaseActivity {
 
     @SuppressLint("CheckResult")
     protected void onShareTypePressed(final ShareType shareType) {
-        if (mRxPermissions == null) {
-            return;
-        }
-        if (mRxPermissions.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            startShare(shareType);
-        } else {
-            TopTitlePopup popup = new TopTitlePopup(this);
-            popup.setupData("请允许天气预报使用读写权限", "使用分享功能，我们需要将您的图片先储存手机文件中，如果您拒绝，也不会影响您使用产品的其他功能");
-            BasePopupView popupView = new XPopup.Builder(this)
-                    .isDestroyOnDismiss(true)
-                    .popupPosition(PopupPosition.Top)
-                    .hasShadowBg(false)
-                    .hasStatusBarShadow(false)
-                    .asCustom(popup);
-            popupView.show();
 
-            mRxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .subscribe(granted -> {
-                        popupView.dismiss();
-                        if (granted) {
-                            startShare(shareType);
-                        }
-                    });
-        }
+        PermissionUtil.readImagePermission(BaseShareActivity.this, (granted, errorMsg) -> {
+            if (Boolean.TRUE.equals(granted)) {
+                startShare(shareType);
+            }
+        });
     }
 
     protected void startShare(final ShareType shareType) {

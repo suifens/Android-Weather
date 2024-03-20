@@ -1,5 +1,6 @@
 package com.goodtech.tq.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,10 +8,21 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
+
+import com.blankj.utilcode.util.PermissionUtils;
+import com.blankj.utilcode.util.ScreenUtils;
+import com.gengee.insaitlib.callback.DataCallback;
+import com.goodtech.tq.views.popup.TopTitlePopup;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
+import com.lxj.xpopup.enums.PopupPosition;
 
 /**
  * com.goodtech.tq.utils
@@ -230,6 +242,73 @@ public class PermissionUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static String[] initializePermissions(String... permissions) {
+        return permissions;
+    }
+
+    private static void requestPermission(Activity activity, PermissionUtils permissionUtils,
+                                          String title, String message, DataCallback<Boolean> callback) {
+        TopTitlePopup popup = new TopTitlePopup(activity);
+        popup.setupData(title, message);
+        BasePopupView popupView = new XPopup.Builder(activity)
+                .isDestroyOnDismiss(true)
+                .popupWidth(ScreenUtils.getScreenWidth())
+                .popupPosition(PopupPosition.Top)
+                .isLightStatusBar(true)
+                .hasShadowBg(false)
+                .hasStatusBarShadow(false)
+                .asCustom(popup);
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                // 执行延时任务的逻辑
+                // 这里可以写需要延时执行的代码
+                popupView.show();
+            }
+        };
+
+        permissionUtils.callback(new PermissionUtils.SimpleCallback() {
+            @Override
+            public void onGranted() {
+                handler.removeCallbacks(runnable);
+                popupView.dismiss();
+                callback.onComplete(true, "");
+            }
+
+            @Override
+            public void onDenied() {
+                handler.removeCallbacks(runnable);
+                popupView.dismiss();
+                callback.onComplete(false, "onDenied");
+            }
+        }).request();
+        handler.postDelayed(runnable, 500);
+    }
+
+    /**
+     * 图片读取权限
+     */
+    public static void readImagePermission(Activity activity, @NonNull DataCallback<Boolean> callback) {
+        String[] permissions = initializePermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        PermissionUtils utils = PermissionUtils.permission(permissions);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (PermissionUtils.isGranted(Manifest.permission.READ_MEDIA_IMAGES)) {
+                callback.onComplete(true, "");
+                return;
+            } else {
+                utils = PermissionUtils.permission(Manifest.permission.READ_MEDIA_IMAGES);
+            }
+        } else if (PermissionUtils.isGranted(permissions)) {
+            callback.onComplete(true, "");
+            return;
+        }
+
+        requestPermission(activity, utils, "请允许天气预报使用读写权限",
+                "使用分享功能，我们需要将您的图片先储存手机文件中，如果您拒绝，也不会影响您使用产品的其他功能", callback);
     }
 
     public static boolean canDrawOverlays(Context context) {
