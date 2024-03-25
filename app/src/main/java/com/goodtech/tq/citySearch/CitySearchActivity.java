@@ -93,20 +93,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         }
         if (checkPermission()) {
             LocationHelper.getInstance().startWithDelay(CitySearchActivity.this, true);
-//            LocationAlert alert = new LocationAlert(CitySearchActivity.this,
-//                    (dialog, which) -> {
-//                        LocationHelper.getInstance().startWithDelay(CitySearchActivity.this, true);
-//                    });
-//            alert.setCancelListener(((dialog, which) -> {
-//                //  取消定位权限判断的时间
-//                SpUtils.getInstance().putLong(Constants.TIME_LOCATION_CANCEL, System.currentTimeMillis());
-//            }));
-//
-//            if (!isFinishing()) {
-//                alert.show();
-//            }
         } else {
-            LocationHelper.getInstance().startWithDelay(CitySearchActivity.this);
+            LocationHelper.getInstance().startWithDelay(CitySearchActivity.this, isRefresh);
         }
     }
 

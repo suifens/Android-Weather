@@ -4,14 +4,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -19,20 +19,18 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.util.PermissionUtils;
-import com.blankj.utilcode.util.UtilsTransActivity;
+import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.views.MessageAlert;
 import com.goodtech.tq.views.popup.TopTitlePopup;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.enums.PopupPosition;
-import com.tbruyelle.rxpermissions2.RxPermissions;
-
-import java.util.List;
 
 /**
  * com.goodtech.tq.location.service
@@ -63,7 +61,7 @@ public class LocationHelper {
     private boolean isLocating = false;
 
     @SuppressLint("CheckResult")
-    public void startWithDelay(final Activity context) {
+    public void startWithDelay(final Context context) {
         startWithDelay(context, false);
     }
 
@@ -71,7 +69,7 @@ public class LocationHelper {
     /**
      * isForce 是否强制定位
      */
-    public void startWithDelay(final Activity context, boolean isForce) {
+    public void startWithDelay(final Context context, boolean isForce) {
 
         if (isLocating) {
             return;
@@ -79,9 +77,7 @@ public class LocationHelper {
 
         long locationTime = SpUtils.getInstance().getLong(Constants.TIME_LOCATION, 0L);
 
-        RxPermissions rxPermissions = new RxPermissions(context);
-        if (rxPermissions.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
-                || rxPermissions.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
 
             if (System.currentTimeMillis() - locationTime > 5 * 60 * 1000 || isForce) {
                 startLocation(context);
@@ -97,36 +93,36 @@ public class LocationHelper {
                     .asCustom(new TopTitlePopup(context));
             popupView.show();
 
-            rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION
-                    , Manifest.permission.ACCESS_COARSE_LOCATION).subscribe(granted ->
-            {
-                popupView.dismiss();
-                if (granted) {
-                    startLocation(context);
-                } else {
-                    if (isForce) {
-                        Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
+            PermissionUtils.permission(Manifest.permission.ACCESS_FINE_LOCATION).callback(
+                    (isAllGranted, granted, deniedForever, denied) -> {
+                        popupView.dismiss();
+                        if (isAllGranted) {
+                            startLocation(context);
+                        } else {
+                            if (isForce) {
+                                Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
+                            }
+                            //  取消定位权限判断的时间
+                            SpUtils.getInstance().putLong(Constants.TIME_LOCATION_CANCEL, System.currentTimeMillis());
+                        }
                     }
-                    //  取消定位权限判断的时间
-                    SpUtils.getInstance().putLong(Constants.TIME_LOCATION_CANCEL, System.currentTimeMillis());
-                }
-            });
+            ).request();
         } else {
             //  取消定位权限判断的时间
             // Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void startLocation(final Activity context) {
+    private void startLocation(final Context context) {
         stop();
         mContext = context;
-        TipHelper.showProgressDialog(context);
-        Handler mHandler = new Handler(Looper.getMainLooper());
+        if (context.getClass() == Activity.class) {
+            TipHelper.showProgressDialog((Activity) context);
+        }
         if (mLocationClient == null) {
             configClient();
             return;
         }
-//        mHandler.post(() -> isLocating = start(context));
         isLocating = start(context);
     }
 
@@ -153,6 +149,20 @@ public class LocationHelper {
         startTicker();
         if (!PermissionUtil.isLocationEnabled(context)) {
             removeTicker();
+            TipHelper.dismissProgressDialog();
+            (new Handler(Looper.getMainLooper())).post(() -> {
+                MessageAlert alert = new MessageAlert(context);
+                alert.setCancelable(true);
+                alert.setTitle("定位失败");
+                alert.setMessage("当前手机需要打开定位功能");
+                alert.setConfirmListener((dialog, which) -> {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    BaseApp.getInstance().startActivity(intent);
+                });
+                alert.show();
+            });
             return false;
         }
         if (mLocationClient != null) {

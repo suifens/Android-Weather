@@ -23,11 +23,14 @@ import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.BtnLinkHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.UIUtils;
+
+import okhttp3.internal.concurrent.TaskRunner;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -52,7 +55,7 @@ public class SplashActivity extends BaseActivity {
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
 
-            if (LocationSpHelper.getCityListAndLocation().size() != 0) {
+            if (!LocationSpHelper.getCityListAndLocation().isEmpty()) {
 
                 if (SpUtils.getInstance().isAgreePermission()) {
                     //  注册
@@ -74,6 +77,7 @@ public class SplashActivity extends BaseActivity {
             if (SpUtils.getInstance().isAgreePermission()) {
                 //加载开屏广告
                 mSplashContainer.post(this::loadSplashAd);
+                LocationHelper.getInstance().startWithDelay(BaseApp.getInstance(), true);
             } else {
                 goToMainActivity();
             }
@@ -90,13 +94,14 @@ public class SplashActivity extends BaseActivity {
      * 跳转到主页面
      */
     private static final String EXTRA_BACK = "EXTRA_BACK";
+
     private void goToMainActivity() {
         // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         // startActivity(intent);
         // overridePendingTransition(0, 0);
 
         if (!getIntent().getBooleanExtra(EXTRA_BACK, false)) {
-            if (LocationSpHelper.getCityListAndLocation().size() == 0) {
+            if (LocationSpHelper.getCityListAndLocation().isEmpty()) {
                 CitySearchActivity.redirectTo(this, true);
             } else {
                 this.startActivity(new Intent(this, MainActivity.class));
@@ -127,7 +132,7 @@ public class SplashActivity extends BaseActivity {
         /** 1、创建AdSlot对象 */
         AdSlot adSlot = new AdSlot.Builder()
                 .setCodeId(mAdUnitId)
-                .setImageAcceptedSize(ScreenUtils.getScreenWidth(),ScreenUtils.getScreenHeight())
+                .setImageAcceptedSize(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight())
                 .build();
 
         /** 3、创建加载、展示监听器 */
@@ -195,6 +200,6 @@ public class SplashActivity extends BaseActivity {
             mCsjSplashAd.getMediationManager().destroy();
         }
     }
-    
+
     // </editor-fold>
 }

@@ -21,6 +21,7 @@ import com.goodtech.tq.activity.SplashActivity;
 import com.goodtech.tq.ad.TTAdManagerHolder;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.jpush.JPushHelper;
+import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.signing.SigningActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.PermissionUtil;
@@ -50,6 +51,7 @@ public class BaseApp extends Application {
     public static BaseApp getInstance() {
         return mApplication;
     }
+
     //  首次请求权限
     public static final String FIRST_CHECK = "FIRST_CHECK";
 
@@ -106,7 +108,7 @@ public class BaseApp extends Application {
 
         TTAdManagerHolder.init(this);
 
-        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+        mVibrator = (Vibrator) getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
         RxPermissions rxPermissions = new RxPermissions(activity);
         // if (!SpUtils.getInstance().getBoolean(FIRST_CHECK, true)) {
@@ -144,7 +146,7 @@ public class BaseApp extends Application {
         //   TTAdSdk.init(context, config);
         //}
         JPushInterface.setDebugMode(true);
-        
+
         //  极光推送 register id
         String registerId = JPushInterface.getRegistrationID(BaseApp.getInstance());
         Log.e(TAG, "startUsingApp: register id = " + registerId);
@@ -154,6 +156,7 @@ public class BaseApp extends Application {
     }
 
     private boolean isServiceStarted = false;
+
     public void startIntent(Activity activity) {
         if (!isServiceStarted) {
             startService(activity);
@@ -187,6 +190,7 @@ public class BaseApp extends Application {
 
     public int appCount = 0;
     public boolean isRunInBackground = false;
+
     public void registerLifecycle() {
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
@@ -240,11 +244,15 @@ public class BaseApp extends Application {
     private void back2App(Activity activity) {
         isRunInBackground = false;
         long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(LEVEL_TIME, 0L);
-        if (!TextUtils.isEmpty( SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))
-                && Math.abs(interval) > 1000 * 60 * 30) {
-            //  离开前台1分钟后返回，则显示启动页广告
-            activity.startActivity(new Intent(activity, SplashActivity.class));
-            SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
+        if (!TextUtils.isEmpty(SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))) {
+            if (Math.abs(interval) > 1000 * 60 * 30) {
+                //  离开前台1分钟后返回，则显示启动页广告
+                activity.startActivity(new Intent(activity, SplashActivity.class));
+                SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
+            } else if (Math.abs(interval) > 1000 * 60 && SpUtils.getInstance().isAgreePermission()) {
+                //加载开屏广告
+                LocationHelper.getInstance().startWithDelay(BaseApp.getInstance(), true);
+            }
         }
     }
 
@@ -252,6 +260,7 @@ public class BaseApp extends Application {
      * 离开应用 压入后台或者退出应用
      */
     private static final String LEVEL_TIME = "LEVEL_TIME";
+
     private void leaveApp(Activity activity) {
         SpUtils.getInstance().putLong(LEVEL_TIME, System.currentTimeMillis());
         isRunInBackground = true;

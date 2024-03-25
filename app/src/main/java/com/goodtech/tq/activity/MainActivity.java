@@ -361,7 +361,7 @@ public class MainActivity extends BaseActivity {
             CityMode cityMode = LocationSpHelper.getLocation();
             mCityModes.set(0, cityMode);
             reloadWeather(0);
-            BaseApp.getInstance().startIntent(MainActivity.this);
+//            BaseApp.getInstance().startIntent(MainActivity.this);
         }
         if (event.getFetchCId() != 0) {
             for (int i = 0; i < mCityModes.size(); i++) {

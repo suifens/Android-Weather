@@ -146,12 +146,9 @@ public class BaseActivity extends AppCompatActivity {
 //
     protected boolean checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+            return this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
         } else {
-            return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED;
         }
     }
@@ -208,9 +205,8 @@ public class BaseActivity extends AppCompatActivity {
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             isAvailable = !TextUtils.isEmpty(locationProviders);
         }
-        boolean coarsePermissionCheck = !checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
         boolean finePermissionCheck = !checkPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-        return isAvailable && (coarsePermissionCheck || finePermissionCheck);
+        return isAvailable && finePermissionCheck;
     }
 
     protected void finishToRight() {
