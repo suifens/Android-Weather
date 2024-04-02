@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 
+import com.amap.api.services.core.PoiItemV2;
 import com.goodtech.tq.citySearch.viewholder.CitySearchHolder;
-import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
 
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ public class CityRecyclerAdapter extends Adapter {
     private WeatherModel mModel;
     private LayoutInflater mInflater;
 
-    private ArrayList<CityMode> mCityList;
+    private ArrayList<PoiItemV2> mCityList;
     private boolean mHadLocation = false;
 
-    public CityRecyclerAdapter(Context context, ArrayList<CityMode> cityModeArrayList) {
+    public CityRecyclerAdapter(Context context, ArrayList<PoiItemV2> cityModeArrayList) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.mCityList = cityModeArrayList;
@@ -53,7 +53,7 @@ public class CityRecyclerAdapter extends Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (mCityList != null && mCityList.size() > i) {
-            CityMode mode = mCityList.get(i);
+            PoiItemV2 mode = mCityList.get(i);
 
             if (viewHolder instanceof CitySearchHolder) {
                 ((CitySearchHolder) viewHolder).setCityMode(mode);
@@ -61,13 +61,13 @@ public class CityRecyclerAdapter extends Adapter {
         }
     }
 
-    public void notifyDataSetChanged(ArrayList<CityMode> cityModeArrayList) {
+    public void notifyDataSetChanged(ArrayList<PoiItemV2> cityModeArrayList) {
         this.mCityList = cityModeArrayList;
         super.notifyDataSetChanged();
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, CityMode cityMode);
+        void onItemClick(View view, int position, PoiItemV2 cityMode);
     }
 
     private OnItemClickListener mOnItemClickListener;//声明接口

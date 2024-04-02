@@ -15,6 +15,11 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.PoiItemV2;
+import com.amap.api.services.core.ServiceSettings;
+import com.amap.api.services.poisearch.PoiResultV2;
+import com.amap.api.services.poisearch.PoiSearchV2;
 import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.activity.MainActivity;
@@ -39,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class CitySearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
+public class CitySearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener, PoiSearchV2.OnPoiSearchListener {
 
     private static final String TAG = "CitySearchActivity";
     private static final String EXTRA_START = "extra_start";
@@ -53,6 +58,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     private boolean isStart;
     private boolean mFirstLoad = true;
     private boolean isRefresh;
+
+    private PoiSearchV2 mPoiSearch = null;
 
     public static void redirectTo(Context ctx, boolean isStart) {
         Log.e(TAG, "onStartWeather: " + System.currentTimeMillis());
@@ -119,6 +126,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         configStationBar(findViewById(R.id.private_station_bar));
 
         init();
+
+        ServiceSettings.updatePrivacyShow(this,true,true);
+        ServiceSettings.updatePrivacyAgree(this,true);
     }
 
     private void init() {
@@ -174,7 +184,14 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mSearchListView = findViewById(R.id.recycler_search);
         mSearchListView.setVisibility(View.GONE);
         mSearchAdapter = new CityRecyclerAdapter(this, null);
-        mSearchAdapter.setOnItemClickListener((view, position, cityMode) -> addCity(cityMode));
+        mSearchAdapter.setOnItemClickListener((view, position, poiItem) -> {
+            CityMode cityMode = new CityMode();
+            cityMode.setCity(poiItem.getTitle());
+            cityMode.setCid(Integer.parseInt(poiItem.getAdCode()));
+            cityMode.setLat(String.valueOf(poiItem.getLatLonPoint().getLatitude()));
+            cityMode.setLon(String.valueOf(poiItem.getLatLonPoint().getLongitude()));
+            addCity(cityMode);
+        });
         mSearchListView.setAdapter(mSearchAdapter);
 
         mEmptyView = findViewById(R.id.layout_no_data);
@@ -272,17 +289,29 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     @Override
     public boolean onQueryTextChange(String s) {
         if (!TextUtils.isEmpty(s)) {
-            ArrayList<CityMode> list = DatabaseHelper.getInstance(this).queryCity(s);
+//            ArrayList<CityMode> list = DatabaseHelper.getInstance(this).queryCity(s);
             mRecommendView.setVisibility(View.GONE);
             mRecommendHeaderView.setVisibility(View.GONE);
-            if (list != null && list.size() > 0) {
-                mSearchListView.setVisibility(View.VISIBLE);
-                mSearchAdapter.notifyDataSetChanged(list);
-                mEmptyView.setVisibility(View.GONE);
-            } else {
-                mSearchListView.setVisibility(View.GONE);
-                mEmptyView.setVisibility(View.VISIBLE);
+
+            // 创建PoiSearch对象
+            try {
+                mPoiSearch = new PoiSearchV2(this, null);
+                mPoiSearch.setOnPoiSearchListener(this);
+            } catch (AMapException e) {
+                throw new RuntimeException(e);
             }
+
+            // 创建查询对象
+            PoiSearchV2.Query query = new PoiSearchV2.Query(s, "", "");
+            // 设置每页数量
+            query.setPageSize(8);
+            // 设置页码
+            query.setPageNum(0);
+
+            // 设置查询参数并开始搜索
+            mPoiSearch.setQuery(query);
+            mPoiSearch.searchPOIAsyn();
+
         } else if (mRecommendView != null) {
             mSearchListView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.GONE);
@@ -291,6 +320,34 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         }
         return false;
     }
+
+    //<editor-fold desc="location search">
+    @Override
+    public void onPoiSearched(PoiResultV2 poiResultV2, int i) {
+        Log.e(TAG, "onPoiSearched: " );
+        if (poiResultV2.getPois().isEmpty()) {
+            mSearchListView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mSearchListView.setVisibility(View.VISIBLE);
+            mSearchAdapter.notifyDataSetChanged(poiResultV2.getPois());
+            mEmptyView.setVisibility(View.GONE);
+            for (PoiItemV2 item : poiResultV2.getPois()) {
+                Log.e(TAG, "onPoiSearched: adName = " + item.getAdName());
+                Log.e(TAG, "onPoiSearched: cityName = " + item.getCityName());
+                Log.e(TAG, "onPoiSearched: getProvinceName = " + item.getProvinceName());
+                Log.e(TAG, "onPoiSearched: " + item.getLatLonPoint());
+                Log.e(TAG, "onPoiSearched: getTitle = " + item.getTitle());
+                Log.e(TAG, "onPoiSearched: " + item.getSnippet());
+            }
+        }
+    }
+
+    @Override
+    public void onPoiItemSearched(PoiItemV2 poiItemV2, int i) {
+        Log.e(TAG, "onPoiItemSearched: " );
+    }
+    //</editor-fold>
 
     public static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
         private final int space;  //位移间距

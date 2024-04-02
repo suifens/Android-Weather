@@ -21,6 +21,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.PoiItemV2;
+import com.amap.api.services.core.ServiceSettings;
+import com.amap.api.services.district.DistrictResult;
+import com.amap.api.services.district.DistrictSearch;
+import com.amap.api.services.district.DistrictSearchQuery;
+import com.amap.api.services.poisearch.PoiResultV2;
+import com.amap.api.services.poisearch.PoiSearch;
+import com.amap.api.services.poisearch.PoiSearchV2;
 import com.blankj.utilcode.util.AppUtils;
 import com.bytedance.applog.AppLog;
 import com.bytedance.applog.InitConfig;
@@ -99,8 +108,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        initAppLog();
 
         mAddressTv = findViewById(R.id.tv_address);
         mViewPager = findViewById(R.id.viewpager_main);
@@ -265,7 +272,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (SpUtils.getInstance().isAgreePermission()) {
+            MobclickAgent.onResume(this);
+        }
 //        WeatherHttpHelper.getInstance().getBaseUrl(() -> WeatherHttpHelper.getInstance().fetchCitiesWeather());
         Log.e(TAG, "onResume: ");
     }
@@ -273,14 +282,17 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (SpUtils.getInstance().isAgreePermission()) {
+            MobclickAgent.onPause(this);
+        }
         this.isCurrent = false;
     }
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
-        LocationHelper.getInstance().stop();
+        if (SpUtils.getInstance().isAgreePermission()) {
+            LocationHelper.getInstance().stop();
+        }
         super.onStop();
     }
 
@@ -299,13 +311,16 @@ public class MainActivity extends BaseActivity {
 
         this.isCurrent = true;
         if (isFirstLoad) {
-            /// 判断新版本
-            fetchNewVersion(() -> {
-                long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(BuildConfig.PGE_INT_POS_ID, 0L);
-                if (SpUtils.getInstance().isAgreePermission()) {
+
+            if (SpUtils.getInstance().isAgreePermission()) {
+                initAppLog();
+
+                /// 判断新版本
+                fetchNewVersion(() -> {
+                    long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(BuildConfig.PGE_INT_POS_ID, 0L);
                     mHandler.postDelayed(this::initAdLoader, 5000);
-                }
-            });
+                });
+            }
 
             isFirstLoad = false;
         } else {
@@ -314,7 +329,7 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (LocationSpHelper.getLocation() != null) {
+        if (LocationSpHelper.getLocation() != null && SpUtils.getInstance().isAgreePermission()) {
             LocationHelper.getInstance().startWithDelay(this);
         }
 
