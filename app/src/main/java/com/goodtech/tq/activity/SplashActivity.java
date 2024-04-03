@@ -1,5 +1,6 @@
 package com.goodtech.tq.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.CSJAdError;
@@ -77,7 +79,9 @@ public class SplashActivity extends BaseActivity {
             if (SpUtils.getInstance().isAgreePermission()) {
                 //加载开屏广告
                 mSplashContainer.post(this::loadSplashAd);
-                LocationHelper.getInstance().startWithDelay(BaseApp.getInstance(), true);
+                if (PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    LocationHelper.getInstance().startWithDelay(BaseApp.getInstance(), true);
+                }
             } else {
                 goToMainActivity();
             }

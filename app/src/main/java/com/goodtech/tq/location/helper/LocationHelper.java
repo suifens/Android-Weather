@@ -82,6 +82,7 @@ public class LocationHelper {
             if (System.currentTimeMillis() - locationTime > 5 * 60 * 1000 || isForce) {
                 startLocation(context);
             }
+
         } else if (!TimeUtils.isCurrentDay(SpUtils.getInstance().getLong(Constants.TIME_LOCATION_CANCEL, 0L))
                 || isForce) {
 

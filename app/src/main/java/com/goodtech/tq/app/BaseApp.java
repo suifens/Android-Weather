@@ -1,5 +1,6 @@
 package com.goodtech.tq.app;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
@@ -14,6 +15,7 @@ import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.blankj.utilcode.util.PermissionUtils;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.activity.MyActivityManager;
 import com.goodtech.tq.activity.SettingActivity;
@@ -185,7 +187,9 @@ public class BaseApp extends Application {
                 //  离开前台1分钟后返回，则显示启动页广告
                 activity.startActivity(new Intent(activity, SplashActivity.class));
                 SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false);
-            } else if (Math.abs(interval) > 1000 * 60 && SpUtils.getInstance().isAgreePermission()) {
+            } else if (Math.abs(interval) > 1000 * 60
+                    && SpUtils.getInstance().isAgreePermission()
+                    && PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 //加载开屏广告
                 LocationHelper.getInstance().startWithDelay(BaseApp.getInstance(), true);
             }
