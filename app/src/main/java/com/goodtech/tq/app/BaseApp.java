@@ -103,12 +103,12 @@ public class BaseApp extends Application {
     }
 
     public void startService(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && PermissionUtil.canDrawOverlays(context)) {
-            startForegroundService(new Intent(context, WidgetService.class));
-            startForegroundService(new Intent(context, DoubleWidgetService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(new Intent(context, WidgetService.class));
+            context.startForegroundService(new Intent(context, DoubleWidgetService.class));
         } else {
-            startService(new Intent(context, WidgetService.class));
-            startService(new Intent(context, DoubleWidgetService.class));
+            context.startService(new Intent(context, WidgetService.class));
+            context.startService(new Intent(context, DoubleWidgetService.class));
         }
     }
 

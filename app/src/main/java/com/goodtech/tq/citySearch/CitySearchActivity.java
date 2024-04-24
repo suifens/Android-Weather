@@ -24,6 +24,7 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.activity.MainActivity;
 import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.eventbus.CityEvent;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -140,7 +141,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendHeaderView.setListener(new CityRecommendAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
-                if (cityMode != null && cityMode.getCid() != 0) {
+                if (cityMode != null && !cityMode.getPoiId().isEmpty()) {
                     addCity(cityMode);
                 } else if (!CitySearchActivity.this.isFinishing()) {
                     toGetLocation();
@@ -162,7 +163,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mRecommendAdapter.setOnItemClickListener(new CityRecommendAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
-                if (cityMode != null && cityMode.getCid() != 0) {
+                if (cityMode != null && !cityMode.getPoiId().isEmpty()) {
                     addCity(cityMode);
                 }
             }
@@ -186,7 +187,8 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mSearchAdapter = new CityRecyclerAdapter(this, null);
         mSearchAdapter.setOnItemClickListener((view, position, poiItem) -> {
             CityMode cityMode = new CityMode();
-            cityMode.setCity(poiItem.getTitle());
+            cityMode.setCity(poiItem.getCityName());
+            cityMode.setMergerName(poiItem.getTitle());
             cityMode.setCid(Integer.parseInt(poiItem.getAdCode()));
             cityMode.setLat(String.valueOf(poiItem.getLatLonPoint().getLatitude()));
             cityMode.setLon(String.valueOf(poiItem.getLatLonPoint().getLongitude()));
@@ -234,9 +236,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             if (index == -1) {
                 WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
                 helper.getBaseUrl(() -> helper.fetchWeather(cityMode));
-                EventBus.getDefault().post(new MessageEvent().addCity(true));
+                EventBus.getDefault().post(new CityEvent().addCity(true));
             } else {
-                EventBus.getDefault().post(new MessageEvent().setCityIndex(index));
+                EventBus.getDefault().post(new CityEvent().setCityIndex(index));
             }
         }
 
@@ -304,7 +306,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             // 创建查询对象
             PoiSearchV2.Query query = new PoiSearchV2.Query(s, "", "");
             // 设置每页数量
-            query.setPageSize(8);
+            query.setPageSize(10);
             // 设置页码
             query.setPageNum(0);
 

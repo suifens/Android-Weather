@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * com.goodtech.tq.helpers
@@ -28,7 +29,7 @@ public class LocationSpHelper {
     public static void saveWithLocation(AMapLocation location) {
         CityMode cityMode = new CityMode();
         cityMode.setLocation(true);
-        if (location == null || TextUtils.isEmpty(location.getCity())) {
+        if (location == null || TextUtils.isEmpty(location.getDistrict())) {
             if (getLocation() != null) {
                 EventBus.getDefault().post(new MessageEvent().setLocation(false));
             }
@@ -38,7 +39,7 @@ public class LocationSpHelper {
             cityMode.setCid(1000);
             cityMode.setLat(String.valueOf(location.getLatitude()));
             cityMode.setLon(String.valueOf(location.getLongitude()));
-            cityMode.setCity(location.getCity());
+            cityMode.setCity(location.getDistrict());
             cityMode.setMergerName(String.format("%s %s", location.getDistrict(), location.getPoiName()));
             //  获取天气信息
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(BaseApp.getInstance());
@@ -145,7 +146,7 @@ public class LocationSpHelper {
         List<CityMode> locations = getCityListAndLocation();
         for (int i = 0; i < locations.size(); i++) {
             CityMode cityMode = locations.get(i);
-            if (cityMode != null && cityMode.getCid() == city.getCid()) {
+            if (cityMode != null && Objects.equals(cityMode.getPoiId(), city.getPoiId())) {
                 return i;
             }
         }
@@ -155,7 +156,7 @@ public class LocationSpHelper {
     private static boolean canAddCity(CityMode city) {
         List<CityMode> locations = getCityListAndLocation();
         for (CityMode cityMode : locations) {
-            if (cityMode.getCid() == city.getCid()) {
+            if (Objects.equals(cityMode.getPoiId(), city.getPoiId())) {
                 return false;
             }
         }

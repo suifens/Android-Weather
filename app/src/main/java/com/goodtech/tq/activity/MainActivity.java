@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,15 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.amap.api.services.core.AMapException;
-import com.amap.api.services.core.PoiItemV2;
-import com.amap.api.services.core.ServiceSettings;
-import com.amap.api.services.district.DistrictResult;
-import com.amap.api.services.district.DistrictSearch;
-import com.amap.api.services.district.DistrictSearchQuery;
-import com.amap.api.services.poisearch.PoiResultV2;
-import com.amap.api.services.poisearch.PoiSearch;
-import com.amap.api.services.poisearch.PoiSearchV2;
 import com.blankj.utilcode.util.AppUtils;
 import com.bytedance.applog.AppLog;
 import com.bytedance.applog.InitConfig;
@@ -43,9 +33,9 @@ import com.bytedance.sdk.openadsdk.TTFullScreenVideoAd;
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
-import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.cityList.CityListActivity;
 import com.goodtech.tq.db.SignDbHelper;
+import com.goodtech.tq.eventbus.CityEvent;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragment.WeatherFragment;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
@@ -54,14 +44,12 @@ import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.JuHeHelper;
-import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.listener.CompletionListener;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.signing.SigningActivity;
-import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.IntentReceiver;
@@ -80,6 +68,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends BaseActivity {
 
@@ -365,6 +354,17 @@ public class MainActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(CityEvent event) {
+        if (event.showIndex() >= 0) {
+            mCurrIndex = event.showIndex();
+        }
+        if (event.isAddCity()) {
+            mLoadLast = true;
+            isNeedReload = true;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
 
         Log.e(TAG, "onMessageEvent: ");
@@ -378,24 +378,17 @@ public class MainActivity extends BaseActivity {
             reloadWeather(0);
 //            BaseApp.getInstance().startIntent(MainActivity.this);
         }
-        if (event.getFetchCId() != 0) {
+        if (event.isNeedReload()) {
+            isNeedReload = true;
+        }
+        if (!event.getFetchCId().isEmpty()) {
             for (int i = 0; i < mCityModes.size(); i++) {
                 CityMode cityMode = mCityModes.get(i);
-                if (cityMode.getCid() == event.getFetchCId()) {
+                if (Objects.equals(cityMode.getPoiId(), event.getFetchCId())) {
                     reloadWeather(i);
                     break;
                 }
             }
-        }
-        if (event.showIndex() >= 0) {
-            mCurrIndex = event.showIndex();
-        }
-        if (event.isAddCity()) {
-            mLoadLast = true;
-            isNeedReload = true;
-        }
-        if (event.isNeedReload()) {
-            isNeedReload = true;
         }
     }
 
@@ -433,8 +426,8 @@ public class MainActivity extends BaseActivity {
     private void reloadWeather(final int index) {
         mHandler.post(() -> {
             CityMode cityMode = mCityModes.get(index);
-            if (cityMode.getCid() != 0) {
-                WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.getCid());
+            if (!cityMode.getPoiId().isEmpty()) {
+                WeatherModel model = WeatherSpHelper.getWeatherModel(cityMode.getPoiId());
                 if (mFragmentList.size() > index) {
                     WeatherFragment fragment = (WeatherFragment) mFragmentList.get(index);
                     fragment.changeWeather(model, cityMode);
@@ -534,7 +527,7 @@ public class MainActivity extends BaseActivity {
             CityMode cityMode = mCityModes.get(position);
             if (cityMode != null) {
                 setAddress(cityMode);
-                WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getCid());
+                WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getPoiId());
                 changeBg(weatherModel);
 
                 if (mFragmentList.size() > position) {
@@ -550,16 +543,17 @@ public class MainActivity extends BaseActivity {
         if (cityMode != null && mAddressTv != null) {
             mLocationTip.setVisibility(cityMode.getLocation() ? View.VISIBLE : View.GONE);
 
-            if (!TextUtils.isEmpty(cityMode.getCity())) {
-                if (cityMode.getLocation()) {
-                    //  定位
-                    mAddressTv.setText(cityMode.getMergerName());
-                } else {
-                    mAddressTv.setText(cityMode.getCity());
-                }
-            } else {
-                mAddressTv.setText("");
-            }
+            mAddressTv.setText(cityMode.getMergerName());
+//            if (!TextUtils.isEmpty(cityMode.getCity())) {
+//                if (cityMode.getLocation()) {
+//                    //  定位
+//                    mAddressTv.setText(cityMode.getMergerName());
+//                } else {
+//                    mAddressTv.setText(cityMode.getCity());
+//                }
+//            } else {
+//                mAddressTv.setText("");
+//            }
         }
 
     }
@@ -584,8 +578,8 @@ public class MainActivity extends BaseActivity {
         }
         CityMode cityMode = mCityModes.get(mCurrIndex);
         WeatherModel weatherModel = null;
-        if (cityMode.getCid() != 0) {
-            weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getCid());
+        if (!cityMode.getPoiId().isEmpty()) {
+            weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getPoiId());
         }
         if (weatherModel != null) {
             SigningActivity.redirectTo(MainActivity.this,

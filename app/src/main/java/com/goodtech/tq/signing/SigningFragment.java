@@ -99,11 +99,7 @@ public class SigningFragment extends BaseFragment {
             }
             //  地址
             if (cityMode != null) {
-                if (cityMode.getCid() == 1000) {
-                    mAddressTv.setText(cityMode.getMergerName());
-                } else {
-                    mAddressTv.setText(cityMode.getCity());
-                }
+                mAddressTv.setText(cityMode.getMergerName());
             }
 
             //  时间

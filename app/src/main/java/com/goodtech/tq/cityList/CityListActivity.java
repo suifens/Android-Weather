@@ -18,7 +18,10 @@ import com.goodtech.tq.ad.AdFeedActivity;
 import com.goodtech.tq.app.BaseApp;
 import com.goodtech.tq.citySearch.CitySearchActivity;
 import com.goodtech.tq.citySearch.viewholder.CityHolder;
+import com.goodtech.tq.eventbus.CityEvent;
 import com.goodtech.tq.eventbus.MessageEvent;
+import com.goodtech.tq.helpers.LocationSpHelper;
+import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.utils.SpUtils;
@@ -129,8 +132,9 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
         mAdapter.setOnItemClickListener(new CityListRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, CityMode cityMode) {
-                if (cityMode.getCid() != 0) {
-                    EventBus.getDefault().post(new MessageEvent().setCityIndex(position));
+                if (!cityMode.getPoiId().isEmpty()) {
+                    int index =  LocationSpHelper.getLocation() != null ? position : Math.max(position - 1, 0);
+                    EventBus.getDefault().post(new CityEvent().setCityIndex(index));
                     finishToRight();
                 } else {
                     toGetLocation();
@@ -192,7 +196,7 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
                 mProvider.getData();
                 mAdapter.notifyDataSetChanged(false);
 
-                EventBus.getDefault().post(new MessageEvent().setCityIndex(0));
+                EventBus.getDefault().post(new CityEvent().setCityIndex(0));
                 finishToRight();
             }, 100);
         }

@@ -9,7 +9,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
 import android.os.IBinder
-import android.provider.Settings
 import android.view.View
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
@@ -154,9 +153,7 @@ class WidgetService : LifecycleService() {
             WeatherHttpHelper.getInstance().getBaseUrl {
                 WeatherHttpHelper.getInstance().fetchWeather(LocationSpHelper.getLocation())
                 { success: Boolean, _: WeatherModel?, _: ErrorCode? ->
-                    if (success) {
-                        updateWidget(this@WidgetService)
-                    }
+                    updateWidget(this@WidgetService)
                 }
             }
         }
@@ -165,7 +162,7 @@ class WidgetService : LifecycleService() {
     private fun updateWidget(context: Context) {
         val location = LocationSpHelper.getLocation()
         if (location != null) {
-            val weatherModel = WeatherSpHelper.getWeatherModel(location.cid)
+            val weatherModel = WeatherSpHelper.getWeatherModel(location.poiId)
             weatherModel?.let {
 
                 NotificationUtil.updateNotification(

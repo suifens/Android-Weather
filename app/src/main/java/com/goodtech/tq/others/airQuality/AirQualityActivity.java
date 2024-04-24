@@ -17,6 +17,8 @@ import com.goodtech.tq.others.airQuality.view.AirLifeView;
 import com.goodtech.tq.views.CircleProgressView;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.Objects;
+
 public class AirQualityActivity extends BaseActivity {
 
     private static final String EXTRA_CITY = "city";
@@ -47,7 +49,7 @@ public class AirQualityActivity extends BaseActivity {
         setContentView(R.layout.activity_air_quality);
 
         mCityMode = getIntent().getParcelableExtra(EXTRA_CITY);
-        if (mCityMode.getCid() == 1000) {
+        if (mCityMode != null && "1000".equals(mCityMode.getPoiId())) {
             mCityMode = LocationSpHelper.getLocation();
         }
         mAqi = getIntent().getIntExtra(EXTRA_AQI, 0);
@@ -60,12 +62,7 @@ public class AirQualityActivity extends BaseActivity {
 
         TextView titleTv = findViewById(R.id.tv_city_name);
         if (titleTv != null) {
-            if (mCityMode.getCid() == 1000) {
-                //  定位
-                titleTv.setText(mCityMode.getMergerName());
-            } else {
-                titleTv.setText(mCityMode.getCity());
-            }
+            titleTv.setText(mCityMode.getMergerName());
         }
 
         mArcView = findViewById(R.id.img_top_bg);

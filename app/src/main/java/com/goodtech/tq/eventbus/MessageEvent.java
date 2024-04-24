@@ -6,12 +6,7 @@ package com.goodtech.tq.eventbus;
 public class MessageEvent {
 
     protected boolean location;
-    //  点击城市的index
-    protected int cityIndex = -1;
-
-    protected int fetchCId;
-
-    protected boolean addCity;
+    protected String fetchCId;
 
     protected boolean needReload;
 
@@ -28,31 +23,13 @@ public class MessageEvent {
         return location;
     }
 
-    public MessageEvent setCityIndex(int cityIndex) {
-        this.cityIndex = cityIndex;
-        return this;
-    }
-
-    public int showIndex() {
-        return cityIndex;
-    }
-
-    public MessageEvent setFetchCId(int fetchCId) {
+    public MessageEvent setFetchCId(String fetchCId) {
         this.fetchCId = fetchCId;
         return this;
     }
 
-    public int getFetchCId() {
+    public String getFetchCId() {
         return fetchCId;
-    }
-
-    public MessageEvent addCity(boolean addCity) {
-        this.addCity = addCity;
-        return this;
-    }
-
-    public boolean isAddCity() {
-        return addCity;
     }
 
     public MessageEvent needReload(boolean needReload) {

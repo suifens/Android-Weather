@@ -165,7 +165,7 @@ class DoubleWidgetService : LifecycleService() {
     private fun updateWidget(context: Context) {
         val location = LocationSpHelper.getLocation()
         if (location != null) {
-            val weatherModel = WeatherSpHelper.getWeatherModel(location.cid)
+            val weatherModel = WeatherSpHelper.getWeatherModel(location.poiId)
             weatherModel?.let {
 
                 NotificationUtil.updateNotification(

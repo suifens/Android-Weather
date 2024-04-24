@@ -48,7 +48,7 @@ public class AirQualityHelper {
                             JuheAirModel model = new Gson().fromJson(String.valueOf(data), new TypeToken<JuheAirModel>(){ }.getType());
                             if (model != null) {
                                 model.setUpdateTime(System.currentTimeMillis());
-                                WeatherSpHelper.saveJuheAqi(new Gson().toJson(model), cityMode.getCid());
+                                WeatherSpHelper.saveJuheAqi(new Gson().toJson(model), cityMode.getPoiId());
                             }
                         }
                     }
@@ -92,7 +92,7 @@ public class AirQualityHelper {
                             JSONObject data = jsonObject.getJSONObject("result").getJSONObject("life");
                             JuheLifeModel model = new Gson().fromJson(String.valueOf(data), new TypeToken<JuheLifeModel>(){ }.getType());
                             if (model != null) {
-                               WeatherSpHelper.saveCityLife(String.valueOf(data), cityMode.getCid());
+                               WeatherSpHelper.saveCityLife(String.valueOf(data), cityMode.getPoiId());
                                 if (callback != null) {
                                     callback.onResponse(model);
                                 }

@@ -18,6 +18,8 @@ public class CityMode implements Parcelable {
      */
     private int cid = 0;
 
+    private String poiId;
+
     private String mergerName;
 
     private String city;
@@ -50,7 +52,25 @@ public class CityMode implements Parcelable {
         this.cid = cid;
     }
 
+    public String getPoiId() {
+        if (poiId == null || poiId.isEmpty()) {
+            if (cid == 0) {
+                return "";
+            }
+            return String.valueOf(cid);
+        } else {
+            return poiId;
+        }
+    }
+
+    public void setPoiId(String poiId) {
+        this.poiId = poiId;
+    }
+
     public String getMergerName() {
+        if (mergerName == null || mergerName.isEmpty()) {
+            return city;
+        }
         return mergerName;
     }
 
@@ -110,6 +130,7 @@ public class CityMode implements Parcelable {
 
     protected CityMode(Parcel in) {
         this.cid = in.readInt();
+        this.poiId = in.readString();
         this.mergerName = in.readString();
         this.city = in.readString();
         this.lat = in.readString();
@@ -133,6 +154,7 @@ public class CityMode implements Parcelable {
 
     public void resolveCour(Cursor cursor){
         this.cid = cursor.getInt(cursor.getColumnIndex("id"));
+        this.poiId = cursor.getString(cursor.getColumnIndex("poiId"));
         this.mergerName = cursor.getString(cursor.getColumnIndex("mergerName"));
         this.city = cursor.getString(cursor.getColumnIndex("cityName"));
         this.lat = cursor.getString(cursor.getColumnIndex("latitude"));
@@ -148,6 +170,7 @@ public class CityMode implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.cid);
+        dest.writeString(this.poiId);
         dest.writeString(this.mergerName);
         dest.writeString(this.city);
         dest.writeString(this.lat);

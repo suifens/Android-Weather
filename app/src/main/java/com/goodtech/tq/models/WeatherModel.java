@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class WeatherModel {
 
-    public int cid;
+    public String poiId;
 
     public double latitude;
 
@@ -65,7 +65,6 @@ public class WeatherModel {
     @Override
     public String toString() {
         return "WeatherModel {" + "\n" +
-                "cid = " + cid + "\n" +
                 "latitude = " + latitude + "\n" +
                 "longitude = " + longitude + "\n" +
                 "expireTime = " + expireTime + "\n" +

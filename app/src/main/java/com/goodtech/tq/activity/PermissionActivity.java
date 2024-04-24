@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.citySearch.CitySearchActivity;
+import com.goodtech.tq.eventbus.CityEvent;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
@@ -193,7 +194,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
 
         WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
         helper.getBaseUrl(() -> helper.fetchWeather(cityMode));
-        EventBus.getDefault().post(new MessageEvent().addCity(true));
+        EventBus.getDefault().post(new CityEvent().addCity(true));
 
         Intent intent = new Intent(PermissionActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

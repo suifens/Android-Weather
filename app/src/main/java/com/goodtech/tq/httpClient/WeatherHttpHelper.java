@@ -114,7 +114,7 @@ public class WeatherHttpHelper {
         Log.e("TAG", "fetchWeather:  ------------" + cityMode.getMergerName());
         if (!TextUtils.isEmpty(cityMode.getLat()) && !TextUtils.isEmpty(cityMode.getLon())) {
             long current = System.currentTimeMillis();
-            long lastUpdate = WeatherSpHelper.getLastUpdate(cityMode.getCid());
+            long lastUpdate = WeatherSpHelper.getLastUpdate(cityMode.getPoiId());
 
             boolean needUpdate = current - lastUpdate > 5 * 60 * 1000;
             if (!needUpdate) {
@@ -160,8 +160,8 @@ public class WeatherHttpHelper {
             @Override
             public void onResponse(boolean success, JSONObject jsonObject, ErrorCode errCode) {
                 if (success) {
-                    WeatherSpHelper.saveWeather(jsonObject, cityMode.getCid());
-                    WeatherModel model = parseWeatherJson(jsonObject, cityMode.getCid());
+                    WeatherSpHelper.saveWeather(jsonObject, cityMode.getPoiId());
+                    WeatherModel model = parseWeatherJson(jsonObject, cityMode.getPoiId());
 
                     if (callback != null) {
                         callback.onResponse(true, model, errCode);
@@ -175,14 +175,14 @@ public class WeatherHttpHelper {
         });
     }
 
-    public static WeatherModel parseWeatherJson(JSONObject jsonObject, int cid) {
+    public static WeatherModel parseWeatherJson(JSONObject jsonObject, String poiId) {
 
         if (jsonObject == null) {
             return null;
         }
 
         WeatherModel model = new WeatherModel();
-        model.cid = cid;
+        model.poiId = poiId;
 
         //  24小时
         JsonObject hourlyElement = new Gson().fromJson(jsonObject.optString(KEY_HOURLY), JsonObject.class);
@@ -210,12 +210,12 @@ public class WeatherHttpHelper {
                     needAddDay = false;
                 }
                 if (time.equals(todayStr)) {
-                    WeatherSpHelper.saveCurrentDay(new Gson().toJson(forecast), cid);
+                    WeatherSpHelper.saveCurrentDay(new Gson().toJson(forecast), poiId);
                     break;
                 }
             }
             if (needAddDay) {
-                String yesterdayWeather = WeatherSpHelper.getYesterdayWeather(cid);
+                String yesterdayWeather = WeatherSpHelper.getYesterdayWeather(poiId);
                 if (yesterdayWeather != null && !TextUtils.isEmpty(yesterdayWeather)) {
                     Daily daily = new Gson().fromJson(yesterdayWeather, new TypeToken<Daily>() {
                     }.getType());
@@ -272,7 +272,7 @@ public class WeatherHttpHelper {
                             JSONArray data = jsonObject.getJSONArray("result");
                             ArrayList<JuheAlarmModel> list = new Gson().fromJson(String.valueOf(data), new TypeToken<ArrayList<JuheAlarmModel>>() {}.getType());
                             if (list != null && list.size() > 0) {
-                                WeatherSpHelper.saveAlarm(cityMode.getCid(), String.valueOf(data));
+                                WeatherSpHelper.saveAlarm(cityMode.getPoiId(), String.valueOf(data));
                             }
                         }
                     }

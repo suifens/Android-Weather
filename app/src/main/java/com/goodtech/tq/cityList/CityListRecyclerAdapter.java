@@ -67,8 +67,8 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityHolder>
     public void onBindViewHolder(@NonNull CityHolder viewHolder, int i) {
 
         final CityMode item = mProvider.getItem(i);
-        if (item.getCid() != 0) {
-            WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(item.getCid());
+        if (!item.getPoiId().isEmpty()) {
+            WeatherModel weatherModel = WeatherSpHelper.getWeatherModel(item.getPoiId());
             viewHolder.setCityMode(item, weatherModel, isEdit);
         } else {
             viewHolder.setCityMode(item, null, isEdit);
@@ -107,10 +107,10 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityHolder>
         mOnItemClickListener = onItemClickListener;
     }
 
-    @Override
-    public long getItemId(int position) {
-        return mProvider.getItem(position).getCid();
-    }
+//    @Override
+//    public long getItemId(int position) {
+//        return mProvider.getItem(position).getPoiId();
+//    }
 
     @Override
     public int getItemViewType(int position) {

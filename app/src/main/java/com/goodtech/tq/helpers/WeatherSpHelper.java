@@ -25,47 +25,47 @@ import java.util.ArrayList;
  */
 @SuppressLint("DefaultLocale")
 public class WeatherSpHelper {
-    public static void saveWeather(JSONObject jsonObject, int cid) {
-        String key = String.format("weather_%d", cid);
-        String timeKey = String.format("weather_%d_update", cid);
+    public static void saveWeather(JSONObject jsonObject, String poiId) {
+        String key = String.format("weather_%s", poiId);
+        String timeKey = String.format("weather_%s_update", poiId);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject.toString());
             SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
 
-            EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
+            EventBus.getDefault().post(new MessageEvent().setFetchCId(poiId));
         }
     }
 
-    public static long getLastUpdate(int cid) {
-        String timeKey = String.format("weather_%d_update", cid);
+    public static long getLastUpdate(String poiId) {
+        String timeKey = String.format("weather_%s_update", poiId);
         return SpUtils.getInstance().getLong(timeKey, (long) 0);
     }
 
     /**
      * 获取当前定位
      */
-    public static WeatherModel getWeatherModel(int cid) {
+    public static WeatherModel getWeatherModel(String poiId) {
 
-        JSONObject weatherJson = getWeatherJson(cid);
+        JSONObject weatherJson = getWeatherJson(poiId);
 
-        WeatherModel weatherModel = WeatherHttpHelper.parseWeatherJson(weatherJson, cid);
+        WeatherModel weatherModel = WeatherHttpHelper.parseWeatherJson(weatherJson, poiId);
 
-        if (weatherModel != null && !TextUtils.isEmpty(getJuheAqi(cid))) {
-            JuheAirModel airModel = new Gson().fromJson(getJuheAqi(cid), new TypeToken<JuheAirModel>(){ }.getType());
+        if (weatherModel != null && !TextUtils.isEmpty(getJuheAqi(poiId))) {
+            JuheAirModel airModel = new Gson().fromJson(getJuheAqi(poiId), new TypeToken<JuheAirModel>(){ }.getType());
             if (airModel != null) {
                 weatherModel.aqi = Integer.parseInt(airModel.getAqi());
             }
         }
 
-        if (weatherModel != null && !TextUtils.isEmpty(getCityLife(cid))) {
-            JuheLifeModel lifeModel = new Gson().fromJson(getCityLife(cid), new TypeToken<JuheLifeModel>(){ }.getType());
+        if (weatherModel != null && !TextUtils.isEmpty(getCityLife(poiId))) {
+            JuheLifeModel lifeModel = new Gson().fromJson(getCityLife(poiId), new TypeToken<JuheLifeModel>(){ }.getType());
             if (lifeModel != null) {
                 weatherModel.lifeModel = lifeModel;
             }
         }
 
-        if (weatherModel != null && !TextUtils.isEmpty(getAlarm(cid))) {
-            ArrayList<JuheAlarmModel> list = new Gson().fromJson(getAlarm(cid), new TypeToken<ArrayList<JuheAlarmModel>>() {}.getType());
+        if (weatherModel != null && !TextUtils.isEmpty(getAlarm(poiId))) {
+            ArrayList<JuheAlarmModel> list = new Gson().fromJson(getAlarm(poiId), new TypeToken<ArrayList<JuheAlarmModel>>() {}.getType());
             if (list != null && list.size() > 0) {
                 weatherModel.alarmModel = list.get(0);
             }
@@ -74,8 +74,8 @@ public class WeatherSpHelper {
         return weatherModel;
     }
 
-    public static JSONObject getWeatherJson(int cid) {
-        String key = String.format("weather_%d", cid);
+    public static JSONObject getWeatherJson(String poiId) {
+        String key = String.format("weather_%s", poiId);
         String json = SpUtils.getInstance().getString(key, "");
         if (!TextUtils.isEmpty(json)) {
             try {
@@ -87,66 +87,66 @@ public class WeatherSpHelper {
         return null;
     }
 
-    public static void saveJuheAqi(String jsonObject, int cid) {
-        String key = String.format("aqi_%d", cid);
-        String timeKey = String.format("aqi_%d_update", cid);
+    public static void saveJuheAqi(String jsonObject, String poiId) {
+        String key = String.format("aqi_%s", poiId);
+        String timeKey = String.format("aqi_%s_update", poiId);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject);
             SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
         }
     }
 
-    public static String getJuheAqi(int cid) {
-        String key = String.format("aqi_%d", cid);
+    public static String getJuheAqi(String poiId) {
+        String key = String.format("aqi_%s", poiId);
         return SpUtils.getInstance().getString(key, "");
     }
 
-    public static void saveCityLife(String jsonObject, int cid) {
-        String key = String.format("life_%d", cid);
-        String timeKey = String.format("life_%d_update", cid);
+    public static void saveCityLife(String jsonObject, String poiId) {
+        String key = String.format("life_%s", poiId);
+        String timeKey = String.format("life_%s_update", poiId);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject);
             SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
 
-            EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
+            EventBus.getDefault().post(new MessageEvent().setFetchCId(poiId));
         }
     }
 
-    public static String getCityLife(int cid) {
-        String key = String.format("life_%d", cid);
+    public static String getCityLife(String poiId) {
+        String key = String.format("life_%s", poiId);
         return SpUtils.getInstance().getString(key, "");
     }
 
-    public static void deleteWeatherModel(int cid) {
-        String key = String.format("weather_%d", cid);
+    public static void deleteWeatherModel(String poiId) {
+        String key = String.format("weather_%s", poiId);
         SpUtils.getInstance().remove(key);
     }
 
-    public static void saveAlarm(int cid, String jsonObject) {
+    public static void saveAlarm(String poiId, String jsonObject) {
         String dayTime = TimeUtils.longToString(System.currentTimeMillis(), "MM-dd");
-        String key = String.format("alarm_%d_%s", cid, dayTime);
+        String key = String.format("alarm_%s_%s", poiId, dayTime);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject);
         }
     }
 
-    public static String getAlarm(int cid) {
+    public static String getAlarm(String poiId) {
         String dayTime = TimeUtils.longToString(System.currentTimeMillis(), "MM-dd");
-        String key = String.format("alarm_%d_%s", cid, dayTime);
+        String key = String.format("alarm_%s_%s", poiId, dayTime);
         return SpUtils.getInstance().getString(key, "");
     }
 
     // <editor-fold defaultstate="collapsed" desc="昨天天气处理">
-    public static void saveCurrentDay(String jsonObject, int cid) {
+    public static void saveCurrentDay(String jsonObject, String poiId) {
         String dayTime = TimeUtils.longToString(System.currentTimeMillis(), "MM-dd");
-        String key = String.format("weather_%d_%s", cid, dayTime);
+        String key = String.format("weather_%s_%s", poiId, dayTime);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject);
         }
     }
 
-    public static String getYesterdayWeather(int cid) {
-        String key = String.format("weather_%d_%s", cid, TimeUtils.getYesterday());
+    public static String getYesterdayWeather(String poiId) {
+        String key = String.format("weather_%s_%s", poiId, TimeUtils.getYesterday());
         return SpUtils.getInstance().getString(key, "");
     }
     // </editor-fold>
