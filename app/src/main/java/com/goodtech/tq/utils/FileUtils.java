@@ -13,7 +13,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -63,7 +63,7 @@ public class FileUtils {
     static {
         STORAGE_BASE_SD_DIR = new File(Environment.getExternalStorageDirectory(), STORAGE_EXTERNAL_PATH).getAbsolutePath();
         STORAGE_BASE_SD_LOG_DIR = new File(Environment.getExternalStorageDirectory(), STORAGE_EXTERNAL_LOG_PATH).getAbsolutePath();
-        STORAGE_BASE_DIR = BaseApp.getInstance().getFilesDir().getAbsolutePath() + "/" + STORAGE_EXTERNAL_PATH;
+        STORAGE_BASE_DIR = App.instance.getFilesDir().getAbsolutePath() + "/" + STORAGE_EXTERNAL_PATH;
         Log.i(TAG, "STORAGE_BASE_DIR=>" + STORAGE_BASE_DIR);
         Log.i(TAG, "STORAGE_BASE_SD_DIR=>" + STORAGE_BASE_SD_DIR);
     }
@@ -94,7 +94,7 @@ public class FileUtils {
     protected static String getFilesDir(String filePath) {
         String dir = null;
         if (TextUtils.isEmpty(STORAGE_BASE_DIR)) {
-            STORAGE_BASE_DIR = BaseApp.getInstance().getFilesDir().getAbsolutePath() + "/" + STORAGE_EXTERNAL_PATH;
+            STORAGE_BASE_DIR = App.instance.getFilesDir().getAbsolutePath() + "/" + STORAGE_EXTERNAL_PATH;
         }
         filePath = STORAGE_BASE_DIR + filePath;
 
@@ -107,7 +107,7 @@ public class FileUtils {
                 dir = file.getAbsolutePath();
             }
         } else {
-            dir = BaseApp.getInstance().getCacheDir().getPath();
+            dir = App.instance.getCacheDir().getPath();
         }
         Log.e(TAG, "getDirByType: path = " + dir);
         return dir + "/";
@@ -116,7 +116,7 @@ public class FileUtils {
     protected static String getCacheDir(String filePath) {
         String dir = null;
         if (TextUtils.isEmpty(STORAGE_CACHE_DIR)) {
-            STORAGE_CACHE_DIR = BaseApp.getInstance().getCacheDir().getAbsolutePath() + "/" + STORAGE_EXTERNAL_PATH;
+            STORAGE_CACHE_DIR = App.instance.getCacheDir().getAbsolutePath() + "/" + STORAGE_EXTERNAL_PATH;
         }
         filePath = STORAGE_CACHE_DIR + filePath;
 
@@ -129,7 +129,7 @@ public class FileUtils {
                 dir = file.getAbsolutePath();
             }
         } else {
-            dir = BaseApp.getInstance().getCacheDir().getPath();
+            dir = App.instance.getCacheDir().getPath();
         }
         Log.e(TAG, "getCacheDir: path = " + dir);
         return dir + "/";
@@ -150,7 +150,7 @@ public class FileUtils {
             filePath = STORAGE_BASE_SD_LOG_DIR + filePath;
         } else {
             if (TextUtils.isEmpty(STORAGE_BASE_SD_LOG_DIR)) {
-                STORAGE_BASE_SD_LOG_DIR = BaseApp.getInstance().getFilesDir().getAbsolutePath() + "/" + STORAGE_EXTERNAL_LOG_PATH;
+                STORAGE_BASE_SD_LOG_DIR = App.instance.getFilesDir().getAbsolutePath() + "/" + STORAGE_EXTERNAL_LOG_PATH;
             }
             filePath = STORAGE_BASE_SD_LOG_DIR + filePath;
         }
@@ -164,7 +164,7 @@ public class FileUtils {
                 dir = file.getAbsolutePath();
             }
         } else {
-            dir = BaseApp.getInstance().getCacheDir().getPath();
+            dir = App.instance.getCacheDir().getPath();
         }
         return dir + "/";
     }
@@ -391,7 +391,7 @@ public class FileUtils {
         InputStreamReader inputReader = null;
         StringBuffer stringBuffer = new StringBuffer();
         try {
-            inputReader = new InputStreamReader(BaseApp.getInstance().getResources().getAssets().open(fileName));
+            inputReader = new InputStreamReader(App.instance.getResources().getAssets().open(fileName));
             BufferedReader bufReader = new BufferedReader(inputReader);
             String line;
             while ((line = bufReader.readLine()) != null) {

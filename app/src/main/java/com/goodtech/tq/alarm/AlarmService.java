@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.citySearch.CityHelper;
+import com.goodtech.tq.modules.citySearch.CityHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;

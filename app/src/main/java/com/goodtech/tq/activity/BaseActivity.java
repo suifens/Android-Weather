@@ -1,11 +1,8 @@
 package com.goodtech.tq.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,29 +13,19 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.app.BaseApp;
-import com.goodtech.tq.location.helper.LocationHelper;
-import com.goodtech.tq.others.test.PrivacyWebActivity;
+import com.goodtech.tq.app.App;
+import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
-import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.PermissionAlert;
-import com.tbruyelle.rxpermissions2.RxPermissions;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 
 /**
  * com.goodtech.tq
@@ -72,7 +59,7 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void onConfirmClick(View view) {
                 SpUtils.getInstance().setPermissionAgree(true);
-                BaseApp.getInstance().startUsingApp(activity);
+                App.instance.startUsingApp(activity);
 
                 if (confirmListener != null) {
                     confirmListener.onClick(view);
@@ -127,7 +114,7 @@ public class BaseActivity extends AppCompatActivity {
 //     }
 //
 //     protected void checkOrStartLocation() {
-//         BaseApp.getInstance().configLocation(this, false);
+//         App.instance.configLocation(this, false);
 //         if (!isLocationEnabled()) {
 //             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //             startActivity(intent);

@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 
 import java.util.Calendar;
 
@@ -63,7 +63,7 @@ public class AlarmManagerUtil {
         AlarmManagerUtil.cancelAlarm(context, ALARM_ACTION, requestCode);
 
         Intent intent = new Intent(ALARM_ACTION);
-        intent.setPackage(BaseApp.getInstance().getPackageName());
+        intent.setPackage(App.instance.getPackageName());
         intent.putExtra("intervalMillis", intervalMillis);
 
         PendingIntent sender = null;

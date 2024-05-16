@@ -20,8 +20,8 @@ import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
-import com.goodtech.tq.app.BaseApp;
-import com.goodtech.tq.citySearch.CitySearchActivity;
+import com.goodtech.tq.app.App;
+import com.goodtech.tq.modules.citySearch.CitySearchActivity;
 import com.goodtech.tq.helpers.BtnLinkHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
@@ -31,8 +31,6 @@ import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.UIUtils;
-
-import okhttp3.internal.concurrent.TaskRunner;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -61,7 +59,7 @@ public class SplashActivity extends BaseActivity {
 
                 if (SpUtils.getInstance().isAgreePermission()) {
                     //  注册
-                    BaseApp.getInstance().startUsingApp(this);
+                    App.instance.startUsingApp(this);
                 }
 
                 SpUtils.getInstance().remove(Constants.TIME_LOCATION);
@@ -80,7 +78,7 @@ public class SplashActivity extends BaseActivity {
                 //加载开屏广告
                 mSplashContainer.post(this::loadSplashAd);
                 if (PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    LocationHelper.getInstance().startWithDelay(BaseApp.getInstance(), true);
+                    LocationHelper.getInstance().startWithDelay(App.instance, true);
                 }
             } else {
                 goToMainActivity();

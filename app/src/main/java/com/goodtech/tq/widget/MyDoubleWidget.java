@@ -4,17 +4,11 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 
-import com.blankj.utilcode.util.ToastUtils;
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
-import com.goodtech.tq.utils.TimeUtils;
 
 public class MyDoubleWidget extends AppWidgetProvider {
     String TAG = "MyDoubleWidget：--------------";
@@ -34,7 +28,7 @@ public class MyDoubleWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         Log.e(TAG, "widget  onEnabled 状态");
-        BaseApp.getInstance().startService(context);
+        App.instance.startService(context);
         SpUtils.getInstance().putBoolean(Constants.WIDGET_DOUBLE, true);
     }
 
@@ -47,7 +41,7 @@ public class MyDoubleWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         Log.e(TAG, "widget  onUpdate 状态");
-        BaseApp.getInstance().startService(context);
+        App.instance.startService(context);
     }
 
     /**

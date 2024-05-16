@@ -15,7 +15,7 @@
         android:layout_marginEnd="10dp"
         android:orientation="horizontal" >
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -24,7 +24,7 @@
             app:constellation="白羊座"
             app:date="3.21 - 4.19" />
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -33,7 +33,7 @@
             app:constellation="金牛座"
             app:date="4.20 - 5.20" />
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -52,7 +52,7 @@
         android:layout_marginEnd="10dp"
         android:orientation="horizontal" >
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -61,7 +61,7 @@
             app:constellation="巨蟹座"
             app:date="6.22 - 7.22" />
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -70,7 +70,7 @@
             app:constellation="狮子座"
             app:date="7.23 - 8.22" />
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_6"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -89,7 +89,7 @@
         android:layout_marginEnd="10dp"
         android:orientation="horizontal" >
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_7"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -98,7 +98,7 @@
             app:constellation="天秤座"
             app:date="9.23 - 10.23" />
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_8"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -107,7 +107,7 @@
             app:constellation="天蝎座"
             app:date="10.24 - 11.22" />
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_9"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -126,7 +126,7 @@
         android:layout_marginEnd="10dp"
         android:orientation="horizontal" >
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_10"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -135,7 +135,7 @@
             app:constellation="摩羯座"
             app:date="12.22 - 1.19" />
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_11"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -144,7 +144,7 @@
             app:constellation="水瓶座"
             app:date="1.20 - 2.18" />
 
-        <com.goodtech.tq.others.constellation.ConstellationItemView
+        <com.goodtech.tq.modules.others.constellation.ConstellationItemView
             android:id="@+id/constellation_12"
             android:layout_width="0dp"
             android:layout_height="match_parent"

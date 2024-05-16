@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".others.calendar.CalendarActivity">
+    tools:context=".modules.others.calendar.CalendarActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_top_bar"
@@ -63,8 +63,8 @@
         app:calendar_show_mode="both_month_week_view">
 
         <com.haibin.calendarview.CalendarView
-            app:month_view="com.goodtech.tq.others.calendar.view.CustomMonthView"
-            app:week_view="com.goodtech.tq.others.calendar.view.CustomWeekView"
+            app:month_view="com.goodtech.tq.modules.others.calendar.view.CustomMonthView"
+            app:week_view="com.goodtech.tq.modules.others.calendar.view.CustomWeekView"
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

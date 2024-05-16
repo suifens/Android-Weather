@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -62,7 +62,7 @@ public class DeviceUtils {
      */
     public static int getStatusBarHeight() {
 
-        Resources resources = BaseApp.getInstance().getResources();
+        Resources resources = App.instance.getResources();
 
         int result = 0;
         //获取状态栏高度的资源id
@@ -77,7 +77,7 @@ public class DeviceUtils {
 
     public static int getNavigationBarHeight() {
 
-        Resources resources = BaseApp.getInstance().getResources();
+        Resources resources = App.instance.getResources();
 
         boolean hasNavigationBar = false;
         int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
@@ -114,8 +114,8 @@ public class DeviceUtils {
     public static String getVersionName(Context context) {
         String versionName = "";
         try {
-            PackageManager packageManager = BaseApp.getInstance().getPackageManager();
-            PackageInfo packInfo = packageManager.getPackageInfo(BaseApp.getInstance().getPackageName(), 0);
+            PackageManager packageManager = App.instance.getPackageManager();
+            PackageInfo packInfo = packageManager.getPackageInfo(App.instance.getPackageName(), 0);
             versionName = packInfo.versionName;
         } catch (Exception e) {
             e.printStackTrace();

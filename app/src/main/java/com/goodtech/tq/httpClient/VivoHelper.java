@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.models.VivoModel;
 import com.goodtech.tq.utils.SpUtils;
 import com.google.gson.Gson;
@@ -27,7 +27,7 @@ public class VivoHelper {
 
     public static synchronized VivoHelper getInstance() {
         if (instance == null) {
-            instance = new VivoHelper(BaseApp.getInstance());
+            instance = new VivoHelper(App.instance);
         }
         return instance;
     }

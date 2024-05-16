@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.SplashActivity
 import com.goodtech.tq.alarm.JAlarmReceiver
-import com.goodtech.tq.app.BaseApp
+import com.goodtech.tq.app.App
 import com.goodtech.tq.helpers.AqiHelper
 import com.goodtech.tq.helpers.LocationSpHelper
 import com.goodtech.tq.helpers.WeatherSpHelper
@@ -122,7 +122,7 @@ class DoubleWidgetService : LifecycleService() {
      * @param context
      */
     private fun openService(context: Context) {
-        BaseApp.getInstance().startService(context)
+        App.instance.startService(context)
     }
 
     private var intervalJob: Job? = null

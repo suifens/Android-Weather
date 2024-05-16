@@ -19,7 +19,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.util.PermissionUtils;
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.PermissionUtil;
@@ -160,7 +160,7 @@ public class LocationHelper {
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    BaseApp.getInstance().startActivity(intent);
+                    App.instance.startActivity(intent);
                 });
                 alert.show();
             });

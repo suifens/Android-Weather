@@ -69,10 +69,10 @@
 
   -keep class com.haibin.calendarview.** { *; }
 
--keep class com.goodtech.tq.others.calendar.view.CustomMonthView {
+-keep class com.goodtech.tq.modules.others.calendar.view.CustomMonthView {
     public <init>(android.content.Context);
 }
--keep class com.goodtech.tq.others.calendar.view.CustomWeekView {
+-keep class com.goodtech.tq.modules.others.calendar.view.CustomWeekView {
     public <init>(android.content.Context);
 }
 

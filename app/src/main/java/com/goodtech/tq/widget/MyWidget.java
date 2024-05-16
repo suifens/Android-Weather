@@ -4,15 +4,9 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 
-import com.blankj.utilcode.util.ToastUtils;
-import com.goodtech.tq.app.BaseApp;
-import com.goodtech.tq.utils.PermissionUtil;
-import com.goodtech.tq.utils.TimeUtils;
+import com.goodtech.tq.app.App;
 
 public class MyWidget extends AppWidgetProvider {
     String TAG = "MyWidget：--------------";
@@ -32,7 +26,7 @@ public class MyWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         Log.e(TAG, "widget  onEnabled 状态");
-        BaseApp.getInstance().startService(context);
+        App.instance.startService(context);
     }
 
     /**
@@ -44,7 +38,7 @@ public class MyWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // super.onUpdate(context, appWidgetManager, appWidgetIds);
         Log.e(TAG, "widget  onUpdate 状态");
-        BaseApp.getInstance().startService(context);
+        App.instance.startService(context);
     }
 
     /**

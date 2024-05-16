@@ -3,7 +3,7 @@ package com.goodtech.tq.helpers;
 import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
@@ -42,7 +42,7 @@ public class LocationSpHelper {
             cityMode.setCity(location.getDistrict());
             cityMode.setMergerName(String.format("%s %s", location.getDistrict(), location.getPoiName()));
             //  获取天气信息
-            WeatherHttpHelper httpHelper = new WeatherHttpHelper(BaseApp.getInstance());
+            WeatherHttpHelper httpHelper = new WeatherHttpHelper(App.instance);
             httpHelper.getBaseUrl(() -> httpHelper.fetchWeather(cityMode));
         }
         Gson gson = new Gson();

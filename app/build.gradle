@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1214
-        versionName "12.1.4"
+        versionCode 1215
+        versionName "12.1.5"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -35,13 +35,13 @@ android {
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
 
-        buildConfigField 'String', 'PGE_APP_ID', '"5353290"'    //应用ID
-        buildConfigField 'String', 'PGE_APP_LOG_ID', '"437522"' //增长参谋id
-        buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102214996"' //开屏广告id
-        buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102215979"'  //24小时动态信息流 id
-        buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102273983"' //动态信息流 id
-        buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102274243"' //日历动态信息流 id
-        buildConfigField 'String', 'PGE_INT_POS_ID', '"102214995"'  //插屏广告 id
+        buildConfigField 'String', 'PGE_APP_ID', '"5168917"'    //应用ID
+        buildConfigField 'String', 'PGE_APP_LOG_ID', '"337877"' //增长参谋id
+        buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102499123"' //开屏广告id
+        buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102498279"'  //24小时动态信息流 id
+        buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102498280"' //动态信息流 id
+        buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102499124"' //日历动态信息流 id
+        buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
 
 //        广告应用ID
 //        buildConfigField 'String', 'PGE_APP_ID', '5353290'
@@ -62,6 +62,7 @@ android {
     flavorDimensions "default"
     productFlavors {
         xiaomi {
+//            applicationIdSuffix ".yyb"
             buildConfigField 'int', 'BAIDU_CHANNEL', '10'
             buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "xiaomi"]
@@ -205,6 +206,14 @@ repositories {
         dirs 'libs'
     }
 }
+//
+//configurations.all {
+//    exclude group: "com.bytedance.boringssl.so", module: 'boringssl-so'
+//    //若接入流媒体sdk（小视频、直播）需要force constraint-layout版本
+//    resolutionStrategy {
+//        force 'com.android.support.constraint:constraint-layout:1.1.2'
+//    }
+//}
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -332,5 +341,19 @@ dependencies {
 //    implementation 'com.amap.api:location:latest.integration'
     //  弹窗
     implementation 'com.github.li-xiaojun:XPopup:2.9.19'
+
+    // 赋能小视频 SDK
+    implementation("com.pangle.cn:pangrowth-dpsdk:5.1.1.0") {
+//        exclude group: 'com.pangle.cn', module: 'adclog'
+        exclude group: 'com.pangle.cn', module: 'partner-live-sdk-lite'
+        exclude group: 'com.pangle.cn', module: 'pangrowth-novel-sdk'
+        exclude group: 'com.pangle.cn', module: 'pangrowth-game-sdk'
+        exclude group: 'com.pangle.cn', module: 'pangrowth-luckycat-sdk'
+        exclude group: 'com.pangle.cn', module: 'pangrowth-reward-sdk'
+        exclude group: 'com.pangle.cn', module: 'partner-luckycat-api-sdk'
+        exclude group: 'com.pangle.cn', module: 'pangrowth-luckycat-api'
+    }
+    // 穿山甲短剧 sdk
+    implementation("com.pangle.cn:pangrowth-djx-sdk:1.1.5.0")
 
 }

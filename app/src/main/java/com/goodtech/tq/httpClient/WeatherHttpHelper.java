@@ -5,8 +5,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.goodtech.tq.app.BaseApp;
-import com.goodtech.tq.citySearch.CityHelper;
+import com.goodtech.tq.app.App;
+import com.goodtech.tq.modules.citySearch.CityHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.listener.CompletionListener;
@@ -17,7 +17,7 @@ import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.JuheAlarmModel;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.others.airQuality.AirQualityHelper;
+import com.goodtech.tq.modules.others.airQuality.AirQualityHelper;
 import com.goodtech.tq.utils.TimeUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -53,7 +53,7 @@ public class WeatherHttpHelper {
 
     public static synchronized WeatherHttpHelper getInstance() {
         if (instance == null) {
-            instance = new WeatherHttpHelper(BaseApp.getInstance());
+            instance = new WeatherHttpHelper(App.instance);
         }
         return instance;
     }

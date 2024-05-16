@@ -13,7 +13,7 @@ import android.util.Log;
 
 import androidx.core.content.FileProvider;
 
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -150,7 +150,7 @@ public class CameraTool {
     public void startCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File imageFile = getImageFile(IMAGE_NAME);
-        Uri photoURI = FileProvider.getUriForFile(mActivity, BaseApp.getInstance().getPackageName() + ".provider", imageFile);
+        Uri photoURI = FileProvider.getUriForFile(mActivity, App.instance.getPackageName() + ".provider", imageFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         startActivityForResult(intent, REQUEST_CODE_CAMERA);
     }

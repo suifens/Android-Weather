@@ -4,9 +4,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
-import android.util.Log;
 
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -40,7 +39,7 @@ public class MyActivityManager {
     }
 
     public String getBaseActivityName() {
-        ActivityManager activityManager = (ActivityManager) BaseApp.getInstance().getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager activityManager = (ActivityManager) App.instance.getSystemService(Context.ACTIVITY_SERVICE);
         List groundActivity = activityManager.getRunningTasks(1);
         RunningTaskInfo sTaskInfo = (RunningTaskInfo) groundActivity.get(0);
 //        Log.e("TAG", "getBaseActivityName: " + sTaskInfo.baseActivity.getClassName());

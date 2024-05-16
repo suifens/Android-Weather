@@ -12,7 +12,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.app.BaseApp;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.utils.CheckApkExist;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.DeviceUtils;
@@ -157,7 +157,7 @@ public class ShareHelper {
 
     public boolean shareToQQ(String imgUrl, IUiListener listener) {
 
-        if (!mTencent.isQQInstalled(BaseApp.getInstance())) {
+        if (!mTencent.isQQInstalled(App.instance)) {
             TipHelper.dismissProgressDialog();
             return false;
         }

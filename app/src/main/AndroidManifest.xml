@@ -14,18 +14,21 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <!--必要权限，解决安全风险漏洞，发送和注册广播事件需要调用带有传递权限的接口-->
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" /> <!-- 必要权限，解决安全风险漏洞，发送和注册广播事件需要调用带有传递权限的接口 -->
     <permission
         android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN"
         android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN" />
-    <!-- 高于Android 11的系统上，如果应用的 targetSdkVersion >= 30 ，推荐增加以下权限声明
-    （SDK将通过此权限正常触发广告行为，并保证广告的正确投放。此权限需要在用户隐私文档中声明)-->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
 
+    <uses-permission android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN" />
+    <!--
+ 高于Android 11的系统上，如果应用的 targetSdkVersion >= 30 ，推荐增加以下权限声明
+    （SDK将通过此权限正常触发广告行为，并保证广告的正确投放。此权限需要在用户隐私文档中声明)
+    -->
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" /> <!-- 访问网络，网络定位需要上网 -->
@@ -54,25 +57,19 @@
     <!-- oppo_permission_start -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" /> <!-- oppo_permission_end -->
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <!--
  高于Android 11的系统上，如果应用的 targetSdkVersion >= 30 ，推荐增加以下权限声明
        （SDK将通过此权限正常触发广告行为，并保证广告的正确投放。此权限需要在用户隐私文档中声明)
     -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
-
-    <!--    读取oaid 设备注册和深度链接：跨APP标识设备-->
-    <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
-
-    <!-- Android 13版本适配，细化存储权限 -->
+        tools:ignore="QueryAllPackagesPermission" /> <!-- 读取oaid 设备注册和深度链接：跨APP标识设备 -->
+    <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" /> <!-- Android 13版本适配，细化存储权限 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
-        android:name=".app.BaseApp"
+        android:name=".app.App"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -82,37 +79,40 @@
         android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         tools:replace="android:label,android:icon,android:theme,android:networkSecurityConfig,android:allowBackup">
         <activity
-            android:name=".others.video.VideoActivity"
+            android:name=".modules.video.djx.DjxVideoActivity"
             android:exported="false" />
-        <activity android:name=".signing.SigningActivity" />
+        <activity
+            android:name=".modules.others.video.VideoActivity"
+            android:exported="false" />
+        <activity android:name=".modules.signing.SigningActivity" />
         <activity android:name=".activity.WidgetSettingActivity" />
-        <activity android:name=".others.taifeng.TyphoonActivity" />
-        <activity android:name=".others.dymovies.DyMoviesActivity" />
-        <activity android:name=".others.outbreak.OutbreakActivity" />
-        <activity android:name=".others.test.MyTestActivity"/>
-        <activity android:name=".others.test.PrivacyWebActivity"/>
-        <activity android:name=".others.airQuality.AirQualityActivity" />
-        <activity android:name=".others.calendar.CalendarActivity" />
-        <activity android:name=".others.constellation.ConstellationDetailActivity" />
-        <activity android:name=".others.constellation.ConstellationActivity" /> <!-- 声明service组件 -->
-<!--        <service-->
-<!--            android:name="com.baidu.location.f"-->
-<!--            android:enabled="true"-->
-<!--            android:process=":remote" /> &lt;!&ndash; AK鉴权 &ndash;&gt;-->
-<!--        <meta-data-->
-<!--            android:name="com.baidu.lbsapi.API_KEY"-->
-<!--            android:value="MW7mNdpfGlsgjWqD9BGv1jHWlSfTBLOO" /> &lt;!&ndash; value的值填写你在友盟后台申请的应用Appkey &ndash;&gt;-->
+        <activity android:name=".modules.others.taifeng.TyphoonActivity" />
+        <activity android:name=".modules.others.dymovies.DyMoviesActivity" />
+        <activity android:name=".modules.others.outbreak.OutbreakActivity" />
+        <activity android:name=".modules.others.test.MyTestActivity" />
+        <activity android:name=".modules.others.test.PrivacyWebActivity" />
+        <activity android:name=".modules.others.airQuality.AirQualityActivity" />
+        <activity android:name=".modules.others.calendar.CalendarActivity" />
+        <activity android:name=".modules.others.constellation.ConstellationDetailActivity" />
+        <activity android:name=".modules.others.constellation.ConstellationActivity" /> <!-- 声明service组件 -->
+        <!-- <service -->
+        <!-- android:name="com.baidu.location.f" -->
+        <!-- android:enabled="true" -->
+        <!-- android:process=":remote" /> &lt;!&ndash; AK鉴权 &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="com.baidu.lbsapi.API_KEY" -->
+        <!-- android:value="MW7mNdpfGlsgjWqD9BGv1jHWlSfTBLOO" /> &lt;!&ndash; value的值填写你在友盟后台申请的应用Appkey &ndash;&gt; -->
         <!-- 高德key -->
         <service android:name="com.amap.api.location.APSService" />
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="a8a7483b252616116740d4489fae4460"/>
-<!--        <meta-data-->
-<!--            android:name="UMENG_APPKEY"-->
-<!--            android:value="595a3b236e27a468630021e8" />-->
-<!--        <meta-data-->
-<!--            android:name="UMENG_CHANNEL"-->
-<!--            android:value="${umeng_channel}" /> &lt;!&ndash; <activity &ndash;&gt;-->
+            android:value="a8a7483b252616116740d4489fae4460" /> <!-- <meta-data -->
+        <!-- android:name="UMENG_APPKEY" -->
+        <!-- android:value="595a3b236e27a468630021e8" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="UMENG_CHANNEL" -->
+        <!-- android:value="${umeng_channel}" /> &lt;!&ndash; <activity &ndash;&gt; -->
         <activity
             android:name=".activity.SplashActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
@@ -152,11 +152,11 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".cityList.CityListActivity"
+            android:name=".modules.cityList.CityListActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".citySearch.CitySearchActivity"
+            android:name=".modules.citySearch.CitySearchActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
@@ -562,9 +562,7 @@
             android:directBootAware="true"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="mediaPlayback" />
-
-        <!-- Pangle ===== -->
+            android:foregroundServiceType="mediaPlayback" /> <!-- Pangle ===== -->
         <provider
             android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
             android:authorities="${applicationId}.TTFileProvider"
@@ -577,9 +575,7 @@
         <provider
             android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
             android:authorities="${applicationId}.TTMultiProvider"
-            android:exported="false" />
-        <!-- Pangle end================== -->
-
+            android:exported="false" /> <!-- Pangle end================== -->
         <!-- GDT start================== -->
         <!-- targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值，例如本例中applicationId为"com.qq.e.union.demo"。 -->
         <provider
@@ -599,34 +595,25 @@
         <activity
             android:name="com.qq.e.ads.LandscapeADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            tools:replace="android:screenOrientation"
-            android:screenOrientation="landscape" />
-
-        <!-- 声明SDK所需要的组件 -->
+            android:screenOrientation="landscape"
+            tools:replace="android:screenOrientation" /> <!-- 声明SDK所需要的组件 -->
         <service
             android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-        <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
-
+            android:exported="false" /> <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
         <activity
             android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-        <!-- GDT end================== -->
-
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" /> <!-- GDT end================== -->
         <!-- baidu start================== -->
-        <!-- 声明打开落地页的Activity（不建议修改主题配置）-->
+        <!-- 声明打开落地页的Activity（不建议修改主题配置） -->
         <activity
             android:name="com.baidu.mobads.sdk.api.AppActivity"
             android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
-            android:theme="@android:style/Theme.NoTitleBar"/>
-        <!-- 声明打开显示激励视频/全屏视频的Activity-->
+            android:theme="@android:style/Theme.NoTitleBar" /> <!-- 声明打开显示激励视频/全屏视频的Activity -->
         <activity
             android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
         <!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
         <!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
         <provider
@@ -638,8 +625,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/bd_file_paths" />
         </provider>
-        <!-- baidu end================== -->
 
+<!--        <provider-->
+<!--            android:name="com.bytedance.sdk.djx.act.DJXProvider"-->
+<!--            android:authorities="${applicationId}.yyb.BDDJXProvider"-->
+<!--            android:exported="false" />-->
+
+<!--        <provider-->
+<!--            android:name="com.bytedance.sdk.dp.act.DPProvider"-->
+<!--            android:authorities="${applicationId}.BDDPProvider"-->
+<!--            android:exported="false" />-->
     </application>
 
 </manifest>

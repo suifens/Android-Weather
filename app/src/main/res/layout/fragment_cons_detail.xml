@@ -47,7 +47,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.goodtech.tq.others.constellation.ScoreView
+            <com.goodtech.tq.modules.others.constellation.ScoreView
                 android:id="@+id/score_all"
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
@@ -77,7 +77,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.goodtech.tq.others.constellation.ScoreView
+            <com.goodtech.tq.modules.others.constellation.ScoreView
                 android:id="@+id/score_work"
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
@@ -106,7 +106,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.goodtech.tq.others.constellation.ScoreView
+            <com.goodtech.tq.modules.others.constellation.ScoreView
                 android:id="@+id/score_love"
                 android:layout_width="wrap_content"
                 android:layout_height="14dp"
@@ -133,7 +133,7 @@
                 android:textColor="@color/white"
                 android:textSize="14dp" />
 
-            <com.goodtech.tq.others.constellation.ScoreView
+            <com.goodtech.tq.modules.others.constellation.ScoreView
                 android:id="@+id/score_money"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp" />
@@ -291,7 +291,7 @@
 
     </LinearLayout>
 
-    <com.goodtech.tq.others.constellation.ConsItemView
+    <com.goodtech.tq.modules.others.constellation.ConsItemView
         android:id="@+id/view_cons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_fortune"
-    tools:context=".others.constellation.ConstellationDetailActivity">
+    tools:context=".modules.others.constellation.ConstellationDetailActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/private_station_bar"

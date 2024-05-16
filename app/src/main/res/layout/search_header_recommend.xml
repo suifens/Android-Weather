@@ -111,7 +111,7 @@
             app:layout_constraintStart_toStartOf="parent"
             >
 
-            <com.goodtech.tq.citySearch.RippleLayout
+            <com.goodtech.tq.modules.citySearch.RippleLayout
                 android:id="@+id/ripplelayout_train_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

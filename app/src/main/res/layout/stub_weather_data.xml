@@ -79,7 +79,7 @@
             android:layout_marginTop="14dp"
             android:layout_marginStart="18dp" />
 
-        <com.goodtech.tq.others.airQuality.view.AirLifeView
+        <com.goodtech.tq.modules.others.airQuality.view.AirLifeView
             android:id="@+id/view_life"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

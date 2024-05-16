@@ -33,7 +33,7 @@ import com.bytedance.sdk.openadsdk.TTFullScreenVideoAd;
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
-import com.goodtech.tq.cityList.CityListActivity;
+import com.goodtech.tq.modules.cityList.CityListActivity;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.CityEvent;
 import com.goodtech.tq.eventbus.MessageEvent;
@@ -49,7 +49,7 @@ import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.signing.SigningActivity;
+import com.goodtech.tq.modules.signing.SigningActivity;
 import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.IntentReceiver;
@@ -376,7 +376,7 @@ public class MainActivity extends BaseActivity {
             CityMode cityMode = LocationSpHelper.getLocation();
             mCityModes.set(0, cityMode);
             reloadWeather(0);
-//            BaseApp.getInstance().startIntent(MainActivity.this);
+//            App.instance.startIntent(MainActivity.this);
         }
         if (event.isNeedReload()) {
             isNeedReload = true;

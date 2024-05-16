@@ -4,8 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.goodtech.tq.app.BaseApp;
-import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.app.App;
 
 /**
  * com.goodtech.tq.httpClient
@@ -34,7 +33,7 @@ public class JuHeHelper {
 
     public static synchronized JuHeHelper getInstance() {
         if (instance == null) {
-            instance = new JuHeHelper(BaseApp.getInstance());
+            instance = new JuHeHelper(App.instance);
         }
         return instance;
     }
