@@ -133,6 +133,18 @@ public class CurrentItemView extends ConstraintLayout {
             }
         });
 
+        view.findViewById(R.id.short_play_btn).setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onShortPlayer();
+            }
+        });
+
+        view.findViewById(R.id.mini_video_btn).setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onMiniVideo();
+            }
+        });
+
         // mSignTipV = view.findViewById(R.id.view_sign_tip);
     }
 

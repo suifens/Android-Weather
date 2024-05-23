@@ -81,6 +81,12 @@
         <activity
             android:name=".modules.video.djx.DjxVideoActivity"
             android:exported="false" />
+        <activity android:name=".modules.video.djx.DrawDramaActivity"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen"
+            android:exported="false" />
+        <activity android:name=".modules.video.DrawVideoFullScreenActivity"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen"
+            android:exported="false" />
         <activity
             android:name=".modules.others.video.VideoActivity"
             android:exported="false" />

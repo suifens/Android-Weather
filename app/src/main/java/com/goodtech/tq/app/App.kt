@@ -113,7 +113,7 @@ class App : Application() {
                 }
 
                 // 初始化小视频 sdk
-//                DPHolder.init(instance)
+                DPHolder.init(instance)
             }
 
             override fun fail(code: Int, msg: String?) {

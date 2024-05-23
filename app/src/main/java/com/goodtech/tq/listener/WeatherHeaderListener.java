@@ -22,4 +22,7 @@ public interface WeatherHeaderListener {
 
     void onWarningBtn();
 
+    void onShortPlayer();
+    void onMiniVideo();
+
 }

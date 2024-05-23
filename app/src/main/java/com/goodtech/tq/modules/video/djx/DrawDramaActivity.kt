@@ -9,7 +9,9 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.goodtech.tq.R
@@ -43,7 +45,7 @@ class DrawDramaActivity : AppCompatActivity() {
         private const val DRAMA_TOP_ID = "drama_top_id"
         private const val INSERT_CUSTOM_VIEW = "insert_custom_view"
 
-        private const val LOCK_SET = -1
+        private const val LOCK_SET = 2
 
         fun start(
             activity: Activity,
@@ -75,6 +77,7 @@ class DrawDramaActivity : AppCompatActivity() {
             activity.startActivity(intent)
         }
 
+        @JvmStatic
         fun start(activity: Activity) {
             val intent = Intent(activity, DrawDramaActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -93,7 +96,7 @@ class DrawDramaActivity : AppCompatActivity() {
     private var isHideInfo = false
     private var isHideEnter = false
     private var isInsertCustomView = false
-    private var dramaFree = 1 // 短剧混排免费集数，默认1
+    private var dramaFree = 3 // 短剧混排免费集数，默认1
     private var dramaDetailFree = 3 // 短剧详情免费集数，默认-1，会使用sdk的默认设置
     private var dramaTopId = -1 // 短剧置顶，默认-1，会使用sdk的默认设置
 
@@ -110,7 +113,7 @@ class DrawDramaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.draw_drama_activity)
         intent?.let { intent ->
-            channelType = intent.getIntExtra(CHANNEL_TYPE, DJXWidgetDrawParams.DRAW_CHANNEL_TYPE_RECOMMEND)
+            channelType = intent.getIntExtra(CHANNEL_TYPE, DJXWidgetDrawParams.DRAW_CHANNEL_TYPE_THEATER)
             contentType = intent.getIntExtra(CONTENT_TYPE, DJXWidgetDrawParams.DRAW_CONTENT_TYPE_ONLY_DRAMA)
             isCustomDetail = intent.getBooleanExtra(IS_CUSTOM_DETAIL, false)
             isHideLike = intent.getBooleanExtra(HIDE_LIKE, false)
@@ -118,8 +121,8 @@ class DrawDramaActivity : AppCompatActivity() {
             isHideInfo = intent.getBooleanExtra(HIDE_INFO, false)
             isHideEnter = intent.getBooleanExtra(HIDE_ENTER, false)
             isInsertCustomView = intent.getBooleanExtra(INSERT_CUSTOM_VIEW, false)
-            dramaFree = intent.getIntExtra(DRAMA_FREE, 1)
-            dramaDetailFree = intent.getIntExtra(DRAMA_DETAIL_FREE, -1)
+            dramaFree = intent.getIntExtra(DRAMA_FREE, 3)
+            dramaDetailFree = intent.getIntExtra(DRAMA_DETAIL_FREE, 3)
             dramaTopId = intent.getIntExtra(DRAMA_TOP_ID, -1)
         }
         Bus.getInstance().addListener(function)
@@ -201,6 +204,7 @@ class DrawDramaActivity : AppCompatActivity() {
                 hideDramaInfo(isHideInfo)
                 hideDramaEnter(isHideEnter)
                 dramaFree(dramaFree)
+                LOCK_SET
                 topDramaId(dramaTopId.toLong())
                 hideClose(false, null)
                 listener(DefaultDrawListener(drawListener))

@@ -56,8 +56,8 @@ object DJXHolder {
             Log.d(TAG, "doInitTask: $isSuccess, $message")
             callback?.invoke(isSuccess)
 
-            val msg = if (isSuccess) "初始化成功" else "初始化失败：$message"
-            Toast.makeText(application, msg, Toast.LENGTH_LONG).show()
+//            val msg = if (isSuccess) "初始化成功" else "初始化失败：$message"
+//            Toast.makeText(application, msg, Toast.LENGTH_LONG).show()
         }
     }
 

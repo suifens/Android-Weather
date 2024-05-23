@@ -40,6 +40,8 @@ import com.goodtech.tq.modules.others.constellation.ConstellationActivity;
 import com.goodtech.tq.modules.others.taifeng.TyphoonActivity;
 import com.goodtech.tq.modules.others.test.MyTestActivity;
 import com.goodtech.tq.modules.signing.SigningActivity;
+import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity;
+import com.goodtech.tq.modules.video.djx.DrawDramaActivity;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.views.popup.AlarmPopup;
 import com.lxj.xpopup.XPopup;
@@ -337,6 +339,18 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
                     .asCustom(popup)
                     .show();
         }
+    }
+
+    @Override
+    public void onShortPlayer() {
+        DrawDramaActivity.start(requireActivity());
+    }
+
+    @Override
+    public void onMiniVideo() {
+        Intent intent = new Intent(requireActivity(), DrawVideoFullScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     // <editor-fold defaultstate="collapsed" desc="广告">

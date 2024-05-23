@@ -17,6 +17,8 @@ import androidx.annotation.RequiresApi;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.modules.others.test.MyTestActivity;
+import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity;
+import com.goodtech.tq.modules.video.djx.DrawDramaActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 // import com.qq.e.comm.managers.setting.GlobalSetting;
@@ -61,6 +63,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.layout_permission_location).setOnClickListener(this);
         findViewById(R.id.switchBtn_setting_m).setOnClickListener(this);
         findViewById(R.id.switchBtn_reminder).setOnClickListener(this);
+        findViewById(R.id.short_play_btn).setOnClickListener(this);
+        findViewById(R.id.mini_video_btn).setOnClickListener(this);
     }
 
     @Override
@@ -149,6 +153,16 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             break;
             case R.id.switchBtn_reminder: {
                 updateReminder();
+            }
+            break;
+            case R.id.short_play_btn: {
+                DrawDramaActivity.start(this);
+            }
+            break;
+            case R.id.mini_video_btn: {
+                Intent intent = new Intent(this, DrawVideoFullScreenActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
             break;
         }
