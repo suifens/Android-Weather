@@ -16,6 +16,8 @@ import androidx.core.widget.NestedScrollView;
 
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.bytedance.sdk.djx.DJXSdk;
+import com.bytedance.sdk.dp.DPSdk;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
@@ -343,14 +345,18 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
 
     @Override
     public void onShortPlayer() {
-        DrawDramaActivity.start(requireActivity());
+        if (DJXSdk.isStartSuccess()) {
+            DrawDramaActivity.start(requireActivity());
+        }
     }
 
     @Override
     public void onMiniVideo() {
-        Intent intent = new Intent(requireActivity(), DrawVideoFullScreenActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        if (DPSdk.isStartSuccess()) {
+            Intent intent = new Intent(requireActivity(), DrawVideoFullScreenActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="广告">

@@ -15,6 +15,8 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.RequiresApi;
 
+import com.bytedance.sdk.djx.DJXSdk;
+import com.bytedance.sdk.dp.DPSdk;
 import com.goodtech.tq.R;
 import com.goodtech.tq.modules.others.test.MyTestActivity;
 import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity;
@@ -156,13 +158,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
             break;
             case R.id.short_play_btn: {
-                DrawDramaActivity.start(this);
+                if (DJXSdk.isStartSuccess()) {
+                    DrawDramaActivity.start(this);
+                }
             }
             break;
             case R.id.mini_video_btn: {
-                Intent intent = new Intent(this, DrawVideoFullScreenActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                if (DPSdk.isStartSuccess()) {
+                    Intent intent = new Intent(this, DrawVideoFullScreenActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
             }
             break;
         }

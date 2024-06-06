@@ -76,6 +76,7 @@
         android:label="${app_name}"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         tools:replace="android:label,android:icon,android:theme,android:networkSecurityConfig,android:allowBackup">
         <activity
