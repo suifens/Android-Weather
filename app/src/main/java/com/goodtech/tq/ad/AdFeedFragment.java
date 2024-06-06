@@ -56,7 +56,7 @@ public class AdFeedFragment extends BaseFragment {
         isLoadedAndShow = true;
 
         feedContainer.setVisibility(View.VISIBLE);
-        showFeedAd(feedContainer, feedAd);
+        mHandler.post(() -> showFeedAd(feedContainer, feedAd));
         return true;
     }
 

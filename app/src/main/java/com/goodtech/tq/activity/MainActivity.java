@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity {
          */
         final InitConfig config = new InitConfig(BuildConfig.PGE_APP_LOG_ID, BuildConfig.UMENG_CHANNEL);
         //上报地址
-        config.setUriConfig (UriConstants.DEFAULT);
+        config.setUriConfig(UriConstants.DEFAULT);
         // 加密开关，SDK 5.5.1 及以上版本支持，false 为关闭加密，上线前建议设置为 true
         AppLog.setEncryptAndCompress(true);
         //日志开关，debug阶段建议开启
@@ -200,12 +200,12 @@ public class MainActivity extends BaseActivity {
             /**
              * server拉取AbConfig数据，和本地数据对比有变化的通知
              * 仅主进程会被调用
-//             * @param changed 是否和本地缓存有所不同
-//             * @param abConfig server返回新abConfig内容
+             //             * @param changed 是否和本地缓存有所不同
+             //             * @param abConfig server返回新abConfig内容
              */
             @Override
             public void onRemoteAbConfigGet(boolean b, JSONObject jsonObject) {
-                Log.i("---测试---返回全部进组信息",""+ jsonObject.toString());
+                Log.i("---测试---返回全部进组信息", "" + jsonObject.toString());
             }
 
             /**
@@ -236,7 +236,7 @@ public class MainActivity extends BaseActivity {
          * 非常重要！！！会直接影响归因结果，必须设置
          * @description 而且建议在初始化后设置，否则可能不生效
          */
-        AppLog.setHeaderInfo("csj_attribution",1);
+        AppLog.setHeaderInfo("csj_attribution", 1);
     }
 
     @Override
@@ -307,14 +307,15 @@ public class MainActivity extends BaseActivity {
                 /// 判断新版本
                 fetchNewVersion(() -> {
                     long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(BuildConfig.PGE_INT_POS_ID, 0L);
-                    mHandler.postDelayed(this::initAdLoader, 5000);
+                    mHandler.postDelayed(() -> new Thread(this::initAdLoader).start(), 8000);
+
                 });
             }
 
             isFirstLoad = false;
         } else {
             if (mIsLoadedAndShow) {
-                showInterFullAd();
+                mHandler.post(this::showInterFullAd);
             }
         }
 
@@ -703,7 +704,7 @@ public class MainActivity extends BaseActivity {
                 mLoadSuccess = true;
                 mTTFullScreenVideoAd = ad;
                 if (mIsLoadedAndShow && isCurrent) {
-                    showInterFullAd();
+                    mHandler.post(() -> showInterFullAd());
                     SpUtils.getInstance().putLong(BuildConfig.PGE_INT_POS_ID, System.currentTimeMillis());
                 }
             }

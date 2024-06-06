@@ -120,7 +120,7 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
         if (isFirstLoad) {
             isFirstLoad = false;
             if (SpUtils.getInstance().isAgreePermission()) {
-                mHandler.postDelayed(this::initAdLoader, 300);
+                mHandler.postDelayed(() -> new Thread(this::initAdLoader).start(), 500);
             }
         }
     }
