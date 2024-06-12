@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1217
-        versionName "12.1.7"
+        versionCode 1218
+        versionName "12.1.8"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -35,6 +35,13 @@ android {
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
 
+//        buildConfigField 'String', 'PGE_APP_ID', '"5353290"'    //应用ID
+//        buildConfigField 'String', 'PGE_APP_LOG_ID', '"437522"' //增长参谋id
+//        buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102214996"' //开屏广告id
+//        buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102215979"'  //24小时动态信息流 id
+//        buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102273983"' //动态信息流 id
+//        buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102274243"' //日历动态信息流 id
+//        buildConfigField 'String', 'PGE_INT_POS_ID', '"102214995"'  //插屏广告 id
         buildConfigField 'String', 'PGE_APP_ID', '"5168917"'    //应用ID
         buildConfigField 'String', 'PGE_APP_LOG_ID', '"337877"' //增长参谋id
         buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102499123"' //开屏广告id
@@ -217,10 +224,10 @@ repositories {
 //}
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation project(':cropimage')
 
     implementation 'com.google.android.material:material:1.9.0'
@@ -243,9 +250,9 @@ dependencies {
     implementation 'com.umeng.umsdk:common:9.5.4'//必选
     implementation 'com.umeng.umsdk:asms:1.6.3'//必选
     //网络请求
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation 'com.squareup.okio:okio:2.10.0'
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.squareup.okio:okio:3.3.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
     //eventbus
     implementation 'org.greenrobot:eventbus:3.3.1'
 
@@ -278,23 +285,18 @@ dependencies {
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
 
     //  极光推送
-    implementation 'cn.jiguang.sdk:jcore:4.2.4'  // 此处以JCore 2.7.2 版本为例。
-    implementation 'cn.jiguang.sdk:jpush:4.9.0'  // 此处以JPush 4.0.0 版本为例
+    implementation 'cn.jiguang.sdk:jpush:5.3.1'  // 此处以JPush 4.0.0 版本为例
     // 接入华为厂商
-    implementation 'com.huawei.hms:push:6.5.0.300'
-    implementation 'cn.jiguang.sdk.plugin:huawei:4.9.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
+    implementation 'com.huawei.hms:push:6.12.0.300'
+    implementation 'cn.jiguang.sdk.plugin:huawei:5.3.1'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
     // 接入魅族厂商
     implementation 'cn.jiguang.sdk.plugin:meizu:4.8.0'
     // 接入 VIVO 厂商
-    implementation 'cn.jiguang.sdk.plugin:vivo:4.9.0'
+    implementation 'cn.jiguang.sdk.plugin:vivo:5.3.1'
     // 接入 OPPO 厂商
-    implementation 'cn.jiguang.sdk.plugin:oppo:4.9.0'
-    implementation(name: 'com.heytap.msp_3.1.0', ext: 'aar')
-    //以下为 OPPO 3.1.0 aar需要依赖
-//    implementation 'commons-codec:commons-codec:1.9'
-//    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'cn.jiguang.sdk.plugin:oppo:5.3.1'
     // 接入小米厂商
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.9.0'
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:5.3.1'
 
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
     implementation 'com.tencent.bugly:crashreport:latest.release'
@@ -310,13 +312,6 @@ dependencies {
     implementation "com.pangle.cn:mediation-ks-adapter:3.3.63.1"//ks adapter 快手
     implementation "com.pangle.cn:mediation-gdt-adapter:4.575.1445.0" //gdt adapter 优汇量
     implementation "com.pangle.cn:mediation-baidu-adapter:9.35.0"//baidu adapter
-
-    //Baidu
-    implementation(name: 'Baidu_MobAds_SDK_v9.35', ext: 'aar')
-    //GDT 优汇量
-    implementation(name: 'GDTSDK.unionNormal.4.575.1445', ext: 'aar')
-    //ks 快手
-    implementation(name: 'kssdk-ad-3.3.63', ext: 'aar')
 
     //  增长参谋广告
     implementation 'com.bytedance.applog:RangersAppLog-Lite-cn:6.15.3'

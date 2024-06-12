@@ -307,8 +307,7 @@ public class MainActivity extends BaseActivity {
                 /// 判断新版本
                 fetchNewVersion(() -> {
                     long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(BuildConfig.PGE_INT_POS_ID, 0L);
-                    mHandler.postDelayed(() -> new Thread(this::initAdLoader).start(), 8000);
-
+                    mHandler.postDelayed(() -> new Thread(this::initAdLoader).start(), 5000);
                 });
             }
 
