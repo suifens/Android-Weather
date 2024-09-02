@@ -75,11 +75,17 @@ public class TTAdManagerHolder {
                 /**
                  * 上线前需要关闭debug开关，否则会影响性能
                  */
-                .debug(true)
+                .debug(false)
                 /**
                  * 使用聚合功能此开关必须设置为true，默认为false，不会初始化聚合模板，聚合功能会吟唱
                  */
                 .useMediation(true)
+                .customController(new TTCustomController() {
+                    @Override
+                    public boolean isCanUseWifiState() {
+                        return false;
+                    }
+                })
 //                .customController(getTTCustomController()) //如果您需要设置隐私策略请参考该api
 //                .setMediationConfig(new MediationConfig.Builder() //可设置聚合特有参数详细设置请参考该api
 //                        .setMediationConfigUserInfoForSegment(getUserInfoForSegment())//如果您需要配置流量分组信息请参考该api

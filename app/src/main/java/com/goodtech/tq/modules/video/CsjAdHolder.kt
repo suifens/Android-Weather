@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.bytedance.sdk.openadsdk.TTAdConfig
 import com.bytedance.sdk.openadsdk.TTAdConstant
 import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.bytedance.sdk.openadsdk.TTCustomController
 
 /**
  * create by hanweiwei on 8/30/23
@@ -22,8 +23,13 @@ object CsjAdHolder {
             .appName(AppUtils.getAppName())
             .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)
             .allowShowNotify(true)
-            .supportMultiProcess(true)
-            .debug(true)
+            .supportMultiProcess(false)
+            .debug(false)
+            .customController(object : TTCustomController() {
+                override fun isCanUseWifiState(): Boolean {
+                    return false
+                }
+            })
             .build()
         TTAdSdk.init(application, build)
         TTAdSdk.start(object : TTAdSdk.Callback {

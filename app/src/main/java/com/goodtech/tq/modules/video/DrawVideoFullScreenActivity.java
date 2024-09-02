@@ -102,184 +102,184 @@ public class DrawVideoFullScreenActivity extends AppCompatActivity {
     }
 
     private void initDrawWidget() {
-        mIDPWidget = DPHolder.INSTANCE.buildDrawWidget(DPWidgetDrawParams.obtain().liveAdCodeId("947474066").liveNativeAdCodeId("947474068")
-            .adOffset(0) //单位 dp，为 0 时可以不设置
-            .drawContentType(mContentType)
-            .drawChannelType(mChannelType)
-            .hideFollow(mIsHideFollow)
-            .hideChannelName(mIsHideChannelName)
-            .hideClose(false, null)
-            .listener(new IDPDrawListener() {
-                @Override
-                public void onDPRefreshFinish() {
-                    log("onDPRefreshFinish");
-                }
-
-                @Override
-                public void onDPPageChange(int position) {
-                    log("onDPPageChange: " + position);
-                }
-
-                @Override
-                public void onDPPageChange(int position, Map<String, Object> map) {
-                    if (map == null) {
-                        return;
+        mIDPWidget = DPHolder.INSTANCE.buildDrawWidget(DPWidgetDrawParams.obtain()
+                .adOffset(0) //单位 dp，为 0 时可以不设置
+                .drawContentType(mContentType)
+                .drawChannelType(mChannelType)
+                .hideFollow(mIsHideFollow)
+                .hideChannelName(mIsHideChannelName)
+                .hideClose(false, null)
+                .listener(new IDPDrawListener() {
+                    @Override
+                    public void onDPRefreshFinish() {
+                        log("onDPRefreshFinish");
                     }
 
-                    log("onDPPageChange: " + position + ", map = " + map.toString());
-                }
-
-                @Override
-                public void onDPVideoPlay(Map<String, Object> map) {
-                    log("onDPVideoPlay map = " + map.toString());
-                }
-
-                @Override
-                public void onDPVideoOver(Map<String, Object> map) {
-                    log("onDPVideoOver map = " + map.toString());
-                }
-
-                @Override
-                public void onDPVideoCompletion(Map<String, Object> map) {
-                    log("onDPVideoCompletion map = " + map.toString());
-                }
-
-                @Override
-                public void onDPClose() {
-                    log("onDPClose");
-                }
-
-                @Override
-                public void onDPReportResult(boolean isSucceed) {
-                    log("onDPReportResult isSucceed = " + isSucceed);
-                }
-
-                @Override
-                public void onDPPageStateChanged(DPPageState pageState) {
-                    log("onDPPageStateChanged pageState = " + pageState.toString());
-                }
-
-                @Override
-                public void onDPReportResult(boolean isSucceed, Map<String, Object> map) {
-                    log("onDPReportResult isSucceed = " + isSucceed + ", map = " + map.toString());
-                }
-
-                @Override
-                public void onDPRequestStart(@Nullable Map<String, Object> map) {
-                    log("onDPRequestStart");
-                }
-
-                @Override
-                public void onDPRequestSuccess(List<Map<String, Object>> list) {
-                    if (list == null) {
-                        return;
+                    @Override
+                    public void onDPPageChange(int position) {
+                        log("onDPPageChange: " + position);
                     }
 
-                    for (int i = 0; i < list.size(); i++) {
-                        log("onDPRequestSuccess i = " + i + ", map = " + list.get(i).toString());
+                    @Override
+                    public void onDPPageChange(int position, Map<String, Object> map) {
+                        if (map == null) {
+                            return;
+                        }
+
+                        log("onDPPageChange: " + position + ", map = " + map.toString());
                     }
-                }
 
-                @Override
-                public void onDPRequestFail(int code, String msg, @Nullable Map<String, Object> map) {
-                    if (map == null) {
-                        log("onDPRequestFail code = " + code + ", msg = " + msg);
-                        return;
+                    @Override
+                    public void onDPVideoPlay(Map<String, Object> map) {
+                        log("onDPVideoPlay map = " + map.toString());
                     }
-                    log("onDPRequestFail  code = " + code + ", msg = " + msg + ", map = " + map.toString());
-                }
 
-                @Override
-                public void onDPClickAuthorName(Map<String, Object> map) {
-                    log("onDPClickAuthorName map = " + map.toString());
-                }
+                    @Override
+                    public void onDPVideoOver(Map<String, Object> map) {
+                        log("onDPVideoOver map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPClickAvatar(Map<String, Object> map) {
-                    log("onDPClickAvatar map = " + map.toString());
-                }
+                    @Override
+                    public void onDPVideoCompletion(Map<String, Object> map) {
+                        log("onDPVideoCompletion map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPClickComment(Map<String, Object> map) {
-                    log("onDPClickComment map = " + map.toString());
-                }
+                    @Override
+                    public void onDPClose() {
+                        log("onDPClose");
+                    }
 
-                @Override
-                public void onDPClickLike(boolean isLike, Map<String, Object> map) {
-                    log("onDPClickLike isLike = " + isLike + ", map = " + map.toString());
-                }
+                    @Override
+                    public void onDPReportResult(boolean isSucceed) {
+                        log("onDPReportResult isSucceed = " + isSucceed);
+                    }
 
-                @Override
-                public void onDPVideoPause(Map<String, Object> map) {
-                    log("onDPVideoPause map = " + map.toString());
-                }
+                    @Override
+                    public void onDPPageStateChanged(DPPageState pageState) {
+                        log("onDPPageStateChanged pageState = " + pageState.toString());
+                    }
 
-                @Override
-                public void onDPVideoContinue(Map<String, Object> map) {
-                    log("onDPVideoContinue map = " + map.toString());
-                }
+                    @Override
+                    public void onDPReportResult(boolean isSucceed, Map<String, Object> map) {
+                        log("onDPReportResult isSucceed = " + isSucceed + ", map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPClickShare(Map<String, Object> map) {
-                    log("onDPClickShare map = " + map.toString());
-                }
+                    @Override
+                    public void onDPRequestStart(@Nullable Map<String, Object> map) {
+                        log("onDPRequestStart");
+                    }
 
-                @Override
-                public void onChannelTabChange(int channel) {
-                    log("onChannelTabChange, is " + channel);
-                }
-            })
-            .adListener(new IDPAdListener() {
-                @Override
-                public void onDPAdRequest(Map<String, Object> map) {
-                    log("onDPAdRequest map =  " + map.toString());
-                }
+                    @Override
+                    public void onDPRequestSuccess(List<Map<String, Object>> list) {
+                        if (list == null) {
+                            return;
+                        }
 
-                @Override
-                public void onDPAdRequestSuccess(Map<String, Object> map) {
-                    log("onDPAdRequestSuccess map = " + map.toString());
-                }
+                        for (int i = 0; i < list.size(); i++) {
+                            log("onDPRequestSuccess i = " + i + ", map = " + list.get(i).toString());
+                        }
+                    }
 
-                @Override
-                public void onDPAdRequestFail(int code, String msg, Map<String, Object> map) {
-                    log("onDPAdRequestFail map = " + map.toString());
-                }
+                    @Override
+                    public void onDPRequestFail(int code, String msg, @Nullable Map<String, Object> map) {
+                        if (map == null) {
+                            log("onDPRequestFail code = " + code + ", msg = " + msg);
+                            return;
+                        }
+                        log("onDPRequestFail  code = " + code + ", msg = " + msg + ", map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPAdFillFail(Map<String, Object> map) {
-                    log("onDPAdFillFail map = " + map.toString());
-                }
+                    @Override
+                    public void onDPClickAuthorName(Map<String, Object> map) {
+                        log("onDPClickAuthorName map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPAdShow(Map<String, Object> map) {
-                    log("onDPAdShow map = " + map.toString());
-                }
+                    @Override
+                    public void onDPClickAvatar(Map<String, Object> map) {
+                        log("onDPClickAvatar map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPAdPlayStart(Map<String, Object> map) {
-                    log("onDPAdPlayStart map = " + map.toString());
-                }
+                    @Override
+                    public void onDPClickComment(Map<String, Object> map) {
+                        log("onDPClickComment map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPAdPlayPause(Map<String, Object> map) {
-                    log("onDPAdPlayPause map = " + map.toString());
-                }
+                    @Override
+                    public void onDPClickLike(boolean isLike, Map<String, Object> map) {
+                        log("onDPClickLike isLike = " + isLike + ", map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPAdPlayContinue(Map<String, Object> map) {
-                    log("onDPAdPlayContinue map = " + map.toString());
-                }
+                    @Override
+                    public void onDPVideoPause(Map<String, Object> map) {
+                        log("onDPVideoPause map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPAdPlayComplete(Map<String, Object> map) {
-                    log("onDPAdPlayComplete map = " + map.toString());
-                }
+                    @Override
+                    public void onDPVideoContinue(Map<String, Object> map) {
+                        log("onDPVideoContinue map = " + map.toString());
+                    }
 
-                @Override
-                public void onDPAdClicked(Map<String, Object> map) {
-                    log("onDPAdClicked map = " + map.toString());
-                }
-            }));
+                    @Override
+                    public void onDPClickShare(Map<String, Object> map) {
+                        log("onDPClickShare map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onChannelTabChange(int channel) {
+                        log("onChannelTabChange, is " + channel);
+                    }
+                })
+                .adListener(new IDPAdListener() {
+                    @Override
+                    public void onDPAdRequest(Map<String, Object> map) {
+                        log("onDPAdRequest map =  " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdRequestSuccess(Map<String, Object> map) {
+                        log("onDPAdRequestSuccess map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdRequestFail(int code, String msg, Map<String, Object> map) {
+                        log("onDPAdRequestFail map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdFillFail(Map<String, Object> map) {
+                        log("onDPAdFillFail map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdShow(Map<String, Object> map) {
+                        log("onDPAdShow map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdPlayStart(Map<String, Object> map) {
+                        log("onDPAdPlayStart map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdPlayPause(Map<String, Object> map) {
+                        log("onDPAdPlayPause map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdPlayContinue(Map<String, Object> map) {
+                        log("onDPAdPlayContinue map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdPlayComplete(Map<String, Object> map) {
+                        log("onDPAdPlayComplete map = " + map.toString());
+                    }
+
+                    @Override
+                    public void onDPAdClicked(Map<String, Object> map) {
+                        log("onDPAdClicked map = " + map.toString());
+                    }
+                }));
     }
 
     private static void log(String msg) {

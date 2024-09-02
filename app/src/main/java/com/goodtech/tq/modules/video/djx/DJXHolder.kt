@@ -16,6 +16,7 @@ import com.bytedance.sdk.djx.model.DJXDramaUnlockAdMode
 import com.bytedance.sdk.djx.params.DJXWidgetDramaHomeParams
 import com.bytedance.sdk.djx.params.DJXWidgetDrawParams
 import com.goodtech.tq.app.App
+import com.goodtech.tq.BuildConfig
 
 /**
  * create by hanweiwei on 8/30/23
@@ -34,7 +35,7 @@ object DJXHolder {
 
     private fun doInitTask(application: Application, callback: ((success: Boolean) -> Unit)?) {
         val config = DJXSdkConfig.Builder()
-            .debug(true)
+            .debug(BuildConfig.DEBUG_MODE)
             .newUser(true)
             .build()
 
@@ -69,7 +70,7 @@ object DJXHolder {
         adListener: IDJXAdListener? = null
     ): IDJXWidget {
         val dramaDetailConfig = DJXDramaDetailConfig.obtain(
-            DJXDramaUnlockAdMode.MODE_COMMON,
+            DJXDramaUnlockAdMode.MODE_SPECIFIC,
             FREE_SET,
             DefaultDramaUnlockListener(LOCK_SET, null)
         )

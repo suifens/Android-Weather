@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1218
-        versionName "12.1.8"
+        versionCode 1223
+        versionName "12.2.3"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -35,13 +35,6 @@ android {
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
 
-//        buildConfigField 'String', 'PGE_APP_ID', '"5353290"'    //应用ID
-//        buildConfigField 'String', 'PGE_APP_LOG_ID', '"437522"' //增长参谋id
-//        buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102214996"' //开屏广告id
-//        buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102215979"'  //24小时动态信息流 id
-//        buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102273983"' //动态信息流 id
-//        buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102274243"' //日历动态信息流 id
-//        buildConfigField 'String', 'PGE_INT_POS_ID', '"102214995"'  //插屏广告 id
         buildConfigField 'String', 'PGE_APP_ID', '"5168917"'    //应用ID
         buildConfigField 'String', 'PGE_APP_LOG_ID', '"337877"' //增长参谋id
         buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102499123"' //开屏广告id
@@ -83,14 +76,6 @@ android {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
             buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
             manifestPlaceholders = [app_name: "天气预报纯净版", umeng_channel: "huawei"]
-
-            buildConfigField 'String', 'PGE_APP_ID', '"5168917"'    //应用ID
-            buildConfigField 'String', 'PGE_APP_LOG_ID', '"337877"' //增长参谋id
-            buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"102499123"' //开屏广告id
-            buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102498279"'  //24小时动态信息流 id
-            buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"102498280"' //动态信息流 id
-            buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102499124"' //日历动态信息流 id
-            buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
         }
         oppo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '6'
@@ -102,11 +87,11 @@ android {
             buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
             manifestPlaceholders = [app_name: "一古预知天气预报软件", umeng_channel: "oppo"]
         }
-//        oppo2 {
-//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-//            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
-//            manifestPlaceholders = [app_name: "一古预知天气预报", umeng_channel: "oppo"]
-//        }
+        oppo2 {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+            manifestPlaceholders = [app_name: "一古预知天气预报", umeng_channel: "oppo"]
+        }
         vivo {
             buildConfigField 'int', 'BAIDU_CHANNEL', '7'
             buildConfigField 'String', 'UMENG_CHANNEL', '"vivo"'

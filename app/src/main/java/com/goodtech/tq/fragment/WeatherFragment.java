@@ -23,6 +23,7 @@ import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.ad.AdFeedFragment;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.fragment.view.CurrentItemView;
 import com.goodtech.tq.fragment.view.DailyListItemView;
 import com.goodtech.tq.fragment.view.HoursItemView;
@@ -345,18 +346,20 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
 
     @Override
     public void onShortPlayer() {
-        if (DJXSdk.isStartSuccess()) {
-            DrawDramaActivity.start(requireActivity());
+        if (!DJXSdk.isStartSuccess()) {
+            App.instance.initDJX();
         }
+        DrawDramaActivity.start(requireActivity());
     }
 
     @Override
     public void onMiniVideo() {
-        if (DPSdk.isStartSuccess()) {
-            Intent intent = new Intent(requireActivity(), DrawVideoFullScreenActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+        if (!DPSdk.isStartSuccess()) {
+            App.instance.initDP();
         }
+        Intent intent = new Intent(requireActivity(), DrawVideoFullScreenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     // <editor-fold defaultstate="collapsed" desc="广告">

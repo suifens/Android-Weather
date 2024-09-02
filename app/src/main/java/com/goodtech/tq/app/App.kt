@@ -93,33 +93,42 @@ class App : Application() {
     fun startUsingApp(activity: Activity?) {
         TTAdManagerHolder.init(this)
         configUM()
-        JPushInterface.setDebugMode(true)
 
         //  极光推送 register id
         val registerId = JPushInterface.getRegistrationID(instance)
-        Log.e(TAG, "startUsingApp: register id = $registerId")
+        Log.i(TAG, "startUsingApp: register id = $registerId")
         if (!TextUtils.isEmpty(registerId)) {
             mJPushRegId = registerId
         }
+    }
 
+    fun loadCsjAdHolder() {
         // 业务 SDK 初始化前请确保 CSJ SDK 正常初始化，初始化逻辑建议都放在 application.onCreate()
         CsjAdHolder.init(SITE_ID, instance, object : TTAdSdk.Callback {
             override fun success() {
                 Log.e(TAG, "CsjAdHolder init success")
 
-                // 初始化短剧 sdk
-                DJXHolder.init(instance) {
-                    Bus.getInstance().sendEvent(DJXStartEvent(it))
-                }
+                initDJX()
 
-                // 初始化小视频 sdk
-                DPHolder.init(instance)
+                initDP()
             }
 
             override fun fail(code: Int, msg: String?) {
                 Log.e(TAG, "CsjAdHolder init fail: $code, $msg")
             }
         })
+    }
+
+    fun initDJX() {
+        // 初始化短剧 sdk
+        DJXHolder.init(instance) {
+            Bus.getInstance().sendEvent(DJXStartEvent(it))
+        }
+    }
+
+    fun initDP() {
+        // 初始化小视频 sdk
+        DPHolder.init(instance)
     }
 
     private var isServiceStarted = false

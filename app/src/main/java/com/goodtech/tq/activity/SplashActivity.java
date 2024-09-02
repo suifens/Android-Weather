@@ -54,14 +54,11 @@ public class SplashActivity extends BaseActivity {
 
         String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
         if (!TextUtils.isEmpty(saveVersion)) {
-
+            if (SpUtils.getInstance().isAgreePermission()) {
+                //  注册
+                App.instance.startUsingApp(this);
+            }
             if (!LocationSpHelper.getCityListAndLocation().isEmpty()) {
-
-                if (SpUtils.getInstance().isAgreePermission()) {
-                    //  注册
-                    App.instance.startUsingApp(this);
-                }
-
                 SpUtils.getInstance().remove(Constants.TIME_LOCATION);
                 SpUtils.getInstance().remove(Constants.TIME_WEATHER);
                 if (!saveVersion.equals("0")) {
@@ -109,6 +106,7 @@ public class SplashActivity extends BaseActivity {
                 this.startActivity(new Intent(this, MainActivity.class));
             }
         }
+        App.instance.loadCsjAdHolder();
         SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
         this.finish();
     }
@@ -141,7 +139,7 @@ public class SplashActivity extends BaseActivity {
         initListeners();
 
         /** 4、加载广告 */
-        adNativeLoader.loadSplashAd(adSlot, mCSJSplashAdListener, 3500);
+        adNativeLoader.loadSplashAd(adSlot, mCSJSplashAdListener, 1500);
     }
 
     private void initListeners() {
