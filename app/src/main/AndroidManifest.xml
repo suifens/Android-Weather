@@ -52,6 +52,9 @@
         android:name="${applicationId}.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature"
         tools:ignore="UniquePermission" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" /> <!-- xiaomi_permission_end -->
     <!-- oppo_permission_start -->
@@ -127,7 +130,8 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             tools:ignore="DuplicateActivity,LockedOrientationActivity"
-            tools:targetApi="cupcake">
+            tools:targetApi="cupcake"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -169,11 +173,6 @@
         <activity
             android:name=".activity.PermissionActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".activity.SplashADActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.FullScreen"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".wxapi.WXEntryActivity"
@@ -309,17 +308,22 @@
         <activity
             android:name="com.qq.e.ads.ADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize" /> <!-- GDT end================== -->
+
         <!-- baidu start================== -->
-        <!-- 声明打开落地页的Activity（不建议修改主题配置） -->
+        <!-- 声明打开落地页的Activity（不建议修改主题配置）-->
         <activity
             android:name="com.baidu.mobads.sdk.api.AppActivity"
             android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
-            android:theme="@android:style/Theme.NoTitleBar" /> <!-- 声明打开显示激励视频/全屏视频的Activity -->
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <!-- 声明打开显示激励视频/全屏视频的Activity-->
         <activity
             android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" /> <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:configChanges"/>
+
+        <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
         <!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
         <!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
         <provider
@@ -331,8 +335,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/bd_file_paths" />
         </provider>
+        <!-- baidu end================== -->
 
-<!--        <provider-->
+
+        <!--        <provider-->
 <!--            android:name="com.bytedance.sdk.djx.act.DJXProvider"-->
 <!--            android:authorities="${applicationId}.yyb.BDDJXProvider"-->
 <!--            android:exported="false" />-->

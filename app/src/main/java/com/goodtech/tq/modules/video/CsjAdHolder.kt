@@ -19,7 +19,7 @@ object CsjAdHolder {
     fun init(siteId: String, application: Application, callback: TTAdSdk.Callback?) {
         val build = TTAdConfig.Builder()
             .appId(siteId) //穿山甲媒体id
-            .useTextureView(true)
+//            .useTextureView(true)
             .appName(AppUtils.getAppName())
             .titleBarTheme(TTAdConstant.TITLE_BAR_THEME_DARK)
             .allowShowNotify(true)
