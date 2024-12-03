@@ -91,86 +91,58 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @SuppressLint({"QueryPermissionsNeeded", "NonConstantResourceId"})
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_back:
-                finish();
-                break;
-            case R.id.layout_widget: {
-                Intent intent = new Intent(SettingActivity.this, WidgetSettingActivity.class);
+        if (v.getId() == R.id.button_back) {
+            finish();
+        } else if (v.getId() == R.id.layout_widget) {
+            Intent intent = new Intent(SettingActivity.this, WidgetSettingActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.layout_private_list) {
+            MyTestActivity.redirectTo(this,
+                    "https://app.yiguxm.com/privacy/yuzhiyinsiqingdan.html",
+                    getResources().getString(R.string.title_private_list),
+                    "Privacy_List");
+        } else if (v.getId() == R.id.layout_praise || v.getId() == R.id.layout_version) {
+            // 评论
+            Uri uri = Uri.parse("market://details?id=" + getPackageName());
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                // 要调起的应用不存在时的处理
+                Toast.makeText(this, "未能跳转到应用商店", Toast.LENGTH_SHORT).show();
+            }
+        } else if (v.getId() == R.id.layout_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.layout_contact) {
+            Intent intent = new Intent(this, ContactActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.layout_permission_phone || v.getId() == R.id.layout_permission_storage) {
+            Intent intent = new Intent();
+            intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + this.getPackageName()));
+            startActivity(intent);
+        } else if (v.getId() == R.id.layout_permission_location) {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        } else if (v.getId() == R.id.switchBtn_setting_m) {
+            // 个性化设置
+            boolean show = SpUtils.getInstance().getBoolean(Constants.PERSONALIZED_AD, true);
+            SpUtils.getInstance().putBoolean(Constants.PERSONALIZED_AD, !show);
+            updateAdType(!show);
+            // GlobalSetting.setAgreePrivacyStrategy(!show);
+        } else if (v.getId() == R.id.switchBtn_reminder) {
+            updateReminder();
+        } else if (v.getId() == R.id.short_play_btn) {
+            if (DJXSdk.isStartSuccess()) {
+                DrawDramaActivity.start(this);
+            }
+        } else if (v.getId() == R.id.mini_video_btn) {
+            if (DPSdk.isStartSuccess()) {
+                Intent intent = new Intent(this, DrawVideoFullScreenActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
-                break;
-            case R.id.layout_private_list: {
-                MyTestActivity.redirectTo(this,
-                        "https://app.yiguxm.com/privacy/yuzhiyinsiqingdan.html",
-                        getResources().getString(R.string.title_private_list),
-                        "Privacy_List");
-            }
-                break;
-            case R.id.layout_praise:
-            case R.id.layout_version: {
-                //  评论
-                Uri uri = Uri.parse("market://details?id=" + getPackageName());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                } else {
-                    //要调起的应用不存在时的处理
-                    Toast.makeText(this, "未能跳转到应用商店", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-            break;
-            case R.id.layout_about: {
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-            }
-            break;
-            case R.id.layout_contact: {
-                Intent intent = new Intent(this, ContactActivity.class);
-                startActivity(intent);
-            }
-            break;
-            case R.id.layout_permission_phone:
-            case R.id.layout_permission_storage: {
-
-                Intent intent = new Intent();
-                intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setData(Uri.parse("package:" + this.getPackageName()));
-                startActivity(intent);
-            }
-            break;
-            case R.id.layout_permission_location: {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-            break;
-            case R.id.switchBtn_setting_m: {
-                //  个性化设置
-                boolean show = SpUtils.getInstance().getBoolean(Constants.PERSONALIZED_AD, true);
-                SpUtils.getInstance().putBoolean(Constants.PERSONALIZED_AD, !show);
-                updateAdType(!show);
-                // GlobalSetting.setAgreePrivacyStrategy(!show);
-            }
-            break;
-            case R.id.switchBtn_reminder: {
-                updateReminder();
-            }
-            break;
-            case R.id.short_play_btn: {
-                if (DJXSdk.isStartSuccess()) {
-                    DrawDramaActivity.start(this);
-                }
-            }
-            break;
-            case R.id.mini_video_btn: {
-                if (DPSdk.isStartSuccess()) {
-                    Intent intent = new Intent(this, DrawVideoFullScreenActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            }
-            break;
         }
     }
 

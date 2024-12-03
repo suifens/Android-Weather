@@ -80,6 +80,7 @@ public class TTAdManagerHolder {
                  * 使用聚合功能此开关必须设置为true，默认为false，不会初始化聚合模板，聚合功能会吟唱
                  */
                 .useMediation(true)
+                .supportMultiProcess(true)
                 .customController(new TTCustomController() {
                     @Override
                     public boolean isCanUseWifiState() {

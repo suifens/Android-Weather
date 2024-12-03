@@ -123,32 +123,28 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.img_delete:
-                showDeleteAnim();
-                mContainer.setOnClickListener(this);
+        if (v.getId() == R.id.img_delete) {
+            showDeleteAnim();
+            mContainer.setOnClickListener(this);
+            if (mListener != null) {
+                mListener.onShowDelete(this);
+            }
+        } else if (v.getId() == R.id.container) {
+            if (isEdit) {
+                hideDeleteAnim();
+                mContainer.setOnClickListener(null);
                 if (mListener != null) {
-                    mListener.onShowDelete(this);
+                    mListener.onShowDelete(null);
                 }
-                break;
-            case R.id.container:
-                if (isEdit) {
-                    hideDeleteAnim();
-                    mContainer.setOnClickListener(null);
-                    if (mListener != null) {
-                        mListener.onShowDelete(null);
-                    }
-                } else {
-                    if (mListener != null) {
-                        mListener.onItemClick(v, getAdapterPosition(), mCityMode);
-                    }
-                }
-                break;
-            case R.id.btn_delete:
+            } else {
                 if (mListener != null) {
-                    mListener.onDeleteCity(getAdapterPosition(), mCityMode);
+                    mListener.onItemClick(v, getAdapterPosition(), mCityMode);
                 }
-                break;
+            }
+        } else if (v.getId() == R.id.btn_delete) {
+            if (mListener != null) {
+                mListener.onDeleteCity(getAdapterPosition(), mCityMode);
+            }
         }
     }
 

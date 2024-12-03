@@ -1,9 +1,6 @@
 package com.goodtech.tq.helpers.picture;
 
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
-
-import androidx.core.content.ContextCompat;
 
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.camera.CustomCameraView;
@@ -13,7 +10,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.luck.picture.lib.style.PictureSelectorUIStyle;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
-import com.luck.picture.lib.tools.SdkVersionUtils;
 
 public class PictureSelectHelper {
 

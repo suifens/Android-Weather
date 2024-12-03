@@ -119,50 +119,46 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_agree:
-//                checkAndRequestPermission();
-                onStartWeather(false);
-                break;
-            case R.id.button_disagree: {
-                DisagreeAlert alert = new DisagreeAlert(PermissionActivity.this,
-                        new DisagreeAlertListener() {
-                            @Override
-                            public void onConfirmClick(View view) {
-                                onStartWeather(false);
-                            }
+        if (v.getId() == R.id.button_agree) {
+            // checkAndRequestPermission();
+            onStartWeather(false);
+        } else if (v.getId() == R.id.button_disagree) {
+            DisagreeAlert alert = new DisagreeAlert(PermissionActivity.this,
+                    new DisagreeAlertListener() {
+                        @Override
+                        public void onConfirmClick(View view) {
+                            onStartWeather(false);
+                        }
 
-                            @Override
-                            public void onCancelClick(View view) {
-                                finish();
-                            }
+                        @Override
+                        public void onCancelClick(View view) {
+                            finish();
+                        }
 
-                            @Override
-                            public void onAgreementClick(View view) {
-                                PrivacyWebActivity.redirectTo(PermissionActivity.this,
-                                        Constants.URL_AGREEMENT,
-                                        getResources().getString(R.string.title_agreement),
-                                        "Agreement");
-                            }
+                        @Override
+                        public void onAgreementClick(View view) {
+                            PrivacyWebActivity.redirectTo(PermissionActivity.this,
+                                    Constants.URL_AGREEMENT,
+                                    getResources().getString(R.string.title_agreement),
+                                    "Agreement");
+                        }
 
-                            @Override
-                            public void onPrivateClick(View view) {
-                                PrivacyWebActivity.redirectTo(PermissionActivity.this,
-                                        Constants.URL_PRIVACY,
-                                        getResources().getString(R.string.title_private),
-                                        "Privacy");
-                            }
+                        @Override
+                        public void onPrivateClick(View view) {
+                            PrivacyWebActivity.redirectTo(PermissionActivity.this,
+                                    Constants.URL_PRIVACY,
+                                    getResources().getString(R.string.title_private),
+                                    "Privacy");
+                        }
 
-                            @Override
-                            public void onVisitorClick(View view) {
-                                onStartWeather(true);
-                            }
-                        });
-                if (!isFinishing()) {
-                    alert.show();
-                }
+                        @Override
+                        public void onVisitorClick(View view) {
+                            onStartWeather(true);
+                        }
+                    });
+            if (!isFinishing()) {
+                alert.show();
             }
-            break;
         }
     }
 

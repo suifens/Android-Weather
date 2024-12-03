@@ -42,26 +42,18 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_back:
-                finish();
-                break;
-
-            case R.id.tv_agreement: {
-                PrivacyWebActivity.redirectTo(this,
-                        Constants.URL_AGREEMENT,
-                        getResources().getString(R.string.title_agreement),
-                        "Agreement");
-            }
-                break;
-
-            case R.id.tv_private: {
-                PrivacyWebActivity.redirectTo(this,
-                        Constants.URL_PRIVACY,
-                        getResources().getString(R.string.title_private),
-                        "Privacy");
-            }
-                break;
+        if (v.getId() == R.id.button_back) {
+            finish();
+        } else if (v.getId() == R.id.tv_agreement) {
+            PrivacyWebActivity.redirectTo(this,
+                    Constants.URL_AGREEMENT,
+                    getResources().getString(R.string.title_agreement),
+                    "Agreement");
+        } else if (v.getId() == R.id.tv_private) {
+            PrivacyWebActivity.redirectTo(this,
+                    Constants.URL_PRIVACY,
+                    getResources().getString(R.string.title_private),
+                    "Privacy");
         }
     }
 }

@@ -93,28 +93,22 @@ public class VideoView extends FrameLayout implements IControlComponent {
 
     @Override
     public void onPlayStateChanged(int playState) {
-        switch (playState) {
-            case xyz.doikki.videoplayer.player.VideoView.STATE_IDLE:
-                L.e("STATE_IDLE " + hashCode());
-                thumb.setVisibility(VISIBLE);
-                break;
-            case xyz.doikki.videoplayer.player.VideoView.STATE_PLAYING:
-                L.e("STATE_PLAYING " + hashCode());
-                thumb.setVisibility(GONE);
-                mPlayBtn.setVisibility(GONE);
-                break;
-            case xyz.doikki.videoplayer.player.VideoView.STATE_PAUSED:
-                L.e("STATE_PAUSED " + hashCode());
-                thumb.setVisibility(GONE);
-                mPlayBtn.setVisibility(VISIBLE);
-                break;
-            case xyz.doikki.videoplayer.player.VideoView.STATE_PREPARED:
-                L.e("STATE_PREPARED " + hashCode());
-                break;
-            case xyz.doikki.videoplayer.player.VideoView.STATE_ERROR:
-                L.e("STATE_ERROR " + hashCode());
-                Toast.makeText(getContext(), R.string.dkplayer_error_message, Toast.LENGTH_SHORT).show();
-                break;
+        if (playState == xyz.doikki.videoplayer.player.VideoView.STATE_IDLE) {
+            L.e("STATE_IDLE " + hashCode());
+            thumb.setVisibility(VISIBLE);
+        } else if (playState == xyz.doikki.videoplayer.player.VideoView.STATE_PLAYING) {
+            L.e("STATE_PLAYING " + hashCode());
+            thumb.setVisibility(GONE);
+            mPlayBtn.setVisibility(GONE);
+        } else if (playState == xyz.doikki.videoplayer.player.VideoView.STATE_PAUSED) {
+            L.e("STATE_PAUSED " + hashCode());
+            thumb.setVisibility(GONE);
+            mPlayBtn.setVisibility(VISIBLE);
+        } else if (playState == xyz.doikki.videoplayer.player.VideoView.STATE_PREPARED) {
+            L.e("STATE_PREPARED " + hashCode());
+        } else if (playState == xyz.doikki.videoplayer.player.VideoView.STATE_ERROR) {
+            L.e("STATE_ERROR " + hashCode());
+//            Toast.makeText(getContext(), R.string.dkplayer_error_message, Toast.LENGTH_SHORT).show();
         }
     }
 

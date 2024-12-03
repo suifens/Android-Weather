@@ -85,13 +85,10 @@ public class ConstellationDetailActivity extends BaseActivity implements View.On
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_back:
-                finish();
-                break;
-            case R.id.button_other:
-                finishToRight();
-                break;
+        if (v.getId() == R.id.button_back) {
+            finish();
+        } else if (v.getId() == R.id.button_other) {
+            finishToRight();
         }
     }
 
@@ -136,7 +133,7 @@ public class ConstellationDetailActivity extends BaseActivity implements View.On
      */
     private void configSegmentTabLayout() {
         mSwitchView = findViewById(R.id.view_switch);
-        String[] titles = new String[] {"今日","明日","本周","本月","今年"};
+        String[] titles = new String[]{"今日", "明日", "本周", "本月", "今年"};
         mSwitchView.setButtonTitles(titles);
         mSwitchView.setOnCheckedChangeListener((view, selectedIndex) -> {
             isSwitchClick = true;
@@ -177,6 +174,7 @@ public class ConstellationDetailActivity extends BaseActivity implements View.On
     }
 
     private static final String TAG = "ConstellationDetailActi";
+
     private void getData(String type) {
 
         JuHeHelper.getInstance().fetchFortune(mConsEnum.name, type, new ApiResponseHandler() {

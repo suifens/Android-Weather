@@ -417,7 +417,7 @@ public class WeatherFragment extends AdFeedFragment implements OnRefreshListener
         if (mFeedContainer2 != null && mGMNativeAd2 != null && mGMNativeAd2 == ad) {
             mFeedContainer2.removeAllViews();
             mFeedContainer2.setVisibility(View.GONE);
-            mGMNativeAd.destroy();
+            mGMNativeAd2.destroy();
         }
     }
 

@@ -50,46 +50,32 @@ public class ConstellationActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_back:
-                finish();
-                break;
-            case R.id.constellation_1:
-                ConstellationDetailActivity.redirectTo(this, constellations[0]);
-                break;
-            case R.id.constellation_2:
-                ConstellationDetailActivity.redirectTo(this, constellations[1]);
-                break;
-            case R.id.constellation_3:
-                ConstellationDetailActivity.redirectTo(this, constellations[2]);
-                break;
-            case R.id.constellation_4:
-                ConstellationDetailActivity.redirectTo(this, constellations[3]);
-                break;
-            case R.id.constellation_5:
-                ConstellationDetailActivity.redirectTo(this, constellations[4]);
-                break;
-            case R.id.constellation_6:
-                ConstellationDetailActivity.redirectTo(this, constellations[5]);
-                break;
-            case R.id.constellation_7:
-                ConstellationDetailActivity.redirectTo(this, constellations[6]);
-                break;
-            case R.id.constellation_8:
-                ConstellationDetailActivity.redirectTo(this, constellations[7]);
-                break;
-            case R.id.constellation_9:
-                ConstellationDetailActivity.redirectTo(this, constellations[8]);
-                break;
-            case R.id.constellation_10:
-                ConstellationDetailActivity.redirectTo(this, constellations[9]);
-                break;
-            case R.id.constellation_11:
-                ConstellationDetailActivity.redirectTo(this, constellations[10]);
-                break;
-            case R.id.constellation_12:
-                ConstellationDetailActivity.redirectTo(this, constellations[11]);
-                break;
+        if (v.getId() == R.id.button_back) {
+            finish();
+        } else if (v.getId() == R.id.constellation_1) {
+            ConstellationDetailActivity.redirectTo(this, constellations[0]);
+        } else if (v.getId() == R.id.constellation_2) {
+            ConstellationDetailActivity.redirectTo(this, constellations[1]);
+        } else if (v.getId() == R.id.constellation_3) {
+            ConstellationDetailActivity.redirectTo(this, constellations[2]);
+        } else if (v.getId() == R.id.constellation_4) {
+            ConstellationDetailActivity.redirectTo(this, constellations[3]);
+        } else if (v.getId() == R.id.constellation_5) {
+            ConstellationDetailActivity.redirectTo(this, constellations[4]);
+        } else if (v.getId() == R.id.constellation_6) {
+            ConstellationDetailActivity.redirectTo(this, constellations[5]);
+        } else if (v.getId() == R.id.constellation_7) {
+            ConstellationDetailActivity.redirectTo(this, constellations[6]);
+        } else if (v.getId() == R.id.constellation_8) {
+            ConstellationDetailActivity.redirectTo(this, constellations[7]);
+        } else if (v.getId() == R.id.constellation_9) {
+            ConstellationDetailActivity.redirectTo(this, constellations[8]);
+        } else if (v.getId() == R.id.constellation_10) {
+            ConstellationDetailActivity.redirectTo(this, constellations[9]);
+        } else if (v.getId() == R.id.constellation_11) {
+            ConstellationDetailActivity.redirectTo(this, constellations[10]);
+        } else if (v.getId() == R.id.constellation_12) {
+            ConstellationDetailActivity.redirectTo(this, constellations[11]);
         }
     }
 }

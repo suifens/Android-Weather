@@ -104,19 +104,16 @@ public class PermissionAlert extends AlertDialog implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_dialog_cancel:
-                if (mListener != null) {
-                    mListener.onCancelClick(v);
-                }
-                this.dismiss();
-                break;
-            case R.id.btn_dialog_confirm:
-                if (mListener != null) {
-                    mListener.onConfirmClick(v);
-                }
-                this.dismiss();
-                break;
+        if (v.getId() == R.id.btn_dialog_cancel) {
+            if (mListener != null) {
+                mListener.onCancelClick(v);
+            }
+            this.dismiss();
+        } else if (v.getId() == R.id.btn_dialog_confirm) {
+            if (mListener != null) {
+                mListener.onConfirmClick(v);
+            }
+            this.dismiss();
         }
     }
 }

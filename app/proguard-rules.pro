@@ -274,5 +274,8 @@
     -keep class com.loc.**{*;}
     -keep class com.autonavi.aps.amapapi.model.**{*;}
 
+    # 保持 Gson 的反射类不被混淆
+    -keep class com.google.gson.** { *; }
 
-    -keep class com.google.gson.** {*;}
+    # 保持所有与 TypeToken 相关的类不被混淆
+    -keep class com.google.gson.reflect.TypeToken { *; }

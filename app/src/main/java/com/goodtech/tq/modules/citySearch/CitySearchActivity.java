@@ -264,9 +264,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(false);
         mSearchView.clearFocus();
-        SearchView.SearchAutoComplete textView = mSearchView.findViewById(R.id.search_src_text);
+        SearchView.SearchAutoComplete textView = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
         if (textView != null) {
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         }
     }
 

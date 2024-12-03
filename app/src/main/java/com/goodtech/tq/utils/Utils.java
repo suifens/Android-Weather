@@ -1,5 +1,6 @@
 package com.goodtech.tq.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -15,6 +16,14 @@ import java.io.InputStreamReader;
  * com.goodtech.tq.utils
  */
 public class Utils {
+
+    public static boolean isActivityAlive(Context context) {
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            return !activity.isFinishing() && !activity.isDestroyed();
+        }
+        return false;
+    }
 
     /**
      * 获取ErrorCode类型

@@ -173,22 +173,13 @@ public class InputAlert extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_dialog_cancel:
-                this.dismiss();
-                break;
-            case R.id.btn_dialog_confirm:
-                if (mConfirmListener != null) {
-                    /**
-                     * 去掉首尾空格 - trim()：
-                     * str.getText().toString().trim();
-                     * 去掉所有空格 - replaceAll(" " , "") ;
-                     * str.getText().toString().replaceAll(" " ,"");
-                     */
-                    mConfirmListener.onConfirmClick(mEditTv.getText().toString().trim());
-                }
-                this.dismiss();
-                break;
+        if (v.getId() == R.id.btn_dialog_cancel) {
+            this.dismiss();
+        } else if (v.getId() == R.id.btn_dialog_confirm) {
+            if (mConfirmListener != null) {
+                mConfirmListener.onConfirmClick(mEditTv.getText().toString().trim());
+            }
+            this.dismiss();
         }
     }
 

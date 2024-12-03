@@ -253,28 +253,23 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_close:
-                EventBus.getDefault().post(new MessageEvent().needReload(true));
-                finishToRight();
-                break;
-            case R.id.city_add:
-                //  添加城市
-                Intent intent = new Intent(CityListActivity.this, CitySearchActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.button_city_edit:
-                if (mEdit) {
-                    mHadEdit = true;
-                    mProvider.saveData();
-                }
-                //  点击编辑/取消按钮
-                setEdit(!mEdit);
-                break;
-            case R.id.button_city_cancel:
-                mProvider.resetData();
-                setEdit(false);
-                break;
+        if (v.getId() == R.id.button_close) {
+            EventBus.getDefault().post(new MessageEvent().needReload(true));
+            finishToRight();
+        } else if (v.getId() == R.id.city_add) {
+            // 添加城市
+            Intent intent = new Intent(CityListActivity.this, CitySearchActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.button_city_edit) {
+            if (mEdit) {
+                mHadEdit = true;
+                mProvider.saveData();
+            }
+            // 点击编辑/取消按钮
+            setEdit(!mEdit);
+        } else if (v.getId() == R.id.button_city_cancel) {
+            mProvider.resetData();
+            setEdit(false);
         }
     }
 

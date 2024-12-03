@@ -148,7 +148,7 @@ public class AlarmService extends Service {
 //        Intent i = new Intent();
         i.setAction("alarm");
         i.putExtra("tmac", "tracy mcgrady");
-        PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, i, 0);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_IMMUTABLE);
 
         Log.e("TAG", "onStartCommand: " + firstTime + "  tri = " + triggerAtTime );
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, 60 * 1000, pIntent);

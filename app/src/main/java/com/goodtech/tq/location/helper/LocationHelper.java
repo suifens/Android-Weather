@@ -26,6 +26,7 @@ import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
+import com.goodtech.tq.utils.Utils;
 import com.goodtech.tq.views.MessageAlert;
 import com.goodtech.tq.views.popup.TopTitlePopup;
 import com.lxj.xpopup.XPopup;
@@ -151,19 +152,21 @@ public class LocationHelper {
         if (!PermissionUtil.isLocationEnabled(context)) {
             removeTicker();
             TipHelper.dismissProgressDialog();
-            (new Handler(Looper.getMainLooper())).post(() -> {
-                MessageAlert alert = new MessageAlert(context);
-                alert.setCancelable(true);
-                alert.setTitle("定位失败");
-                alert.setMessage("当前手机需要打开定位功能");
-                alert.setConfirmListener((dialog, which) -> {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    App.instance.startActivity(intent);
+            if (Utils.isActivityAlive(context)) {
+                (new Handler(Looper.getMainLooper())).post(() -> {
+                    MessageAlert alert = new MessageAlert(context);
+                    alert.setCancelable(true);
+                    alert.setTitle("定位失败");
+                    alert.setMessage("当前手机需要打开定位功能");
+                    alert.setConfirmListener((dialog, which) -> {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        App.instance.startActivity(intent);
+                    });
+                    alert.show();
                 });
-                alert.show();
-            });
+            }
             return false;
         }
         if (mLocationClient != null) {
