@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.bytedance.sdk.openadsdk.AdSlot;
@@ -21,16 +22,15 @@ import com.bytedance.sdk.openadsdk.TTAdSdk;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
-import com.goodtech.tq.modules.citySearch.CitySearchActivity;
+import com.goodtech.tq.base.AppExtKt;
 import com.goodtech.tq.helpers.BtnLinkHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
+import com.goodtech.tq.modules.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
-import com.goodtech.tq.utils.UIUtils;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -106,8 +106,8 @@ public class SplashActivity extends BaseActivity {
                 this.startActivity(new Intent(this, MainActivity.class));
             }
         }
-        App.instance.loadCsjAdHolder();
-        SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
+//        App.instance.loadCsjAdHolder();
+        SpUtils.getInstance().putString(SpUtils.VERSION_APP, AppUtils.getAppVersionName());
         this.finish();
     }
 
@@ -151,7 +151,7 @@ public class SplashActivity extends BaseActivity {
                 mCsjSplashAd = csjSplashAd;
                 csjSplashAd.setSplashAdListener(mCSJSplashInteractionListener);
                 View splashView = csjSplashAd.getSplashView();
-                UIUtils.removeFromParent(splashView);
+                AppExtKt.removeFromParent(splashView);
                 mSplashContainer.removeAllViews();
                 mSplashContainer.addView(splashView);
             }

@@ -24,6 +24,7 @@ import androidx.collection.LruCache;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.blankj.utilcode.util.SizeUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.base.BaseShareActivity;
@@ -35,7 +36,6 @@ import com.goodtech.tq.helpers.picture.PictureSelectHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.db.SignRecord;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ShotUtil;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
@@ -211,9 +211,9 @@ public class SigningActivity extends BaseShareActivity {
         ViewPagerAdapter trainsPageAdapter = new ViewPagerAdapter(this, mFragments);
         mViewPager.setAdapter(trainsPageAdapter);
 
-        int width = DeviceUtils.dip2px(this, 8);
-        int height = DeviceUtils.dip2px(this, 8);
-        int margin = DeviceUtils.dip2px(this, 10);
+        int width = SizeUtils.dp2px(8);
+        int height = SizeUtils.dp2px(8);
+        int margin = SizeUtils.dp2px(10);
         RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(width, height);
         for (int i = 0; i < 3; i++) {
             RadioButton tempButton = new RadioButton(this);

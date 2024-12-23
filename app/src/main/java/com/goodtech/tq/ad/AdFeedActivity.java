@@ -16,7 +16,7 @@ import com.bytedance.sdk.openadsdk.mediation.ad.MediationExpressRenderListener;
 import com.bytedance.sdk.openadsdk.mediation.manager.MediationNativeManager;
 import com.gengee.insaitlib.callback.DataCallback;
 import com.goodtech.tq.activity.BaseActivity;
-import com.goodtech.tq.utils.UIUtils;
+import com.goodtech.tq.base.AppExtKt;
 
 import java.util.List;
 
@@ -94,7 +94,7 @@ public class AdFeedActivity extends BaseActivity {
                     public void onRenderSuccess(View view, float v, float v1, boolean b) {
                         Log.d("TAG", "feed express render success");
                         View expressFeedView = mTTFeedAd.getAdView(); // *** 注意不要使用onRenderSuccess参数中的view ***
-                        UIUtils.removeFromParent(expressFeedView);
+                        AppExtKt.removeFromParent(expressFeedView);
                         feedContainer.removeAllViews();
                         feedContainer.addView(expressFeedView);
                     }
@@ -121,7 +121,7 @@ public class AdFeedActivity extends BaseActivity {
                     }
                 });
                 if (feedView != null) {
-                    UIUtils.removeFromParent(feedView);
+                    AppExtKt.removeFromParent(feedView);
                     feedContainer.removeAllViews();
                     feedContainer.addView(feedView);
                 }

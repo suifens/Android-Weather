@@ -8,10 +8,10 @@ import android.widget.RadioGroup;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.blankj.utilcode.util.SizeUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.BaseFragment;
 import com.goodtech.tq.fragment.adapter.ViewPagerAdapter;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
@@ -41,9 +41,9 @@ public class SigningPagesFragment extends BaseFragment {
         ViewPagerAdapter trainsPageAdapter = new ViewPagerAdapter(getActivity(), mPagerViews);
         mViewPager.setAdapter(trainsPageAdapter);
 
-        int width = DeviceUtils.dip2px(getContext(), 8);
-        int height = DeviceUtils.dip2px(getContext(), 3);
-        int margin = DeviceUtils.dip2px(getContext(), 6);
+        int width = SizeUtils.dp2px(8);
+        int height = SizeUtils.dp2px(3);
+        int margin = SizeUtils.dp2px(6);
         RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(width, height);
         for (int i = 0; i < mPagerViews.size(); i++) {
             RadioButton tempButton = new RadioButton(getActivity());

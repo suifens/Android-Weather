@@ -20,6 +20,8 @@ import com.amap.api.services.core.PoiItemV2;
 import com.amap.api.services.core.ServiceSettings;
 import com.amap.api.services.poisearch.PoiResultV2;
 import com.amap.api.services.poisearch.PoiSearchV2;
+import com.blankj.utilcode.util.DeviceUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.activity.MainActivity;
@@ -30,7 +32,6 @@ import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.models.CityMode;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.utils.Utils;
@@ -174,7 +175,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         //  样式
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         mRecommendView.setLayoutManager(gridLayoutManager);
-        int screenWidth = DeviceUtils.getScreenWidth(this); //屏幕宽度
+        int screenWidth = ScreenUtils.getScreenWidth(); //屏幕宽度
         int itemWidth = Utils.dp2pxInt(100); //每个item的宽度
         mRecommendView.addItemDecoration(new SpaceItemDecoration((screenWidth - itemWidth * 3) / 6));
 

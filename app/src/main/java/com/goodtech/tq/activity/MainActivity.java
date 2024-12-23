@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.applog.AppLog;
 import com.bytedance.applog.InitConfig;
 import com.bytedance.applog.alink.IALinkListener;
@@ -50,7 +51,6 @@ import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.modules.signing.SigningActivity;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.ImageUtils;
 import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.SpUtils;
@@ -501,9 +501,9 @@ public class MainActivity extends BaseActivity {
         }
         mRgIndicator.removeAllViews();
 
-        int width = DeviceUtils.dip2px(getBaseContext(), 5);
-        int height = DeviceUtils.dip2px(getBaseContext(), 5);
-        int margin = DeviceUtils.dip2px(getBaseContext(), 6);
+        int width = SizeUtils.dp2px(5);
+        int height = SizeUtils.dp2px(5);
+        int margin = SizeUtils.dp2px(6);
         RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(width, height);
         for (int i = 0; i < pagerSize; i++) {
             RadioButton tempButton = new RadioButton(MainActivity.this);

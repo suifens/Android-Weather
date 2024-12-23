@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.sdk.openadsdk.TTFeedAd;
@@ -27,7 +28,6 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.ad.AdFeedActivity;
 import com.goodtech.tq.models.calendar.DayDetail;
 import com.goodtech.tq.models.calendar.Holiday;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.haibin.calendarview.Calendar;
@@ -150,7 +150,7 @@ public class CalendarActivity extends AdFeedActivity implements
     @Override
     public void configStationBar(View stationBar) {
         LinearLayout.LayoutParams bars = new LinearLayout.LayoutParams(stationBar.getLayoutParams());
-        bars.height = bars.height + DeviceUtils.getStatusBarHeight();
+        bars.height = bars.height + BarUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
     }
 

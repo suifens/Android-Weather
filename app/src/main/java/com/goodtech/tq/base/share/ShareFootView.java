@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
-import com.goodtech.tq.utils.DeviceUtils;
 
 public class ShareFootView extends LinearLayout {
 
@@ -37,6 +37,6 @@ public class ShareFootView extends LinearLayout {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.share_recycler_bottom, this, true);
 
         TextView textView = view.findViewById(R.id.tv_app_name);
-        textView.setText(DeviceUtils.getAppName(App.instance));
+        textView.setText(AppUtils.getAppName());
     }
 }

@@ -26,8 +26,6 @@ public class TTAdManagerHolder {
 
     private static boolean sInit;
 
-
-
     public static TTAdManager get() {
 
         return TTAdSdk.getAdManager();

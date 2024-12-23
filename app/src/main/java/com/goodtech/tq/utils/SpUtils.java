@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.goodtech.tq.app.App;
 import com.tencent.mmkv.MMKV;
 
@@ -38,7 +39,7 @@ public class SpUtils {
         preferences = MMKV.mmkvWithID(userId);
 
         //  4.5.2中将 SharedPreferences 迁移到 MMKV 中
-        if (DeviceUtils.getVersionCode(App.instance) >= 151) {
+        if (AppUtils.getAppVersionCode() >= 151) {
 
             SharedPreferences old_man = App.instance.getSharedPreferences("matches_sp", Context.MODE_PRIVATE);
             if (old_man.getAll().size() > 0) {

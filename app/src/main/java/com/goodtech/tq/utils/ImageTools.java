@@ -26,6 +26,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.ImageUtils;
 
 import java.io.BufferedInputStream;
@@ -695,8 +696,7 @@ public class ImageTools {
 	 */
 	public static String saveImageToGallery(Context context, Bitmap bmp) {
 
-		File file = ImageUtils.save2Album(bmp,
-				DeviceUtils.getAppName(context),
+		File file = ImageUtils.save2Album(bmp, AppUtils.getAppName(),
 				CompressFormat.JPEG, true);
 		return file != null ? file.getAbsolutePath() : "";
 

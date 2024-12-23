@@ -17,11 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.DeviceUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.TipHelper;
@@ -50,7 +51,7 @@ public class BaseActivity extends AppCompatActivity {
         mStationBar = stationBar;
 
         ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(stationBar.getLayoutParams());
-        bars.height = bars.height + DeviceUtils.getStatusBarHeight();
+        bars.height = bars.height + BarUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
     }
 

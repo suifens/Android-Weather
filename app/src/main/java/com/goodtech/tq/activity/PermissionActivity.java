@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.BarUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.modules.citySearch.CitySearchActivity;
 import com.goodtech.tq.eventbus.CityEvent;
@@ -24,7 +26,6 @@ import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.DisagreeAlert;
 import com.goodtech.tq.views.DisagreeAlert.DisagreeAlertListener;
@@ -53,7 +54,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
 
         View stationBar = findViewById(R.id.status);
         LinearLayout.LayoutParams bars = new LinearLayout.LayoutParams(stationBar.getLayoutParams());
-        bars.height = bars.height + DeviceUtils.getStatusBarHeight();
+        bars.height = bars.height + BarUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
 
         mSpannableTv = findViewById(R.id.tv_spannable);
@@ -165,7 +166,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     private void onStartWeather(boolean isVisitor) {
         mHandler.post(() -> {
             SpUtils.getInstance().setPermissionAgree(!isVisitor);
-            SpUtils.getInstance().putString(SpUtils.VERSION_APP, DeviceUtils.getVersionName(this));
+            SpUtils.getInstance().putString(SpUtils.VERSION_APP, AppUtils.getAppVersionName());
             if (isVisitor) {
                 showVisitor();
             } else {

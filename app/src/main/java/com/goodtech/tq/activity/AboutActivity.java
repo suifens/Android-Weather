@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.umeng.analytics.MobclickAgent;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
@@ -32,7 +32,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         configStationBar(findViewById(R.id.private_station_bar));
 
         TextView versionTv = findViewById(R.id.tv_version);
-        String version = DeviceUtils.getVersionName(AboutActivity.this);
+        String version = AppUtils.getAppVersionName();
         versionTv.setText(String.format("版本: V %s", version));
 
         findViewById(R.id.button_back).setOnClickListener(this);

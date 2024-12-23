@@ -11,11 +11,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
-import com.goodtech.tq.utils.CheckApkExist;
 import com.goodtech.tq.utils.Constants;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.goodtech.tq.utils.TipHelper;
 import com.tencent.connect.share.QQShare;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
@@ -116,7 +115,7 @@ public class ShareHelper {
         params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, lineUrl);
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, lineUrl);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, DeviceUtils.getAppName(mActivity));
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, AppUtils.getAppName());
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         mTencent.shareToQQ(mActivity, params, null);
     }
@@ -163,7 +162,7 @@ public class ShareHelper {
         }
         Bundle params = new Bundle();
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, imgUrl);
-        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, DeviceUtils.getAppName(mActivity));
+        params.putString(QQShare.SHARE_TO_QQ_APP_NAME, AppUtils.getAppName());
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare. SHARE_TO_QQ_TYPE_IMAGE);
         mTencent.shareToQQ(mActivity, params, new IUiListener() {
             @Override
@@ -232,48 +231,6 @@ public class ShareHelper {
         return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
 
-    public void shareImgToInstagram(final Bitmap bitmap) {
-        if (!CheckApkExist.checkApkExist(mActivity, CheckApkExist.instagramPkgName)) {
-            TipHelper.dismissProgressDialog();
-            if (mShareHelperCallback != null) {
-                mShareHelperCallback.onSuccess(false, 0);
-            } else {
-            }
-            return;
-        }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(mActivity.getContentResolver(), bitmap, null, null));
-
-                shareToInstagram(uri);
-            }
-        }).start();
-    }
-    
-    protected void shareToInstagram(Uri uri) {
-        try {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            ComponentName comp = new ComponentName("com.instagram.android", "com.instagram.share.ShareHandlerActivity");
-            shareIntent.setComponent(comp);
-            shareIntent.setType("image/*");
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share to");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mActivity.startActivity(shareIntent);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("image/*");
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share to");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mActivity.startActivity(shareIntent);
-        }
-        
-        TipHelper.dismissProgressDialog();
-    }
 
     public void setShareHelperCallback(ShareHelperCallback shareHelperCallback) {
         mShareHelperCallback = shareHelperCallback;

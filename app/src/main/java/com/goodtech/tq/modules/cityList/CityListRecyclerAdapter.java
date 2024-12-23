@@ -12,11 +12,11 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.goodtech.tq.R;
+import com.goodtech.tq.base.AppExtKt;
 import com.goodtech.tq.modules.citySearch.viewholder.CityHolder;
 import com.goodtech.tq.helpers.WeatherSpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.DeviceUtils;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemState;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
@@ -83,7 +83,7 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityHolder>
                 bgResId = R.drawable.bg_item_dragging_active_state;
 
                 // need to clear drawable state here to get correct appearance of the dragging item.
-                DeviceUtils.clearState(viewHolder.mContainer.getForeground());
+                AppExtKt.clearState(viewHolder.mContainer.getForeground());
             } else if (dragState.isDragging()) {
                 bgResId = R.drawable.bg_item_dragging_state;
             } else {
@@ -125,7 +125,7 @@ public class CityListRecyclerAdapter extends RecyclerView.Adapter<CityHolder>
         final int offsetX = containerView.getLeft() + (int) (containerView.getTranslationX() + 0.5f);
         final int offsetY = containerView.getTop() + (int) (containerView.getTranslationY() + 0.5f);
 
-        return DeviceUtils.hitTest(dragHandleView, x - offsetX, y - offsetY);
+        return AppExtKt.hitTest(dragHandleView, x - offsetX, y - offsetY);
     }
 
     @Nullable
