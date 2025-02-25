@@ -91,8 +91,8 @@ class App : Application() {
 
     @SuppressLint("CheckResult")
     fun startUsingApp(activity: Activity?) {
-//        TTAdManagerHolder.init(this)
-//        configUM()
+        TTAdManagerHolder.init(this)
+        configUM()
 
         //  极光推送 register id
         val registerId = JPushInterface.getRegistrationID(instance)
