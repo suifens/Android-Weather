@@ -1,3 +1,5 @@
 rootProject.name='Weather'
 include ':app', ':cropimage'
-//include ':mediationAdapters:Util',':mediationAdapters:BDAdapter',':mediationAdapters:TTAdapter',':mediationAdapters:KSAdapter'
+include ':insaitlib'
+
+project(':insaitlib').projectDir = new File('/Volumes/MyDevice/Project/insaitlib')
