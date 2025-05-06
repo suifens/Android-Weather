@@ -39,25 +39,31 @@ import com.tencent.mmkv.MMKV
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import java.lang.ref.WeakReference
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class App : Application() {
 
     companion object {
-        const val SITE_ID = "5168917"
-        const val SDK_SETTINGS_CONFIG = "SDK_Setting_5168917.json"
         private const val TAG = "BaseApp"
+        private const val SITE_ID = "5168917"
+        const val SDK_SETTINGS_CONFIG = "SDK_Setting_5168917.json"
+        private const val LEVEL_TIME = "LEVEL_TIME"
+        private const val BACKGROUND_RETURN_DELAY = 300L
+        private const val AD_SHOW_INTERVAL = 1000L * 60 * 30
+        private const val LOCATION_UPDATE_INTERVAL = 1000L * 60
 
         @Volatile
         lateinit var instance: App
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
-        lateinit var weakTopActivity: WeakReference<Activity>
+        private lateinit var weakTopActivity: WeakReference<Activity>
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
-        lateinit var weakTopRunningActivity: WeakReference<Activity>
+        private lateinit var weakTopRunningActivity: WeakReference<Activity>
 
         val topActivity: Activity?
             get() = weakTopActivity.get()
@@ -66,35 +72,64 @@ class App : Application() {
             get() = weakTopActivity.get()
     }
 
+    private val mainScope = CoroutineScope(Dispatchers.Main)
     private val mHandler = Handler(Looper.getMainLooper())
-    val mVibrator: Vibrator by lazy { getSystemService(VIBRATOR_SERVICE) as Vibrator }
+    private val mVibrator: Vibrator by lazy { getSystemService(VIBRATOR_SERVICE) as Vibrator }
+    
     var needStatePerm: Boolean = true
     var needLocationPerm: Boolean = true
     var mJPushRegId: String? = null
+    private var isServiceStarted = false
+    private var appCount = 0
+    private var isRunInBackground = false
 
     override fun onCreate() {
         super.onCreate()
         instance = this
+        initializeApp()
+    }
+
+    private fun initializeApp() {
+        try {
+            initializeUM()
+            initializeMMKV()
+            registerLifecycle()
+            initializeDatabase()
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化失败", e)
+        }
+    }
+
+    private fun initializeUM() {
         try {
             UMConfigure.preInit(this, Constants.UM_APP_ID, BuildConfig.FLAVOR)
-        } catch (e: Throwable) {
-            e.printStackTrace()
+        } catch (e: Exception) {
+            Log.e(TAG, "UM初始化失败", e)
         }
+    }
 
-        //  MMKV 存储配置
+    private fun initializeMMKV() {
         MMKV.initialize(this)
-        //  Activity生命周期监听
-        registerLifecycle()
+    }
 
+    private fun initializeDatabase() {
         DatabaseHelper.getInstance(applicationContext).openDatabase()
     }
 
     @SuppressLint("CheckResult")
     fun startUsingApp(activity: Activity?) {
-        TTAdManagerHolder.init(this)
-        configUM()
+        mainScope.launch {
+            initializeAdSDK()
+            configUM()
+            initializeJPush()
+        }
+    }
 
-        //  极光推送 register id
+    private fun initializeAdSDK() {
+        TTAdManagerHolder.init(this)
+    }
+
+    private fun initializeJPush() {
         val registerId = JPushInterface.getRegistrationID(instance)
         Log.i(TAG, "startUsingApp: register id = $registerId")
         if (!TextUtils.isEmpty(registerId)) {
@@ -103,12 +138,10 @@ class App : Application() {
     }
 
     fun loadCsjAdHolder() {
-        // 业务 SDK 初始化前请确保 CSJ SDK 正常初始化，初始化逻辑建议都放在 application.onCreate()
         CsjAdHolder.init(SITE_ID, instance, object : TTAdSdk.Callback {
             override fun success() {
                 Log.e(TAG, "CsjAdHolder init success")
-                initDJX()
-                initDP()
+                initializeVideoSDKs()
             }
 
             override fun fail(code: Int, msg: String?) {
@@ -117,19 +150,20 @@ class App : Application() {
         })
     }
 
+    private fun initializeVideoSDKs() {
+        initDJX()
+        initDP()
+    }
+
     fun initDJX() {
-        // 初始化短剧 sdk
         DJXHolder.init(instance) {
             Bus.getInstance().sendEvent(DJXStartEvent(it))
         }
     }
 
     fun initDP() {
-        // 初始化小视频 sdk
         DPHolder.init(instance)
     }
-
-    private var isServiceStarted = false
 
     fun startIntent(activity: Activity) {
         if (!isServiceStarted) {
@@ -139,21 +173,15 @@ class App : Application() {
     }
 
     fun startService(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(Intent(context, WidgetService::class.java))
-            context.startForegroundService(Intent(context, DoubleWidgetService::class.java))
-        } else {
+        try {
             context.startService(Intent(context, WidgetService::class.java))
             context.startService(Intent(context, DoubleWidgetService::class.java))
+        } catch (e: Exception) {
+            Log.e(TAG, "启动服务失败", e)
         }
     }
 
-
-    /**
-     * 友盟配置
-     */
     private fun configUM() {
-        //  配置 UM_APP_ID , 标识
         UMConfigure.init(
             this,
             Constants.UM_APP_ID,
@@ -161,10 +189,11 @@ class App : Application() {
             UMConfigure.DEVICE_TYPE_PHONE,
             ""
         )
-        //手动采集选择
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL)
+        initializeBugly()
+    }
 
-        /// bug收集
+    private fun initializeBugly() {
         CrashReport.initCrashReport(
             applicationContext,
             Constants.BUGLY_APP_ID,
@@ -172,32 +201,26 @@ class App : Application() {
         )
     }
 
-    var appCount = 0
-    var isRunInBackground = false
-
-    fun registerLifecycle() {
+    private fun registerLifecycle() {
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+            
             override fun onActivityStarted(activity: Activity) {
                 appCount++
-                MyActivityManager.getInstance().currentActivity = activity
+                MyActivityManager.getInstance().setCurrentActivity(activity)
             }
 
             override fun onActivityResumed(activity: Activity) {
                 if (isRunInBackground) {
-                    //应用从后台回到前台 需要做的操作
-                    mHandler.postDelayed({ back2App(activity) }, 300)
+                    mHandler.postDelayed({ back2App(activity) }, BACKGROUND_RETURN_DELAY)
                 }
             }
 
             override fun onActivityPaused(activity: Activity) {}
+            
             override fun onActivityStopped(activity: Activity) {
                 appCount--
-                if (appCount == 0 && !(activity is SplashActivity
-                            || activity is SettingActivity
-                            || activity is SigningActivity)
-                ) {
-                    //应用进入后台 需要做的操作
+                if (appCount == 0 && !isSpecialActivity(activity)) {
                     leaveApp(activity)
                 }
             }
@@ -207,30 +230,32 @@ class App : Application() {
         })
     }
 
-    /**
-     * 从后台回到前台需要执行的逻辑
-     */
+    private fun isSpecialActivity(activity: Activity): Boolean {
+        return activity is SplashActivity || 
+               activity is SettingActivity || 
+               activity is SigningActivity
+    }
+
     private fun back2App(activity: Activity) {
         isRunInBackground = false
         val interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(LEVEL_TIME, 0L)
-        if (!TextUtils.isEmpty(SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))) {
-            if (Math.abs(interval) > 1000 * 60 * 30) {
-                //  离开前台1分钟后返回，则显示启动页广告
+        
+        if (TextUtils.isEmpty(SpUtils.getInstance().getString(SpUtils.VERSION_APP, ""))) {
+            return
+        }
+
+        when {
+            Math.abs(interval) > AD_SHOW_INTERVAL -> {
                 activity.startActivity(Intent(activity, SplashActivity::class.java))
                 SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false)
-            } else if (Math.abs(interval) > 1000 * 60 && SpUtils.getInstance().isAgreePermission
-                && PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
-            ) {
-                //加载开屏广告
+            }
+            Math.abs(interval) > LOCATION_UPDATE_INTERVAL && 
+            SpUtils.getInstance().isAgreePermission &&
+            PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION) -> {
                 LocationHelper.getInstance().startWithDelay(instance, true)
             }
         }
     }
-
-    /**
-     * 离开应用 压入后台或者退出应用
-     */
-    private val LEVEL_TIME = "LEVEL_TIME"
 
     private fun leaveApp(activity: Activity) {
         SpUtils.getInstance().putLong(LEVEL_TIME, System.currentTimeMillis())
@@ -240,8 +265,6 @@ class App : Application() {
     fun setJPushRegId(jPushRegId: String) {
         this.mJPushRegId = jPushRegId
         Log.e(TAG, "setJPushRegId: $jPushRegId")
-        //  恢复极光推送
         JPushHelper.resumePush()
     }
-
 }

@@ -69,4 +69,5 @@ public class Constants {
     public static final String WIDGET_TRANSPARENT = "WIDGET_TRANSPARENT";
     public static final String WIDGET_DOUBLE = "WIDGET_DOUBLE";
 
+    public static final long AD_TIME_OUT = 2000L;
 }

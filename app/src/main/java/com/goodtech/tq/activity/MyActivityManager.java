@@ -35,14 +35,34 @@ public class MyActivityManager {
     }
     
     public void setCurrentActivity(Activity activity) {
-        sCurrentActivityWeakRef = new WeakReference<Activity>(activity);
+        if (activity == null) {
+            return;
+        }
+        sCurrentActivityWeakRef = new WeakReference<>(activity);
     }
 
     public String getBaseActivityName() {
-        ActivityManager activityManager = (ActivityManager) App.instance.getSystemService(Context.ACTIVITY_SERVICE);
-        List groundActivity = activityManager.getRunningTasks(1);
-        RunningTaskInfo sTaskInfo = (RunningTaskInfo) groundActivity.get(0);
-//        Log.e("TAG", "getBaseActivityName: " + sTaskInfo.baseActivity.getClassName());
-        return sTaskInfo.baseActivity.getClassName();
+        try {
+            Activity currentActivity = getCurrentActivity();
+            if (currentActivity == null || currentActivity.isFinishing() || currentActivity.isDestroyed()) {
+                return "";
+            }
+            ActivityManager activityManager = (ActivityManager) currentActivity.getSystemService(Context.ACTIVITY_SERVICE);
+            if (activityManager == null) {
+                return "";
+            }
+            List<RunningTaskInfo> groundActivity = activityManager.getRunningTasks(1);
+            if (groundActivity == null || groundActivity.isEmpty()) {
+                return "";
+            }
+            RunningTaskInfo sTaskInfo = groundActivity.get(0);
+            if (sTaskInfo == null || sTaskInfo.baseActivity == null) {
+                return "";
+            }
+            return sTaskInfo.baseActivity.getClassName();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
