@@ -61,7 +61,6 @@ android {
 
     buildFeatures {
         buildConfig = true
-        viewBinding = true
     }
 
     flavorDimensions "default"
@@ -221,23 +220,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.20"
     implementation 'androidx.work:work-runtime-ktx:2.10.0'
 
-    // MVVM相关依赖
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-    implementation 'androidx.activity:activity-ktx:1.8.2'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
-    
-    // ViewBinding
-    implementation 'androidx.databinding:databinding-runtime:8.2.2'
-    
-    // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
-
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation project(':cropimage')
-    implementation project(':insaitlib')
 
     implementation 'com.google.android.material:material:1.12.0'
     //noinspection GradleCompatible
