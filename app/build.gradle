@@ -21,10 +21,10 @@ android {
 
     defaultConfig {
         applicationId "com.goodtech.tq"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 35
-        versionCode 1300
-        versionName "13.0.0"
+        versionCode 1310
+        versionName "13.1.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -333,7 +333,7 @@ dependencies {
     implementation 'com.github.li-xiaojun:XPopup:2.10.0'
 
     // 赋能小视频 SDK
-    implementation ('com.pangle.cn:pangrowth-sdk:4.1.1.0'){
+    implementation ('com.pangle.cn:pangrowth-sdk:4.4.1.0'){
         exclude group: 'com.pangle.cn', module: 'partner-live-sdk'
         exclude group: 'com.pangle.cn', module: 'pangrowth-novel-sdk'
         exclude group: 'com.pangle.cn', module: 'pangrowth-game-sdk'

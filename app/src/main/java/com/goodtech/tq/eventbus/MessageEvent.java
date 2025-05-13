@@ -29,6 +29,9 @@ public class MessageEvent {
     }
 
     public String getFetchCId() {
+        if (fetchCId == null) {
+            return "";
+        }
         return fetchCId;
     }
 
