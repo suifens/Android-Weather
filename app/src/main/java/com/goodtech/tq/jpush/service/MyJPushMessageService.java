@@ -10,9 +10,9 @@ import cn.jpush.android.api.CustomMessage;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.JPushMessage;
 import cn.jpush.android.api.NotificationMessage;
-import cn.jpush.android.service.JPushMessageService;
+import cn.jpush.android.service.JPushMessageReceiver;
 
-public class MyJPushMessageService extends JPushMessageService {
+public class MyJPushMessageService extends JPushMessageReceiver {
 
     private static final String TAG = "PushMessageService";
 
