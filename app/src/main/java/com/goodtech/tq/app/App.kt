@@ -13,6 +13,7 @@ import android.os.Looper
 import android.os.Vibrator
 import android.text.TextUtils
 import android.util.Log
+import cn.jiguang.api.utils.JCollectionAuth
 import cn.jpush.android.api.JPushInterface
 import com.blankj.utilcode.util.PermissionUtils
 import com.bytedance.sdk.openadsdk.TTAdSdk
@@ -95,6 +96,7 @@ class App : Application() {
             initializeMMKV()
             registerLifecycle()
             initializeDatabase()
+            JCollectionAuth.setAuth(this, false)
         } catch (e: Exception) {
             Log.e(TAG, "初始化失败", e)
         }
@@ -130,6 +132,11 @@ class App : Application() {
     }
 
     private fun initializeJPush() {
+
+        JPushInterface.setDebugMode(false)
+        JPushInterface.init(this)
+        JCollectionAuth.setAuth(this, true);
+
         val registerId = JPushInterface.getRegistrationID(instance)
         Log.i(TAG, "startUsingApp: register id = $registerId")
         if (!TextUtils.isEmpty(registerId)) {

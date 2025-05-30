@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 24
         targetSdkVersion 35
-        versionCode 1310
-        versionName "13.1.0"
+        versionCode 1311
+        versionName "13.1.1"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -71,81 +71,81 @@ android {
             buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
             manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
         }
-        xiaomi1 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
-        }
-        huawei {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "huawei"]
-        }
-        oppo {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "oppo"]
-        }
-        oppo1 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
-            manifestPlaceholders = [app_name: "更云天气预报软件", umeng_channel: "oppo"]
-        }
-        oppo2 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "oppo"]
-        }
-        vivo {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"vivo"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "vivo"]
-        }
-        yyb {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "yyb"]
-        }
-        yyb1 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "yyb"]
-        }
-        meizu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"meizu"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "meizu"]
-        }
-        kupai {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"kupai"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "kupai"]
-        }
-        anzhi {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"anzhi"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "anzhi"]
-        }
+//        xiaomi1 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
+//        }
+//        huawei {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "huawei"]
+//        }
+//        oppo {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "oppo"]
+//        }
+//        oppo1 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+//            manifestPlaceholders = [app_name: "更云天气预报软件", umeng_channel: "oppo"]
+//        }
+//        oppo2 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "oppo"]
+//        }
+//        vivo {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"vivo"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "vivo"]
+//        }
+//        yyb {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "yyb"]
+//        }
+//        yyb1 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "yyb"]
+//        }
+//        meizu {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"meizu"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "meizu"]
+//        }
+//        kupai {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"kupai"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "kupai"]
+//        }
+//        anzhi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"anzhi"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "anzhi"]
+//        }
         wdj {
             buildConfigField 'int', 'BAIDU_CHANNEL', '999'
             buildConfigField 'String', 'UMENG_CHANNEL', '"wandoujia"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "wandoujia"]
         }
-        baidu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"baidu"'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "baidu"]
-        }
-        flavor360 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"360"'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "360"]
-        }
-        honor {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"honor"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "honor"]
-        }
+//        baidu {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"baidu"'
+//            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "baidu"]
+//        }
+//        flavor360 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"360"'
+//            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "360"]
+//        }
+//        honor {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"honor"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "honor"]
+//        }
     }
 
     def fileArray = []
@@ -285,7 +285,7 @@ dependencies {
     // 接入魅族厂商
     implementation 'cn.jiguang.sdk.plugin:meizu:4.8.0'
     // 接入 VIVO 厂商
-    implementation 'cn.jiguang.sdk.plugin:vivo:5.5.3'
+//    implementation 'cn.jiguang.sdk.plugin:vivo:5.5.3'
     // 接入 OPPO 厂商
     implementation 'cn.jiguang.sdk.plugin:oppo:5.5.3'
     // 接入小米厂商

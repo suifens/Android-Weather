@@ -362,13 +362,13 @@
             android:name="cn.jpush.android.service.AlarmReceiver"
             android:exported="false" />
 
-        <service android:name="com.goodtech.tq.jpush.service.MyJPushMessageService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.SERVICE_MESSAGE" />
-                <category android:name="${applicationId}"></category>
-            </intent-filter>
-        </service>
+<!--        <service android:name="com.goodtech.tq.jpush.service.MyJPushMessageService"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="cn.jpush.android.intent.SERVICE_MESSAGE" />-->
+<!--                <category android:name="${applicationId}"></category>-->
+<!--            </intent-filter>-->
+<!--        </service>-->
         <!-- <editor-fold desc="极光"> -->
         <!-- 从认证版本 2.9.0 开始使用 com.cmic.gen.sdk.view.GenLoginAuthActivity -->
         <activity
@@ -488,10 +488,12 @@
         </activity>
         <meta-data
             android:name="XIAOMI_APPKEY"
-            android:value="${XIAOMI_APPKEY}" />
+            android:value="${XIAOMI_APPKEY}"
+            tools:replace="android:value"/>
         <meta-data
             android:name="XIAOMI_APPID"
-            android:value="${XIAOMI_APPID}" />
+            android:value="${XIAOMI_APPID}"
+            tools:replace="android:value"/>
         <!--</editor-fold>-->
 
         <!--huawei_config_start-->
