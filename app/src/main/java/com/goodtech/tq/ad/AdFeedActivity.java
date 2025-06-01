@@ -14,7 +14,7 @@ import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.bytedance.sdk.openadsdk.TTNativeAd;
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationExpressRenderListener;
 import com.bytedance.sdk.openadsdk.mediation.manager.MediationNativeManager;
-import com.gengee.insaitlib.callback.DataCallback;
+import com.goodtech.tq.base.callback.DataCallback;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.base.AppExtKt;
 

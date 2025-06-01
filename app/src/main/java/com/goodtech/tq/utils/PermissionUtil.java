@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.ScreenUtils;
-import com.gengee.insaitlib.callback.DataCallback;
+import com.goodtech.tq.base.callback.DataCallback;
 import com.goodtech.tq.views.popup.TopTitlePopup;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
