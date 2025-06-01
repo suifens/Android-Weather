@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
-    android:layout_height="400dp">
+    android:paddingTop="76dp"
+    android:paddingBottom="0dp"
+    android:layout_height="476dp">
 
     <com.goodtech.tq.fragment.viewholder.HeaderItemsView
         android:id="@+id/view_items"

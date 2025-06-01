@@ -1,15 +1,12 @@
 package com.goodtech.tq.fragment
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.ViewStub
-import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
-import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bytedance.sdk.djx.DJXSdk
@@ -19,21 +16,15 @@ import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.BaseActivity
 import com.goodtech.tq.ad.AdFeedFragment
+import com.goodtech.tq.adapter.WeatherAdapter
 import com.goodtech.tq.app.App
 import com.goodtech.tq.base.callback.DataCallback
-import com.goodtech.tq.fragment.view.CurrentItemView
-import com.goodtech.tq.fragment.view.DailyListItemView
-import com.goodtech.tq.fragment.view.HoursItemView
-import com.goodtech.tq.fragment.view.LineTempItemView
-import com.goodtech.tq.fragment.view.ObservationView
-import com.goodtech.tq.fragment.view.RecentItemView
 import com.goodtech.tq.helpers.BtnLinkHelper
 import com.goodtech.tq.httpClient.WeatherHttpHelper
 import com.goodtech.tq.listener.WeatherHeaderListener
 import com.goodtech.tq.models.CityMode
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.modules.others.airQuality.AirQualityActivity
-import com.goodtech.tq.modules.others.airQuality.view.AirLifeView
 import com.goodtech.tq.modules.others.calendar.CalendarActivity
 import com.goodtech.tq.modules.others.constellation.ConstellationActivity
 import com.goodtech.tq.modules.others.taifeng.TyphoonActivity
@@ -52,24 +43,13 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     private val TAG = "WeatherFragment"
     private lateinit var mRefreshLayout: SmartRefreshLayout
-    private lateinit var mScrollView: NestedScrollView
+    private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mAdapter: WeatherAdapter
     private var mWeatherModel: WeatherModel? = null
     private var mStateBarBg: View? = null
     private var mCityMode: CityMode? = null
     private var mHadLoad = false
     private var isFirstLoad = true
-
-    // Views
-    private lateinit var mContainerView: View
-    private lateinit var mCurrentView: CurrentItemView
-    private lateinit var mRecentView: RecentItemView
-    private lateinit var mHoursView: HoursItemView
-    private lateinit var mFeedContainer: FrameLayout
-    private lateinit var mFeedContainer2: FrameLayout
-    private lateinit var mDailyListView: DailyListItemView
-    private lateinit var mLineTempView: LineTempItemView
-    private lateinit var mLifeView: AirLifeView
-    private lateinit var mObservationView: ObservationView
 
     // Ad related
     private var mLoadSuccess = false
@@ -84,20 +64,24 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     override fun setupCacheViews() {
         super.setupCacheViews()
         mRefreshLayout = mCacheView as SmartRefreshLayout
-        mScrollView = mCacheView.findViewById(R.id.scroll_view)
+        mRecyclerView = mCacheView.findViewById(R.id.recycler_view)
+        mAdapter = WeatherAdapter()
+        mAdapter.setWeatherHeaderListener(this)
+        mRecyclerView.adapter = mAdapter
+        
+        initView()
     }
 
     fun setStateBar(stateBar: View) {
         mStateBarBg = stateBar
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         mRefreshLayout.setOnRefreshListener(this)
 
-        mScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+        mRecyclerView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
             mStateBarBg?.let { stateBar ->
                 when {
                     scrollY <= stateBar.height && scrollY > 10 -> {
@@ -113,10 +97,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     override fun onResume() {
         super.onResume()
-        val viewStub = mCacheView.findViewById<ViewStub>(R.id.stub_weather_data)
-        if (viewStub?.parent != null) {
-            val inflate = viewStub.inflate()
-            initView(inflate)
+        if (!mHadLoad) {
             mHadLoad = true
             updateData()
         }
@@ -128,20 +109,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         }
     }
 
-    private fun initView(view: View) {
-        mContainerView = view.findViewById(R.id.weatherContainer)
-        mContainerView.visibility = View.INVISIBLE
-        mCurrentView = view.findViewById(R.id.item_current)
-        mCurrentView.setItemListener(this)
-        mRecentView = view.findViewById(R.id.item_recent)
-        mHoursView = view.findViewById(R.id.item_hours)
-        mFeedContainer = view.findViewById(R.id.item_ad1)
-        mFeedContainer2 = view.findViewById(R.id.item_ad2)
-        mObservationView = view.findViewById(R.id.item_observation)
-        mDailyListView = view.findViewById(R.id.item_daily_list)
-        mLineTempView = view.findViewById(R.id.item_line_temp)
-        mLifeView = view.findViewById(R.id.view_life)
-
+    private fun initView() {
         if (SpUtils.getInstance().isAgreePermission()) {
             initNativeExpressAD()
         }
@@ -169,7 +137,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     }
 
     private fun updateData() {
-        if (mHadLoad && mCurrentView != null && mWeatherModel != null) {
+        if (mHadLoad && mWeatherModel != null) {
             mHandler.post {
                 // 在HoursItemView显示时加载第一个广告
                 if (mWeatherModel?.hourlies != null) {
@@ -181,17 +149,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                     loadSecondAd()
                 }
 
-                mContainerView.visibility = View.VISIBLE
-
-                mCurrentView.setData(mWeatherModel!!)
-                mRecentView.setData(mWeatherModel!!)
-                mWeatherModel?.hourlies?.let { mHoursView.setHourlies(mWeatherModel!!) }
-                mCityMode?.let { mObservationView.setData(mWeatherModel!!) }
-                mWeatherModel?.dailies?.let {
-                    mDailyListView.setData(mWeatherModel!!)
-                    mLineTempView.setData(mWeatherModel!!)
-                }
-                mWeatherModel?.lifeModel?.let { mLifeView.setupLife(it, Color.WHITE) }
+                mAdapter.setData(mWeatherModel!!, mCityMode)
             }
         }
     }
@@ -201,7 +159,8 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID, width, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
                 if (data != null) {
-                    showAd(mFeedContainer, true, false, data)
+                    mGMNativeAd = data
+                    mAdapter.setAd1(data)
                 }
             }
         })
@@ -212,7 +171,8 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID3, width, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
                 if (data != null) {
-                    showAd(mFeedContainer2, true, false, data)
+                    mGMNativeAd2 = data
+                    mAdapter.setAd2(data)
                 }
             }
         })
@@ -221,16 +181,12 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     private fun initNativeExpressAD() {
         mLoadSuccess = false
         mLoadSuccess2 = false
-        mFeedContainer.removeAllViews()
-        mFeedContainer2.removeAllViews()
         Log.e(TAG, "initNativeExpressAD: ++++ ${System.currentTimeMillis()}")
     }
 
     private fun initAdLoader() {
         mLoadSuccess = false
         mLoadSuccess2 = false
-        mFeedContainer.removeAllViews()
-        mFeedContainer2.removeAllViews()
         Log.e(TAG, "initAdLoader: ++++ ${System.currentTimeMillis()}")
     }
 
