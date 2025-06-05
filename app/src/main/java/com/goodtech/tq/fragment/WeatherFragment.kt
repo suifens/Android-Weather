@@ -1,11 +1,9 @@
 package com.goodtech.tq.fragment
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -54,10 +52,14 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     // Ad related
     private var mLoadSuccess = false
     private var mLoadSuccess2 = false
-    private var mIsLoadedAndShow = false
-    private var mIsLoadedAndShow2 = false
+    private var mBannerAd: TTFeedAd? = null
     private var mGMNativeAd: TTFeedAd? = null
     private var mGMNativeAd2: TTFeedAd? = null
+    private var mGMNativeAd3: TTFeedAd? = null
+    private var isFirstAdLoaded = false  // 第一个广告是否已加载
+    private var isSecondAdLoaded = false // 第二个广告是否已加载
+    private var isThirdAdLoaded = false // 第三个广告是否已加载
+    private var isAd0Loaded = false // Ad0是否已加载
 
     override fun getViewLayoutRes(): Int = R.layout.fragment_weather
 
@@ -65,9 +67,54 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         super.setupCacheViews()
         mRefreshLayout = mCacheView as SmartRefreshLayout
         mRecyclerView = mCacheView.findViewById(R.id.recycler_view)
+        
+        // 设置RecyclerView的缓存策略
+        mRecyclerView.setItemViewCacheSize(10) // 设置较大的缓存大小
+        mRecyclerView.recycledViewPool.setMaxRecycledViews(0, 0) // 禁用视图回收池
+        mRecyclerView.setHasFixedSize(true) // 固定大小，避免重新测量
+        
         mAdapter = WeatherAdapter()
         mAdapter.setWeatherHeaderListener(this)
+        mAdapter.setAdLoadCallback(object : WeatherAdapter.AdLoadCallback {
+            override fun onAdLoaded(position: Int) {
+                when (position) {
+                    0 -> {
+                        if (!isAd0Loaded) {
+                            Thread { loadAd0() }.start()
+                        }
+                    }
+                    4 -> {
+                        if (!isFirstAdLoaded) {
+                            Thread { loadFirstAd() }.start()
+                        }
+                    }
+                    6 -> {
+                        if (!isSecondAdLoaded) {
+                            Thread { loadSecondAd() }.start()
+                        }
+                    }
+                    9 -> {
+                        if (!isThirdAdLoaded) {
+                            Thread { loadThirdAd() }.start()
+                        }
+                    }
+                }
+            }
+        })
         mRecyclerView.adapter = mAdapter
+        
+        // 添加10dp的间距
+        mRecyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: android.graphics.Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                outRect.top = SizeUtils.dp2px(5f)
+                outRect.bottom = SizeUtils.dp2px(5f)
+            }
+        })
         
         initView()
     }
@@ -136,43 +183,76 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         updateData()
     }
 
+    val adWidth = SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat() - SizeUtils.px2dp(20f))
+
     private fun updateData() {
         if (mHadLoad && mWeatherModel != null) {
             mHandler.post {
-                // 在HoursItemView显示时加载第一个广告
-                if (mWeatherModel?.hourlies != null) {
-                    loadFirstAd()
-                }
-
-                // 在DailyListItemView显示时加载第二个广告
-                if (mWeatherModel?.dailies != null) {
-                    loadSecondAd()
-                }
-
+                // 先更新UI数据
                 mAdapter.setData(mWeatherModel!!, mCityMode)
             }
         }
     }
 
-    private fun loadFirstAd() {
-        val width = SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat())
-        loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID, width, object : DataCallback<TTFeedAd> {
+    private fun loadAd0() {
+        if (isAd0Loaded) return
+        
+        loadFeedAd(BuildConfig.PGE_HOME_BANNER_POS_ID, adWidth, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
                 if (data != null) {
-                    mGMNativeAd = data
-                    mAdapter.setAd1(data)
+                    mHandler.post {
+                        mBannerAd = data
+                        mAdapter.setAd0(data)
+                        isAd0Loaded = true
+                    }
+                }
+            }
+        })
+    }
+
+    private fun loadFirstAd() {
+        if (isFirstAdLoaded) return
+        
+        loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID, adWidth, object : DataCallback<TTFeedAd> {
+            override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
+                if (data != null) {
+                    mHandler.post {
+                        mGMNativeAd = data
+                        mAdapter.setAd1(data)
+                        isFirstAdLoaded = true
+                    }
                 }
             }
         })
     }
 
     private fun loadSecondAd() {
-        val width = SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat())
-        loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID3, width, object : DataCallback<TTFeedAd> {
+        if (isSecondAdLoaded) return
+        
+        loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID2, adWidth, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
                 if (data != null) {
-                    mGMNativeAd2 = data
-                    mAdapter.setAd2(data)
+                    mHandler.post {
+                        mGMNativeAd2 = data
+                        mAdapter.setAd2(data)
+                        isSecondAdLoaded = true
+                    }
+                }
+            }
+        })
+    }
+
+    private fun loadThirdAd() {
+        if (isThirdAdLoaded) return
+
+        loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID3, adWidth, object : DataCallback<TTFeedAd> {
+            override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
+                if (data != null) {
+                    mHandler.post {
+                        mGMNativeAd3 = data
+                        mAdapter.setAd3(data)
+                        isThirdAdLoaded = true
+                    }
                 }
             }
         })
@@ -181,27 +261,50 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     private fun initNativeExpressAD() {
         mLoadSuccess = false
         mLoadSuccess2 = false
+        isFirstAdLoaded = false
+        isSecondAdLoaded = false
+        isThirdAdLoaded = false
+        isAd0Loaded = false
         Log.e(TAG, "initNativeExpressAD: ++++ ${System.currentTimeMillis()}")
     }
 
     private fun initAdLoader() {
         mLoadSuccess = false
         mLoadSuccess2 = false
+        isFirstAdLoaded = false
+        isSecondAdLoaded = false
+        isThirdAdLoaded = false
+        isAd0Loaded = false
         Log.e(TAG, "initAdLoader: ++++ ${System.currentTimeMillis()}")
+        
+        // 在后台线程中初始化广告加载器
+        Thread {
+            if (SpUtils.getInstance().isAgreePermission()) {
+                initNativeExpressAD()
+            }
+        }.start()
     }
 
     private fun removeAdView(ad: TTFeedAd?) {
-//        ad?.let {
-//            if (it.getMediationManager() != null) {
-//                it.getMediationManager().destroy()
-//            }
-//        }
+        ad?.let {
+            try {
+                it.destroy()
+            } catch (e: Exception) {
+                Log.e(TAG, "removeAdView error: ${e.message}")
+            }
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        removeAdView(mBannerAd)
         removeAdView(mGMNativeAd)
         removeAdView(mGMNativeAd2)
+        removeAdView(mGMNativeAd3)
+        isFirstAdLoaded = false
+        isSecondAdLoaded = false
+        isThirdAdLoaded = false
+        isAd0Loaded = false
     }
 
     // WeatherHeaderListener implementations

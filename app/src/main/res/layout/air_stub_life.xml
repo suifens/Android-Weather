@@ -4,13 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center">
+    android:background="@drawable/bg_circle_black_12"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="14dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="12dp"
+            android:background="@color/white"
+            android:layout_marginTop="1dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="生活服务指数"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:layout_marginStart="6dp"
+            />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         >
 
         <com.goodtech.tq.modules.others.airQuality.view.AirLifeItemView

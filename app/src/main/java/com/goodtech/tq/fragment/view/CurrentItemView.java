@@ -54,6 +54,8 @@ public class CurrentItemView extends ConstraintLayout {
     public TextView mWind_rh;
     //温度
     public TextView mTempTv;
+
+    public TextView mCurTitleTv;
     //天气状态
     public TextView mPhraseTv;
     //提醒
@@ -74,6 +76,7 @@ public class CurrentItemView extends ConstraintLayout {
         mIconImgV = view.findViewById(R.id.img_icon);
         mWind_rh = view.findViewById(R.id.tv_rh_wrap);
         mTempTv = view.findViewById(R.id.tv_temperature);
+        mCurTitleTv = view.findViewById(R.id.tv_current);
         mPhraseTv = view.findViewById(R.id.tv_wx_phrase);
         mItemsView = view.findViewById(R.id.view_items);
         mWarningBtn = view.findViewById(R.id.warningBtn);
@@ -185,6 +188,7 @@ public class CurrentItemView extends ConstraintLayout {
                             mTempTv.setText(String.format("%d°", hourly.metric.temp));
                             hadSetTemp = true;
                         }
+                        mCurTitleTv.setText("当前：");
                         mPhraseTv.setText(hourly.getPhraseChar());
                     }
                 }
@@ -199,6 +203,7 @@ public class CurrentItemView extends ConstraintLayout {
                             WeatherUtils.windGrade(metric.wspd), observation.rh));
                     mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
                     mTempTv.setText(String.format("%d°", metric.temp));
+                    mCurTitleTv.setText("当前：");
                     mPhraseTv.setText(observation.getWxPhrase());
                 }
             }

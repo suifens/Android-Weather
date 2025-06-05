@@ -144,12 +144,8 @@ public class CalendarPresenter {
                     }
 
                     if (count[0] == 12) {
-                        if (holidayList.size() > 0) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                Collections.sort(holidayList, Comparator.comparingLong(Holiday::getDate));
-                            } else {
-                                Collections.sort(holidayList);
-                            }
+                        if (!holidayList.isEmpty()) {
+                            holidayList.sort(Comparator.comparingLong(Holiday::getDate));
                             mHolidayList = holidayList;
                             mHolidayMap.put(year, holidayList);
 

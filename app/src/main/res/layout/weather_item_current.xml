@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
-    android:paddingTop="76dp"
-    android:paddingBottom="0dp"
-    android:layout_height="476dp">
+    android:layout_height="wrap_content">
 
     <com.goodtech.tq.fragment.viewholder.HeaderItemsView
         android:id="@+id/view_items"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="86dp"
+        android:layout_marginBottom="310dp"
         android:background="@drawable/bg_circle_white_12"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <ImageButton
         android:id="@+id/warningBtn"
@@ -40,14 +41,14 @@
         android:minHeight="140dp"
         android:layout_marginTop="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/view_items">
 
         <ImageView
             android:id="@+id/img_icon"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginStart="10dp"
-            app:srcCompat="@drawable/icon36" />
+             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -59,7 +60,6 @@
                 android:id="@+id/tv_temperature"
                 android:layout_width="wrap_content"
                 android:layout_height="86dp"
-                android:text="26"
                 android:textColor="@color/white"
                 android:textSize="64dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,6 @@
                 android:id="@+id/tv_current"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="当前："
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
                 app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +80,6 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="2dp"
                 android:fontFamily="sans-serif-condensed-medium"
-                android:text="多云"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
                 app:layout_constraintStart_toEndOf="@+id/tv_current"
@@ -93,7 +91,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:gravity="bottom"
-                android:text="东风 3级｜ 湿度47%"
                 android:textColor="@color/white_alpha80"
                 android:textSize="13dp"
                 app:layout_constraintStart_toStartOf="parent"

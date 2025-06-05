@@ -1,5 +1,6 @@
 package com.goodtech.tq.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -22,25 +23,35 @@ private fun View.setMatchParentWidth() {
     )
 }
 
+@SuppressLint("NotifyDataSetChanged")
 class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
     
     companion object {
-        private const val TYPE_CURRENT = 0
-        private const val TYPE_RECENT = 1
-        private const val TYPE_HOURS = 2
-        private const val TYPE_AD1 = 3
-        private const val TYPE_DAILY = 4
+        private const val TYPE_AD0 = 0
+        private const val TYPE_CURRENT = 1
+        private const val TYPE_RECENT = 2
+        private const val TYPE_HOURS = 3
+        private const val TYPE_AD1 = 4
         private const val TYPE_LINE_TEMP = 5
         private const val TYPE_AD2 = 6
-        private const val TYPE_LIFE = 7
-        private const val TYPE_OBSERVATION = 8
+        private const val TYPE_DAILY = 7
+        private const val TYPE_LIFE = 8
+        private const val TYPE_AD3 = 9
+        private const val TYPE_OBSERVATION = 10
+    }
+
+    interface AdLoadCallback {
+        fun onAdLoaded(position: Int)
     }
 
     private var weatherModel: WeatherModel? = null
     private var cityMode: CityMode? = null
+    private var feedAd0: TTFeedAd? = null
     private var feedAd1: TTFeedAd? = null
     private var feedAd2: TTFeedAd? = null
+    private var feedAd3: TTFeedAd? = null
     private var weatherHeaderListener: WeatherHeaderListener? = null
+    private var adLoadCallback: AdLoadCallback? = null
 
     fun setData(model: WeatherModel, mode: CityMode?) {
         weatherModel = model
@@ -48,37 +59,75 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun setAd0(ad: TTFeedAd?) {
+        feedAd0 = ad
+        if (ad == null) {
+            notifyItemChanged(0)
+        } else {
+            notifyItemChanged(0)
+        }
+    }
+
     fun setAd1(ad: TTFeedAd?) {
         feedAd1 = ad
-        notifyItemChanged(3)
+        if (ad == null) {
+            notifyItemChanged(4)
+        } else {
+            notifyItemChanged(4)
+        }
     }
 
     fun setAd2(ad: TTFeedAd?) {
         feedAd2 = ad
-        notifyItemChanged(6)
+        if (ad == null) {
+            notifyItemChanged(6)
+        } else {
+            notifyItemChanged(6)
+        }
+    }
+
+    fun setAd3(ad: TTFeedAd?) {
+        feedAd3 = ad
+        if (ad == null) {
+            notifyItemChanged(9)
+        } else {
+            notifyItemChanged(9)
+        }
     }
 
     fun setWeatherHeaderListener(listener: WeatherHeaderListener) {
         weatherHeaderListener = listener
     }
 
+    fun setAdLoadCallback(callback: AdLoadCallback) {
+        adLoadCallback = callback
+    }
+
     override fun getItemViewType(position: Int): Int {
         return when (position) {
-            0 -> TYPE_CURRENT
-            1 -> TYPE_RECENT
-            2 -> TYPE_HOURS
-            3 -> TYPE_AD1
-            4 -> TYPE_DAILY
+            0 -> TYPE_AD0
+            1 -> TYPE_CURRENT
+            2 -> TYPE_RECENT
+            3 -> TYPE_HOURS
+            4 -> TYPE_AD1
             5 -> TYPE_LINE_TEMP
             6 -> TYPE_AD2
-            7 -> TYPE_LIFE
-            8 -> TYPE_OBSERVATION
+            7 -> TYPE_DAILY
+            8 -> TYPE_LIFE
+            9 -> TYPE_AD3
+            10 -> TYPE_OBSERVATION
             else -> throw IllegalArgumentException("Invalid position $position")
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         return when (viewType) {
+            TYPE_AD0, TYPE_AD1, TYPE_AD2, TYPE_AD3 -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_ad_container, parent, false)
+                view.setMatchParentWidth()
+                WeatherViewHolder.AdViewHolder(view)
+            }
             TYPE_CURRENT -> {
                 val view = CurrentItemView(parent.context)
                 view.setMatchParentWidth()
@@ -94,12 +143,6 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                 val view = HoursItemView(parent.context)
                 view.setMatchParentWidth()
                 WeatherViewHolder.HoursViewHolder(view)
-            }
-            TYPE_AD1, TYPE_AD2 -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_ad_container, parent, false)
-                view.setMatchParentWidth()
-                WeatherViewHolder.AdViewHolder(view)
             }
             TYPE_DAILY -> {
                 val view = DailyListItemView(parent.context)
@@ -149,16 +192,56 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                 weatherModel?.let { holder.view.setData(it) }
             }
             is WeatherViewHolder.AdViewHolder -> {
-                if (position == 3 && feedAd1 != null) {
-                    showAd(holder.feedContainer, feedAd1!!)
-                } else if (position == 6 && feedAd2 != null) {
-                    showAd(holder.feedContainer, feedAd2!!)
+                when (position) {
+                    0 -> {
+                        if (feedAd0 != null) {
+                            holder.feedContainer.visibility = View.VISIBLE
+                            holder.feedContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                            showAd(holder.feedContainer, feedAd0!!)
+                            adLoadCallback?.onAdLoaded(4)
+                        } else {
+                            holder.feedContainer.visibility = View.GONE
+                            holder.feedContainer.layoutParams.height = 0
+                        }
+                    }
+                    4 -> {
+                        if (feedAd1 != null) {
+                            holder.feedContainer.visibility = View.VISIBLE
+                            holder.feedContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                            showAd(holder.feedContainer, feedAd1!!)
+                            adLoadCallback?.onAdLoaded(6)
+                        } else {
+                            holder.feedContainer.visibility = View.GONE
+                            holder.feedContainer.layoutParams.height = 0
+                        }
+                    }
+                    6 -> {
+                        if (feedAd2 != null) {
+                            holder.feedContainer.visibility = View.VISIBLE
+                            holder.feedContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                            showAd(holder.feedContainer, feedAd2!!)
+                            adLoadCallback?.onAdLoaded(9)
+                        } else {
+                            holder.feedContainer.visibility = View.GONE
+                            holder.feedContainer.layoutParams.height = 0
+                        }
+                    }
+                    9 -> {
+                        if (feedAd3 != null) {
+                            holder.feedContainer.visibility = View.VISIBLE
+                            holder.feedContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                            showAd(holder.feedContainer, feedAd3!!)
+                        } else {
+                            holder.feedContainer.visibility = View.GONE
+                            holder.feedContainer.layoutParams.height = 0
+                        }
+                    }
                 }
             }
         }
     }
 
-    override fun getItemCount(): Int = 9
+    override fun getItemCount(): Int = 11
 
     private fun showAd(container: FrameLayout, ad: TTFeedAd) {
         container.visibility = View.VISIBLE
