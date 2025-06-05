@@ -6,7 +6,6 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -29,8 +28,8 @@ import com.goodtech.tq.jpush.JPushHelper
 import com.goodtech.tq.location.helper.LocationHelper
 import com.goodtech.tq.modules.signing.SigningActivity
 import com.goodtech.tq.modules.video.CsjAdHolder
-import com.goodtech.tq.modules.video.djx.DJXHolder
 import com.goodtech.tq.modules.video.DPHolder
+import com.goodtech.tq.modules.video.djx.DJXHolder
 import com.goodtech.tq.utils.Constants
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.widget.DoubleWidgetService
@@ -39,10 +38,10 @@ import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mmkv.MMKV
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
-import java.lang.ref.WeakReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
 
 class App : Application() {
 
@@ -83,6 +82,8 @@ class App : Application() {
     private var isServiceStarted = false
     private var appCount = 0
     private var isRunInBackground = false
+    //  加载插屏广告了
+    var hadInitAd = false
 
     override fun onCreate() {
         super.onCreate()

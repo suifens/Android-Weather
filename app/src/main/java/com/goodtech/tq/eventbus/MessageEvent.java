@@ -9,6 +9,8 @@ public class MessageEvent {
     protected String fetchCId;
 
     protected boolean needReload;
+    /// 加载
+    public boolean loadIntAd;
 
     public MessageEvent() {
 
@@ -37,6 +39,11 @@ public class MessageEvent {
 
     public MessageEvent needReload(boolean needReload) {
         this.needReload = needReload;
+        return this;
+    }
+
+    public MessageEvent needLoadIntAd(boolean needReload) {
+        this.loadIntAd = needReload;
         return this;
     }
 

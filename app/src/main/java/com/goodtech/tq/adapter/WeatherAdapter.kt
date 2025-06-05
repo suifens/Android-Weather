@@ -10,11 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bytedance.sdk.openadsdk.TTFeedAd
 import com.goodtech.tq.R
 import com.goodtech.tq.ad.AdManager
-import com.goodtech.tq.fragment.view.*
+import com.goodtech.tq.app.App
+import com.goodtech.tq.eventbus.MessageEvent
+import com.goodtech.tq.fragment.view.CurrentItemView
+import com.goodtech.tq.fragment.view.DailyListItemView
+import com.goodtech.tq.fragment.view.HoursItemView
+import com.goodtech.tq.fragment.view.LineTempItemView
+import com.goodtech.tq.fragment.view.ObservationView
+import com.goodtech.tq.fragment.view.RecentItemView
 import com.goodtech.tq.listener.WeatherHeaderListener
 import com.goodtech.tq.models.CityMode
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.modules.others.airQuality.view.AirLifeView
+import org.greenrobot.eventbus.EventBus
 
 private fun View.setMatchParentWidth() {
     layoutParams = ViewGroup.LayoutParams(
@@ -198,33 +206,36 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                             holder.feedContainer.visibility = View.VISIBLE
                             holder.feedContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                             showAd(holder.feedContainer, feedAd0!!)
-                            adLoadCallback?.onAdLoaded(4)
                         } else {
                             holder.feedContainer.visibility = View.GONE
                             holder.feedContainer.layoutParams.height = 0
                         }
+                        adLoadCallback?.onAdLoaded(4)
                     }
                     4 -> {
                         if (feedAd1 != null) {
                             holder.feedContainer.visibility = View.VISIBLE
                             holder.feedContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                             showAd(holder.feedContainer, feedAd1!!)
-                            adLoadCallback?.onAdLoaded(6)
                         } else {
                             holder.feedContainer.visibility = View.GONE
                             holder.feedContainer.layoutParams.height = 0
                         }
+                        adLoadCallback?.onAdLoaded(6)
                     }
                     6 -> {
                         if (feedAd2 != null) {
                             holder.feedContainer.visibility = View.VISIBLE
                             holder.feedContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                             showAd(holder.feedContainer, feedAd2!!)
-                            adLoadCallback?.onAdLoaded(9)
                         } else {
                             holder.feedContainer.visibility = View.GONE
                             holder.feedContainer.layoutParams.height = 0
                         }
+                        if (!App.instance.hadInitAd) {
+                            EventBus.getDefault().post(MessageEvent().needLoadIntAd(true))
+                        }
+                        adLoadCallback?.onAdLoaded(9)
                     }
                     9 -> {
                         if (feedAd3 != null) {

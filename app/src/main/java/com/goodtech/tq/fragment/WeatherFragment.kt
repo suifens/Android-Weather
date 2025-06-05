@@ -69,7 +69,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         mRecyclerView = mCacheView.findViewById(R.id.recycler_view)
         
         // 设置RecyclerView的缓存策略
-        mRecyclerView.setItemViewCacheSize(10) // 设置较大的缓存大小
+        mRecyclerView.setItemViewCacheSize(11) // 设置较大的缓存大小
         mRecyclerView.recycledViewPool.setMaxRecycledViews(0, 0) // 禁用视图回收池
         mRecyclerView.setHasFixedSize(true) // 固定大小，避免重新测量
         
@@ -78,11 +78,6 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         mAdapter.setAdLoadCallback(object : WeatherAdapter.AdLoadCallback {
             override fun onAdLoaded(position: Int) {
                 when (position) {
-                    0 -> {
-                        if (!isAd0Loaded) {
-                            Thread { loadAd0() }.start()
-                        }
-                    }
                     4 -> {
                         if (!isFirstAdLoaded) {
                             Thread { loadFirstAd() }.start()
@@ -103,7 +98,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         })
         mRecyclerView.adapter = mAdapter
         
-        // 添加10dp的间距
+        // 添加间距
         mRecyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: android.graphics.Rect,
@@ -111,7 +106,14 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                 parent: RecyclerView,
                 state: RecyclerView.State
             ) {
-                outRect.top = SizeUtils.dp2px(5f)
+                val position = parent.getChildAdapterPosition(view)
+                if (position == 0) {
+                    // 第一个item的top间距为60dp
+                    outRect.top = SizeUtils.dp2px(85f)
+                } else {
+                    // 其他item的间距为5dp
+                    outRect.top = SizeUtils.dp2px(5f)
+                }
                 outRect.bottom = SizeUtils.dp2px(5f)
             }
         })
@@ -144,15 +146,15 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     override fun onResume() {
         super.onResume()
-        if (!mHadLoad) {
-            mHadLoad = true
-            updateData()
-        }
         if (isFirstLoad) {
             isFirstLoad = false
             if (SpUtils.getInstance().isAgreePermission()) {
                 mHandler.postDelayed({ Thread { initAdLoader() }.start() }, 500)
             }
+        }
+        if (!mHadLoad) {
+            mHadLoad = true
+            updateData()
         }
     }
 
@@ -190,6 +192,10 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
             mHandler.post {
                 // 先更新UI数据
                 mAdapter.setData(mWeatherModel!!, mCityMode)
+
+                if (!isAd0Loaded) {
+                    Thread { loadAd0() }.start()
+                }
             }
         }
     }
@@ -276,7 +282,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         isThirdAdLoaded = false
         isAd0Loaded = false
         Log.e(TAG, "initAdLoader: ++++ ${System.currentTimeMillis()}")
-        
+
         // 在后台线程中初始化广告加载器
         Thread {
             if (SpUtils.getInstance().isAgreePermission()) {

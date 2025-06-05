@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 24
         targetSdkVersion 35
-        versionCode 1311
-        versionName "13.1.1"
+        versionCode 1320
+        versionName "13.2.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -42,7 +42,7 @@ android {
         buildConfigField 'String', 'PGE_EXPRESS_POS_ID', '"102498279"'  //24小时动态信息流 id
         buildConfigField 'String', 'PGE_EXPRESS_POS_ID2', '"102498280"' //动态信息流 id
         buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"103501276"' //动态信息流 id
-        buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"102499124"' //日历动态信息流 id
+        buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"103501633"' //日历动态信息流 id
         buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
 
 //        广告应用ID

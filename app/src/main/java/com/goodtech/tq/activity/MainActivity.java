@@ -34,6 +34,7 @@ import com.bytedance.sdk.openadsdk.TTFullScreenVideoAd;
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.modules.cityList.CityListActivity;
 import com.goodtech.tq.db.SignDbHelper;
 import com.goodtech.tq.eventbus.CityEvent;
@@ -306,8 +307,6 @@ public class MainActivity extends BaseActivity {
 
                 /// 判断新版本
                 fetchNewVersion(() -> {
-                    long interval = System.currentTimeMillis() - SpUtils.getInstance().getLong(BuildConfig.PGE_INT_POS_ID, 0L);
-                    mHandler.postDelayed(() -> new Thread(this::initAdLoader).start(), 5000);
                 });
             }
 
@@ -370,6 +369,14 @@ public class MainActivity extends BaseActivity {
         Log.e(TAG, "onMessageEvent: ");
         TipHelper.dismissProgressDialog();
         removeTicker();
+
+        if (event.loadIntAd) {
+            if (System.currentTimeMillis() - SpUtils.getInstance().getLong(BuildConfig.PGE_INT_POS_ID, 0L) > 12 * 60 * 60 * 1000 && !App.instance.getHadInitAd()) {
+                App.instance.setHadInitAd(true);
+                new Thread(this::initAdLoader).start();
+            }
+            return;
+        }
 
         if (event.isSuccessLocation()) {
             /// 定位成功
