@@ -20,6 +20,7 @@ import com.goodtech.tq.adapter.WeatherAdapter
 import com.goodtech.tq.app.App
 import com.goodtech.tq.base.callback.DataCallback
 import com.goodtech.tq.helpers.BtnLinkHelper
+import com.goodtech.tq.helpers.WeatherSpHelper
 import com.goodtech.tq.httpClient.WeatherHttpHelper
 import com.goodtech.tq.listener.WeatherHeaderListener
 import com.goodtech.tq.models.CityMode
@@ -196,10 +197,21 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     private val adWidth = SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat()) - 20
 
     private fun updateData() {
-        if (mHadLoad && mWeatherModel != null) {
+        if (mHadLoad) {
             mHandler.post {
-                // 先更新UI数据
-                mAdapter.setData(mWeatherModel!!, mCityMode)
+                // 先尝试加载本地缓存数据
+                if (mWeatherModel == null && mCityMode != null) {
+                    val cachedModel = WeatherSpHelper.getWeatherModel(mCityMode!!.getPoiId())
+                    if (cachedModel != null) {
+                        mWeatherModel = cachedModel
+                        mAdapter.setData(cachedModel, mCityMode)
+                    }
+                }
+                
+                // 如果有新数据则更新
+                mWeatherModel?.let { model ->
+                    mAdapter.setData(model, mCityMode)
+                }
             }
         }
     }

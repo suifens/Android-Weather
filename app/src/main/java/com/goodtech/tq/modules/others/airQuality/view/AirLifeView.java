@@ -3,6 +3,7 @@ package com.goodtech.tq.modules.others.airQuality.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -24,6 +25,10 @@ public class AirLifeView extends ConstraintLayout {
     private void init(Context context, AttributeSet attrs) {
 
         LayoutInflater.from(getContext()).inflate(R.layout.air_stub_life, this, true);
+        setBackgroundResource(R.drawable.bg_circle_black_12);
+
+        findViewById(R.id.titleLayout).setVisibility(View.VISIBLE);
+
         dressingView = findViewById(R.id.item_dressing);
         sportView = findViewById(R.id.item_sport);
         umbrellaView = findViewById(R.id.item_umbrella);
