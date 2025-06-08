@@ -12,12 +12,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.FrameLayout;
 
 import androidx.annotation.RequiresApi;
 
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.sdk.djx.DJXSdk;
 import com.bytedance.sdk.dp.DPSdk;
+import com.bytedance.sdk.openadsdk.TTFeedAd;
+import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
+import com.goodtech.tq.ad.AdFeedActivity;
+import com.goodtech.tq.base.callback.DataCallback;
 import com.goodtech.tq.modules.others.test.MyTestActivity;
 import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity;
 import com.goodtech.tq.modules.video.djx.DrawDramaActivity;
@@ -28,7 +35,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener {
+public class SettingActivity extends AdFeedActivity implements View.OnClickListener {
 
     private static final String grantedStr = "已允许";
     private static final String deniedStr = "权限设置";
@@ -37,6 +44,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private ToggleButton mSwitchView;
     private ToggleButton mToggleSwitch;
+    private View adContainer;
+    private TTFeedAd mFeedAd;
+    private boolean mLoadSuccess = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
+
+        adContainer = findViewById(R.id.ad_contentPanel);
 
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.layout_widget).setOnClickListener(this);
@@ -74,12 +86,18 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onStart();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    protected Boolean isFirstLoad = true;
     @Override
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
         checkPermissions();
+        if (isFirstLoad) {
+            isFirstLoad = false;
+            if (SpUtils.getInstance().isAgreePermission()) {
+                loadFeedAd();
+            }
+        }
     }
 
     @Override
@@ -192,5 +210,31 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             storageStateTv.setTextColor(grantedColor);
         }
 
+    }
+
+    private void loadFeedAd() {
+        if (mLoadSuccess) return;
+        int adWidth = SizeUtils.px2dp(ScreenUtils.getScreenWidth()) - 20;
+        loadFeedAd(BuildConfig.PGE_CALENDAR_POS_ID, adWidth, (data, errorMsg) -> {
+            if (data != null) {
+                mHandler.post(() -> {
+                    mFeedAd = data;
+                    mLoadSuccess = true;
+                    showAd((FrameLayout) adContainer, mLoadSuccess, true, mFeedAd);
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mFeedAd != null) {
+            try {
+                mFeedAd.destroy();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

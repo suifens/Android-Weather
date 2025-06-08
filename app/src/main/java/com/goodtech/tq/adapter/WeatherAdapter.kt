@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bytedance.sdk.openadsdk.TTFeedAd
+import com.bytedance.sdk.openadsdk.TTNativeAd
+import com.bytedance.sdk.openadsdk.TTNativeExpressAd
 import com.goodtech.tq.R
 import com.goodtech.tq.ad.AdManager
 import com.goodtech.tq.app.App
@@ -54,7 +56,7 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
     private var weatherModel: WeatherModel? = null
     private var cityMode: CityMode? = null
-    private var feedAd0: TTFeedAd? = null
+    private var feedAd0: TTNativeExpressAd? = null
     private var feedAd1: TTFeedAd? = null
     private var feedAd2: TTFeedAd? = null
     private var feedAd3: TTFeedAd? = null
@@ -67,7 +69,7 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
         notifyDataSetChanged()
     }
 
-    fun setAd0(ad: TTFeedAd?) {
+    fun setAd0(ad: TTNativeExpressAd?) {
         feedAd0 = ad
         if (ad == null) {
             notifyItemChanged(0)
@@ -205,7 +207,7 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                         if (feedAd0 != null) {
                             holder.feedContainer.visibility = View.VISIBLE
                             holder.feedContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                            showAd(holder.feedContainer, feedAd0!!)
+                            showExpressAd(holder.feedContainer, feedAd0!!)
                         } else {
                             holder.feedContainer.visibility = View.GONE
                             holder.feedContainer.layoutParams.height = 0
@@ -256,6 +258,39 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
     private fun showAd(container: FrameLayout, ad: TTFeedAd) {
         container.visibility = View.VISIBLE
+        container.background = container.context.getDrawable(R.drawable.bg_round_8)
         AdManager.getInstance().showFeedAd(container.context as android.app.Activity, container, ad)
+    }
+
+    private fun showExpressAd(container: FrameLayout, ad: TTNativeExpressAd) {
+        container.visibility = View.VISIBLE
+        container.background = container.context.getDrawable(R.drawable.bg_round_8)
+        container.removeAllViews()
+        ad.setExpressInteractionListener(object : TTNativeExpressAd.ExpressAdInteractionListener {
+            override fun onAdClicked(view: View?, type: Int) {
+                // 广告点击回调
+            }
+
+            override fun onAdShow(view: View?, type: Int) {
+                // 广告展示回调
+            }
+
+            override fun onRenderFail(view: View?, msg: String?, code: Int) {
+                // 渲染失败回调
+                container.visibility = View.GONE
+                container.layoutParams.height = 0
+            }
+
+            override fun onRenderSuccess(view: View?, width: Float, height: Float) {
+                // 渲染成功回调
+                ad.expressAdView?.let { adView ->
+                    // 如果广告视图已经有父视图，先移除
+                    (adView.parent as? ViewGroup)?.removeView(adView)
+                    container.removeAllViews()
+                    container.addView(adView)
+                }
+            }
+        })
+        ad.render()
     }
 } 

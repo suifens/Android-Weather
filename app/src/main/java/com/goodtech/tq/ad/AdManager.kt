@@ -4,11 +4,14 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import com.bytedance.sdk.openadsdk.AdSlot
+import com.bytedance.sdk.openadsdk.TTAdConstant
 import com.bytedance.sdk.openadsdk.TTAdDislike
 import com.bytedance.sdk.openadsdk.TTAdNative
 import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.bytedance.sdk.openadsdk.TTAppDownloadListener
 import com.bytedance.sdk.openadsdk.TTFeedAd
 import com.bytedance.sdk.openadsdk.TTNativeAd
+import com.bytedance.sdk.openadsdk.TTNativeExpressAd
 import com.bytedance.sdk.openadsdk.mediation.ad.MediationExpressRenderListener
 import com.goodtech.tq.base.callback.DataCallback
 import com.goodtech.tq.base.removeFromParent
@@ -127,5 +130,101 @@ class AdManager {
                 Log.d(TAG, "feed load success, but list is null")
             }
         }
+    }
+
+    fun loadExpressAd(activity: android.app.Activity, codeId: String, width: Int, height: Int, callback: DataCallback<TTNativeExpressAd>) {
+        val adSlot = AdSlot.Builder()
+            .setCodeId(codeId)
+            .setAdCount(1)
+            .setExpressViewAcceptedSize(width.toFloat(), height.toFloat())
+            .build()
+
+        val ttAdNative = TTAdManagerHolder.get().createAdNative(activity)
+        ttAdNative.loadBannerExpressAd(adSlot, object : TTAdNative.NativeExpressAdListener {
+            override fun onError(code: Int, message: String) {
+                callback.onComplete(null, "load error : $code, $message")
+            }
+
+            override fun onNativeExpressAdLoad(ads: List<TTNativeExpressAd>) {
+                if (ads.isNullOrEmpty()) {
+                    callback.onComplete(null, "ads is empty")
+                    return
+                }
+
+                Log.d(TAG, "BannerExpressAd load success")
+                val ad = ads[0]
+                ad.setSlideIntervalTime(30 * 1000)
+                bindAdListener(ad, activity)
+                callback.onComplete(ad, null)
+            }
+        })
+    }
+
+    private fun bindAdListener(ad: TTNativeExpressAd, activity: android.app.Activity) {
+        ad.setExpressInteractionListener(object : TTNativeExpressAd.ExpressAdInteractionListener {
+            override fun onAdClicked(view: View, type: Int) {
+                Log.d("AdManager", "广告被点击")
+            }
+
+            override fun onAdShow(view: View, type: Int) {
+                Log.d("AdManager", "广告展示")
+            }
+
+            override fun onRenderFail(view: View, msg: String, code: Int) {
+                Log.e("AdManager", "render fail: $msg code:$code")
+            }
+
+            override fun onRenderSuccess(view: View, width: Float, height: Float) {
+                Log.d("AdManager", "渲染成功")
+            }
+        })
+
+        // 设置dislike
+        ad.setDislikeCallback(activity, object : TTAdDislike.DislikeInteractionCallback {
+            override fun onShow() {
+                Log.d("AdManager", "dislike show")
+            }
+
+            override fun onSelected(position: Int, value: String, enforce: Boolean) {
+                Log.d("AdManager", "dislike selected: $value")
+                if (enforce) {
+                    Log.d("AdManager", "广告被强制关闭")
+                }
+            }
+
+            override fun onCancel() {
+                Log.d("AdManager", "dislike cancel")
+            }
+        })
+
+        // 设置下载监听
+        if (ad.getInteractionType() != TTAdConstant.INTERACTION_TYPE_DOWNLOAD) {
+            return
+        }
+        ad.setDownloadListener(object : TTAppDownloadListener {
+            override fun onIdle() {
+                Log.d("AdManager", "点击开始下载")
+            }
+
+            override fun onDownloadActive(totalBytes: Long, currBytes: Long, fileName: String, appName: String) {
+                Log.d("AdManager", "下载中，点击暂停")
+            }
+
+            override fun onDownloadPaused(totalBytes: Long, currBytes: Long, fileName: String, appName: String) {
+                Log.d("AdManager", "下载暂停，点击继续")
+            }
+
+            override fun onDownloadFailed(totalBytes: Long, currBytes: Long, fileName: String, appName: String) {
+                Log.d("AdManager", "下载失败，点击重新下载")
+            }
+
+            override fun onInstalled(fileName: String, appName: String) {
+                Log.d("AdManager", "安装完成，点击图片打开")
+            }
+
+            override fun onDownloadFinished(totalBytes: Long, fileName: String, appName: String) {
+                Log.d("AdManager", "点击安装")
+            }
+        })
     }
 } 

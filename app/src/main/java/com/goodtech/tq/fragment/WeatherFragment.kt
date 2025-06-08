@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bytedance.sdk.djx.DJXSdk
 import com.bytedance.sdk.dp.DPSdk
 import com.bytedance.sdk.openadsdk.TTFeedAd
+import com.bytedance.sdk.openadsdk.TTNativeExpressAd
 import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.BaseActivity
@@ -36,6 +38,7 @@ import com.lxj.xpopup.XPopup
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.goodtech.tq.ad.AdManager
 
 class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListener {
 
@@ -52,7 +55,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     // Ad related
     private var mLoadSuccess = false
     private var mLoadSuccess2 = false
-    private var mBannerAd: TTFeedAd? = null
+    private var mBannerAd: TTNativeExpressAd? = null
     private var mGMNativeAd: TTFeedAd? = null
     private var mGMNativeAd2: TTFeedAd? = null
     private var mGMNativeAd3: TTFeedAd? = null
@@ -149,7 +152,12 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         if (isFirstLoad) {
             isFirstLoad = false
             if (SpUtils.getInstance().isAgreePermission()) {
-                mHandler.postDelayed({ Thread { initAdLoader() }.start() }, 500)
+                mHandler.postDelayed({ 
+                    Thread { 
+                        initAdLoader()
+                        loadBannerAd()
+                    }.start() 
+                }, 500)
             }
         }
         if (!mHadLoad) {
@@ -179,41 +187,46 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         }
     }
 
-    fun changeWeather(model: WeatherModel, cityMode: CityMode) {
+    fun changeWeather(model: WeatherModel?, cityMode: CityMode) {
         mWeatherModel = model
         mCityMode = cityMode
         updateData()
     }
 
-    val adWidth = SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat() - SizeUtils.px2dp(20f))
+    private val adWidth = SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat()) - 20
 
     private fun updateData() {
         if (mHadLoad && mWeatherModel != null) {
             mHandler.post {
                 // 先更新UI数据
                 mAdapter.setData(mWeatherModel!!, mCityMode)
-
-                if (!isAd0Loaded) {
-                    Thread { loadAd0() }.start()
-                }
             }
         }
     }
 
-    private fun loadAd0() {
+    private fun loadBannerAd() {
         if (isAd0Loaded) return
         
-        loadFeedAd(BuildConfig.PGE_HOME_BANNER_POS_ID, adWidth, object : DataCallback<TTFeedAd> {
-            override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
-                if (data != null) {
-                    mHandler.post {
-                        mBannerAd = data
-                        mAdapter.setAd0(data)
-                        isAd0Loaded = true
+        val width =  SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat()) - 20
+        val height = 0 // 设置一个合适的banner高度
+
+        AdManager.getInstance().loadExpressAd(
+            requireActivity(),
+            BuildConfig.PGE_HOME_BANNER_POS_ID,
+            adWidth,
+            height,
+            object : DataCallback<TTNativeExpressAd> {
+                override fun onComplete(data: TTNativeExpressAd?, errorMsg: String?) {
+                    if (data != null) {
+                        mHandler.post {
+                            mBannerAd = data
+                            mAdapter.setAd0(data)
+                            isAd0Loaded = true
+                        }
                     }
                 }
             }
-        })
+        )
     }
 
     private fun loadFirstAd() {
@@ -303,7 +316,16 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     override fun onDestroy() {
         super.onDestroy()
-        removeAdView(mBannerAd)
+        mBannerAd?.let {
+            try {
+                it.expressAdView?.let { adView ->
+                    (adView.parent as? ViewGroup)?.removeView(adView)
+                }
+                it.destroy()
+            } catch (e: Exception) {
+                Log.e(TAG, "removeAdView error: ${e.message}")
+            }
+        }
         removeAdView(mGMNativeAd)
         removeAdView(mGMNativeAd2)
         removeAdView(mGMNativeAd3)
