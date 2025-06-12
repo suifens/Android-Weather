@@ -23,8 +23,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdkVersion 24
         targetSdkVersion 35
-        versionCode 1320
-        versionName "13.2.0"
+        versionCode 1321
+        versionName "13.2.1"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -279,19 +279,19 @@ dependencies {
     //  相机/相册
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
 
-//    //  极光推送
-//    implementation 'cn.jiguang.sdk:jpush:5.7.0'  // 此处以JPush 4.0.0 版本为例
-//    // 接入华为厂商
-//    implementation 'com.huawei.hms:push:6.12.0.300'
-//    implementation 'cn.jiguang.sdk.plugin:huawei:5.5.3'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
-//    // 接入魅族厂商
-//    implementation 'cn.jiguang.sdk.plugin:meizu:4.8.0'
-//    // 接入 VIVO 厂商
-////    implementation 'cn.jiguang.sdk.plugin:vivo:5.5.3'
-//    // 接入 OPPO 厂商
-//    implementation 'cn.jiguang.sdk.plugin:oppo:5.5.3'
-//    // 接入小米厂商
-//    implementation 'cn.jiguang.sdk.plugin:xiaomi:5.5.3'
+    //  极光推送
+    implementation 'cn.jiguang.sdk:jpush:5.7.0'  // 此处以JPush 4.0.0 版本为例
+    // 接入华为厂商
+    implementation 'com.huawei.hms:push:6.12.0.300'
+    implementation 'cn.jiguang.sdk.plugin:huawei:5.7.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
+    // 接入魅族厂商
+    implementation 'cn.jiguang.sdk.plugin:meizu:5.7.0'
+    // 接入 VIVO 厂商
+//    implementation 'cn.jiguang.sdk.plugin:vivo:5.7.0'
+    // 接入 OPPO 厂商
+    implementation 'cn.jiguang.sdk.plugin:oppo:5.7.0'
+    // 接入小米厂商
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:5.7.0'
 
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
     implementation 'com.tencent.bugly:crashreport:latest.release'

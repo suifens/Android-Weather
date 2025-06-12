@@ -80,6 +80,10 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
         findViewById(R.id.switchBtn_reminder).setOnClickListener(this);
         findViewById(R.id.short_play_btn).setOnClickListener(this);
         findViewById(R.id.mini_video_btn).setOnClickListener(this);
+        findViewById(R.id.layout_privacy).setOnClickListener(this);
+        findViewById(R.id.layout_agreement).setOnClickListener(this);
+        findViewById(R.id.layout_info_list).setOnClickListener(this);
+        findViewById(R.id.layout_share_list).setOnClickListener(this);
     }
 
     @Override
