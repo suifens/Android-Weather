@@ -43,6 +43,9 @@ public class Constants {
     public final static String URL_PRIVACY = "https://app.yiguxm.com/privacy/tqybPrivacy.html";
     public final static String URL_PRIVACY_LIST = "https://app.yiguxm.com/privacy/yuzhiyinsiqingdan.html";
 
+    public final static String URL_INFO_LIST = "https://app.yiguxm.com/privacy/gytqgrsjqd.html";
+    public final static String URL_SHARE_LIST = "https://app.yiguxm.com/privacy/gytqgxqd.html";
+
     public final static String URL_CITY = "file:///android_asset/cityRecommend.json";
 
     public final static String RECOMMEND_CITY = "cityRecommend.json";

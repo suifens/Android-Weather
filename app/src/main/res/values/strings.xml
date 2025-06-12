@@ -27,6 +27,8 @@
     <string name="title_contact">联系客服</string>
     <string name="title_version">版本更新</string>
     <string name="title_setting_widget">天气桌面插件设置</string>
+    <string name="title_info_list">收集个人信息清单</string>
+    <string name="title_share_list">第三方共享清单</string>
 
     <string name="button_edit">编辑</string>
     <string name="button_cancel">取消</string>

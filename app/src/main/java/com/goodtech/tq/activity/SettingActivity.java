@@ -26,6 +26,7 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.ad.AdFeedActivity;
 import com.goodtech.tq.base.callback.DataCallback;
 import com.goodtech.tq.modules.others.test.MyTestActivity;
+import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity;
 import com.goodtech.tq.modules.video.djx.DrawDramaActivity;
 import com.goodtech.tq.utils.Constants;
@@ -68,7 +69,7 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.layout_widget).setOnClickListener(this);
         findViewById(R.id.layout_private_list).setOnClickListener(this);
-        findViewById(R.id.layout_praise).setOnClickListener(this);
+//        findViewById(R.id.layout_praise).setOnClickListener(this);
         findViewById(R.id.layout_about).setOnClickListener(this);
         findViewById(R.id.layout_contact).setOnClickListener(this);
         findViewById(R.id.layout_version).setOnClickListener(this);
@@ -119,7 +120,7 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
                     "https://app.yiguxm.com/privacy/yuzhiyinsiqingdan.html",
                     getResources().getString(R.string.title_private_list),
                     "Privacy_List");
-        } else if (v.getId() == R.id.layout_praise || v.getId() == R.id.layout_version) {
+        } else if (v.getId() == R.id.layout_version) { // (v.getId() == R.id.layout_praise || v.getId() == R.id.layout_version) {
             // 评论
             Uri uri = Uri.parse("market://details?id=" + getPackageName());
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -161,6 +162,26 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
+        } else if (v.getId() == R.id.layout_agreement) {
+            PrivacyWebActivity.redirectTo(this,
+                    Constants.URL_AGREEMENT,
+                    getResources().getString(R.string.title_agreement),
+                    "Agreement");
+        } else if (v.getId() == R.id.layout_privacy) {
+            PrivacyWebActivity.redirectTo(this,
+                    Constants.URL_PRIVACY,
+                    getResources().getString(R.string.title_private),
+                    "Privacy");
+        } else if (v.getId() == R.id.layout_info_list) {
+            PrivacyWebActivity.redirectTo(this,
+                    Constants.URL_INFO_LIST,
+                    getResources().getString(R.string.title_info_list),
+                    "Info List");
+        } else if (v.getId() == R.id.layout_share_list) {
+            PrivacyWebActivity.redirectTo(this,
+                    Constants.URL_SHARE_LIST,
+                    getResources().getString(R.string.title_share_list),
+                    "Share List");
         }
     }
 
