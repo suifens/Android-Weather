@@ -34,24 +34,24 @@ import java.util.ArrayList;
  */
 public class JAlarmReceiver extends BroadcastReceiver {
     
-    private Context mContext;
-
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (context == null) {
+            return;
+        }
         
-        mContext = context;
         long intervalMillis = intent.getLongExtra("intervalMillis", 0);
         Log.e("BroadcastReceiver", "onReceive: intervalMillis= " + System.currentTimeMillis());
-//        if (intervalMillis != 0) {
-//            Calendar calendar = Calendar.getInstance();
-//            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-//            AlarmManagerUtil.setAlarm(context, hour);
-//        }
 
-        JPushHelper.buildLocalNotification(mContext.getApplicationContext(),
-                mContext.getString(R.string.app_name), "收到消息");
+        JPushHelper.buildLocalNotification(context.getApplicationContext(),
+                context.getString(R.string.app_name), "收到消息");
 
-        new Thread(() -> mHandler.sendEmptyMessage(1)).start();
+        new Thread(() -> {
+            Message msg = Message.obtain();
+            msg.what = 1;
+            msg.obj = context;
+            mHandler.sendMessage(msg);
+        }).start();
     }
 
     private Handler mHandler = new Handler(){
@@ -60,7 +60,9 @@ public class JAlarmReceiver extends BroadcastReceiver {
             super.handleMessage(msg);
             switch (msg.what){
                 case 1:
-                    fetchAlarm(mContext);
+                    if (msg.obj instanceof Context) {
+                        fetchAlarm((Context) msg.obj);
+                    }
                     break;
             }
         }
@@ -68,6 +70,10 @@ public class JAlarmReceiver extends BroadcastReceiver {
 
     //  获取天气预警
     public static void fetchAlarm(Context context) {
+        if (context == null) {
+            return;
+        }
+        
         if (!SpUtils.getInstance().getBoolean(Constants.REMINDER_WEATHER, true)) {
             //  不添加提醒
             return;
@@ -112,6 +118,10 @@ public class JAlarmReceiver extends BroadcastReceiver {
     }
 
     public static void checkAlarmModels(Context context, ArrayList<JuheAlarmModel> list) {
+        if (context == null) {
+            return;
+        }
+        
         CityMode cityMode = LocationSpHelper.getLocation();
         if (list != null && list.size() > 0) {
             JuheAlarmModel alarmModel = null;

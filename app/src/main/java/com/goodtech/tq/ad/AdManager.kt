@@ -136,7 +136,7 @@ class AdManager {
         val adSlot = AdSlot.Builder()
             .setCodeId(codeId)
             .setAdCount(1)
-            .setExpressViewAcceptedSize(width.toFloat(), height.toFloat())
+            .setExpressViewAcceptedSize(width.toFloat(), 0F)
             .build()
 
         val ttAdNative = TTAdManagerHolder.get().createAdNative(activity)
@@ -154,7 +154,7 @@ class AdManager {
                 Log.d(TAG, "BannerExpressAd load success")
                 val ad = ads[0]
                 ad.setSlideIntervalTime(30 * 1000)
-                bindAdListener(ad, activity)
+//                bindAdListener(ad, activity)
                 callback.onComplete(ad, null)
             }
         })

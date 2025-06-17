@@ -17,6 +17,7 @@ import cn.jpush.android.api.JPushInterface
 import com.blankj.utilcode.util.PermissionUtils
 import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.goodtech.tq.BuildConfig
+import com.goodtech.tq.activity.MainActivity
 import com.goodtech.tq.activity.MyActivityManager
 import com.goodtech.tq.activity.SettingActivity
 import com.goodtech.tq.activity.SplashActivity
@@ -55,6 +56,7 @@ class App : Application() {
         private const val LOCATION_UPDATE_INTERVAL = 1000L * 60
 
         @Volatile
+        @JvmStatic
         lateinit var instance: App
 
         @SuppressLint("StaticFieldLeak")
@@ -71,6 +73,8 @@ class App : Application() {
         val topRunningActivity: Activity?
             get() = weakTopActivity.get()
     }
+
+    var mainActivity: MainActivity? = null
 
     private val mainScope = CoroutineScope(Dispatchers.Main)
     private val mHandler = Handler(Looper.getMainLooper())

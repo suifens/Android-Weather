@@ -34,6 +34,25 @@ public class NotificationUtil {
         return (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
+    public static void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            channel.setDescription("天气服务通知");
+            channel.enableLights(false);
+            channel.enableVibration(false);
+            channel.setShowBadge(false);
+            
+            NotificationManager notificationManager = getNotificationManager(context);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+    }
+
     /**
      * 创建或更新
      *

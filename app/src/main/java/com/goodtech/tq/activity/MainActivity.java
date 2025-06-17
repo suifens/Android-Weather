@@ -99,6 +99,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        App.getInstance().setMainActivity(this);
+
         mAddressTv = findViewById(R.id.tv_address);
         mViewPager = findViewById(R.id.viewpager_main);
         mBgImgView = findViewById(R.id.img_background);

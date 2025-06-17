@@ -114,9 +114,13 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                 if (position == 0) {
                     // 第一个item的top间距为60dp
                     outRect.top = SizeUtils.dp2px(85f)
+                    outRect.left = SizeUtils.dp2px(0f)
+                    outRect.right = SizeUtils.dp2px(0f)
                 } else {
                     // 其他item的间距为5dp
                     outRect.top = SizeUtils.dp2px(5f)
+                    outRect.left = SizeUtils.dp2px(10f)
+                    outRect.right = SizeUtils.dp2px(10f)
                 }
                 outRect.bottom = SizeUtils.dp2px(5f)
             }
@@ -219,7 +223,6 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     private fun loadBannerAd() {
         if (isAd0Loaded) return
         
-        val width =  SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat()) - 20
         val height = 0 // 设置一个合适的banner高度
 
         AdManager.getInstance().loadExpressAd(

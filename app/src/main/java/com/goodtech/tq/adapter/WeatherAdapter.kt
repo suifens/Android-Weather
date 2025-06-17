@@ -7,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bytedance.sdk.openadsdk.TTAdDislike.DislikeInteractionCallback
 import com.bytedance.sdk.openadsdk.TTFeedAd
-import com.bytedance.sdk.openadsdk.TTNativeAd
 import com.bytedance.sdk.openadsdk.TTNativeExpressAd
 import com.goodtech.tq.R
 import com.goodtech.tq.ad.AdManager
 import com.goodtech.tq.app.App
+import com.goodtech.tq.app.App.Companion.instance
 import com.goodtech.tq.eventbus.MessageEvent
 import com.goodtech.tq.fragment.view.CurrentItemView
 import com.goodtech.tq.fragment.view.DailyListItemView
@@ -71,11 +72,7 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
     fun setAd0(ad: TTNativeExpressAd?) {
         feedAd0 = ad
-        if (ad == null) {
-            notifyItemChanged(0)
-        } else {
-            notifyItemChanged(0)
-        }
+        notifyItemChanged(0)
     }
 
     fun setAd1(ad: TTFeedAd?) {
@@ -288,9 +285,28 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                     (adView.parent as? ViewGroup)?.removeView(adView)
                     container.removeAllViews()
                     container.addView(adView)
+                    bindDislike(ad, container)
                 }
             }
         })
         ad.render()
+    }
+
+    private fun bindDislike(ad: TTNativeExpressAd, container: FrameLayout) {
+
+        //使用默认模板中默认dislike弹出样式
+        ad.setDislikeCallback(instance.mainActivity, object : DislikeInteractionCallback {
+            override fun onShow() {
+            }
+
+            override fun onSelected(position: Int, value: String, enforce: Boolean) {
+                container.removeAllViews()
+                setAd0(null)
+            }
+
+            override fun onCancel() {
+
+            }
+        })
     }
 } 

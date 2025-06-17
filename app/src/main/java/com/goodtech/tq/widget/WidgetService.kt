@@ -47,6 +47,7 @@ class WidgetService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         isFirst = true
+        NotificationUtil.createNotificationChannel(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
                 Notify_Id,

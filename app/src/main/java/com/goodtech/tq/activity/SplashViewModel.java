@@ -12,6 +12,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.bytedance.sdk.openadsdk.AdSlot;
 import com.bytedance.sdk.openadsdk.CSJAdError;
 import com.bytedance.sdk.openadsdk.CSJSplashAd;
@@ -245,8 +247,12 @@ public class SplashViewModel extends AndroidViewModel {
         String mAdUnitId = BuildConfig.PGE_SPLASH_POS_ID;
         TTAdNative adNativeLoader = TTAdSdk.getAdManager().createAdNative(getApplication());
 
+        int width = SizeUtils.px2dp(ScreenUtils.getScreenWidth());
+        int height = SizeUtils.px2dp(ScreenUtils.getScreenHeight());
+
         AdSlot adSlot = new AdSlot.Builder()
                 .setCodeId(mAdUnitId)
+                .setExpressViewAcceptedSize(width, height)
                 .build();
 
         adNativeLoader.loadSplashAd(adSlot, mCSJSplashAdListener, AD_TIME_OUT);
