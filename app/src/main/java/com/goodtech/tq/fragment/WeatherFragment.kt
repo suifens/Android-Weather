@@ -82,18 +82,23 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         mAdapter.setAdLoadCallback(object : WeatherAdapter.AdLoadCallback {
             override fun onAdLoaded(position: Int) {
                 when (position) {
+                    0 -> {
+                        if (!isAd0Loaded && SpUtils.getInstance().isAgreePermission()) {
+                            Thread { loadBannerAd() }.start()
+                        }
+                    }
                     4 -> {
-                        if (!isFirstAdLoaded) {
+                        if (!isFirstAdLoaded && SpUtils.getInstance().isAgreePermission()) {
                             Thread { loadFirstAd() }.start()
                         }
                     }
                     6 -> {
-                        if (!isSecondAdLoaded) {
+                        if (!isSecondAdLoaded && SpUtils.getInstance().isAgreePermission()) {
                             Thread { loadSecondAd() }.start()
                         }
                     }
                     9 -> {
-                        if (!isThirdAdLoaded) {
+                        if (!isThirdAdLoaded && SpUtils.getInstance().isAgreePermission()) {
                             Thread { loadThirdAd() }.start()
                         }
                     }

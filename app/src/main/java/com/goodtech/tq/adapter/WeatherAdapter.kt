@@ -65,6 +65,7 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
     private var adLoadCallback: AdLoadCallback? = null
 
     fun setData(model: WeatherModel, mode: CityMode?) {
+        adLoadCallback?.onAdLoaded(0)
         weatherModel = model
         cityMode = mode
         notifyDataSetChanged()
@@ -263,6 +264,7 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
         container.visibility = View.VISIBLE
         container.background = container.context.getDrawable(R.drawable.bg_round_8)
         container.removeAllViews()
+        bindDislike(ad, container)
         ad.setExpressInteractionListener(object : TTNativeExpressAd.ExpressAdInteractionListener {
             override fun onAdClicked(view: View?, type: Int) {
                 // 广告点击回调
@@ -285,7 +287,6 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                     (adView.parent as? ViewGroup)?.removeView(adView)
                     container.removeAllViews()
                     container.addView(adView)
-                    bindDislike(ad, container)
                 }
             }
         })

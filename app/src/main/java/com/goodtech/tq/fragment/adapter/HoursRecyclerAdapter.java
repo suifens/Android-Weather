@@ -68,7 +68,7 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
         private final TextView mTemperature;
         private final TextView mPhraseChar;
 
-        private final AlternateBoldTextView mRainTv;
+        private final TextView mRainTv;
 
         HourlyHolder(View view) {
             super(view);
