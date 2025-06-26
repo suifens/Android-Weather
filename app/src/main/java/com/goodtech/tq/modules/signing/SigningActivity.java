@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import androidx.annotation.Nullable;
 import androidx.collection.LruCache;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -28,6 +29,7 @@ import com.blankj.utilcode.util.SizeUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.base.BaseShareActivity;
+import com.goodtech.tq.base.callback.DataCallback;
 import com.goodtech.tq.base.share.ShareFootView;
 import com.goodtech.tq.base.share.ShareType;
 import com.goodtech.tq.db.SignDbHelper;
@@ -36,6 +38,7 @@ import com.goodtech.tq.helpers.picture.PictureSelectHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.db.SignRecord;
+import com.goodtech.tq.utils.PermissionUtil;
 import com.goodtech.tq.utils.ShotUtil;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.TipHelper;
@@ -362,23 +365,18 @@ public class SigningActivity extends BaseShareActivity {
         }
         mBottomSheet = new CommonBottomSheet(activity, selectItems[0], selectItems[1]);
         mBottomSheet.setCommonBottomSheetListener((item, itemTitle) -> {
-            if (mRxPermissions == null) {
-                mRxPermissions = new RxPermissions(activity);
-            }
             if (item == 1) {
-                mRxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .subscribe(granted -> {
-                            if (granted) {
-                                PictureSelectHelper.showCamera(SigningActivity.this, mPictureCallback);
-                            }
-                        });
+                PermissionUtil.readCameraPermission(SigningActivity.this, (granted, errorMsg) -> {
+                    if (Boolean.TRUE.equals(granted)) {
+                        PictureSelectHelper.showCamera(SigningActivity.this, mPictureCallback);
+                    }
+                });
             } else {
-                mRxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .subscribe(granted -> {
-                            if (granted) {
-                                PictureSelectHelper.showGallery(SigningActivity.this, mPictureCallback);
-                            }
-                        });
+                PermissionUtil.readGalleryPermission(SigningActivity.this, (granted, errorMsg) -> {
+                    if (Boolean.TRUE.equals(granted)) {
+                        PictureSelectHelper.showGallery(SigningActivity.this, mPictureCallback);
+                    }
+                });
             }
         });
         mBottomSheet.show();

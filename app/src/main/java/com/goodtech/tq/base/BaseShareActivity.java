@@ -31,13 +31,9 @@ public class BaseShareActivity extends BaseActivity {
 
     private static final String TAG = "BaseShareActivity";
 
-    protected RxPermissions mRxPermissions;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mRxPermissions = new RxPermissions(this); // where this is an Activity instance
     }
 
     /**

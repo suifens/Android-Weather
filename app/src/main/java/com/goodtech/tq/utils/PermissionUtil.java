@@ -59,10 +59,11 @@ public class PermissionUtil {
 
     /**
      * 此函数可以自己定义
+     *
      * @param activity
      */
-    public static void goToSetting(Activity activity){
-        switch (Build.MANUFACTURER){
+    public static void goToSetting(Activity activity) {
+        switch (Build.MANUFACTURER) {
             case MANUFACTURER_HUAWEI:
                 Huawei(activity);
                 break;
@@ -192,6 +193,7 @@ public class PermissionUtil {
 
     /**
      * 只能打开到自带安全软件
+     *
      * @param activity
      */
     public static void _360(Activity activity) {
@@ -205,9 +207,10 @@ public class PermissionUtil {
 
     /**
      * 应用信息界面
+     *
      * @param activity
      */
-    public static void ApplicationInfo(Activity activity){
+    public static void ApplicationInfo(Activity activity) {
         Intent localIntent = new Intent();
         localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= 9) {
@@ -223,6 +226,7 @@ public class PermissionUtil {
 
     /**
      * 系统设置界面
+     *
      * @param activity
      */
     public static void SystemConfig(Activity activity) {
@@ -288,6 +292,29 @@ public class PermissionUtil {
         handler.postDelayed(runnable, 500);
     }
 
+    public static void readCameraPermission(Activity activity, @NonNull DataCallback<Boolean> callback) {
+        String[] permissions = initializePermissions(Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        PermissionUtils utils = PermissionUtils.permission(permissions);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (PermissionUtils.isGranted(Manifest.permission.CAMERA,
+                    Manifest.permission.READ_MEDIA_IMAGES)) {
+                callback.onComplete(true, "");
+                return;
+            } else {
+                utils = PermissionUtils.permission(Manifest.permission.CAMERA,
+                        Manifest.permission.READ_MEDIA_IMAGES);
+            }
+        } else if (PermissionUtils.isGranted(permissions)) {
+            callback.onComplete(true, "");
+            return;
+        }
+
+        requestPermission(activity, utils, "请允许天气预报使用相机权限",
+                "为了提供您可以自己拍照分享天气海报。我们需要获取您设备的相机权限。不授权不影响您使用APP", callback);
+    }
+
     /**
      * 图片读取权限
      */
@@ -309,6 +336,29 @@ public class PermissionUtil {
 
         requestPermission(activity, utils, "请允许天气预报使用读写权限",
                 "使用分享功能，我们需要将您的图片先储存手机文件中，如果您拒绝，也不会影响您使用产品的其他功能", callback);
+    }
+
+    /**
+     * 相册读取权限
+     */
+    public static void readGalleryPermission(Activity activity, @NonNull DataCallback<Boolean> callback) {
+        String[] permissions = initializePermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        PermissionUtils utils = PermissionUtils.permission(permissions);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (PermissionUtils.isGranted(Manifest.permission.READ_MEDIA_IMAGES)) {
+                callback.onComplete(true, "");
+                return;
+            } else {
+                utils = PermissionUtils.permission(Manifest.permission.READ_MEDIA_IMAGES);
+            }
+        } else if (PermissionUtils.isGranted(permissions)) {
+            callback.onComplete(true, "");
+            return;
+        }
+
+        requestPermission(activity, utils, "请允许天气预报使用相册权限",
+                "为了提供您可以自己相册选择分享天气海报。我们需要获取您设备的相册权限。不授权不影响您使用APP", callback);
     }
 
     public static boolean canDrawOverlays(Context context) {
