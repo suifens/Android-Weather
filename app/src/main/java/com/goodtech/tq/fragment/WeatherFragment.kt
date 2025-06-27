@@ -83,9 +83,9 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
             override fun onAdLoaded(position: Int) {
                 when (position) {
                     0 -> {
-                        if (!isAd0Loaded && SpUtils.getInstance().isAgreePermission()) {
-                            Thread { loadBannerAd() }.start()
-                        }
+//                        if (!isAd0Loaded && SpUtils.getInstance().isAgreePermission()) {
+//                            Thread { loadBannerAd() }.start()
+//                        }
                     }
                     4 -> {
                         if (!isFirstAdLoaded && SpUtils.getInstance().isAgreePermission()) {
@@ -165,7 +165,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                 mHandler.postDelayed({ 
                     Thread { 
                         initAdLoader()
-                        loadBannerAd()
+//                        loadBannerAd()
                     }.start() 
                 }, 500)
             }

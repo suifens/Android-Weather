@@ -305,7 +305,7 @@ public class MainActivity extends BaseActivity {
         if (isFirstLoad) {
 
             if (SpUtils.getInstance().isAgreePermission()) {
-                initAppLog();
+//                initAppLog();
 
                 /// 判断新版本
                 fetchNewVersion(() -> {
@@ -313,10 +313,10 @@ public class MainActivity extends BaseActivity {
             }
 
             isFirstLoad = false;
-        } else {
-            if (mIsLoadedAndShow) {
-                mHandler.post(this::showInterFullAd);
-            }
+//        } else {
+//            if (mIsLoadedAndShow) {
+//                mHandler.post(this::showInterFullAd);
+//            }
         }
 
         if (LocationSpHelper.getLocation() != null && SpUtils.getInstance().isAgreePermission()) {
