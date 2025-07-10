@@ -120,7 +120,7 @@ class HomeFragment : BaseFragment() {
         // 点击地址，跳转到城市列表
         binding.layoutAddress.setOnClickListener {
             if (!SpUtils.getInstance().isAgreePermission()) {
-                (activity as? BaseActivity)?.showPermissionDialog(requireActivity()) {
+                (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) {
                     CityListActivity.redirectTo(requireActivity())
                 }
                 return@setOnClickListener
@@ -131,7 +131,7 @@ class HomeFragment : BaseFragment() {
         // 跳转到设置页面
         binding.imgSetting.setOnClickListener {
             if (!SpUtils.getInstance().isAgreePermission()) {
-                (activity as? BaseActivity)?.showPermissionDialog(requireActivity()) {
+                (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) {
                     startActivity(Intent(requireActivity(), SettingActivity::class.java))
                 }
                 return@setOnClickListener
@@ -385,7 +385,7 @@ class HomeFragment : BaseFragment() {
 
     private fun onSignClick() {
         if (!SpUtils.getInstance().isAgreePermission()) {
-            (activity as? BaseActivity)?.showPermissionDialog(requireActivity()) {
+            (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) {
                 onSignClick()
             }
             return

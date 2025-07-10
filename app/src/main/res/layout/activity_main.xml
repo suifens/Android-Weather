@@ -1,143 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:section="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_about_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
-
-    <ImageView
-        android:id="@+id/img_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
-        android:src="@drawable/bg_normal"
-        />
-
-<!--    <ScrollView-->
-<!--        android:id="@+id/scroll_background"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:scrollbars="none"-->
-<!--        android:fadingEdge="none"-->
-<!--        android:overScrollMode="never"-->
-<!--        >-->
-
-<!--        -->
-
-<!--    </ScrollView>-->
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_weight="0.925" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/private_station_bar"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tablayout_main"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="horizontal">
+        android:layout_height="60dp"
+        android:background="@color/white"
+        section:tabIndicatorHeight="0dp" />
 
-        <View
-            android:id="@+id/station_bg_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0"
-            android:background="@drawable/gradient_weather"
-            />
-
-        <LinearLayout
-            android:id="@+id/layout_address"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:orientation="horizontal"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/img_sign">
-            
-            <ImageView
-                android:id="@+id/img_add"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:src="@drawable/ic_add" />
-
-            <TextView
-                android:id="@+id/tv_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:maxWidth="220dp"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
-
-            <ImageView
-                android:id="@+id/img_location"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="6dp"
-                android:src="@drawable/ic_location_white" />
-            
-        </LinearLayout>
-
-        <RadioGroup
-            android:id="@+id/indicator_city"
-            android:layout_width="wrap_content"
-            android:layout_height="5dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_marginStart="36dp"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:id="@+id/img_sign"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_share"
-            android:layout_marginEnd="6dp"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/img_setting" />
-
-        <View
-            android:id="@+id/view_sign_tip"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:background="@drawable/bg_circle_cb5656"
-            android:layout_marginEnd="2dp"
-            android:layout_marginTop="2dp"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/img_sign"
-            app:layout_constraintTop_toTopOf="@+id/img_sign" />
-
-        <ImageView
-            android:id="@+id/img_setting"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_setting"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="6dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
