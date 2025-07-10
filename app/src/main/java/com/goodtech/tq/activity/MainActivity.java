@@ -24,6 +24,7 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.eventbus.CityEvent;
 import com.goodtech.tq.eventbus.MessageEvent;
+import com.goodtech.tq.fragment.DrawDramaFragment;
 import com.goodtech.tq.fragment.HomeFragment;
 import com.goodtech.tq.fragment.SettingFragment;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
@@ -92,6 +93,7 @@ public class MainActivity extends BaseActivity {
         
         // 添加Fragment
         mFragmentList.add(new HomeFragment());
+        mFragmentList.add(new DrawDramaFragment());
         mFragmentList.add(new SettingFragment());
         
         mPagerAdapter = new MainPagerAdapter(this, mFragmentList);
@@ -225,6 +227,13 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 切换到短剧标签页
+     */
+    public void switchToDramaTab() {
+        mViewPager.setCurrentItem(TabInfo.DRAMA.tabIndex, true);
+    }
+
     private View getTabView(android.content.Context context, int tabIcon, int tabTitle) {
         View view = LayoutInflater.from(context).inflate(R.layout.main_tab_content, null);
         ImageView icon = view.findViewById(R.id.tab_content_image);
@@ -309,7 +318,8 @@ public class MainActivity extends BaseActivity {
     // Tab信息枚举
     private enum TabInfo {
         HOME(0, R.string.tab_home, R.drawable.ic_home_selected, R.drawable.ic_home_unselected),
-        SETTING(1, R.string.tab_settings, R.drawable.tab_ic_duanju_s, R.drawable.tab_ic_duanju_n);
+        DRAMA(1, R.string.tab_drama, R.drawable.tab_ic_duanju_s, R.drawable.tab_ic_duanju_n),
+        SETTING(2, R.string.tab_settings, R.drawable.ic_setting, R.drawable.ic_setting);
 
         private final int tabIndex;
         private final int tabTitle;
