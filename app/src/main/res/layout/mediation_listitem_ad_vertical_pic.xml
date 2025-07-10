@@ -157,6 +157,13 @@
                         android:textColor="#000"
                         android:textSize="14sp"
                         tools:text="Nidddddddddd" />
+                    <TextView
+                        android:id="@+id/reg_url"
+                        android:textColor="#000"
+                        android:textSize="14sp"
+                        android:text="Nidddddddddd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -165,9 +172,8 @@
 
         <ImageView
             android:id="@+id/iv_listitem_dislike"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:padding="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"

@@ -57,5 +57,9 @@
 
     <color name="color_current_location">#FAFAFA</color>
     <color name="color_line">#ECECEC</color>
+    
+    <!-- 缺失的颜色资源 -->
+    <color name="common_half_alpha">#80000000</color>
+    <color name="demo_white">#FFFFFF</color>
 
 </resources>

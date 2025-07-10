@@ -103,6 +103,13 @@
     
     <!-- Tab相关字符串 -->
     <string name="tab_home">首页</string>
+    <string name="tab_drama">短剧</string>
     <string name="tab_settings">设置</string>
+
+    <string name="live_feed_btn">去抖音直播间</string>
+    
+    <!-- 缺失的字符串资源 -->
+    <string name="demo_ad">广告</string>
+    <string name="demo_reward_feedback">激励反馈</string>
 
 </resources>

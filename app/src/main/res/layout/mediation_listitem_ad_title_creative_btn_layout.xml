@@ -117,5 +117,13 @@
             android:textColor="#000"
             android:textSize="14sp"
             tools:text="Nidddddddddd" />
+
+        <TextView
+            android:id="@+id/reg_url"
+            android:textColor="#000"
+            android:textSize="14sp"
+            android:text="Nidddddddddd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </RelativeLayout>
