@@ -79,30 +79,6 @@ class HomeFragment : BaseFragment() {
         setupClickListeners()
         configViewPager()
         registerEventBus()
-        
-        isCurrent = true
-        
-        if (isFirstLoad) {
-            if (SpUtils.getInstance().isAgreePermission()) {
-                // 判断新版本
-                fetchNewVersion { }
-            }
-            isFirstLoad = false
-        }
-
-        if (LocationSpHelper.getLocation() != null && SpUtils.getInstance().isAgreePermission()) {
-            LocationHelper.getInstance().startWithDelay(requireActivity())
-        }
-
-        val cityModesFromSp = LocationSpHelper.getCityListAndLocation()
-        if (cityModesFromSp.size != cityModes.size || isNeedReload) {
-            cityModes = cityModesFromSp.toMutableList()
-            isNeedReload = true
-        }
-
-        reloadView()
-        binding.viewPager.currentItem = currIndex
-        setIndicator(currIndex)
     }
 
     private fun setupViews() {
@@ -169,6 +145,33 @@ class HomeFragment : BaseFragment() {
         // 注册广播接收器
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         requireActivity().registerReceiver(receiver, filter)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        isCurrent = true
+
+        if (isFirstLoad) {
+            if (SpUtils.getInstance().isAgreePermission()) {
+                // 判断新版本
+                fetchNewVersion { }
+            }
+            isFirstLoad = false
+        }
+
+        if (LocationSpHelper.getLocation() != null && SpUtils.getInstance().isAgreePermission()) {
+            LocationHelper.getInstance().startWithDelay(requireActivity())
+        }
+
+        val cityModesFromSp = LocationSpHelper.getCityListAndLocation()
+        if (cityModesFromSp.size != cityModes.size || isNeedReload) {
+            cityModes = cityModesFromSp.toMutableList()
+            isNeedReload = true
+        }
+
+        reloadView()
+        binding.viewPager.currentItem = currIndex
+        setIndicator(currIndex)
     }
 
     override fun onResume() {

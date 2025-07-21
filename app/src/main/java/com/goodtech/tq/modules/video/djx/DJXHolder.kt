@@ -22,20 +22,20 @@ import com.goodtech.tq.BuildConfig
  * create by hanweiwei on 8/30/23
  */
 object DJXHolder {
+
     private const val TAG = "DJXHolder"
 
     const val FREE_SET = 5
     const val LOCK_SET = 2
 
     //初始化
-    @JvmStatic
-    fun init(application: Application, callback: ((success: Boolean) -> Unit)?) {
-        doInitTask(application, callback)
+    fun init(application: Application) {
+        doInitTask(application)
     }
 
-    private fun doInitTask(application: Application, callback: ((success: Boolean) -> Unit)?) {
+    private fun doInitTask(application: Application) {
         val config = DJXSdkConfig.Builder()
-            .debug(BuildConfig.DEBUG_MODE)
+            .debug(true)
             .newUser(true)
             .build()
 
@@ -53,27 +53,19 @@ object DJXHolder {
 //        config.router = DJXRouterImpl()
 
         DJXSdk.init(application, App.SDK_SETTINGS_CONFIG, config)
-        DJXSdk.start { isSuccess, message ->
-            Log.d(TAG, "doInitTask: $isSuccess, $message")
-            callback?.invoke(isSuccess)
+        start {  }
+    }
 
-//            val msg = if (isSuccess) "初始化成功" else "初始化失败：$message"
-//            Toast.makeText(application, msg, Toast.LENGTH_LONG).show()
-        }
+    fun start(callback: ((success: Boolean) -> Unit)?) {
+        DJXSdk.start(DJXSdk.StartListener { isSuccess, message, error ->
+            Log.d(TAG, "doInitTask: $isSuccess, $message, $error")
+            callback?.invoke(isSuccess)
+        })
     }
 
     //加载短剧
-    @JvmStatic
-    fun loadDramaDraw(
-        dramaListener: IDJXDramaListener? = null,
-        drawListener: IDJXDrawListener? = null,
-        adListener: IDJXAdListener? = null
-    ): IDJXWidget {
-        val dramaDetailConfig = DJXDramaDetailConfig.obtain(
-            DJXDramaUnlockAdMode.MODE_SPECIFIC,
-            FREE_SET,
-            DefaultDramaUnlockListener(LOCK_SET, null)
-        )
+    fun loadDramaDraw(dramaListener: IDJXDramaListener?, drawListener: IDJXDrawListener?, adListener: IDJXAdListener?): IDJXWidget {
+        val dramaDetailConfig = DJXDramaDetailConfig.obtain(DJXDramaUnlockAdMode.MODE_COMMON, FREE_SET, DefaultDramaUnlockListener(LOCK_SET, null))
             .listener(DefaultDramaListener(dramaListener)) // 短剧详情页视频播放回调
             .adListener(adListener) // 短剧详情页激励视频回调
 
@@ -92,16 +84,11 @@ object DJXHolder {
 
     //加载剧场首页
     fun loadDramaHome(listener: IDJXDramaHomeListener?): IDJXWidget {
-        val detailConfig = DJXDramaDetailConfig.obtain(
-            DJXDramaUnlockAdMode.MODE_COMMON,
-            FREE_SET,
-            DefaultDramaUnlockListener(LOCK_SET, null)
-        )
+        val detailConfig = DJXDramaDetailConfig.obtain(DJXDramaUnlockAdMode.MODE_COMMON, FREE_SET, DefaultDramaUnlockListener(LOCK_SET, null))
         val params = DJXWidgetDramaHomeParams.obtain(detailConfig)
             .showBackBtn(false)
             .listener(DefaultDramaHomeListener(listener))
 
         return DJXSdk.factory().createDramaHome(params)
     }
-
 }

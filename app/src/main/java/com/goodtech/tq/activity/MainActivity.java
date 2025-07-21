@@ -27,6 +27,7 @@ import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragment.DrawDramaFragment;
 import com.goodtech.tq.fragment.HomeFragment;
 import com.goodtech.tq.fragment.SettingFragment;
+import com.goodtech.tq.fragment.VideoDrawFragment;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.JuHeHelper;
@@ -71,15 +72,14 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         App.getInstance().setMainActivity(this);
-
         initColors();
         setupViewPager();
         setupTabs();
         handleIntent();
         initApp();
-        registerEventBus();
+//        registerEventBus();
+        insetNavigationBar(findViewById(R.id.bottomLayout));
     }
 
     private void initColors() {
@@ -94,11 +94,12 @@ public class MainActivity extends BaseActivity {
         // 添加Fragment
         mFragmentList.add(new HomeFragment());
         mFragmentList.add(new DrawDramaFragment());
-        mFragmentList.add(new SettingFragment());
+        mFragmentList.add(new VideoDrawFragment());
         
         mPagerAdapter = new MainPagerAdapter(this, mFragmentList);
         mViewPager.setAdapter(mPagerAdapter);
-        
+
+        mViewPager.setUserInputEnabled(false);
         // 设置ViewPager2页面切换监听
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -111,7 +112,7 @@ public class MainActivity extends BaseActivity {
 
     private void setupTabs() {
         mTabLayout = findViewById(R.id.tablayout_main);
-        
+
         // 使用TabLayoutMediator连接TabLayout和ViewPager2
         TabLayoutMediator mediator = new TabLayoutMediator(mTabLayout, mViewPager, (tab, position) -> {
             tab.setCustomView(getTabView(this, TabInfo.values()[position].unTabIcon, TabInfo.values()[position].tabTitle));
@@ -137,9 +138,9 @@ public class MainActivity extends BaseActivity {
         mHandler.postDelayed(this::checkNewVersion, 1000);
     }
 
-    private void registerEventBus() {
-        EventBus.getDefault().register(this);
-    }
+//    private void registerEventBus() {
+//        EventBus.getDefault().register(this);
+//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -188,20 +189,20 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         unregisterReceiver(receiver);
     }
 
-    // 事件处理
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(CityEvent event) {
-        // 处理城市相关事件
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event) {
-        // 处理消息事件
-    }
+//    // 事件处理
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onMessageEvent(CityEvent event) {
+//        // 处理城市相关事件
+//    }
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onMessageEvent(MessageEvent event) {
+//        // 处理消息事件
+//    }
 
     private void changeTab(boolean changeText) {
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {

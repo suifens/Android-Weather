@@ -13,9 +13,14 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.DeviceUtils;
@@ -53,6 +58,32 @@ public class BaseActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(stationBar.getLayoutParams());
         bars.height = bars.height + BarUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
+    }
+
+    protected void insetStatusBar(View view) {
+        if (view == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return;
+        ViewCompat.setOnApplyWindowInsetsListener(view, new OnApplyWindowInsetsListener() {
+            @NonNull
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(@NonNull View v, @NonNull WindowInsetsCompat insets) {
+                Insets stateBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+                v.setPadding(stateBars.left, stateBars.top, stateBars.right, stateBars.bottom);
+                return WindowInsetsCompat.CONSUMED;
+            }
+        });
+    }
+
+    protected void insetNavigationBar(View view) {
+        if (view == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return;
+        ViewCompat.setOnApplyWindowInsetsListener(view, new OnApplyWindowInsetsListener() {
+            @NonNull
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(@NonNull View v, @NonNull WindowInsetsCompat insets) {
+                Insets navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+                v.setPadding(navigationBars.left, navigationBars.top, navigationBars.right, navigationBars.bottom);
+                return WindowInsetsCompat.CONSUMED;
+            }
+        });
     }
 
     public void showPermissionDialog(Activity activity, View.OnClickListener confirmListener) {

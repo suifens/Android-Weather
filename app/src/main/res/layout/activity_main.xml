@@ -11,13 +11,21 @@
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.925" />
+        android:layout_weight="1"
+        />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout_main"
+    <LinearLayout
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/white"
-        section:tabIndicatorHeight="0dp" />
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tablayout_main"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            section:tabIndicatorHeight="0dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -80,9 +80,18 @@ object DPHolder {
         }
     }
 
-    fun buildDrawWidget(params: DPWidgetDrawParams?): IDPWidget {
-        //创建draw视频流组件
-        return factory.createDraw(params)
+    fun buildDrawWidget(params: DPWidgetDrawParams?): IDPWidget? {
+        return try {
+            if (!isDPStarted) {
+                Log.w(TAG, "DP SDK未启动，无法创建视频组件")
+                return null
+            }
+            //创建draw视频流组件
+            factory.createDraw(params)
+        } catch (e: Exception) {
+            Log.e(TAG, "创建视频组件失败", e)
+            null
+        }
     }
 
     fun buildGridWidget(params: DPWidgetGridParams?): IDPWidget {

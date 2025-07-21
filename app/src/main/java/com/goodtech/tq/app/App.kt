@@ -92,7 +92,31 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        setupGlobalExceptionHandler()
         initializeApp()
+    }
+
+    private fun setupGlobalExceptionHandler() {
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            try {
+                Log.e(TAG, "未捕获的异常: ${thread.name}", throwable)
+                
+                // 如果是视频引擎相关的异常，记录详细信息
+                if (throwable.stackTraceToString().contains("TTVideoEngine") || 
+                    throwable.stackTraceToString().contains("StrategyGearABR")) {
+                    Log.e(TAG, "视频引擎异常详情", throwable)
+                }
+                
+                // 可以在这里添加崩溃上报逻辑
+                // CrashReport.postCatchedException(throwable)
+            } catch (e: Exception) {
+                Log.e(TAG, "处理未捕获异常时出错", e)
+            } finally {
+                // 调用默认处理器
+                defaultHandler?.uncaughtException(thread, throwable)
+            }
+        }
     }
 
     private fun initializeApp() {
@@ -129,6 +153,7 @@ class App : Application() {
             initializeAdSDK()
             configUM()
             initializeJPush()
+            loadCsjAdHolder()
         }
     }
 
@@ -150,31 +175,50 @@ class App : Application() {
     }
 
     fun loadCsjAdHolder() {
-        CsjAdHolder.init(SITE_ID, instance, object : TTAdSdk.Callback {
-            override fun success() {
-                Log.e(TAG, "CsjAdHolder init success")
-                initializeVideoSDKs()
-            }
+        try {
+            CsjAdHolder.init(SITE_ID, instance, object : TTAdSdk.Callback {
+                override fun success() {
+                    Log.e(TAG, "CsjAdHolder init success")
+                    // 广告SDK初始化成功后，再初始化视频SDK
+                    initVideoSDKs()
+                }
 
-            override fun fail(code: Int, msg: String?) {
-                Log.e(TAG, "CsjAdHolder init fail: $code, $msg")
-            }
-        })
+                override fun fail(code: Int, msg: String?) {
+                    Log.e(TAG, "CsjAdHolder init fail: $code, $msg")
+                    // 即使广告SDK失败，也尝试初始化视频SDK
+                    initVideoSDKs()
+                }
+            })
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化广告SDK失败", e)
+            // 异常情况下也尝试初始化视频SDK
+            initVideoSDKs()
+        }
     }
 
-    private fun initializeVideoSDKs() {
-        initDJX()
-        initDP()
+    private fun initVideoSDKs() {
+        try {
+            initDJX()
+            initDP()
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化视频SDK失败", e)
+        }
     }
 
     fun initDJX() {
-        DJXHolder.init(instance) {
-            Bus.getInstance().sendEvent(DJXStartEvent(it))
+        try {
+            DJXHolder.init(instance)
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化DJX SDK失败", e)
         }
     }
 
     fun initDP() {
-        DPHolder.init(instance)
+        try {
+            DPHolder.init(instance)
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化DP SDK失败", e)
+        }
     }
 
     fun startIntent(activity: Activity) {

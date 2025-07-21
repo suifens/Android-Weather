@@ -43,7 +43,8 @@
 		"draw_banner_code_id": "954646113",
 		"drama_rewarded_ad_code_id": "954646111",
 		"drama_rewarded_ad_code_id_02": "954646125",
-		"drama_draw_ad_code_id": "954646121"
+		"drama_draw_ad_code_id": "954646121",
+		"staggered_grid_ad_code_id_02": "961667710"
 	},
 	"novel": {
 		"status": 0,
@@ -54,5 +55,19 @@
 		"banner_ad_code_id": "",
 		"end_ad_code_id": ""
 	},
-	"live": null
+	"live": null,
+	"license_config": [
+		{
+			"PackageName": "com.goodtech.tq",
+			"BundleId": "com.goodtech.tq",
+			"StartTime": "20250721T095218Z",
+			"ExpireTime": "20270721T095218Z",
+			"CreatedTime": "20250721T095218Z",
+			"Signature": "AFVxTGXqhOOl59WptOYeKvJqdOcvloLjEqSqc5ZkRIvzPO96W/T1JX2HiK7KPK1IXbd0x6DjCyiC5ojuB3fJUOwHDwUIl+LSGp9hm3tHaydN6OP7u9gNIojqz3PwvAYku4x3w7RJZkKQMdYh7XsDxGVCBSRmjE7Izq2nmFapN5fECfhep3m1JKDRVXSy3Oy7A78vgri079+uT4qhLR73ThNQYFBTmou6uPmvwGXv/P6Av5ZLFaFq3Ke9mVxIMGmJP1rVS+yk0ke+FrtvjLY8ZCZ3UG82HBQZQeYrJr2CkWNqc7UK0oAOH6SnXV2WZZQoor1hYua6Q/YC7HHwo2xUnQ==",
+			"Content": "eyJJZCI6IjE2OTczNDU1MzgiLCAiVmVyc2lvbiI6MiwgIkNoYW5uZWwiOiJhZF9jc2oiLCAiVHlwZSI6MiwgIlBhY2thZ2VOYW1lIjoiY29tLmdvb2R0ZWNoLnRxIiwgIkJ1bmRsZUlkIjoiY29tLmdvb2R0ZWNoLnRxIiwgIk1vZHVsZXMiOlt7Ik5hbWUiOiJ2b2RfcGxheSIsICJFZGl0aW9uIjoicHJlbWl1bV9lZGl0aW9uIiwgIlN0YXJ0VGltZSI6MTc1MzA5MTUzODA1NCwgIkV4cGlyZVRpbWUiOjE4MTYxNjM1MzgwNTQsICJFeHBpcmVCdWZmZXIiOjE1NTUyMDAwMDAwfV0sICJGaWxlVmVyc2lvbiI6IjE3NTMwOTE1MzgwNjMxMzA4MzYifQ==",
+			"MainURL": "https://vod-license-m.volccdn.com/vod-license/l-1697345538-ch-ad_csj-a-337877.lic?lk3s=0d9f7a7d\u0026x-expires=4906691538\u0026x-signature=sm1IyHKMNF0MX7%2BXmoHhRmxCIxs%3D",
+			"BackupURL": "https://vod-license-b.volccdn.com/vod-license/l-1697345538-ch-ad_csj-a-337877.lic?lk3s=0d9f7a7d\u0026x-expires=4906691538\u0026x-signature=pJjaL1GAklp9HR1morATZ%2BlB5X0%3D",
+			"Id": "1697345538"
+		}
+	]
 }
