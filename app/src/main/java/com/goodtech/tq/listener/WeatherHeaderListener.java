@@ -1,5 +1,7 @@
 package com.goodtech.tq.listener;
 
+import com.goodtech.tq.models.LifeItemBean;
+
 public interface WeatherHeaderListener {
     //  台风路径
     void onTyphoon();
@@ -24,5 +26,7 @@ public interface WeatherHeaderListener {
 
     void onShortPlayer();
     void onMiniVideo();
+
+    void onLifeItem(LifeItemBean lifeItemBean);
 
 }

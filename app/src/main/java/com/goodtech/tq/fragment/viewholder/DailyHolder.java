@@ -11,7 +11,7 @@ import com.goodtech.tq.models.Daily;
 import com.goodtech.tq.models.Daypart;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.utils.TimeUtils;
 
 /**
@@ -51,10 +51,10 @@ public class DailyHolder extends RecyclerView.ViewHolder {
             if (dayPart == null) {
                 Observation observation = model.observation;
                 if (observation != null) {
-                    mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
+                    mIconImgV.setImageResource(WeatherUtils.weatherImageRes(observation.wxIcon));
                 }
             } else {
-                mIconImgV.setImageResource(ImageUtils.weatherImageRes(dayPart.iconCd));
+                mIconImgV.setImageResource(WeatherUtils.weatherImageRes(dayPart.iconCd));
             }
         }
     }

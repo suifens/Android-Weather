@@ -6,30 +6,55 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * com.goodtech.tq.models
+ * 气象要素数据类
+ * 包含温度、湿度、气压、风速等具体的数值数据
+ * 实现Parcelable接口，支持数据序列化传输
  */
 public class Metric implements Parcelable {
 
+    /** 阵风风速（公里/小时） */
     public int gust;
+    
+    /** 露点温度（摄氏度），空气中水汽达到饱和时的温度 */
     @SerializedName("dewpt")
-    public int dewpt;   //  露点
+    public int dewpt;
+    
+    /** 体感温度（摄氏度），考虑风速和湿度影响后的实际感受温度 */
     @SerializedName("feels_like")
     public int feelsLike;
+    
+    /** 最高温度（摄氏度） */
     @SerializedName("max_temp")
-    public int maxTemp; //  最高温
+    public int maxTemp;
+    
+    /** 最低温度（摄氏度） */
     @SerializedName("min_temp")
-    public int minTemp; //  最低温
+    public int minTemp;
+    
+    /** 累计降水量（毫米） */
     @SerializedName("precip_total")
     public float precipTotal;
+    
+    /** 气压值（毫巴） */
     @SerializedName("pressure")
-    public float pressure;  //  气压
+    public float pressure;
+    
+    /** 当前温度（摄氏度） */
     @SerializedName("temp")
-    public int temp;    //  温度
+    public int temp;
+    
+    /** 能见度（公里） */
     @SerializedName("vis")
-    public float vis;   //  能见度
+    public float vis;
+    
+    /** 风速（公里/小时） */
     @SerializedName("wspd")
-    public int wspd;    //  风速 km/h
+    public int wspd;
 
+    /**
+     * 重写toString方法，用于调试输出
+     * @return 格式化的字符串表示
+     */
     @Override
     public String toString() {
         return "Metric {" + "\n" +
@@ -46,7 +71,10 @@ public class Metric implements Parcelable {
                 '}';
     }
 
-
+    /**
+     * Parcelable构造函数
+     * @param in Parcel对象
+     */
     protected Metric(Parcel in) {
         gust = in.readInt();
         dewpt = in.readInt();
@@ -60,10 +88,12 @@ public class Metric implements Parcelable {
         wspd = in.readInt();
     }
 
+    /** 默认构造函数 */
     Metric() {
 
     }
 
+    /** Parcelable创建器 */
     public static final Creator<Metric> CREATOR = new Creator<Metric>() {
         @Override
         public Metric createFromParcel(Parcel in) {

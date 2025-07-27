@@ -104,7 +104,7 @@
     <!-- Tab相关字符串 -->
     <string name="tab_home">首页</string>
     <string name="tab_drama">短剧</string>
-    <string name="tab_settings">设置</string>
+    <string name="tab_video">小视频</string>
 
     <string name="live_feed_btn">去抖音直播间</string>
     

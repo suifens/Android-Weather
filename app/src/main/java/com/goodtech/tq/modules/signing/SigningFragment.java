@@ -18,7 +18,7 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.fragment.BaseFragment;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Hourly;
-import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.utils.TimeUtils;
 
 import java.io.File;
@@ -93,7 +93,7 @@ public class SigningFragment extends BaseFragment {
     @SuppressLint("DefaultLocale")
     public void updateData(Hourly hourly, CityMode cityMode, int continueCount) {
         if (mWeatherIcon != null) {
-            mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
+            mWeatherIcon.setImageResource(WeatherUtils.weatherImageRes(hourly.icon_cd));
             if (hourly.metric != null) {
                 mTempTv.setText(String.format("%d", hourly.metric.temp));
             }

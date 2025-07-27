@@ -33,7 +33,7 @@ import com.goodtech.tq.models.CityMode
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.modules.cityList.CityListActivity
 import com.goodtech.tq.modules.signing.SigningActivity
-import com.goodtech.tq.utils.ImageUtils
+import com.goodtech.tq.utils.WeatherUtils
 import com.goodtech.tq.utils.IntentReceiver
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.utils.TimeUtils
@@ -215,7 +215,9 @@ class HomeFragment : BaseFragment() {
      * 显示权限对话框
      */
     private fun showPermissionDialog(onGranted: () -> Unit) {
-        (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity(), onGranted)
+        (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) { 
+            onGranted() 
+        }
     }
 
     /**
@@ -239,7 +241,7 @@ class HomeFragment : BaseFragment() {
         val fragment = createWeatherFragment()
         fragmentList.add(fragment)
         
-        val adapter = ViewPagerAdapter(requireActivity(), fragmentList)
+        val adapter = ViewPagerAdapter(requireActivity(), fragmentList as List<Fragment>?)
         binding.viewPager.adapter = adapter
         
         binding.viewPager.registerOnPageChangeCallback(createPageChangeCallback())
@@ -460,7 +462,7 @@ class HomeFragment : BaseFragment() {
         adjustFragmentList()
         safeExecuteFragmentOperation {
             val adapter = binding.viewPager.adapter as? ViewPagerAdapter
-            adapter?.replaceAll(fragmentList)
+            adapter?.replaceAll(fragmentList as List<Fragment>)
         }
     }
 
@@ -552,7 +554,7 @@ class HomeFragment : BaseFragment() {
             if (model?.dailies != null) {
                 TipHelper.dismissProgressDialog(PROGRESS_DISMISS_DELAY_MS)
                 val isNight = calculateIsNight(model.dailies[0])
-                binding.imgBackground.setImageResource(ImageUtils.bgImageRes(model.getIconCd(), isNight))
+                binding.imgBackground.setImageResource(WeatherUtils.bgImageRes(model.getIconCd(), isNight))
             } else {
                 binding.imgBackground.setImageResource(R.drawable.bg_normal)
                 mainHandler.postDelayed({ TipHelper.dismissProgressDialog() }, PROGRESS_DISMISS_FALLBACK_MS)
@@ -566,8 +568,9 @@ class HomeFragment : BaseFragment() {
     private fun calculateIsNight(daily: Any?): Boolean {
         if (daily == null) return false
         
-        val sunrise = TimeUtils.switchTime(daily.sunRise)
-        val sunset = TimeUtils.switchTime(daily.sunSet)
+        val dailyObj = daily as? com.goodtech.tq.models.Daily ?: return false
+        val sunrise = TimeUtils.switchTime(dailyObj.sunRise)
+        val sunset = TimeUtils.switchTime(dailyObj.sunSet)
         val current = System.currentTimeMillis()
         
         return current < sunrise || current > sunset

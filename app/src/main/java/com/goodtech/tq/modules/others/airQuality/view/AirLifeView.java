@@ -8,7 +8,7 @@ import android.view.View;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.goodtech.tq.R;
-import com.goodtech.tq.models.JuheLifeModel;
+import com.goodtech.tq.models.LifeEntity;
 
 public class AirLifeView extends ConstraintLayout {
 
@@ -50,7 +50,7 @@ public class AirLifeView extends ConstraintLayout {
     private AirLifeItemView allergyView;    //过敏指数
     private AirLifeItemView comfortView;    //舒适度指数
 
-    public void setupLife(JuheLifeModel lifeModel, int color) {
+    public void setupLife(LifeEntity lifeModel, int color) {
         if (color != 0) {
             dressingView.setTextColor(color);
             sportView.setTextColor(color);

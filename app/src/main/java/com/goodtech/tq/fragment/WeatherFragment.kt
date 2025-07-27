@@ -40,6 +40,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.goodtech.tq.ad.AdManager
+import com.goodtech.tq.models.LifeItemBean
+import com.goodtech.tq.views.popup.LifeDetailsPopup
 
 class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListener {
 
@@ -447,5 +449,26 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         val intent = Intent(requireActivity(), DrawVideoFullScreenActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+    }
+
+    override fun onLifeItem(lifeItemBean: LifeItemBean?) {
+        val popup = LifeDetailsPopup(requireActivity())
+        popup.lifeDetails = lifeItemBean
+        val entity = mWeatherModel?.lifeModel
+        if (entity != null) {
+            popup.lifeTitle = entity.lifeTitleWith(lifeItemBean)
+            popup.lifeImgRes = entity.lifeImageWith(lifeItemBean)
+        }
+        mCityMode?.let { city ->
+            popup.cityName = city.mergerName
+        }
+        mWeatherModel?.let { weather ->
+            popup.observation = weather.observation
+        }
+
+        XPopup.Builder(requireActivity())
+            .isDestroyOnDismiss(true)   //  只使用一次
+            .asCustom(popup)
+            .show()
     }
 } 

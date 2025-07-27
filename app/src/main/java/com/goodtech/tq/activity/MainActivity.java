@@ -22,11 +22,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.blankj.utilcode.util.AppUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
-import com.goodtech.tq.eventbus.CityEvent;
-import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.fragment.DrawDramaFragment;
 import com.goodtech.tq.fragment.HomeFragment;
-import com.goodtech.tq.fragment.SettingFragment;
 import com.goodtech.tq.fragment.VideoDrawFragment;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;
@@ -40,9 +37,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.lxj.xpopup.XPopup;
 import com.umeng.analytics.MobclickAgent;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -138,9 +132,6 @@ public class MainActivity extends BaseActivity {
         mHandler.postDelayed(this::checkNewVersion, 1000);
     }
 
-//    private void registerEventBus() {
-//        EventBus.getDefault().register(this);
-//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -320,7 +311,7 @@ public class MainActivity extends BaseActivity {
     private enum TabInfo {
         HOME(0, R.string.tab_home, R.drawable.ic_home_selected, R.drawable.ic_home_unselected),
         DRAMA(1, R.string.tab_drama, R.drawable.tab_ic_duanju_s, R.drawable.tab_ic_duanju_n),
-        SETTING(2, R.string.tab_settings, R.drawable.ic_setting, R.drawable.ic_setting);
+        SETTING(2, R.string.tab_video, R.drawable.tab_ic_shiping_s, R.drawable.tab_ic_shiping_n);
 
         private final int tabIndex;
         private final int tabTitle;

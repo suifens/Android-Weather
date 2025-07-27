@@ -213,7 +213,7 @@ class WidgetService : LifecycleService() {
                         //
                         remoteViews.setImageViewResource(
                             R.id.sIconImgView,
-                            ImageUtils.weatherImageRes(hourly.icon_cd)
+                            WeatherUtils.weatherImageRes(hourly.icon_cd)
                         )
                         remoteViews.setTextViewText(R.id.sTv_wx_phrase, hourly.getPhraseChar())
                         if (hourly.metric != null) {
@@ -244,7 +244,7 @@ class WidgetService : LifecycleService() {
                 )
                 remoteViews.setImageViewResource(
                     R.id.sIconImgView,
-                    ImageUtils.weatherImageRes(observation.wxIcon)
+                    WeatherUtils.weatherImageRes(observation.wxIcon)
                 )
                 remoteViews.setTextViewText(
                     R.id.sTv_temperature,

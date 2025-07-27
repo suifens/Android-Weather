@@ -102,7 +102,7 @@ public class NotificationUtil {
                     String dayHour = TimeUtils.longToString(hourly.fcst_valid * 1000, "MMddHH");
                     if (dayHour.equals(current)) {
                         //
-                        views.setImageViewResource(R.id.ivWeather, ImageUtils.weatherImageRes(hourly.icon_cd));
+                        views.setImageViewResource(R.id.ivWeather, WeatherUtils.weatherImageRes(hourly.icon_cd));
                         views.setTextViewText(R.id.tvWeather, hourly.getPhraseChar());
 
                         if (hourly.metric != null) {
@@ -117,7 +117,7 @@ public class NotificationUtil {
                 Observation observation = model.observation;
                 Metric metric = observation.metric;
 
-                views.setImageViewResource(R.id.ivWeather, ImageUtils.weatherImageRes(observation.wxIcon));
+                views.setImageViewResource(R.id.ivWeather, WeatherUtils.weatherImageRes(observation.wxIcon));
                 views.setTextViewText(R.id.tvTemp, String.format("%d°", metric.temp));
                 views.setTextViewText(R.id.tvWeather, observation.getWxPhrase());
             }

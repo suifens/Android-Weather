@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.Hourly;
-import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.utils.font.AlternateBoldTextView;
@@ -110,7 +110,7 @@ public class HoursRecyclerAdapter extends RecyclerView.Adapter<HoursRecyclerAdap
                     setupPhrase("");
                 }
             } else {
-                mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(hourly.icon_cd));
+                mWeatherIcon.setImageResource(WeatherUtils.weatherImageRes(hourly.icon_cd));
                 mTemperature.setText(String.format("%d°", hourly.metric.temp));
                 setupPhrase(hourly.getPhraseChar());
             }

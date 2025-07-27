@@ -7,7 +7,7 @@ import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.models.JuheAirModel;
 import com.goodtech.tq.models.JuheAlarmModel;
-import com.goodtech.tq.models.JuheLifeModel;
+import com.goodtech.tq.models.LifeEntity;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.TimeUtils;
@@ -58,7 +58,7 @@ public class WeatherSpHelper {
         }
 
         if (weatherModel != null && !TextUtils.isEmpty(getCityLife(poiId))) {
-            JuheLifeModel lifeModel = new Gson().fromJson(getCityLife(poiId), new TypeToken<JuheLifeModel>(){ }.getType());
+            LifeEntity lifeModel = new Gson().fromJson(getCityLife(poiId), new TypeToken<LifeEntity>(){ }.getType());
             if (lifeModel != null) {
                 weatherModel.lifeModel = lifeModel;
             }

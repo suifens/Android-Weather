@@ -62,4 +62,7 @@
     <color name="common_half_alpha">#80000000</color>
     <color name="demo_white">#FFFFFF</color>
 
+    <color name="color_383838">#383838</color>
+    <color name="color_515151">#515151</color>
+
 </resources>

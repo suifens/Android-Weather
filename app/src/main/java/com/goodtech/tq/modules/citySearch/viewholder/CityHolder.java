@@ -21,7 +21,7 @@ import com.goodtech.tq.modules.cityList.CityListRecyclerAdapter;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.WeatherUtils;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
 /**
@@ -66,7 +66,7 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
         if (weatherModel != null && weatherModel.observation != null) {
             mWeatherIcon.setVisibility(View.VISIBLE);
             mTipTv.setVisibility(View.GONE);
-            mWeatherIcon.setImageResource(ImageUtils.weatherImageRes(getIconId(weatherModel)));
+            mWeatherIcon.setImageResource(WeatherUtils.weatherImageRes(getIconId(weatherModel)));
             if (weatherModel.observation != null && weatherModel.observation.metric != null) {
                 mTempTv.setText(String.format("%d°", weatherModel.observation.metric.temp));
             }

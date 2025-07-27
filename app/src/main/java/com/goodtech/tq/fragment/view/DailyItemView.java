@@ -18,7 +18,7 @@ import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.Metric;
 import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
-import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.utils.TimeUtils;
 import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.utils.font.AlternateBoldTextView;
@@ -77,11 +77,11 @@ public class DailyItemView extends ConstraintLayout {
             if (dayPart == null) {
                 Observation observation = model.observation;
                 if (observation != null) {
-                    mIconImgV.setImageResource(ImageUtils.weatherImageRes(observation.wxIcon));
+                    mIconImgV.setImageResource(WeatherUtils.weatherImageRes(observation.wxIcon));
                     updateRain(observation.getWxPhrase());
                 }
             } else {
-                mIconImgV.setImageResource(ImageUtils.weatherImageRes(dayPart.iconCd));
+                mIconImgV.setImageResource(WeatherUtils.weatherImageRes(dayPart.iconCd));
                 updateRain(dayPart.getPhraseChar());
             }
         }

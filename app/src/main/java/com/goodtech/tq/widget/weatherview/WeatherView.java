@@ -18,7 +18,7 @@ import java.util.List;
 
 import com.goodtech.tq.R;
 import com.goodtech.tq.models.Daily;
-import com.goodtech.tq.utils.ImageUtils;
+import com.goodtech.tq.utils.WeatherUtils;
 import com.goodtech.tq.utils.TimeUtils;
 
 
@@ -464,12 +464,12 @@ public class WeatherView extends HorizontalScrollView {
                 itemView.setDayTemp(model.metric.maxTemp);
                 if (model.dayPart != null) {
                     itemView.setDayWeather(model.dayPart.getPhraseChar());
-                    itemView.setDayImg(ImageUtils.weatherImageRes(model.dayPart.iconCd));
+                    itemView.setDayImg(WeatherUtils.weatherImageRes(model.dayPart.iconCd));
                 }
                 itemView.setNightTemp(model.metric.minTemp);
                 if (model.nightPart != null) {
                     itemView.setNightWeather(model.nightPart.getPhraseChar());
-                    itemView.setNightImg(ImageUtils.weatherImageRes(model.nightPart.iconCd));
+                    itemView.setNightImg(WeatherUtils.weatherImageRes(model.nightPart.iconCd));
                 }
                 // itemView.setAirLevel(model.getAirLevel());
                 itemView.setLayoutParams(new LinearLayout.LayoutParams(screenWidth / columnNumber, ViewGroup.LayoutParams.WRAP_CONTENT));

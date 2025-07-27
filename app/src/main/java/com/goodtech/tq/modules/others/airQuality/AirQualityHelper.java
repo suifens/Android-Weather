@@ -8,7 +8,7 @@ import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.JuHeHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.JuheAirModel;
-import com.goodtech.tq.models.JuheLifeModel;
+import com.goodtech.tq.models.LifeEntity;
 import com.goodtech.tq.models.WeatherModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -62,7 +62,7 @@ public class AirQualityHelper {
 
     public static interface CityLifeCallback {
 
-        void onResponse(JuheLifeModel lifeModel);
+        void onResponse(LifeEntity lifeModel);
 
     }
     /**
@@ -90,7 +90,7 @@ public class AirQualityHelper {
                     if (success) {
                         if (jsonObject != null && !jsonObject.isNull("result")) {
                             JSONObject data = jsonObject.getJSONObject("result").getJSONObject("life");
-                            JuheLifeModel model = new Gson().fromJson(String.valueOf(data), new TypeToken<JuheLifeModel>(){ }.getType());
+                            LifeEntity model = new Gson().fromJson(String.valueOf(data), new TypeToken<LifeEntity>(){ }.getType());
                             if (model != null) {
                                WeatherSpHelper.saveCityLife(String.valueOf(data), cityMode.getPoiId());
                                 if (callback != null) {

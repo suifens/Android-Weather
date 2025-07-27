@@ -4,7 +4,136 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout3"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
+
+<!--    <eightbitlab.com.blurview.BlurTarget-->
+<!--        android:id="@+id/target"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent" />-->
+
+
+    <ImageView
+        android:id="@+id/img_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/view_items"
+        app:layout_constraintTop_toBottomOf="@+id/view_items"
+        />
+
+    <com.goodtech.tq.utils.font.AlternateBoldTextView
+        android:id="@+id/tv_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/white"
+        android:textSize="120dp"
+        tools:text="18°"
+        app:layout_constraintStart_toStartOf="@+id/view_items"
+        app:layout_constraintTop_toBottomOf="@+id/view_items" />
+
+    <TextView
+        android:id="@+id/tv_wx_phrase"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="26dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        tools:text="多云"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/tv_temperature"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_temperature" />
+
+    <TextView
+        android:id="@+id/tv_rh_wrap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="-10dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/white_alpha80"
+        android:textSize="18dp"
+        tools:text="sdlkfjsdl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temperature" />
+
+    <ImageButton
+        android:id="@+id/warningBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/tv_rh_wrap"
+        app:layout_constraintTop_toBottomOf="@+id/tv_rh_wrap"
+        app:srcCompat="@drawable/ic_worning" />
+
+
+<!--    <eightbitlab.com.blurview.BlurView-->
+<!--        android:id="@+id/blurView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:background="@drawable/bg_round_blur"-->
+<!--        app:blurOverlayColor="#B3FFFFFF"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        >-->
+
+        <LinearLayout
+            android:id="@+id/dressingView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_round_blur"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="7dp"
+                android:src="@drawable/img_clothes_min"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginStart="5dp"
+                android:text="穿衣建议｜"
+                android:textSize="14dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/dressingTv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:lines="1"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginEnd="2dp"
+                android:text=""
+                android:textSize="14dp"
+                android:textColor="@color/black" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="7dp"
+                android:src="@drawable/ic_more_r"
+                />
+
+        </LinearLayout>
+
+<!--    </eightbitlab.com.blurview.BlurView>-->
 
     <com.goodtech.tq.fragment.viewholder.HeaderItemsView
         android:id="@+id/view_items"
@@ -18,115 +147,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
-    <ImageButton
-        android:id="@+id/warningBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:visibility="invisible"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_items"
-        app:srcCompat="@drawable/ic_worning" />
-
-    <LinearLayout
-        android:id="@+id/layout_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:minHeight="140dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view_items">
-
-        <ImageView
-            android:id="@+id/img_icon"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="10dp"
-             />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="130dp"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1">
-
-            <com.goodtech.tq.utils.font.AlternateBoldTextView
-                android:id="@+id/tv_temperature"
-                android:layout_width="wrap_content"
-                android:layout_height="86dp"
-                android:textColor="@color/white"
-                android:textSize="64dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_current"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_16"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_temperature" />
-
-            <TextView
-                android:id="@+id/tv_wx_phrase"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginBottom="2dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_16"
-                app:layout_constraintStart_toEndOf="@+id/tv_current"
-                app:layout_constraintTop_toBottomOf="@+id/tv_temperature" />
-
-            <TextView
-                android:id="@+id/tv_rh_wrap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:gravity="bottom"
-                android:textColor="@color/white_alpha80"
-                android:textSize="13dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_current" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageButton
-            android:id="@+id/short_play_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/color_clear"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_csj" />
-
-        <View
-            android:layout_width="10dp"
-            android:layout_height="0dp" />
-
-        <ImageButton
-            android:id="@+id/mini_video_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/color_clear"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_video" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
