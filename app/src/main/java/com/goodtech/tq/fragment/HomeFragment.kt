@@ -15,7 +15,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.BaseActivity
@@ -41,85 +40,28 @@ import com.goodtech.tq.utils.TipHelper
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import kotlinx.coroutines.*
 
-/**
- * 主页面 Fragment
- * 负责显示天气信息和城市管理
- */
 class HomeFragment : BaseFragment() {
 
     companion object {
         private const val TAG = "HomeFragment"
-        private const val RETRY_DELAY_MS = 100L
-        private const val PROGRESS_DISMISS_DELAY_MS = 1000L
-        private const val PROGRESS_DISMISS_FALLBACK_MS = 2000L
-        private const val INDICATOR_WIDTH_DP = 5f
-        private const val INDICATOR_HEIGHT_DP = 5f
-        private const val INDICATOR_MARGIN_DP = 6f
     }
 
-    // UI 相关
+    private val receiver: BroadcastReceiver = IntentReceiver()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     
-    // 生命周期管理
-    private val mainHandler = Handler(Looper.getMainLooper())
-    private val receiver: BroadcastReceiver = IntentReceiver()
+    protected val mHandler = Handler(Looper.getMainLooper())
     
-    // 数据管理
-    private val fragmentList = mutableListOf<WeatherFragment>()
+    // 数据
+    private val fragmentList = mutableListOf<Fragment>()
     private var cityModes = mutableListOf<CityMode>()
-    private var currentIndex = 0
-    private var isLoadLast = false
-    private var isSigned = false
+    private var currIndex = 0
+    private var loadLast = false
+    private var signed = false
     private var isFirstLoad = true
     private var isCurrent = false
     private var isNeedReload = true
-    private var isFragmentManagerBusy = false
-
-    // 协程作用域
-    private val fragmentScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-
-    /**
-     * 检查 Fragment 是否处于安全状态
-     */
-    private fun isFragmentSafe(): Boolean {
-        return isAdded && !isDetached && activity != null && !isFragmentManagerBusy
-    }
-
-    /**
-     * 安全地执行 Fragment 操作
-     */
-    private fun safeExecuteFragmentOperation(operation: () -> Unit) {
-        if (!isFragmentSafe()) {
-            Log.w(TAG, "Fragment not in safe state, skipping operation")
-            return
-        }
-        
-        try {
-            isFragmentManagerBusy = true
-            operation()
-        } catch (e: IllegalStateException) {
-            Log.e(TAG, "FragmentManager transaction conflict: ${e.message}")
-            // 延迟重试
-            mainHandler.postDelayed({
-                try {
-                    if (isFragmentSafe()) {
-                        operation()
-                    }
-                } catch (e2: Exception) {
-                    Log.e(TAG, "Failed to execute operation after retry: ${e2.message}")
-                } finally {
-                    isFragmentManagerBusy = false
-                }
-            }, RETRY_DELAY_MS)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error executing fragment operation: ${e.message}")
-        } finally {
-            isFragmentManagerBusy = false
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -132,205 +74,101 @@ class HomeFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeViews()
-    }
-
-    /**
-     * 初始化视图
-     */
-    private fun initializeViews() {
-        setupStatusBar()
+        
+        setupViews()
         setupClickListeners()
-        setupViewPager()
+        configViewPager()
         registerEventBus()
-    }
-
-    /**
-     * 设置状态栏
-     */
-    private fun setupStatusBar() {
-        val statusBar = binding.privateStationBar
-        val layoutParams = statusBar.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
-        layoutParams.height += BarUtils.getStatusBarHeight()
-        statusBar.layoutParams = layoutParams
-    }
-
-    /**
-     * 设置点击监听器
-     */
-    private fun setupClickListeners() {
-        binding.layoutAddress.setOnClickListener { handleAddressClick() }
-        binding.imgSetting.setOnClickListener { handleSettingClick() }
-        binding.imgSign.setOnClickListener { handleSignClick() }
-    }
-
-    /**
-     * 处理地址点击事件
-     */
-    private fun handleAddressClick() {
-        if (!hasPermission()) {
-            showPermissionDialog { navigateToCityList() }
-            return
-        }
-        navigateToCityList()
-    }
-
-    /**
-     * 处理设置点击事件
-     */
-    private fun handleSettingClick() {
-        if (!hasPermission()) {
-            showPermissionDialog { navigateToSettings() }
-            return
-        }
-        navigateToSettings()
-    }
-
-    /**
-     * 处理签到点击事件
-     */
-    private fun handleSignClick() {
-        if (!hasPermission()) {
-            showPermissionDialog { handleSignClick() }
-            return
-        }
         
-        val cityMode = cityModes.getOrNull(currentIndex) ?: return
-        val weatherModel = getWeatherModel(cityMode.getPoiId()) ?: return
-        
-        SigningActivity.redirectTo(
-            requireActivity(),
-            weatherModel.hourlies[0],
-            cityMode,
-            0
-        )
-    }
-
-    /**
-     * 检查权限
-     */
-    private fun hasPermission(): Boolean = SpUtils.getInstance().isAgreePermission()
-
-    /**
-     * 显示权限对话框
-     */
-    private fun showPermissionDialog(onGranted: () -> Unit) {
-        (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) { 
-            onGranted() 
-        }
-    }
-
-    /**
-     * 导航到城市列表
-     */
-    private fun navigateToCityList() {
-        CityListActivity.redirectTo(requireActivity())
-    }
-
-    /**
-     * 导航到设置页面
-     */
-    private fun navigateToSettings() {
-        startActivity(Intent(requireActivity(), SettingActivity::class.java))
-    }
-
-    /**
-     * 设置 ViewPager
-     */
-    private fun setupViewPager() {
-        val fragment = createWeatherFragment()
-        fragmentList.add(fragment)
-        
-        val adapter = ViewPagerAdapter(requireActivity(), fragmentList as List<Fragment>?)
-        binding.viewPager.adapter = adapter
-        
-        binding.viewPager.registerOnPageChangeCallback(createPageChangeCallback())
-    }
-
-    /**
-     * 创建天气 Fragment
-     */
-    private fun createWeatherFragment(): WeatherFragment {
-        return WeatherFragment().apply {
-            setStateBar(binding.stationBgView)
-        }
-    }
-
-    /**
-     * 创建页面切换回调
-     */
-    private fun createPageChangeCallback() = object : ViewPager2.OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-            if (currentIndex != position) {
-                currentIndex = position
-                updateIndicator(position)
-            }
-        }
-    }
-
-    /**
-     * 注册事件总线
-     */
-    private fun registerEventBus() {
-        EventBus.getDefault().register(this)
-        
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        requireActivity().registerReceiver(receiver, filter)
-    }
-
-    override fun onStart() {
-        super.onStart()
         isCurrent = true
-        handleFirstLoad()
-        handleLocation()
-        handleCityModesUpdate()
-        scheduleViewReload()
-    }
-
-    /**
-     * 处理首次加载
-     */
-    private fun handleFirstLoad() {
+        
         if (isFirstLoad) {
-            if (hasPermission()) {
-                checkNewVersion()
+            if (SpUtils.getInstance().isAgreePermission()) {
+                // 判断新版本
+                fetchNewVersion { }
             }
             isFirstLoad = false
         }
-    }
 
-    /**
-     * 处理定位
-     */
-    private fun handleLocation() {
-        if (LocationSpHelper.getLocation() != null && hasPermission()) {
+        if (LocationSpHelper.getLocation() != null && SpUtils.getInstance().isAgreePermission()) {
             LocationHelper.getInstance().startWithDelay(requireActivity())
         }
-    }
 
-    /**
-     * 处理城市模式更新
-     */
-    private fun handleCityModesUpdate() {
         val cityModesFromSp = LocationSpHelper.getCityListAndLocation()
         if (cityModesFromSp.size != cityModes.size || isNeedReload) {
             cityModes = cityModesFromSp.toMutableList()
             isNeedReload = true
         }
+
+        reloadView()
+        binding.viewPager.currentItem = currIndex
+        setIndicator(currIndex)
     }
 
-    /**
-     * 调度视图重载
-     */
-    private fun scheduleViewReload() {
-        mainHandler.post {
-            safeExecuteFragmentOperation {
-                reloadView()
-                binding.viewPager.currentItem = currentIndex
-                updateIndicator(currentIndex)
+    private fun setupViews() {
+        // 配置状态栏
+        configStationBar(binding.privateStationBar)
+    }
+
+    private fun configStationBar(stationBar: View) {
+        val bars = stationBar.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+        bars.height = bars.height + com.blankj.utilcode.util.BarUtils.getStatusBarHeight()
+        stationBar.layoutParams = bars
+    }
+
+    private fun setupClickListeners() {
+        // 点击地址，跳转到城市列表
+        binding.layoutAddress.setOnClickListener {
+            if (!SpUtils.getInstance().isAgreePermission()) {
+                (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) {
+                    CityListActivity.redirectTo(requireActivity())
+                }
+                return@setOnClickListener
             }
+            CityListActivity.redirectTo(requireActivity())
         }
+
+        // 跳转到设置页面
+        binding.imgSetting.setOnClickListener {
+            if (!SpUtils.getInstance().isAgreePermission()) {
+                (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) {
+                    startActivity(Intent(requireActivity(), SettingActivity::class.java))
+                }
+                return@setOnClickListener
+            }
+            startActivity(Intent(requireActivity(), SettingActivity::class.java))
+        }
+
+        // 签到按钮
+        binding.imgSign.setOnClickListener {
+            onSignClick()
+        }
+    }
+
+    private fun configViewPager() {
+        val fragment = WeatherFragment()
+        fragment.setStateBar(binding.stationBgView)
+        fragmentList.add(fragment)
+        val adapter = ViewPagerAdapter(requireActivity(), fragmentList)
+        binding.viewPager.adapter = adapter
+        
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (currIndex != position) {
+                    currIndex = position
+                    setIndicator(position)
+                }
+            }
+        })
+    }
+
+    private fun registerEventBus() {
+        EventBus.getDefault().register(this)
+        
+        // 注册广播接收器
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        requireActivity().registerReceiver(receiver, filter)
     }
 
     override fun onResume() {
@@ -344,7 +182,7 @@ class HomeFragment : BaseFragment() {
     }
 
     override fun onStop() {
-        if (hasPermission()) {
+        if (SpUtils.getInstance().isAgreePermission()) {
             LocationHelper.getInstance().stop()
         }
         super.onStop()
@@ -352,313 +190,222 @@ class HomeFragment : BaseFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        cleanup()
-    }
-
-    /**
-     * 清理资源
-     */
-    private fun cleanup() {
         EventBus.getDefault().unregister(this)
         requireActivity().unregisterReceiver(receiver)
-        fragmentScope.cancel()
         _binding = null
     }
 
-    /**
-     * 重载视图
-     */
     private fun reloadView() {
-        if (!isNeedReload || !isFragmentSafe()) {
+        if (!isNeedReload) {
             return
         }
 
         isNeedReload = false
-        setupIndicator(cityModes.size)
+        configRgIndicator(cityModes.size)
         reloadFragment()
-        updateCurrentIndex()
-        reloadWeathers()
-    }
 
-    /**
-     * 更新当前索引
-     */
-    private fun updateCurrentIndex() {
-        currentIndex = if (isLoadLast) {
-            fragmentList.size - 1
+        if (loadLast) {
+            currIndex = fragmentList.size - 1
+            loadLast = false
         } else {
-            minOf(currentIndex, fragmentList.size - 1)
+            currIndex = minOf(currIndex, fragmentList.size - 1)
         }
-        isLoadLast = false
+        
+        // 更新天气
+        reloadWeathers()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: CityEvent) {
-        handleCityEvent(event)
-    }
-
-    /**
-     * 处理城市事件
-     */
-    private fun handleCityEvent(event: CityEvent) {
         if (event.showIndex() >= 0) {
-            currentIndex = event.showIndex()
+            currIndex = event.showIndex()
         }
         if (event.isAddCity()) {
-            isLoadLast = true
+            loadLast = true
             isNeedReload = true
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
-        Log.d(TAG, "Received MessageEvent")
+        Log.e(TAG, "onMessageEvent: ")
         TipHelper.dismissProgressDialog()
 
-        when {
-            event.loadIntAd -> handleAdEvent()
-            event.isSuccessLocation() -> handleLocationSuccess()
-            event.isNeedReload -> isNeedReload = true
-            event.getFetchCId().isNotEmpty() -> handleWeatherUpdate(event.getFetchCId())
+        if (event.loadIntAd) {
+            // 广告相关逻辑
+            return
         }
-    }
 
-    /**
-     * 处理广告事件
-     */
-    private fun handleAdEvent() {
-        // 广告相关逻辑
-    }
-
-    /**
-     * 处理定位成功
-     */
-    private fun handleLocationSuccess() {
-        val cityMode = LocationSpHelper.getLocation()
-        if (cityMode != null && cityModes.isNotEmpty()) {
-            cityModes[0] = cityMode
-            reloadWeather(0)
+        if (event.isSuccessLocation()) {
+            // 定位成功
+            val cityMode = LocationSpHelper.getLocation()
+            if (cityMode != null && cityModes.isNotEmpty()) {
+                cityModes[0] = cityMode
+                reloadWeather(0)
+            }
         }
-    }
-
-    /**
-     * 处理天气更新
-     */
-    private fun handleWeatherUpdate(cityId: String) {
-        cityModes.forEachIndexed { index, cityMode ->
-            if (cityMode.getPoiId() == cityId) {
-                reloadWeather(index)
-                return
+        
+        if (event.isNeedReload) {
+            isNeedReload = true
+        }
+        
+        if (event.getFetchCId().isNotEmpty()) {
+            for (i in cityModes.indices) {
+                val cityMode = cityModes[i]
+                if (cityMode.poiId == event.getFetchCId()) {
+                    reloadWeather(i)
+                    break
+                }
             }
         }
     }
 
-    /**
-     * 重载 Fragment
-     */
     private fun reloadFragment() {
-        if (fragmentList.size == cityModes.size) return
-
-        adjustFragmentList()
-        safeExecuteFragmentOperation {
-            val adapter = binding.viewPager.adapter as? ViewPagerAdapter
-            adapter?.replaceAll(fragmentList as List<Fragment>)
+        if (fragmentList.size != cityModes.size) {
+            while (fragmentList.size > cityModes.size) {
+                fragmentList.removeAt(fragmentList.size - 1)
+            }
+            while (fragmentList.size < cityModes.size) {
+                addFragment()
+            }
+            val adapter = binding.viewPager.adapter as ViewPagerAdapter
+            adapter.replaceAll(fragmentList)
         }
     }
 
-    /**
-     * 调整 Fragment 列表
-     */
-    private fun adjustFragmentList() {
-        while (fragmentList.size > cityModes.size) {
-            fragmentList.removeAt(fragmentList.size - 1)
-        }
-        while (fragmentList.size < cityModes.size) {
-            fragmentList.add(createWeatherFragment())
-        }
+    private fun addFragment() {
+        val fragment = WeatherFragment()
+        fragment.setStateBar(binding.stationBgView)
+        fragmentList.add(fragment)
     }
 
-    /**
-     * 重载天气信息
-     */
     private fun reloadWeathers() {
-        updateSignStatus()
-        showLoadingDialog()
-        reloadAllWeathers()
-        updateSignUI()
-    }
-
-    /**
-     * 更新签到状态
-     */
-    private fun updateSignStatus() {
         val signDbHelper = SignDbHelper(requireActivity())
-        val today = TimeUtils.longToString(System.currentTimeMillis(), "yyyy-MM-dd")
-        isSigned = signDbHelper.hadSigning(today)
-    }
+        signed = signDbHelper.hadSigning(TimeUtils.longToString(System.currentTimeMillis(), "yyyy-MM-dd"))
 
-    /**
-     * 显示加载对话框
-     */
-    private fun showLoadingDialog() {
         TipHelper.showProgressDialog(requireActivity(), R.string.loading_data, false)
-    }
-
-    /**
-     * 重载所有天气
-     */
-    private fun reloadAllWeathers() {
-        cityModes.forEachIndexed { index, _ ->
-            reloadWeather(index)
+        for (i in cityModes.indices) {
+            reloadWeather(i)
         }
+
+        setSignedIn(signed)
     }
 
-    /**
-     * 更新签到 UI
-     */
-    private fun updateSignUI() {
-        setSignedIn(isSigned)
-    }
-
-    /**
-     * 重载指定索引的天气
-     */
     private fun reloadWeather(index: Int) {
-        mainHandler.post {
-            val cityMode = cityModes.getOrNull(index) ?: return@post
-            if (cityMode.getPoiId().isEmpty()) return@post
-
-            val weatherModel = getWeatherModel(cityMode.getPoiId())
-            val fragment = fragmentList.getOrNull(index) ?: return@post
-
-            weatherModel?.let { fragment.changeWeather(it, cityMode) }
-            
-            if (index == currentIndex) {
-                updateBackground(weatherModel)
+        mHandler.post {
+            val cityMode = cityModes[index]
+            if (cityMode.getPoiId().isNotEmpty()) {
+                val model = WeatherSpHelper.getWeatherModel(cityMode.getPoiId())
+                if (fragmentList.size > index) {
+                    val fragment = fragmentList[index] as WeatherFragment
+                    if (model != null) {
+                        fragment.changeWeather(model, cityMode)
+                    }
+                    if (index == currIndex) {
+                        changeBg(model)
+                    }
+                }
             }
         }
     }
 
-    /**
-     * 获取天气模型
-     */
-    private fun getWeatherModel(cityId: String): WeatherModel? {
-        return WeatherSpHelper.getWeatherModel(cityId)
-    }
+    private fun changeBg(model: WeatherModel?) {
+        mHandler.post {
+            if (model != null && model.dailies != null) {
+                TipHelper.dismissProgressDialog(1000)
 
-    /**
-     * 更新背景
-     */
-    private fun updateBackground(model: WeatherModel?) {
-        mainHandler.post {
-            if (model?.dailies != null) {
-                TipHelper.dismissProgressDialog(PROGRESS_DISMISS_DELAY_MS)
-                val isNight = calculateIsNight(model.dailies[0])
-                binding.imgBackground.setImageResource(WeatherUtils.bgImageRes(model.getIconCd(), isNight))
+                val daily = model.dailies[0]
+                var night = false
+                if (daily != null) {
+                    val tSunrise = TimeUtils.switchTime(daily.sunRise)
+                    val tSunset = TimeUtils.switchTime(daily.sunSet)
+                    val current = System.currentTimeMillis()
+
+                    night = current < tSunrise || current > tSunset
+                }
+                // 天气图标
+                binding.imgBackground.setImageResource(WeatherUtils.bgImageRes(model.getIconCd(), night))
             } else {
                 binding.imgBackground.setImageResource(R.drawable.bg_normal)
-                mainHandler.postDelayed({ TipHelper.dismissProgressDialog() }, PROGRESS_DISMISS_FALLBACK_MS)
+                mHandler.postDelayed({ TipHelper.dismissProgressDialog() }, 2000)
             }
         }
     }
 
-    /**
-     * 计算是否为夜晚
-     */
-    private fun calculateIsNight(daily: Any?): Boolean {
-        if (daily == null) return false
-        
-        val dailyObj = daily as? com.goodtech.tq.models.Daily ?: return false
-        val sunrise = TimeUtils.switchTime(dailyObj.sunRise)
-        val sunset = TimeUtils.switchTime(dailyObj.sunSet)
-        val current = System.currentTimeMillis()
-        
-        return current < sunrise || current > sunset
-    }
-
-    /**
-     * 设置指示器
-     */
-    private fun setupIndicator(pagerSize: Int) {
+    private fun configRgIndicator(pagerSize: Int) {
         binding.indicatorCity.removeAllViews()
 
-        val width = SizeUtils.dp2px(INDICATOR_WIDTH_DP)
-        val height = SizeUtils.dp2px(INDICATOR_HEIGHT_DP)
-        val margin = SizeUtils.dp2px(INDICATOR_MARGIN_DP)
+        val width = SizeUtils.dp2px(5f)
+        val height = SizeUtils.dp2px(5f)
+        val margin = SizeUtils.dp2px(6f)
         val layoutParams = RadioGroup.LayoutParams(width, height)
         
-        repeat(pagerSize) { index ->
-            val button = createIndicatorButton()
-            if (index > 0) {
+        for (i in 0 until pagerSize) {
+            val tempButton = RadioButton(requireActivity())
+            tempButton.isEnabled = false
+            tempButton.isChecked = false
+            tempButton.setBackgroundResource(R.drawable.sl_indicator_white)
+            tempButton.buttonDrawable = null
+            if (i > 0) {
                 layoutParams.leftMargin = margin
             }
-            binding.indicatorCity.addView(button, layoutParams)
+            binding.indicatorCity.addView(tempButton, layoutParams)
         }
-        
-        updateIndicator(currentIndex)
+        setIndicator(currIndex)
     }
 
-    /**
-     * 创建指示器按钮
-     */
-    private fun createIndicatorButton(): RadioButton {
-        return RadioButton(requireActivity()).apply {
-            isEnabled = false
-            isChecked = false
-            setBackgroundResource(R.drawable.sl_indicator_white)
-            buttonDrawable = null
+    private fun setIndicator(position: Int) {
+        if (position >= 0 && position < binding.indicatorCity.childCount) {
+            binding.indicatorCity.check(binding.indicatorCity.getChildAt(position).id)
+
+            val cityMode = cityModes[position]
+            if (cityMode != null) {
+                setAddress(cityMode)
+                val weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getPoiId())
+                changeBg(weatherModel)
+
+                if (fragmentList.size > position) {
+                    val fragment = fragmentList[position] as WeatherFragment
+                    if (weatherModel != null) {
+                        fragment.changeWeather(weatherModel, cityMode)
+                    }
+                }
+            }
         }
     }
 
-    /**
-     * 更新指示器
-     */
-    private fun updateIndicator(position: Int) {
-        if (position !in 0 until binding.indicatorCity.childCount) return
-
-        binding.indicatorCity.check(binding.indicatorCity.getChildAt(position).id)
-
-        val cityMode = cityModes.getOrNull(position) ?: return
-        updateAddress(cityMode)
-        
-        val weatherModel = getWeatherModel(cityMode.getPoiId())
-        updateBackground(weatherModel)
-
-        val fragment = fragmentList.getOrNull(position)
-        weatherModel?.let { fragment?.changeWeather(it, cityMode) }
-    }
-
-    /**
-     * 更新地址显示
-     */
-    private fun updateAddress(cityMode: CityMode) {
+    private fun setAddress(cityMode: CityMode) {
         binding.imgLocation.visibility = if (cityMode.getLocation()) View.VISIBLE else View.GONE
         binding.tvAddress.text = cityMode.getMergerName()
     }
 
-    /**
-     * 设置签到状态
-     */
     private fun setSignedIn(signedIn: Boolean) {
         binding.viewSignTip.visibility = if (signedIn) View.GONE else View.VISIBLE
     }
 
-    /**
-     * 检查新版本
-     */
-    private fun checkNewVersion() {
-        fragmentScope.launch {
-            try {
-                fetchNewVersion { }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error checking new version: ${e.message}")
+    private fun onSignClick() {
+        if (!SpUtils.getInstance().isAgreePermission()) {
+            (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) {
+                onSignClick()
             }
+            return
+        }
+        
+        val cityMode = cityModes[currIndex]
+        var weatherModel: WeatherModel? = null
+        if (cityMode.getPoiId().isNotEmpty()) {
+            weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getPoiId())
+        }
+        if (weatherModel != null) {
+            SigningActivity.redirectTo(
+                requireActivity(),
+                weatherModel.hourlies[0],
+                cityMode,
+                0
+            )
         }
     }
 
-    /**
-     * 获取新版本信息
-     */
     private fun fetchNewVersion(listener: CompletionListener) {
         // 这里应该调用版本检查的API
         // 暂时简化实现

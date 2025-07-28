@@ -24,8 +24,6 @@ public class HeaderItemsView extends LinearLayout {
         super(context);
         init();
     }
-    
-    public WeatherHeaderListener listener;
 
     public void setListener(WeatherHeaderListener listener) {
 

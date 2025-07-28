@@ -5,13 +5,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.SeekBar
 import androidx.annotation.Nullable
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
-import com.bytedance.pangle.transform.ZeusTransformUtils.getWindow
 import com.goodtech.tq.R
-import com.goodtech.tq.app.App
 import com.goodtech.tq.databinding.WeatherItemCurrentBinding
 import com.goodtech.tq.fragment.viewholder.HeaderItemsView
 import com.goodtech.tq.helpers.BtnLinkHelper
@@ -19,7 +16,6 @@ import com.goodtech.tq.listener.WeatherHeaderListener
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.utils.TimeUtils
 import com.goodtech.tq.utils.WeatherUtils
-import kotlin.math.max
 
 
 /**
@@ -118,7 +114,7 @@ class CurrentItemView @JvmOverloads constructor(
      */
     fun setItemListener(listener: WeatherHeaderListener?) {
         mListener = listener
-        binding.viewItems.listener = listener
+        binding.viewItems.setListener(listener)
     }
 
     /**

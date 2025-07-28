@@ -232,7 +232,7 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                             holder.feedContainer.visibility = View.GONE
                             holder.feedContainer.layoutParams.height = 0
                         }
-                        if (!App.instance.hadInitAd) {
+                        if (!instance.hadInitAd) {
                             EventBus.getDefault().post(MessageEvent().needLoadIntAd(true))
                         }
                         adLoadCallback?.onAdLoaded(9)
