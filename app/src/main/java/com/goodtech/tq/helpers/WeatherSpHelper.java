@@ -49,6 +49,9 @@ public class WeatherSpHelper {
      * 获取当前定位
      */
     public static WeatherModel getWeatherModel(String poiId) {
+        if (poiId == null || poiId.isEmpty()) {
+            return null;
+        }
 
         JSONObject weatherJson = getWeatherJson(poiId);
 

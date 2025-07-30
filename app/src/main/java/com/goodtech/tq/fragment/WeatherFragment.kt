@@ -17,6 +17,7 @@ import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.BaseActivity
 import com.goodtech.tq.ad.AdFeedFragment
+import com.goodtech.tq.ad.AdManager
 import com.goodtech.tq.adapter.WeatherAdapter
 import com.goodtech.tq.app.App
 import com.goodtech.tq.base.callback.DataCallback
@@ -25,6 +26,8 @@ import com.goodtech.tq.helpers.WeatherSpHelper
 import com.goodtech.tq.httpClient.WeatherHttpHelper
 import com.goodtech.tq.listener.WeatherHeaderListener
 import com.goodtech.tq.models.CityMode
+import com.goodtech.tq.models.JuheAlarmModel
+import com.goodtech.tq.models.LifeItemBean
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.modules.others.airQuality.AirQualityActivity
 import com.goodtech.tq.modules.others.calendar.CalendarActivity
@@ -36,13 +39,13 @@ import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity
 import com.goodtech.tq.modules.video.djx.DrawDramaActivity
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.views.popup.AlarmPopup
+import com.goodtech.tq.views.popup.LifeDetailsPopup
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.lxj.xpopup.XPopup
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-import com.goodtech.tq.ad.AdManager
-import com.goodtech.tq.models.LifeItemBean
-import com.goodtech.tq.views.popup.LifeDetailsPopup
 import kotlinx.coroutines.launch
 
 class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListener {
@@ -169,6 +172,16 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                     }
                 }
             } else {
+                val alarm = WeatherSpHelper.getAlarm(mWeatherModel!!.poiId)
+                if (alarm != null) {
+                    val list = Gson().fromJson<ArrayList<JuheAlarmModel?>?>(
+                        alarm,
+                        object : TypeToken<ArrayList<JuheAlarmModel?>?>() {}.getType()
+                    )
+                    if (list != null && list.isNotEmpty()) {
+                        mWeatherModel?.alarmModel = list[0]
+                    }
+                }
                 mAdapter.setData(mWeatherModel!!, mCityMode)
             }
         }
@@ -233,7 +246,17 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                         mAdapter.setData(cachedModel, mCityMode)
                     }
                 }
-                
+
+                val alarm = WeatherSpHelper.getAlarm(mWeatherModel!!.poiId)
+                if (alarm != null) {
+                    val list = Gson().fromJson<ArrayList<JuheAlarmModel?>?>(
+                        alarm,
+                        object : TypeToken<ArrayList<JuheAlarmModel?>?>() {}.getType()
+                    )
+                    if (list != null && list.isNotEmpty()) {
+                        mWeatherModel?.alarmModel = list[0]
+                    }
+                }
                 // 如果有新数据则更新
                 mWeatherModel?.let { model ->
                     mAdapter.setData(model, mCityMode)
@@ -485,5 +508,9 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
             .isDestroyOnDismiss(true)   //  只使用一次
             .asCustom(popup)
             .show()
+    }
+
+    override fun onPeriphery() {
+
     }
 } 

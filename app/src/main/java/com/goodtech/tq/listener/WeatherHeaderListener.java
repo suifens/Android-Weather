@@ -28,5 +28,7 @@ public interface WeatherHeaderListener {
     void onMiniVideo();
 
     void onLifeItem(LifeItemBean lifeItemBean);
+    //  周边天气
+    void onPeriphery();
 
 }

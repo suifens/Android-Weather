@@ -92,6 +92,10 @@ class CurrentItemView @JvmOverloads constructor(
             mListener?.onWarningBtn()
         }
 
+        binding.peripheryLayout.setOnClickListener {
+            mListener?.onPeriphery()
+        }
+
         setupBlurView()
     }
 

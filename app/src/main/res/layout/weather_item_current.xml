@@ -80,6 +80,41 @@
         app:layout_constraintStart_toStartOf="@+id/tv_rh_wrap"
         app:layout_constraintTop_toBottomOf="@+id/tv_rh_wrap"
         app:srcCompat="@drawable/ic_worning" />
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/peripheryLayout"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_radius8_0c194a"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/tv_rh_wrap"
+        app:layout_constraintTop_toBottomOf="@+id/warningBtn">
+
+        <TextView
+            android:id="@+id/peripheryTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            tools:text="查看周边天气\n情况"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_more_r"
+            android:layout_marginBottom="-2dp"
+            app:layout_constraintEnd_toEndOf="@+id/peripheryTv"
+            app:layout_constraintBottom_toBottomOf="@+id/peripheryTv"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 <!--    <eightbitlab.com.blurview.BlurView-->

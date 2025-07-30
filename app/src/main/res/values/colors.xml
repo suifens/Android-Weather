@@ -55,6 +55,12 @@
     <color name="color_00c4ff">#00C4FF</color>
     <color name="color_8ee8ff">#8EE8FF</color>
 
+    <color name="color_fff8f2">#FFF8F2</color>
+    <color name="color_fff3f3">#FFF3F3</color>
+    <color name="color_edf4fd">#EDF4FD</color>
+    <color name="color_f3fae3">#F3FAE3</color>
+    <color name="color_f2f1ff">#F2F1FF</color>
+
     <color name="color_current_location">#FAFAFA</color>
     <color name="color_line">#ECECEC</color>
     

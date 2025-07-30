@@ -78,6 +78,8 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         tools:replace="android:label,android:icon,android:theme,android:networkSecurityConfig,android:allowBackup">
+        <activity android:name=".activity.PeripheralActivity"
+            android:exported="false" />
         <activity
             android:name=".modules.video.djx.DjxVideoActivity"
             android:exported="false" />

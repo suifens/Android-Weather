@@ -129,5 +129,41 @@ public class DatabaseHelper {
         return list;
     }
 
+    public ArrayList<CityMode> searchCitiesWithCode(String cityCode) {
+
+        // 构建查询语句
+//        StringBuilder query = new StringBuilder("SELECT *, (LENGTH(mergerName) - LENGTH(REPLACE(mergerName, '" + name.charAt(0) + "', '')))");
+//        for (int i = 1; i < name.length(); i++) {
+//            query.append("+ (LENGTH(mergerName) - LENGTH(REPLACE(mergerName, '").append(name.charAt(i)).append("', ''))) ");
+//        }
+//        query.append("AS match_count FROM city WHERE ");
+//        for (int i = 0; i < name.length(); i++) {
+//            query.append("mergerName LIKE '%").append(name.charAt(i)).append("%' OR ");
+//        }
+//        query = new StringBuilder(query.substring(0, query.length() - 4));  // 去除最后一个OR
+//        query.append(" ORDER BY match_count DESC");
+
+        String queryStr = String.format("select * from city where cityCode = %s order by cityId asc limit 0,10", cityCode);
+
+        Cursor cursor = mDatabase.rawQuery(queryStr, null);
+
+        ArrayList<CityMode> list = new ArrayList<>();
+        if (cursor == null) {
+            return null;
+        }
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    CityMode cityMode = new CityMode();
+                    cityMode.resolveCour(cursor);
+                    list.add(cityMode);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            cursor.close();
+        }
+        return list;
+    }
+
 }
 

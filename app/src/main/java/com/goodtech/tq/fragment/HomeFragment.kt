@@ -14,6 +14,7 @@ import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bytedance.sdk.openadsdk.AdSlot
 import com.bytedance.sdk.openadsdk.TTAdConstant
@@ -117,7 +118,7 @@ class HomeFragment : BaseFragment() {
 
     private fun configStationBar(stationBar: View) {
         val bars = stationBar.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
-        bars.height = bars.height + com.blankj.utilcode.util.BarUtils.getStatusBarHeight()
+        bars.height += BarUtils.getStatusBarHeight()
         stationBar.layoutParams = bars
     }
 
