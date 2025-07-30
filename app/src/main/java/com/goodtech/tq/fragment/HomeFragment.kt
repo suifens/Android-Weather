@@ -12,11 +12,20 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.SizeUtils
+import com.bytedance.sdk.openadsdk.AdSlot
+import com.bytedance.sdk.openadsdk.TTAdConstant
+import com.bytedance.sdk.openadsdk.TTAdNative
+import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.bytedance.sdk.openadsdk.TTFullScreenVideoAd
+import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
+import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.BaseActivity
 import com.goodtech.tq.activity.SettingActivity
+import com.goodtech.tq.app.App
 import com.goodtech.tq.databinding.FragmentHomeBinding
 import com.goodtech.tq.db.SignDbHelper
 import com.goodtech.tq.eventbus.CityEvent
@@ -35,6 +44,7 @@ import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.utils.TimeUtils
 import com.goodtech.tq.utils.TipHelper
 import com.goodtech.tq.utils.WeatherUtils
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -228,6 +238,16 @@ class HomeFragment : BaseFragment() {
 
         if (event.loadIntAd) {
             // 广告相关逻辑
+            if (System.currentTimeMillis() - SpUtils.getInstance().getLong(
+                    BuildConfig.PGE_INT_POS_ID,
+                    0L
+                ) > 12 * 60 * 60 * 1000 && !App.instance.hadInitAd
+            ) {
+                App.instance.hadInitAd = true
+                lifecycleScope.launch {
+                    initAdLoader()
+                }
+            }
             return
         }
 
@@ -404,4 +424,105 @@ class HomeFragment : BaseFragment() {
         // 暂时简化实现
         listener.onCompletion()
     }
+
+    //<editor-fold desc="插屏广告">
+    private var mTTFullScreenVideoAd: TTFullScreenVideoAd? = null
+    private var mLoadSuccess = false //是否加载成功
+    private var mIsLoadedAndShow = true //广告加载成功并展示
+
+    private var adNativeLoader: TTAdNative? = null
+
+    /**
+     * 展示广告
+     */
+    private fun showAd() {
+        Log.e(TAG, "showAd: ++++++++++")
+        mLoadSuccess = false
+//        if (mAdInterstitialFullManager != null) {
+//            mAdInterstitialFullManager.loadAdWithCallback(BuildConfig.PGE_INT_POS_ID);
+//        }
+    }
+
+    private fun initAdLoader() {
+        mLoadSuccess = false
+        adNativeLoader = TTAdSdk.getAdManager().createAdNative(requireActivity())
+        val adSlot = AdSlot.Builder()
+            .setCodeId(BuildConfig.PGE_INT_POS_ID)
+            .setOrientation(TTAdConstant.ORIENTATION_VERTICAL) //设置横竖屏方向
+            .setMediationAdSlot(
+                MediationAdSlot.Builder()
+                    .setMuted(true) //是否静音
+                    .setVolume(0.7f) //设置音量
+                    .setBidNotify(true) //竞价结果通知
+                    .build()
+            )
+            .build()
+
+        adNativeLoader!!.loadFullScreenVideoAd(
+            adSlot,
+            object : TTAdNative.FullScreenVideoAdListener {
+                override fun onError(code: Int, message: String?) {
+                    mLoadSuccess = false
+                    Log.d("TAG", "InterstitialFull onError code = " + code + " msg = " + message)
+                }
+
+                override fun onFullScreenVideoAdLoad(ad: TTFullScreenVideoAd) {
+                    Log.d("TAG", "InterstitialFull onFullScreenVideoLoaded")
+                    mLoadSuccess = true
+                    mTTFullScreenVideoAd = ad
+                }
+
+                override fun onFullScreenVideoCached() {
+                    Log.d("TAG", "InterstitialFull onFullScreenVideoCached")
+                }
+
+                override fun onFullScreenVideoCached(ad: TTFullScreenVideoAd) {
+                    Log.d("TAG", "InterstitialFull onFullScreenVideoCached")
+                    mLoadSuccess = true
+                    mTTFullScreenVideoAd = ad
+                    if (mIsLoadedAndShow && isCurrent) {
+                        lifecycleScope.launch { showInterFullAd() }
+                        SpUtils.getInstance()
+                            .putLong(BuildConfig.PGE_INT_POS_ID, System.currentTimeMillis())
+                    }
+                }
+            })
+    }
+
+    /**
+     * 展示广告
+     */
+    private fun showInterFullAd() {
+        if (mIsLoadedAndShow && mLoadSuccess) {
+            // 展示广告
+
+            this.mTTFullScreenVideoAd!!.setFullScreenVideoAdInteractionListener(object :
+                TTFullScreenVideoAd.FullScreenVideoAdInteractionListener {
+                override fun onAdShow() {
+                    Log.d("TAG", "InterstitialFull onAdShow")
+                }
+
+                override fun onAdVideoBarClick() {
+                    Log.d("TAG", "InterstitialFull onAdVideoBarClick")
+                }
+
+                override fun onAdClose() {
+                    Log.d("TAG", "InterstitialFull onAdClose")
+                }
+
+                override fun onVideoComplete() {
+                    Log.d("TAG", "InterstitialFull onVideoComplete")
+                }
+
+                override fun onSkippedVideo() {
+                    Log.d("TAG", "InterstitialFull onSkippedVideo")
+                }
+            })
+            this.mTTFullScreenVideoAd!!.showFullScreenVideoAd(requireActivity())
+            mIsLoadedAndShow = false
+        } else {
+            // TToast.show(this, "请先加载广告");
+        }
+    }
+    //</editor-fold>
 } 
