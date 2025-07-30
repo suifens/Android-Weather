@@ -130,7 +130,11 @@ class CurrentItemView @JvmOverloads constructor(
 
             var hadSetTemp = false
             val current = TimeUtils.longToString(System.currentTimeMillis(), "MMddHH")
-            
+
+            var feelsLike = 0
+            var wdirCardinal = ""
+            var wspd = 0
+            var rh = 0
             // 处理小时数据
             for (hourly in model.hourlies) {
                 if (hourly != null) {
@@ -138,13 +142,10 @@ class CurrentItemView @JvmOverloads constructor(
                     if (dayHour == current) {
                         binding.imgIcon.setImageResource(WeatherUtils.weatherImageRes(hourly.icon_cd))
                         if (hourly.metric != null) {
-                            binding.tvRhWrap.text = String.format(
-                                "%s风 %d级｜ 湿度%d%%\n体感温度：%d°",
-                                hourly.wdir_cardinal,
-                                WeatherUtils.windGrade(hourly.metric.wspd.toFloat()),
-                                hourly.rh,
-                                hourly.metric.feelsLike
-                            )
+                            wdirCardinal = hourly.wdir_cardinal
+                            wspd = WeatherUtils.windGrade(hourly.metric.wspd.toFloat())
+                            rh = hourly.rh
+                            feelsLike = hourly.metric.feelsLike
                             binding.tvTemperature.text = String.format("%d°", hourly.metric.temp)
                             hadSetTemp = true
                         }
@@ -159,18 +160,22 @@ class CurrentItemView @JvmOverloads constructor(
                 val metric = observation.metric
 
                 if (!hadSetTemp) {
-                    binding.tvRhWrap.text = String.format(
-                        "%s风 %d级｜ 湿度%d%%\n体感温度：%d°",
-                        observation.wdirCardinal,
-                        WeatherUtils.windGrade(metric.wspd.toFloat()),
-                        observation.rh,
-                        metric.feelsLike
-                    )
+                    wdirCardinal = observation.wdirCardinal
+                    wspd = WeatherUtils.windGrade(metric.wspd.toFloat())
+                    rh = observation.rh
                     binding.imgIcon.setImageResource(WeatherUtils.weatherImageRes(observation.wxIcon))
                     binding.tvTemperature.text = String.format("%d°", metric.temp)
                     binding.tvWxPhrase.text = observation.wxPhrase
                 }
+                feelsLike = metric.feelsLike
             }
+            binding.tvRhWrap.text = String.format(
+                "%s风 %d级｜ 湿度%d%%\n体感温度：%d°",
+                wdirCardinal,
+                wspd,
+                rh,
+                feelsLike
+            )
 
             // 数据设置完成，整个视图已经可见
             model.lifeModel?.let { lifeModel ->

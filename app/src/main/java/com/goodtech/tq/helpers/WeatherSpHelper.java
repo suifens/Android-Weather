@@ -25,9 +25,13 @@ import java.util.ArrayList;
  */
 @SuppressLint("DefaultLocale")
 public class WeatherSpHelper {
+    
+    private static final String WEATHER_KEY_FORMAT = "weather_%s";
+    private static final String WEATHER_UPDATE_FORMAT = "weather_%s_update";
+    
     public static void saveWeather(JSONObject jsonObject, String poiId) {
-        String key = String.format("weather_%s", poiId);
-        String timeKey = String.format("weather_%s_update", poiId);
+        String key = String.format(WEATHER_KEY_FORMAT, poiId);
+        String timeKey = String.format(WEATHER_UPDATE_FORMAT, poiId);
         if (jsonObject != null) {
             SpUtils.getInstance().putString(key, jsonObject.toString());
             SpUtils.getInstance().putLong(timeKey, System.currentTimeMillis());
@@ -37,7 +41,7 @@ public class WeatherSpHelper {
     }
 
     public static long getLastUpdate(String poiId) {
-        String timeKey = String.format("weather_%s_update", poiId);
+        String timeKey = String.format(WEATHER_UPDATE_FORMAT, poiId);
         return SpUtils.getInstance().getLong(timeKey, (long) 0);
     }
 
@@ -75,7 +79,7 @@ public class WeatherSpHelper {
     }
 
     public static JSONObject getWeatherJson(String poiId) {
-        String key = String.format("weather_%s", poiId);
+        String key = String.format(WEATHER_KEY_FORMAT, poiId);
         String json = SpUtils.getInstance().getString(key, "");
         if (!TextUtils.isEmpty(json)) {
             try {
@@ -118,7 +122,7 @@ public class WeatherSpHelper {
     }
 
     public static void deleteWeatherModel(String poiId) {
-        String key = String.format("weather_%s", poiId);
+        String key = String.format(WEATHER_KEY_FORMAT, poiId);
         SpUtils.getInstance().remove(key);
     }
 

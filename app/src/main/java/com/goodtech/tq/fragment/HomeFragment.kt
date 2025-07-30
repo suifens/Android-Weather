@@ -5,8 +5,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -32,11 +30,11 @@ import com.goodtech.tq.models.CityMode
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.modules.cityList.CityListActivity
 import com.goodtech.tq.modules.signing.SigningActivity
-import com.goodtech.tq.utils.WeatherUtils
 import com.goodtech.tq.utils.IntentReceiver
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.utils.TimeUtils
 import com.goodtech.tq.utils.TipHelper
+import com.goodtech.tq.utils.WeatherUtils
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -51,15 +49,12 @@ class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     
-    protected val mHandler = Handler(Looper.getMainLooper())
-    
     // 数据
     private val fragmentList = mutableListOf<Fragment>()
     private var cityModes = mutableListOf<CityMode>()
     private var currIndex = 0
     private var loadLast = false
     private var signed = false
-    private var isFirstLoad = true
     private var isCurrent = false
     private var isNeedReload = true
 
@@ -220,7 +215,7 @@ class HomeFragment : BaseFragment() {
         if (event.showIndex() >= 0) {
             currIndex = event.showIndex()
         }
-        if (event.isAddCity()) {
+        if (event.isAddCity) {
             loadLast = true
             isNeedReload = true
         }
@@ -236,7 +231,7 @@ class HomeFragment : BaseFragment() {
             return
         }
 
-        if (event.isSuccessLocation()) {
+        if (event.isSuccessLocation) {
             // 定位成功
             val cityMode = LocationSpHelper.getLocation()
             if (cityMode != null && cityModes.isNotEmpty()) {
@@ -294,8 +289,8 @@ class HomeFragment : BaseFragment() {
     private fun reloadWeather(index: Int) {
         mHandler.post {
             val cityMode = cityModes[index]
-            if (cityMode.getPoiId().isNotEmpty()) {
-                val model = WeatherSpHelper.getWeatherModel(cityMode.getPoiId())
+            if (cityMode.poiId.isNotEmpty()) {
+                val model = WeatherSpHelper.getWeatherModel(cityMode.poiId)
                 if (fragmentList.size > index) {
                     val fragment = fragmentList[index] as WeatherFragment
                     if (model != null) {
@@ -359,23 +354,21 @@ class HomeFragment : BaseFragment() {
             binding.indicatorCity.check(binding.indicatorCity.getChildAt(position).id)
 
             val cityMode = cityModes[position]
-            if (cityMode != null) {
-                setAddress(cityMode)
-                val weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getPoiId())
-                changeBg(weatherModel)
+            setAddress(cityMode)
+            val weatherModel = WeatherSpHelper.getWeatherModel(cityMode.poiId)
+            changeBg(weatherModel)
 
-                if (fragmentList.size > position) {
-                    val fragment = fragmentList[position] as WeatherFragment
-                    if (weatherModel != null) {
-                        fragment.changeWeather(weatherModel, cityMode)
-                    }
+            if (fragmentList.size > position) {
+                val fragment = fragmentList[position] as WeatherFragment
+                if (weatherModel != null) {
+                    fragment.changeWeather(weatherModel, cityMode)
                 }
             }
         }
     }
 
     private fun setAddress(cityMode: CityMode) {
-        binding.imgLocation.visibility = if (cityMode.getLocation()) View.VISIBLE else View.GONE
+        binding.imgLocation.visibility = if (cityMode.location) View.VISIBLE else View.GONE
         binding.tvAddress.text = cityMode.getMergerName()
     }
 
@@ -393,8 +386,8 @@ class HomeFragment : BaseFragment() {
         
         val cityMode = cityModes[currIndex]
         var weatherModel: WeatherModel? = null
-        if (cityMode.getPoiId().isNotEmpty()) {
-            weatherModel = WeatherSpHelper.getWeatherModel(cityMode.getPoiId())
+        if (cityMode.poiId.isNotEmpty()) {
+            weatherModel = WeatherSpHelper.getWeatherModel(cityMode.poiId)
         }
         if (weatherModel != null) {
             SigningActivity.redirectTo(

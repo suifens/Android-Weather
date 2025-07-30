@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -42,6 +43,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.goodtech.tq.ad.AdManager
 import com.goodtech.tq.models.LifeItemBean
 import com.goodtech.tq.views.popup.LifeDetailsPopup
+import kotlinx.coroutines.launch
 
 class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListener {
 
@@ -53,7 +55,6 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     private var mStateBarBg: View? = null
     private var mCityMode: CityMode? = null
     private var mHadLoad = false
-    private var isFirstLoad = true
 
     // Ad related
     private var mLoadSuccess = false
@@ -155,6 +156,20 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                     scrollY > stateBar.height -> stateBar.alpha = 1f
                     else -> stateBar.alpha = 0f
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            if (mWeatherModel == null) {
+                if (mCityMode != null) {
+                    val cachedModel = WeatherSpHelper.getWeatherModel(mCityMode!!.poiId)
+                    if (cachedModel != null) {
+                        mWeatherModel = cachedModel
+                        mAdapter.setData(cachedModel, mCityMode)
+                    }
+                }
+            } else {
+                mAdapter.setData(mWeatherModel!!, mCityMode)
             }
         }
     }
