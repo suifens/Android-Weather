@@ -66,6 +66,8 @@ public class SplashActivity extends BaseActivity {
         viewModel.getIsAdShown().observe(this, isShown -> {
             if (isShown) {
                 Log.d(TAG, "广告展示成功");
+            } else {
+                goToMainActivity();
             }
         });
 

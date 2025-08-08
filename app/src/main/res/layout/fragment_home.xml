@@ -68,7 +68,7 @@
                 android:layout_marginStart="6dp"
                 android:ellipsize="end"
                 android:lines="1"
-                android:maxWidth="220dp"
+                android:maxWidth="200dp"
                 android:textColor="@color/white"
                 android:textSize="16dp" />
 
