@@ -73,19 +73,6 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-    protected void insetSystemBarBottom(View view) {
-        if (view == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return;
-        ViewCompat.setOnApplyWindowInsetsListener(view, new OnApplyWindowInsetsListener() {
-            @NonNull
-            @Override
-            public WindowInsetsCompat onApplyWindowInsets(@NonNull View v, @NonNull WindowInsetsCompat insets) {
-                Insets stateBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
-                v.setPadding(stateBars.left, 0, stateBars.right, stateBars.bottom);
-                return WindowInsetsCompat.CONSUMED;
-            }
-        });
-    }
-
     protected void insetNavigationBar(View view) {
         if (view == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return;
         ViewCompat.setOnApplyWindowInsetsListener(view, new OnApplyWindowInsetsListener() {

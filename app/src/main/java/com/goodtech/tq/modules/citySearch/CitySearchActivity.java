@@ -123,6 +123,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
+        insetNavigationBar(findViewById(R.id.root_container));
 
         init();
 

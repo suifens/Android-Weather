@@ -2,7 +2,11 @@ package com.goodtech.tq.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.bytedance.sdk.djx.utils.StatusBarUtil
 import com.bytedance.sdk.dp.DPSdk
 import com.bytedance.sdk.dp.DPWidgetDrawParams
 import com.bytedance.sdk.dp.IDPDrawListener
@@ -11,10 +15,14 @@ import com.goodtech.tq.R
 import com.goodtech.tq.common.bus.Bus
 import com.goodtech.tq.common.bus.BusEvent
 import com.goodtech.tq.common.bus.event.DPStartEvent
+import com.goodtech.tq.databinding.MediaFragmentWrapperBinding
 import com.goodtech.tq.modules.video.VideoUtils
 
 class VideoDrawFragment: BaseFragment() {
     private var dpWidget: IDPWidget? = null
+    private var _binding: MediaFragmentWrapperBinding? = null
+    private val binding get() = _binding!!
+
     companion object {
         const val TAG = "DrawFragment"
     }
@@ -30,8 +38,13 @@ class VideoDrawFragment: BaseFragment() {
         }
     }
 
-    override fun getViewLayoutRes(): Int {
-        return R.layout.media_fragment_wrapper
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = MediaFragmentWrapperBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,6 +71,9 @@ class VideoDrawFragment: BaseFragment() {
         } catch (e: Exception) {
             Log.e(TAG, "初始化视频组件失败", e)
         }
+        val params = binding.flContainer.layoutParams as ConstraintLayout.LayoutParams
+        params.topMargin = StatusBarUtil.getStatusBarHeight(requireActivity())
+        binding.flContainer.layoutParams = params
     }
 
     override fun onResume() {

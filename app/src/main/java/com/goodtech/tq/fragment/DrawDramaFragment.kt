@@ -1,18 +1,28 @@
 package com.goodtech.tq.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.Insets
+import androidx.core.view.WindowInsetsCompat
 import com.bytedance.sdk.djx.DJXSdk
 import com.bytedance.sdk.djx.IDJXWidget
+import com.bytedance.sdk.djx.utils.StatusBarUtil
 import com.goodtech.tq.R
 import com.goodtech.tq.common.bus.Bus
 import com.goodtech.tq.common.bus.BusEvent
 import com.goodtech.tq.common.bus.event.DJXStartEvent
+import com.goodtech.tq.databinding.FragmentDrawDramaBinding
+import com.goodtech.tq.databinding.FragmentHomeBinding
 import com.goodtech.tq.modules.video.djx.DJXHolder
 
 class DrawDramaFragment : BaseFragment() {
 
     private var djxWidget: IDJXWidget? = null
+    private var _binding: FragmentDrawDramaBinding? = null
+    private val binding get() = _binding!!
 
     private val listener: (BusEvent) -> Unit = {
         if (it is DJXStartEvent) {
@@ -22,8 +32,13 @@ class DrawDramaFragment : BaseFragment() {
         }
     }
 
-    override fun getViewLayoutRes(): Int {
-        return R.layout.fragment_draw_drama
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentDrawDramaBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,6 +60,9 @@ class DrawDramaFragment : BaseFragment() {
                 this.commitNowAllowingStateLoss()
             }
         }
+        val params = binding.drawDramaFrame.layoutParams as ConstraintLayout.LayoutParams
+        params.topMargin = StatusBarUtil.getStatusBarHeight(requireActivity())
+        binding.drawDramaFrame.layoutParams = params
     }
 
     override fun onResume() {
