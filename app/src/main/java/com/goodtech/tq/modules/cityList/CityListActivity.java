@@ -108,7 +108,6 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
         setContentView(R.layout.activity_city_list);
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
-        insetNavigationBar(findViewById(R.id.root_container));
 
 
         mCloseBtn = findViewById(R.id.button_close);

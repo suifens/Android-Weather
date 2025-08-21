@@ -49,7 +49,15 @@ public class BaseActivity extends AppCompatActivity {
         StatusBarUtil.setImmerseStatusBarSystemUiVisibility(this);
     }
 
-     /**
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            insetNavigationBar();
+        }
+    }
+
+    /**
      * 配置station bar
      */
     public void configStationBar(View stationBar) {
@@ -73,8 +81,11 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 为指定View设置导航栏适配
+     */
     protected void insetNavigationBar(View view) {
-        if (view == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return;
+        if (view == null || Build.VERSION.SDK_INT != Build.VERSION_CODES.VANILLA_ICE_CREAM) return;
         ViewCompat.setOnApplyWindowInsetsListener(view, new OnApplyWindowInsetsListener() {
             @NonNull
             @Override
@@ -84,6 +95,27 @@ public class BaseActivity extends AppCompatActivity {
                 return WindowInsetsCompat.CONSUMED;
             }
         });
+    }
+
+    /**
+     * 为Activity的rootView设置导航栏适配
+     * 自动查找并适配根布局
+     */
+    protected void insetNavigationBar() {
+        View rootView = findViewById(android.R.id.content);
+        if (rootView != null) {
+            insetNavigationBar(rootView);
+        }
+    }
+
+    /**
+     * 为Activity的rootView设置导航栏适配（指定根布局ID）
+     */
+    protected void insetNavigationBar(int rootViewId) {
+        View rootView = findViewById(rootViewId);
+        if (rootView != null) {
+            insetNavigationBar(rootView);
+        }
     }
 
     public void showPermissionDialog(Activity activity, View.OnClickListener confirmListener) {

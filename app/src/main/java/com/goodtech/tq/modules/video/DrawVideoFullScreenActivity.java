@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.bytedance.sdk.djx.utils.StatusBarUtil;
 import com.goodtech.tq.R;
 import com.bytedance.sdk.dp.DPPageState;
 import com.bytedance.sdk.dp.DPSdk;
@@ -17,6 +20,7 @@ import com.bytedance.sdk.dp.DPWidgetDrawParams;
 import com.bytedance.sdk.dp.IDPAdListener;
 import com.bytedance.sdk.dp.IDPDrawListener;
 import com.bytedance.sdk.dp.IDPWidget;
+import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.common.bus.Bus;
 import com.goodtech.tq.common.bus.IBusListener;
 import com.goodtech.tq.common.bus.event.DPStartEvent;
@@ -28,7 +32,7 @@ import java.util.Map;
  * 沉浸式小视频场景展示：全屏样式
  * Create by hanweiwei on 2020-04-21.
  */
-public class DrawVideoFullScreenActivity extends AppCompatActivity {
+public class DrawVideoFullScreenActivity extends BaseActivity {
     private static final String TAG = DrawVideoFullScreenActivity.class.getSimpleName();
     public static final String CHANNEL_TYPE = "channel_type";
     public static final String CONTENT_TYPE = "content_type";
@@ -93,6 +97,11 @@ public class DrawVideoFullScreenActivity extends AppCompatActivity {
                 .replace(R.id.draw_style1_frame, mDrawFragment)
                 .commitAllowingStateLoss();
         isInited = true;
+
+        FrameLayout frame = findViewById(R.id.draw_style1_frame);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) frame.getLayoutParams();
+        params.topMargin = StatusBarUtil.getStatusBarHeight(this);
+        frame.setLayoutParams(params);
     }
 
     @Override

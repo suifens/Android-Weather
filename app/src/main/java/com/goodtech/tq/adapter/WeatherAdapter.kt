@@ -78,29 +78,17 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
     fun setAd1(ad: TTFeedAd?) {
         feedAd1 = ad
-        if (ad == null) {
-            notifyItemChanged(4)
-        } else {
-            notifyItemChanged(4)
-        }
+        notifyItemChanged(4)
     }
 
     fun setAd2(ad: TTFeedAd?) {
         feedAd2 = ad
-        if (ad == null) {
-            notifyItemChanged(6)
-        } else {
-            notifyItemChanged(6)
-        }
+        notifyItemChanged(6)
     }
 
     fun setAd3(ad: TTFeedAd?) {
         feedAd3 = ad
-        if (ad == null) {
-            notifyItemChanged(9)
-        } else {
-            notifyItemChanged(9)
-        }
+        notifyItemChanged(9)
     }
 
     fun setWeatherHeaderListener(listener: WeatherHeaderListener) {
@@ -194,7 +182,8 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                 weatherModel?.let { holder.view.setData(it) }
             }
             is WeatherViewHolder.LifeViewHolder -> {
-                weatherModel?.lifeModel?.let { holder.view.setupLife(it, Color.WHITE) }
+                holder.view.showWhiteType()
+                weatherModel?.lifeModel?.let { holder.view.setupLife(it) }
             }
             is WeatherViewHolder.ObservationViewHolder -> {
                 weatherModel?.let { holder.view.setData(it) }

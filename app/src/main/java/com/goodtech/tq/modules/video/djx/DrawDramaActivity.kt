@@ -2,24 +2,17 @@ package com.goodtech.tq.modules.video.djx
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.toColorInt
 import com.bytedance.sdk.djx.DJXRewardAdResult
-import com.goodtech.tq.R
-import com.goodtech.tq.common.bus.Bus
-import com.goodtech.tq.common.bus.IBusListener
-import com.goodtech.tq.common.bus.event.DJXStartEvent
 import com.bytedance.sdk.djx.DJXSdk
 import com.bytedance.sdk.djx.IDJXWidget
 import com.bytedance.sdk.djx.interfaces.listener.IDJXDramaUnlockListener
@@ -31,17 +24,23 @@ import com.bytedance.sdk.djx.model.DJXDramaUnlockInfo
 import com.bytedance.sdk.djx.model.DJXDramaUnlockMethod
 import com.bytedance.sdk.djx.params.DJXWidgetDramaDetailParams
 import com.bytedance.sdk.djx.params.DJXWidgetDrawParams
+import com.bytedance.sdk.djx.utils.StatusBarUtil
 import com.bytedance.sdk.openadsdk.AdSlot
 import com.bytedance.sdk.openadsdk.TTAdLoadType
 import com.bytedance.sdk.openadsdk.TTAdNative
 import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd
+import com.goodtech.tq.R
+import com.goodtech.tq.activity.BaseActivity
+import com.goodtech.tq.common.bus.Bus
+import com.goodtech.tq.common.bus.IBusListener
+import com.goodtech.tq.common.bus.event.DJXStartEvent
 import com.goodtech.tq.utils.TipHelper
 
 /**
  * Created by limingqi on 2023/5/10
  */
-class DrawDramaActivity : AppCompatActivity() {
+class DrawDramaActivity : BaseActivity() {
 
     companion object {
         private const val TAG = "DrawDramaActivity"
@@ -156,6 +155,10 @@ class DrawDramaActivity : AppCompatActivity() {
                 .commitAllowingStateLoss()
             isInited = true
         }
+        val frame = findViewById<FrameLayout>(R.id.draw_drama_frame)
+        val params = frame.layoutParams as ConstraintLayout.LayoutParams
+        params.topMargin = StatusBarUtil.getStatusBarHeight(this)
+        frame.layoutParams = params
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -175,7 +178,7 @@ class DrawDramaActivity : AppCompatActivity() {
                     Log.d(TAG, "createCustomView: map=$map")
                     val label = TextView(container.context)
                     label.text = map["title"]?.toString() ?: ""
-                    label.setTextColor(Color.parseColor("#f1f1f1"))
+                    label.setTextColor("#f1f1f1".toColorInt())
                     label.textSize = 20f
 
                     val labelParams = FrameLayout.LayoutParams(

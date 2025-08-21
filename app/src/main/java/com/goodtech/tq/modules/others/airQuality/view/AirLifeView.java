@@ -1,6 +1,7 @@
 package com.goodtech.tq.modules.others.airQuality.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,6 @@ public class AirLifeView extends ConstraintLayout {
     private void init(Context context, AttributeSet attrs) {
 
         LayoutInflater.from(getContext()).inflate(R.layout.air_stub_life, this, true);
-        setBackgroundResource(R.drawable.bg_circle_black_12);
 
         findViewById(R.id.titleLayout).setVisibility(View.VISIBLE);
 
@@ -50,18 +50,21 @@ public class AirLifeView extends ConstraintLayout {
     private AirLifeItemView allergyView;    //过敏指数
     private AirLifeItemView comfortView;    //舒适度指数
 
-    public void setupLife(LifeEntity lifeModel, int color) {
-        if (color != 0) {
-            dressingView.setTextColor(color);
-            sportView.setTextColor(color);
-            umbrellaView.setTextColor(color);
-            fishingView.setTextColor(color);
-            coldView.setTextColor(color);
-            carView.setTextColor(color);
-            conditionerView.setTextColor(color);
-            allergyView.setTextColor(color);
-            comfortView.setTextColor(color);
-        }
+    public void showWhiteType() {
+        setBackgroundResource(R.drawable.bg_circle_black_12);
+        int color = Color.WHITE;
+        dressingView.setTextColor(color);
+        sportView.setTextColor(color);
+        umbrellaView.setTextColor(color);
+        fishingView.setTextColor(color);
+        coldView.setTextColor(color);
+        carView.setTextColor(color);
+        conditionerView.setTextColor(color);
+        allergyView.setTextColor(color);
+        comfortView.setTextColor(color);
+    }
+
+    public void setupLife(LifeEntity lifeModel) {
         if (lifeModel != null) {
             dressingView.setState(lifeModel.getChuanyi() != null ? lifeModel.getChuanyi().getV() : "");
             sportView.setState(lifeModel.getYundong() != null ? lifeModel.getYundong().getV() : "");

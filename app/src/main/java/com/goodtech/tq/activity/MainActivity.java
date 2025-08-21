@@ -73,7 +73,6 @@ public class MainActivity extends BaseActivity {
         handleIntent();
         initApp();
 //        registerEventBus();
-        insetNavigationBar(findViewById(R.id.bottomLayout));
     }
 
     private void initColors() {
