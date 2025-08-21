@@ -107,13 +107,16 @@ class HomeFragment : BaseFragment() {
         }
 
         reloadView()
-        binding.viewPager.currentItem = currIndex
-        setIndicator(currIndex)
     }
 
     private fun setupViews() {
         // 配置状态栏
         configStationBar(binding.privateStationBar)
+    }
+
+    private fun switchViewPager(index: Int) {
+        binding.viewPager.currentItem = index
+        setIndicator(index)
     }
 
     private fun configStationBar(stationBar: View) {
@@ -147,6 +150,12 @@ class HomeFragment : BaseFragment() {
 
         // 签到按钮
         binding.imgSign.setOnClickListener {
+            if (!SpUtils.getInstance().isAgreePermission()) {
+                (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) {
+                    onSignClick()
+                }
+                return@setOnClickListener
+            }
             onSignClick()
         }
     }
@@ -180,6 +189,9 @@ class HomeFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         isCurrent = true
+        if (isNeedReload) {
+            reloadView()
+        }
     }
 
     override fun onPause() {
@@ -219,12 +231,14 @@ class HomeFragment : BaseFragment() {
         
         // 更新天气
         reloadWeathers()
+        switchViewPager(currIndex)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: CityEvent) {
         if (event.showIndex() >= 0) {
             currIndex = event.showIndex()
+            switchViewPager(currIndex)
         }
         if (event.isAddCity) {
             loadLast = true
@@ -398,13 +412,6 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun onSignClick() {
-        if (!SpUtils.getInstance().isAgreePermission()) {
-            (requireActivity() as? BaseActivity)?.showPermissionDialog(requireActivity()) {
-                onSignClick()
-            }
-            return
-        }
-        
         val cityMode = cityModes[currIndex]
         var weatherModel: WeatherModel? = null
         if (cityMode.poiId.isNotEmpty()) {

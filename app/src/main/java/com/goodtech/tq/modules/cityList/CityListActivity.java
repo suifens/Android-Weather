@@ -38,6 +38,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
+import static com.gengee.insaitlib.ext.ViewExtKt.insetSystemBarBottom;
+
 /**
  *
  */
@@ -109,6 +111,10 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
 
         //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
+        
+        // 配置系统栏适配（使用ViewExt中的扩展方法）
+        insetSystemBarBottom(findViewById(R.id.root_container));
+
 
         mCloseBtn = findViewById(R.id.button_close);
         mCancelBtn = findViewById(R.id.button_city_cancel);
