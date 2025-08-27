@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,7 +24,6 @@ import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 
-import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;

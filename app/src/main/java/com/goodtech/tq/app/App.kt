@@ -88,6 +88,9 @@ class App : Application() {
     private var isRunInBackground = false
     //  加载插屏广告了
     var hadInitAd = false
+    
+    // 标记是否已经初始化SDK
+    private var isSDKInitialized = false
 
     override fun onCreate() {
         super.onCreate()
@@ -121,21 +124,14 @@ class App : Application() {
 
     private fun initializeApp() {
         try {
-            initializeUM()
+            // 只初始化基础组件，不初始化可能请求权限的SDK
             initializeMMKV()
             registerLifecycle()
             initializeDatabase()
-            JCollectionAuth.setAuth(this, false)
+            // 注意：不在这里初始化JPush，延迟到用户同意权限后
+            // JCollectionAuth.setAuth(this, false)
         } catch (e: Exception) {
             Log.e(TAG, "初始化失败", e)
-        }
-    }
-
-    private fun initializeUM() {
-        try {
-            UMConfigure.preInit(this, Constants.UM_APP_ID, BuildConfig.FLAVOR)
-        } catch (e: Exception) {
-            Log.e(TAG, "UM初始化失败", e)
         }
     }
 
@@ -147,38 +143,62 @@ class App : Application() {
         DatabaseHelper.getInstance(applicationContext).openDatabase()
     }
 
+    /**
+     * 用户同意权限后调用，初始化所有SDK
+     */
     @SuppressLint("CheckResult")
     fun startUsingApp(activity: Activity?) {
+        if (isSDKInitialized) {
+            Log.d(TAG, "SDK已经初始化，跳过重复初始化")
+            return
+        }
+        
         mainScope.launch {
-            initializeAdSDK()
-            configUM()
-            initializeJPush()
-            loadCsjAdHolder()
+            try {
+                Log.d(TAG, "开始初始化SDK...")
+                initializeAdSDK()
+                configUM()
+                initializeJPush()
+                loadCsjAdHolder()
+                isSDKInitialized = true
+                Log.d(TAG, "SDK初始化完成")
+            } catch (e: Exception) {
+                Log.e(TAG, "SDK初始化失败", e)
+            }
         }
     }
 
     private fun initializeAdSDK() {
-        TTAdManagerHolder.init(this)
+        try {
+            Log.d(TAG, "初始化广告SDK...")
+            TTAdManagerHolder.init(this)
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化广告SDK失败", e)
+        }
     }
 
     private fun initializeJPush() {
+        try {
+            Log.d(TAG, "初始化极光推送...")
+            JPushInterface.setDebugMode(false)
+            JPushInterface.init(this)
+            JCollectionAuth.setAuth(this, true);
 
-        JPushInterface.setDebugMode(false)
-        JPushInterface.init(this)
-        JCollectionAuth.setAuth(this, true);
-
-        val registerId = JPushInterface.getRegistrationID(instance)
-        Log.i(TAG, "startUsingApp: register id = $registerId")
-        if (!TextUtils.isEmpty(registerId)) {
-            mJPushRegId = registerId
+            val registerId = JPushInterface.getRegistrationID(instance)
+            if (!TextUtils.isEmpty(registerId)) {
+                mJPushRegId = registerId
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化极光推送失败", e)
         }
     }
 
     fun loadCsjAdHolder() {
         try {
+            Log.d(TAG, "初始化穿山甲广告...")
             CsjAdHolder.init(SITE_ID, instance, object : TTAdSdk.Callback {
                 override fun success() {
-                    Log.e(TAG, "CsjAdHolder init success")
+                    Log.d(TAG, "CsjAdHolder init success")
                     // 广告SDK初始化成功后，再初始化视频SDK
                     initVideoSDKs()
                 }
@@ -198,6 +218,7 @@ class App : Application() {
 
     private fun initVideoSDKs() {
         try {
+            Log.d(TAG, "初始化视频SDK...")
             initDJX()
             initDP()
         } catch (e: Exception) {
@@ -207,6 +228,7 @@ class App : Application() {
 
     fun initDJX() {
         try {
+            Log.d(TAG, "初始化DJX SDK...")
             DJXHolder.init(instance)
         } catch (e: Exception) {
             Log.e(TAG, "初始化DJX SDK失败", e)
@@ -215,6 +237,7 @@ class App : Application() {
 
     fun initDP() {
         try {
+            Log.d(TAG, "初始化DP SDK...")
             DPHolder.init(instance)
         } catch (e: Exception) {
             Log.e(TAG, "初始化DP SDK失败", e)
@@ -238,23 +261,33 @@ class App : Application() {
     }
 
     private fun configUM() {
-        UMConfigure.init(
-            this,
-            Constants.UM_APP_ID,
-            BuildConfig.FLAVOR,
-            UMConfigure.DEVICE_TYPE_PHONE,
-            ""
-        )
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL)
-        initializeBugly()
+        try {
+            Log.d(TAG, "初始化友盟统计...")
+            UMConfigure.init(
+                this,
+                Constants.UM_APP_ID,
+                BuildConfig.FLAVOR,
+                UMConfigure.DEVICE_TYPE_PHONE,
+                ""
+            )
+            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL)
+            initializeBugly()
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化友盟统计失败", e)
+        }
     }
 
     private fun initializeBugly() {
-        CrashReport.initCrashReport(
-            applicationContext,
-            Constants.BUGLY_APP_ID,
-            BuildConfig.DEBUG_MODE
-        )
+        try {
+            Log.d(TAG, "初始化Bugly...")
+            CrashReport.initCrashReport(
+                applicationContext,
+                Constants.BUGLY_APP_ID,
+                BuildConfig.DEBUG_MODE
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化Bugly失败", e)
+        }
     }
 
     private fun registerLifecycle() {

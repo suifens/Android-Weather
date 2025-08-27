@@ -30,6 +30,7 @@ import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.DisagreeAlert;
 import com.goodtech.tq.views.DisagreeAlert.DisagreeAlertListener;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.PermissionManager;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -165,11 +166,15 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
 
     private void onStartWeather(boolean isVisitor) {
         mHandler.post(() -> {
-            SpUtils.getInstance().setPermissionAgree(!isVisitor);
-            SpUtils.getInstance().putString(SpUtils.VERSION_APP, AppUtils.getAppVersionName());
             if (isVisitor) {
+                // 游客模式，不初始化SDK
+                SpUtils.getInstance().setPermissionAgree(false);
+                SpUtils.getInstance().putString(SpUtils.VERSION_APP, AppUtils.getAppVersionName());
                 showVisitor();
             } else {
+                // 用户同意权限，使用权限管理工具初始化SDK
+                PermissionManager.INSTANCE.onPrivacyAgreed(this);
+                SpUtils.getInstance().putString(SpUtils.VERSION_APP, AppUtils.getAppVersionName());
                 CitySearchActivity.redirectTo(this, true);
                 this.finish();
             }

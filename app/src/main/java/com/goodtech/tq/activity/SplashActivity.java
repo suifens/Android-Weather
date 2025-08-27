@@ -28,6 +28,7 @@ import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.modules.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
+import com.goodtech.tq.utils.PermissionManager;
 import com.goodtech.tq.utils.StatusBarUtil;
 
 @SuppressLint("CustomSplashScreen")
@@ -45,9 +46,11 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         
-        viewModel = new ViewModelProvider(this).get(SplashViewModel.class);
         initViews();
-        setupObservers();
+        if (SpUtils.getInstance().isAgreePermission()) {
+            viewModel = new ViewModelProvider(this).get(SplashViewModel.class);
+            setupObservers();
+        }
         checkAppVersion();
     }
 
@@ -112,7 +115,8 @@ public class SplashActivity extends BaseActivity {
 
     private void initializeApp() {
         if (SpUtils.getInstance().isAgreePermission()) {
-            App.instance.startUsingApp(this);
+            // 使用权限管理工具安全初始化SDK
+            PermissionManager.INSTANCE.safeInitializeSDK(this);
             viewModel.prepareWeatherData();
             BtnLinkHelper.fetchBtnLinks();
             loadSplashAd();
@@ -161,6 +165,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.destroyAd();
+        if (viewModel != null) {
+            viewModel.destroyAd();
+        }
     }
 }
