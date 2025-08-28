@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path name="external_files" path="."/>
+    <external-path path="photos" name="camera_photos" />
+    <external-path name="my_images" path="/weather/image/" />
+    <external-path name="my_videos" path="/weather/video/" />
+    <external-path name="images" path="share/" />
+    <external-path name="videos" path="video/" />
+    <external-path name="dcim" path="DCIM/" />
+    <external-files-path name="opensdk_external" path="Images/tmp"/>
+    <root-path name="opensdk_root" path=""/>
+    <root-path name="root_path" path="." />
+
+</paths>

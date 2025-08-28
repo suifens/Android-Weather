@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="490dp" >
+
+    <ImageView
+        android:id="@+id/img_weather"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_radius20_purple"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/bgTemp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <ImageView
+            android:id="@+id/locationImgView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_loc_w"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@+id/tvCity"
+            app:layout_constraintTop_toTopOf="@+id/tvCity"
+            />
+
+        <TextView
+            android:id="@+id/tvCity"
+            style="@style/Marquee_Text"
+            android:layout_width="wrap_content"
+            android:maxWidth="200dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white_80"
+            android:textSize="16sp"
+            tools:text="城市"
+            android:layout_marginTop="18dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/tempTv"
+            style="@style/AlternateStyle"
+            android:textColor="@color/white"
+            android:textSize="100sp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/iconImgV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="18°" />
+
+        <TextView
+            android:id="@+id/weatherDetailTv"
+            style="@style/Black_Text"
+            android:layout_marginTop="15dp"
+            android:textAlignment="center"
+            android:lineSpacingExtra="3sp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phraseTv"
+            tools:text="南风" />
+
+        <ImageView
+            android:id="@+id/iconImgV"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="25dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:src="@drawable/icon5" />
+
+        <TextView
+            android:id="@+id/phraseTv"
+            style="@style/Black_Text"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconImgV"
+            tools:text="多云" />
+
+
+        <TextView
+            android:id="@+id/rainTipTv"
+            style="@style/Black_Text"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="invisible"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/detailImgV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="未来两小时可能有🌧️出门记得带🌂哦～" />
+
+        <ImageView
+            android:id="@+id/detailImgV"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/btn_open_detail" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

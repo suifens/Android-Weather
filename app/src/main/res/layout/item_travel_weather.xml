@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/cityNameTv"
+        style="@style/Black_Text"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        tools:text="西名曲"
+        />
+
+    <ImageView
+        android:id="@+id/iconImgV"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        tools:src="@drawable/icon5" />
+
+    <TextView
+        android:id="@+id/phraseTv"
+        style="@style/Black_Text"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        tools:text="多云"
+        />
+
+    <TextView
+        android:id="@+id/tempTv"
+        style="@style/Black_Text"
+        android:layout_marginTop="9dp"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:text="29/17°"
+        />
+
+    <TextView
+        android:id="@+id/rhTv"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:background="@drawable/bg_white_16"
+        android:layout_marginTop="9dp"
+        android:textColor="#4ABA97"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/tvDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        tools:text="晴"
+        />
+
+</LinearLayout>

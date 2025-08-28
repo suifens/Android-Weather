@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="top_city">
+        <item>北京</item>
+        <item>上海</item>
+        <item>重庆</item>
+        <item>深圳</item>
+        <item>郑州</item>
+        <item>广州</item>
+        <item>成都</item>
+        <item>杭州</item>
+        <item>苏州</item>
+        <item>厦门</item>
+        <item>青岛</item>
+        <item>南京</item>
+        <item>天津</item>
+    </string-array>
+
+    <string-array name="top_city_pinyin">
+        <item>Beijing</item>
+        <item>Shanghai</item>
+        <item>Chongqing</item>
+        <item>Shenzhen</item>
+        <item>Zhengzhou</item>
+        <item>Guangzhou</item>
+        <item>Chengdu</item>
+        <item>Hangzhou</item>
+        <item>Suzhou</item>
+        <item>Xiamen</item>
+        <item>Qingdao</item>
+        <item>Nanjing</item>
+        <item>Tianjing</item>
+    </string-array>
+
+</resources>

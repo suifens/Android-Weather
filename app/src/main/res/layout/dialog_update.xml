@@ -44,7 +44,7 @@
         style="@style/ConfirmButtonStyle"
         android:layout_width="160dp"
         android:text="立即更新"
-        android:background="@drawable/bg_circle_8b98e4"
+        android:background="@drawable/bg_radius8_42a0fb"
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"

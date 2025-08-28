@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_time"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tv_year_month"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="2021年4月"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:src="@drawable/ic_more" />
+
+        </LinearLayout>
+
+        <com.haibin.calendarview.CalendarLayout
+            android:id="@+id/calendarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            app:calendar_content_view_id="@+id/nestedScrollView"
+            app:calendar_show_mode="both_month_week_view">
+
+            <com.haibin.calendarview.CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/white"
+                app:calendar_padding="10dp"
+                app:current_month_lunar_text_color="#CFCFCF"
+                app:current_month_text_color="#333333"
+                app:day_text_size="24sp"
+                app:lunar_text_size="10sp"
+                app:max_year="2050"
+                app:min_year="1949"
+                app:month_view="com.goodtech.weatherlib.view.calendar.CustomMonthView"
+                app:month_view_show_mode="mode_fix"
+                app:other_month_lunar_text_color="#e1e1e1"
+                app:other_month_text_color="#e1e1e1"
+                app:scheme_text="假"
+                app:scheme_text_color="#333"
+                app:scheme_theme_color="#128c4b"
+                app:selected_lunar_text_color="@color/white"
+                app:selected_text_color="@color/white"
+                app:selected_theme_color="#E05353"
+                app:week_background="@color/white"
+                app:week_start_with="sun"
+                app:week_text_color="#333333"
+                app:week_view="com.goodtech.weatherlib.view.calendar.CustomWeekView"
+                app:year_view_day_text_color="#333333"
+                app:year_view_day_text_size="10sp"
+                app:year_view_month_text_color="#ff0000"
+                app:year_view_month_text_size="20dp"
+                app:year_view_scheme_color="#f17706"
+                app:year_view_select_text_color="#ff0000"
+                app:year_view_week_height="12sp"
+                app:year_view_week_text_color="#e1e1e1"
+                app:year_view_week_text_size="8sp" />
+
+        </com.haibin.calendarview.CalendarLayout>
+
+        <include layout="@layout/stub_calendar_day_detail"
+            android:id="@+id/detailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp" />
+
+        <include layout="@layout/stub_calendar_almanac_day"
+            android:id="@+id/dayAlmanac"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp" />
+
+        <include layout="@layout/stub_calendar_almanac_hour"
+            android:id="@+id/hourAlmanac"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -4,23 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:orientation="vertical">
-
-    <View
-        android:id="@+id/status"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:fitsSystemWindows="true" >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,42 +25,36 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:srcCompat="@drawable/ic_logo" />
 
                 <TextView
                     android:id="@+id/welcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="欢迎您使用"
-                    android:textSize="22dp"
+                    android:text="@string/permission_welcome"
+                    android:textSize="24sp"
                     android:textColor="@color/black"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/status"
+                    android:layout_marginStart="10dp"
                     />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" 预知天气"
-                    android:textColor="@color/black"
-                    android:textSize="22dp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/welcome"
-                    app:layout_constraintTop_toBottomOf="@+id/status" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_spannable"
+                android:id="@+id/spannableTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="2dp"
                 android:layout_marginTop="18dp"
                 android:text="@string/permission_title1"
-                android:textColor="@color/color_4a4a4a"
                 android:textSize="14dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/welcome" />
+                />
 
             <TextView
                 android:id="@+id/title2"
@@ -79,14 +65,13 @@
                 android:text="@string/permission_title2"
                 android:textColor="@color/black"
                 android:textSize="14dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+                />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="26dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title2">
 
@@ -117,6 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:layout_marginEnd="10dp"
+                    android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="10dp"
                     android:ellipsize="end"
                     android:gravity="start"
@@ -209,6 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:layout_marginEnd="10dp"
+                    android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="10dp"
                     android:ellipsize="end"
                     android:gravity="start"
@@ -228,38 +215,28 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/button_agree"
+    <android.widget.Button
+        android:id="@+id/agreeBtn"
+        style="@style/ConfirmButtonStyle"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_circle_00c4ff"
-        android:layout_marginBottom="10dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:text="同意并进入"
-        android:textSize="16dp"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/button_disagree"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <Button
-        android:id="@+id/button_disagree"
+    <android.widget.Button
+        android:id="@+id/disagreeBtn"
+        style="@style/ClearButtonStyle"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/color_clear"
-        android:layout_marginBottom="30dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="40dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:text="@string/btn_u_disagree"
+        android:text="不同意"
         android:textSize="16dp"
         android:textColor="@color/colorSubtitle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintEnd_toEndOf="parent"
         />
 
 </LinearLayout>

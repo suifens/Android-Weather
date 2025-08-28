@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bgHoliday"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    >
+
+    <View
+        android:id="@+id/bgView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_holiday_1" />
+
+    <TextView
+        android:id="@+id/tvHoliday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="18dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        tools:text="北京市" />
+
+    <TextView
+        android:id="@+id/tvCount"
+        android:layout_width="60dp"
+        android:layout_height="26dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/bg_white_20"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="共3天" />
+
+    <TextView
+        android:id="@+id/tvHolidayTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvHoliday"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="18dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        tools:text="北京市" />
+
+    <TextView
+        android:id="@+id/tvPropose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvHolidayTime"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="14dp"
+        android:lines="2"
+        android:ellipsize="end"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        tools:text="北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市" />
+
+</RelativeLayout>

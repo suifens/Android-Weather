@@ -1,3 +1,24 @@
-rootProject.name='Weather'
-include ':app', ':cropimage'
-//include ':mediationAdapters:Util',':mediationAdapters:BDAdapter',':mediationAdapters:TTAdapter',':mediationAdapters:KSAdapter'
+//pluginManagement {
+//    repositories {
+//        gradlePluginPortal()
+//        google()
+//        mavenCentral()
+////        jcenter() // 必须
+//        maven { url 'https://jitpack.io' }
+//        maven {url 'https://developer.huawei.com/repo/'}
+//    }
+//}
+//dependencyResolutionManagement {
+//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositories {
+//        google()
+//        mavenCentral()
+////        jcenter() // 必须
+//        maven { url 'https://jitpack.io' }
+//        maven {url 'https://developer.huawei.com/repo/'}
+//    }
+//}
+
+include ':weatherlib'
+rootProject.name = "SimpleWeather"
+include ':app'

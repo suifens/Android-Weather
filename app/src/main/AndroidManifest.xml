@@ -1,49 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.goodtech.tq">
-    <!-- 前台服务 -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 这个权限用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 这个权限用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <!--必要权限，解决安全风险漏洞，发送和注册广播事件需要调用带有传递权限的接口-->
-    <permission
-        android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN" />
-    <!-- 高于Android 11的系统上，如果应用的 targetSdkVersion >= 30 ，推荐增加以下权限声明
-    （SDK将通过此权限正常触发广告行为，并保证广告的正确投放。此权限需要在用户隐私文档中声明)-->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+    package="com.chunjing.tq">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <!-- 如果设置了target >= 28 如果需要启动后台定位则必须声明这个权限 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 如果您的应用需要后台定位权限，且有可能运行在Android Q设备上,并且设置了target>28，必须增加这个权限声明 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 用于访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 用于写入缓存数据到扩展存储卡 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" /> <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 推送设置 -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- Required -->
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- 极光 -->
     <permission
         android:name="${applicationId}.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature"
-        tools:ignore="UniquePermission" /> <!-- Required  一些系统要求的权限，如访问网络等 -->
-    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
-    <uses-permission
-        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" /> <!-- 华为角标 -->
-    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" /> <!-- vivo 角标 -->
-    <uses-permission android:name="com.vivo.notification.permission.BADGE_ICON" /> <!-- Optional for location -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />&lt;!&ndash; Android Q后台定位权限&ndash;&gt; -->
+        android:protectionLevel="signature" /> <!-- Required  一些系统要求的权限，如访问网络等 -->
+    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" /> <!-- 适配Android13，弹出通知必须权限 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 如您需要对应设备通知相关的能力，建议集成以下权限（可选） -->
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" /> <!-- 华为角标 -->
+    <uses-permission android:name="com.vivo.notification.permission.BADGE_ICON" /> <!-- VIVO角标权限 -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 振动器权限，JPUSH支持通知开启振动功能，小米推送必须 -->
     <!-- xiaomi_permission_start -->
     <permission
         android:name="${applicationId}.permission.MIPUSH_RECEIVE"
@@ -55,119 +43,143 @@
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
     <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE" /> <!-- oppo_permission_end -->
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--
- 高于Android 11的系统上，如果应用的 targetSdkVersion >= 30 ，推荐增加以下权限声明
-       （SDK将通过此权限正常触发广告行为，并保证广告的正确投放。此权限需要在用户隐私文档中声明)
-    -->
-    <uses-permission
-        android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+    <queries>
+        <package android:name="com.tencent.mm" /> <!-- 指定微信包名 -->
+        <package android:name="com.tencent.mobileqq" />
+        <package android:name="com.sina.weibo" />
+        <package android:name="com.taobao.taobao" />
+        <!-- 华为推送 -->
+        <intent>
+            <action android:name="com.huawei.hms.core.aidlservice" />
+        </intent>
+    </queries>
 
     <application
-        android:name=".app.BaseApp"
+        android:name=".MyApp"
         android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="${app_name}"
-        android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
-        tools:replace="android:label,android:icon,android:theme,android:networkSecurityConfig,android:allowBackup">
+        android:theme="@style/Theme.SimpleWeather.NoActionBar"
+        android:usesCleartextTraffic="true"
+        tools:ignore="HardcodedDebugMode"
+        tools:targetApi="31"
+        tools:replace="android:label,android:allowBackup" >
         <activity
-            android:name=".others.video.VideoActivity"
-            android:exported="false" />
-        <activity android:name=".signing.SigningActivity" />
-        <activity android:name=".activity.WidgetSettingActivity" />
-        <activity android:name=".others.taifeng.TyphoonActivity" />
-        <activity android:name=".others.dymovies.DyMoviesActivity" />
-        <activity android:name=".others.outbreak.OutbreakActivity" />
-        <activity android:name=".others.test.MyTestActivity"/>
-        <activity android:name=".others.test.PrivacyWebActivity"/>
-        <activity android:name=".others.airQuality.AirQualityActivity" />
-        <activity android:name=".others.calendar.CalendarActivity" />
-        <activity android:name=".others.constellation.ConstellationDetailActivity" />
-        <activity android:name=".others.constellation.ConstellationActivity" /> <!-- 声明service组件 -->
-<!--        <service-->
-<!--            android:name="com.baidu.location.f"-->
-<!--            android:enabled="true"-->
-<!--            android:process=":remote" /> &lt;!&ndash; AK鉴权 &ndash;&gt;-->
-<!--        <meta-data-->
-<!--            android:name="com.baidu.lbsapi.API_KEY"-->
-<!--            android:value="MW7mNdpfGlsgjWqD9BGv1jHWlSfTBLOO" /> &lt;!&ndash; value的值填写你在友盟后台申请的应用Appkey &ndash;&gt;-->
-        <!-- 高德key -->
-        <service android:name="com.amap.api.location.APSService" />
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="a8a7483b252616116740d4489fae4460"/>
-<!--        <meta-data-->
-<!--            android:name="UMENG_APPKEY"-->
-<!--            android:value="595a3b236e27a468630021e8" />-->
-<!--        <meta-data-->
-<!--            android:name="UMENG_CHANNEL"-->
-<!--            android:value="${umeng_channel}" /> &lt;!&ndash; <activity &ndash;&gt;-->
+            android:name=".ui.activity.PeripheralActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".activity.SplashActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:name=".ui.activity.RecommendShareActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.CalendarShareActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.WeatherShareActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.TravelDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.WeatherActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.LifeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.SearchCityActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.ContactActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.WidgetSettingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.CalendarActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.CityListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.CityManagerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.PermissionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.base.BaseWebActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.AddCityActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            tools:ignore="DuplicateActivity,LockedOrientationActivity"
-            tools:targetApi="cupcake">
+            android:theme="@style/SplashTheme"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".activity.MainActivity"
-            android:exported="false"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
             <intent-filter>
-                <action android:name="jpush.testAction" />
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="jpush.testCategory" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- <data android:scheme="um.该app对应的appkey" /> -->
+                <data android:scheme="63747e9905844627b5824c88" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.AboutActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".activity.ContactActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".activity.SettingActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".cityList.CityListActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".citySearch.CitySearchActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".activity.PermissionActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".activity.SplashADActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.FullScreen"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".wxapi.WXEntryActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:taskAffinity="com.goodtech.tq"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -176,159 +188,118 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+                android:resource="@xml/file_paths" />
         </provider>
+        <!-- <editor-fold default-state="collapsed" desc="高德定位"> -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="e723ff6bd86ffecbd6045c0d596e1724" />
 
-        <activity
-            android:name="com.tencent.tauth.AuthActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:noHistory="true">
+        <service android:name="com.amap.api.location.APSService" /> <!-- </editor-fold> -->
+        <!-- <editor-fold default-state="collapsed" desc="小组件"> -->
+        <receiver
+            android:name=".widget.WeatherWidgetSmall"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/weather_widget_info_small" />
+        </receiver>
+
+        <service
+            android:name=".widget.service.WidgetServiceSmall"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <receiver
+            android:name=".widget.WeatherWidgetDouble"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/weather_widget_info_double" />
+        </receiver>
+
+        <service
+            android:name=".widget.service.WidgetServiceDouble"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <receiver
+            android:name=".receiver.BootCompleteReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tencent1106159384" /> <!-- 开放平台获取的APPID -->
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.tencent.connect.common.AssistActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        </receiver>
+        <receiver
+            android:name=".receiver.BootCompleteReceiverDouble"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED_DOUBLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
         <uses-library
             android:name="org.apache.http.legacy"
-            android:required="false" />
-
-        <activity android:name="cn.gengee.cropimage.camera.CropImage" /> <!-- 截图回调 -->
-        <!-- For test only 测试状态通知栏，需要打开的Activity -->
-        <!-- <activity android:name=".jpush.TestActivity" android:exported="false"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="jpush.testAction" /> -->
-        <!-- <category android:name="jpush.testCategory" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-        <!-- User defined.  For test only  用户自定义接收消息器,3.0.7开始支持,目前新tag/alias接口设置结果会在该广播接收器对应的方法中回调 -->
-        <!-- since 3.3.0 接收JPush相关事件 -->
-        <receiver
-            android:name=".jpush.service.PushMessageReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
-
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver> <!-- 点击通知时，要打开的 activity -->
-        <!-- <activity -->
-        <!-- android:name=".jpush.OpenClickActivity" -->
-        <!-- android:exported="false"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.VIEW" /> -->
-        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-        <!-- <action android:name="cn.jiguang.demo.jpush.OpenClickActivity" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-        <!-- since 3.3.0 Required SDK 核心功能 -->
-        <!-- 可配置android:process参数将PushService放在其他进程中 -->
-        <!-- User defined.  For test only 继承自cn.jpush.android.service.JCommonService -->
+            android:required="false" /> <!-- <editor-fold default-state="collapsed" desc="极光推送"> -->
         <service
             android:name=".jpush.service.PushService"
+            android:enabled="true"
             android:exported="false"
             android:process=":pushcore">
             <intent-filter>
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
-        </service> <!-- Rich push 核心功能 since 2.0.6 -->
-        <activity
-            android:name="cn.jpush.android.ui.PopWinActivity"
-            android:exported="true"
-            android:theme="@style/MyDialogStyle">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
+        </service>
 
-                <action android:name="cn.jpush.android.ui.PopWinActivity" />
-
-                <category android:name="${JPUSH_PKGNAME}" />
-            </intent-filter>
-        </activity> <!-- Required SDK核心功能 -->
-        <activity
-            android:name="cn.jpush.android.ui.PushActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:exported="true"
-            android:theme="@android:style/Theme.NoTitleBar">
-            <intent-filter>
-                <action android:name="cn.jpush.android.ui.PushActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="${JPUSH_PKGNAME}" />
-            </intent-filter>
-        </activity> <!-- since 3.5.0 Required SDK 核心功能 -->
-        <!-- 3.5.0新增，用于定时展示功能 -->
         <receiver
-            android:name="cn.jpush.android.service.SchedulerReceiver"
-            android:exported="false" /> <!-- since 3.0.9 Required SDK 核心功能 -->
-        <provider
-            android:name="cn.jpush.android.service.DataProvider"
-            android:authorities="${JPUSH_PKGNAME}.DataProvider"
-            android:exported="false"
-            android:process=":pushcore" /> <!-- since 3.1.0 Required SDK 核心功能 -->
-        <provider
-            android:name="cn.jpush.android.service.DownloadProvider"
-            android:authorities="${JPUSH_PKGNAME}.DownloadProvider"
-            android:exported="true" /> <!-- since 3.3.0 Required SDK核心功能 -->
-        <activity
-            android:name="cn.jpush.android.service.JNotifyActivity"
-            android:exported="true"
-            android:taskAffinity="jpush.custom"
-            tools:replace="android:taskAffinity">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.JNotifyActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </activity> <!-- since 3.5.6 新增华硕通道 -->
-        <receiver
-            android:name="cn.jpush.android.asus.AsusPushMessageReceiver"
-            android:exported="false" /> <!-- Required SDK 核心功能 -->
-        <!-- 可配置android:process参数将PushService放在其他进程中 -->
-        <service
-            android:name="cn.jpush.android.service.PushService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":pushcore">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTER" />
-                <action android:name="cn.jpush.android.intent.REPORT" />
-                <action android:name="cn.jpush.android.intent.PushService" />
-                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
-            </intent-filter>
-        </service> <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
-        <!-- 若不启用该功能可删除该组件，或把 enabled 设置成 false ；App 不会被其他 App 拉起，但会拉起其他的 App。 -->
-        <service
-            android:name="cn.jpush.android.service.DaemonService"
+            android:name=".jpush.service.PushMessageReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.DaemonService" />
-
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!-- Required  用户注册SDK的intent -->
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!-- Required  用户接收SDK消息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
+                <category android:name="${JPUSH_PKGNAME}" /> <!-- JPush上注册的包名 -->
+            </intent-filter>
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
+                <!-- Required  显示通知栏 -->
                 <category android:name="${JPUSH_PKGNAME}" />
             </intent-filter>
-        </service> <!-- 可选，如果使用静态Activity方式拉起，该组件必须声明 -->
-        <activity
-            android:name="cn.jpush.android.service.DActivity"
-            android:enabled="true"
-            android:exported="true"
-            android:taskAffinity="jpush.custom"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="android:taskAffinity">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.DActivity" />
-
-                <category android:name="${JPUSH_PKGNAME}" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
             </intent-filter>
-        </activity> <!-- Required SDK核心功能 -->
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver> <!-- Required SDK 核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true"
@@ -347,118 +318,25 @@
 
                 <data android:scheme="package" />
             </intent-filter>
-        </receiver> <!-- Required SDK核心功能 -->
+        </receiver>
         <receiver
             android:name="cn.jpush.android.service.AlarmReceiver"
             android:exported="false" /> <!-- xiaomi_config_start -->
-        <service
-            android:name="com.xiaomi.push.service.XMJobService"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":pushservice" />
-        <service
-            android:name="com.xiaomi.push.service.XMPushService"
-            android:enabled="true"
-            android:process=":pushservice" />
-        <service
-            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" />
-
-        <receiver
-            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.xiaomi.push.service.receivers.PingReceiver"
-            android:exported="false"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.xiaomi.push.PING_TIMER" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="cn.jpush.android.service.PluginXiaomiPlatformsReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.ERROR" />
-            </intent-filter>
-        </receiver>
-
+        <!-- JPUSH_CHANNEL 是为了方便开发者统计 APK 分发渠道。 -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="${JPUSH_CHANNEL}" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="${JPUSH_APPKEY}" /> <!-- xiaomi -->
         <meta-data
             android:name="XIAOMI_APPKEY"
-            android:value="${XIAOMI_APPKEY}" />
+            android:value="${XIAOMI_APPKEY}"
+            tools:replace="android:value"/>
         <meta-data
             android:name="XIAOMI_APPID"
-            android:value="${XIAOMI_APPID}" /> <!-- xiaomi_config_end -->
-        <!-- huawei_config_start -->
-        <service
-            android:name="cn.jpush.android.service.PluginHuaweiPlatformsService"
-            android:exported="false"
-            tools:ignore="Instantiatable">
-            <intent-filter>
-                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
-            </intent-filter>
-        </service> <!-- huawei_config_end -->
-        <!-- meizu_config_start -->
-        <receiver
-            android:name="cn.jpush.android.service.PluginMeizuPlatformsReceiver"
-            android:exported="true">
-            <intent-filter>
-
-                <!-- 接收 push 消息 -->
-                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
-                <!-- 接收 register 消息 -->
-                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
-                <!-- 接收 unregister 消息 -->
-                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
-                <!-- 兼容低版本 Flyme3 推送服务配置 -->
-                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
-                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
-
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
-
-        <meta-data
-            android:name="MEIZU_APPKEY"
-            android:value="${MEIZU_APPKEY}" />
-        <meta-data
-            android:name="MEIZU_APPID"
-            android:value="${MEIZU_APPID}" /> <!-- meizu_config_end -->
-        <!-- oppo_config_start -->
-        <service
-            android:name="cn.jpush.android.service.PluginOppoPushService"
-            android:exported="true"
-            android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">
-            <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
-            </intent-filter>
-        </service> <!-- since JPushv3.6.8 ，oppov2.1.0 oppo 核心功能 -->
-        <service
-            android:name="com.heytap.msp.push.service.DataMessageCallbackService"
-            android:exported="true"
-            android:permission="com.heytap.mcs.permission.SEND_PUSH_MESSAGE">
-            <intent-filter>
-                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE" />
-                <action android:name="com.heytap.msp.push.RECEIVE_MCS_MESSAGE" />
-            </intent-filter>
-        </service> <!-- 兼容Q版本 -->
+            android:value="${XIAOMI_APPID}"
+            tools:replace="android:value"/> <!-- oppo -->
         <meta-data
             android:name="OPPO_APPKEY"
             android:value="${OPPO_APPKEY}" />
@@ -467,97 +345,44 @@
             android:value="${OPPO_APPID}" />
         <meta-data
             android:name="OPPO_APPSECRET"
-            android:value="${OPPO_APPSECRET}" /> <!-- oppo_config_end -->
-        <!-- vivo_config_start -->
-        <receiver
-            android:name="cn.jpush.android.service.PluginVivoMessageReceiver"
-            android:exported="false">
-            <intent-filter>
-
-                <!-- 接收 push 消息 -->
-                <action android:name="com.vivo.pushclient.action.RECEIVE" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.vivo.push.sdk.service.CommandClientService"
-            android:exported="true" />
-
-        <activity
-            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".activity.BaseActivity" />
-
+            android:value="${OPPO_APPSECRET}" /> <!-- vivo -->
         <meta-data
             android:name="com.vivo.push.api_key"
             android:value="${VIVO_APPKEY}" />
         <meta-data
             android:name="com.vivo.push.app_id"
-            android:value="${VIVO_APPID}" /> <!-- vivo_config_end -->
-        <!-- Required_config -->
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="${JPUSH_CHANNEL}" />
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="${JPUSH_APPKEY}" /> <!-- </>值来自开发者平台取得的AppKey -->
-        <!-- alarm_config -->
-        <service
-            android:name=".alarm.AlarmService"
-            android:enabled="true"
-            android:exported="false" />
+            android:value="${VIVO_APPID}" />
 
-        <receiver
-            android:name=".alarm.JAlarmReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter android:priority="1000">
-                <action android:name="com.goodtech.tq.alarm" />
-
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver> <!-- alarm_config_end -->
-        <receiver
-            android:name=".widget.MyWidget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_info" />
-        </receiver>
-
-        <service
-            android:name=".widget.WidgetService"
-            android:directBootAware="true"
-            android:enabled="true"
+        <!-- <editor-fold default-state="collapsed" desc="分享">-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
             android:exported="true"
-            android:foregroundServiceType="mediaPlayback" />
-
-        <receiver
-            android:name=".widget.MyDoubleWidget"
-            android:exported="true">
+            android:launchMode="singleTask"
+            android:noHistory="true">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1112185117" /> <!-- 开放平台获取的APPID -->
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/appwidget_info_double" />
-        </receiver>
-
-        <service
-            android:name=".widget.DoubleWidgetService"
-            android:directBootAware="true"
-            android:enabled="true"
+        <activity
+            android:name=".wxapi.WXEntryActivity"
             android:exported="true"
-            android:foregroundServiceType="mediaPlayback" />
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.chunjing.tq"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- Pangle ===== -->
+        <!-- </editor-fold>-->
+
+        <!-- 穿山甲 start================== -->
         <provider
             android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
             android:authorities="${applicationId}.TTFileProvider"
@@ -567,11 +392,41 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/pangle_file_paths" />
         </provider>
+
         <provider
             android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
             android:authorities="${applicationId}.TTMultiProvider"
             android:exported="false" />
-        <!-- Pangle end================== -->
+        <!-- 穿山甲 end================== -->
+
+        <!-- baidu start================== -->
+        <!-- 声明打开落地页的Activity（不建议修改主题配置）-->
+        <activity
+            android:name="com.baidu.mobads.sdk.api.AppActivity"
+            android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <!-- 声明打开显示激励视频/全屏视频的Activity-->
+        <activity
+            android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:configChanges" />
+
+        <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
+        <!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
+        <!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
+        <provider
+            android:name="com.baidu.mobads.sdk.api.BdFileProvider"
+            android:authorities="${applicationId}.bd.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/bd_file_paths" />
+        </provider>
+        <!-- baidu end================== -->
+
 
         <!-- GDT start================== -->
         <!-- targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值，例如本例中applicationId为"com.qq.e.union.demo"。 -->
@@ -592,8 +447,8 @@
         <activity
             android:name="com.qq.e.ads.LandscapeADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            tools:replace="android:screenOrientation"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            tools:replace="android:screenOrientation" />
 
         <!-- 声明SDK所需要的组件 -->
         <service
@@ -606,32 +461,6 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
         <!-- GDT end================== -->
 
-        <!-- baidu start================== -->
-        <!-- 声明打开落地页的Activity（不建议修改主题配置）-->
-        <activity
-            android:name="com.baidu.mobads.sdk.api.AppActivity"
-            android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
-            android:theme="@android:style/Theme.NoTitleBar"/>
-        <!-- 声明打开显示激励视频/全屏视频的Activity-->
-        <activity
-            android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
-            android:configChanges="screenSize|orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
-        <!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
-        <!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
-        <provider
-            android:name="com.baidu.mobads.sdk.api.BdFileProvider"
-            android:authorities="${applicationId}.bd.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/bd_file_paths" />
-        </provider>
-        <!-- baidu end================== -->
 
     </application>
 

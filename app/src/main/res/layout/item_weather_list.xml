@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="150dp"
+    android:layout_height="240dp"
+    android:minWidth="150dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+
+        <ImageView
+            android:id="@+id/weatherImgV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/welcome_bg" />
+
+        <TextView
+            android:id="@+id/tvTemp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@+id/iconImgV" />
+
+        <ImageView
+            android:id="@+id/iconImgV"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDesc"
+            style="@style/Medium_Title"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            tools:text="晴"
+            app:layout_constraintTop_toBottomOf="@+id/iconImgV" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/weatherTimeTv"
+        style="@style/Medium_Title"
+        android:layout_width="match_parent"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/color_383838"
+        android:textSize="16sp"
+        tools:text="昨天（）"/>
+
+    <TextView
+        android:id="@+id/weatherDetailTv"
+        style="@style/Medium_Title"
+        android:layout_width="match_parent"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/color_515151_50"
+        android:textSize="12sp"
+        tools:text="南风" />
+
+</LinearLayout>
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dayView"
+    android:background="@drawable/sl_btn_day"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/weekTv"
+        style="@style/Medium_Title"
+        android:textColor="@drawable/sl_font_515151_white"
+        android:textSize="14sp"
+        tools:text="西名曲"
+        />
+
+    <TextView
+        android:id="@+id/timeTv"
+        style="@style/Medium_Title"
+        android:layout_marginTop="1dp"
+        android:textColor="@drawable/sl_font_80515151_white"
+        android:textSize="12sp"
+        tools:text="西名曲"
+        />
+
+</LinearLayout>

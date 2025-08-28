@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="280dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-black"
+        android:text="时辰宜忌"
+        android:textAlignment="center"
+        android:textColor="@color/color_red"
+        android:textSize="16sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:divider="@drawable/divider_width_2"
+        android:showDividers="middle"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_1"
+            style="@style/HourButtonStyle"
+            android:text="辛丑"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_2"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_2"
+            style="@style/HourButtonStyle"
+            android:text="壬寅"
+            app:layout_constraintStart_toEndOf="@+id/btn_1"
+            app:layout_constraintEnd_toStartOf="@+id/btn_3"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_3"
+            style="@style/HourButtonStyle"
+            android:text="癸卯"
+            app:layout_constraintStart_toEndOf="@+id/btn_2"
+            app:layout_constraintEnd_toStartOf="@+id/btn_4"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_4"
+            style="@style/HourButtonStyle"
+            android:text="甲辰"
+            app:layout_constraintStart_toEndOf="@+id/btn_3"
+            app:layout_constraintEnd_toStartOf="@+id/btn_5"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_5"
+            style="@style/HourButtonStyle"
+            android:text="乙巳"
+            app:layout_constraintStart_toEndOf="@+id/btn_4"
+            app:layout_constraintEnd_toStartOf="@+id/btn_6"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_6"
+            style="@style/HourButtonStyle"
+            android:text="丙午"
+            app:layout_constraintStart_toEndOf="@+id/btn_5"
+            app:layout_constraintEnd_toStartOf="@+id/btn_7"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_7"
+            style="@style/HourButtonStyle"
+            android:text="丁未"
+            app:layout_constraintStart_toEndOf="@+id/btn_6"
+            app:layout_constraintEnd_toStartOf="@+id/btn_8"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_8"
+            style="@style/HourButtonStyle"
+            android:text="戊申"
+            app:layout_constraintStart_toEndOf="@+id/btn_7"
+            app:layout_constraintEnd_toStartOf="@+id/btn_9"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_9"
+            style="@style/HourButtonStyle"
+            android:text="己酉"
+            app:layout_constraintStart_toEndOf="@+id/btn_8"
+            app:layout_constraintEnd_toStartOf="@+id/btn_10"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_10"
+            style="@style/HourButtonStyle"
+            android:text="庚戌"
+            app:layout_constraintStart_toEndOf="@+id/btn_9"
+            app:layout_constraintEnd_toStartOf="@+id/btn_11"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_11"
+            style="@style/HourButtonStyle"
+            android:text="辛亥"
+            app:layout_constraintStart_toEndOf="@+id/btn_10"
+            app:layout_constraintEnd_toStartOf="@+id/btn_12"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/btn_12"
+            style="@style/HourButtonStyle"
+            android:text="庚子"
+            app:layout_constraintStart_toEndOf="@+id/btn_11"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_hours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="22dp"
+        android:text=""
+        android:fontFamily="sans-serif-black"
+        android:textColor="@color/color_red"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        android:text=""
+        android:fontFamily="sans-serif-black"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="宜"
+            android:gravity="center"
+            android:textColor="#71A276"
+            android:textSize="16dp"
+            android:fontFamily="sans-serif-black"
+             />
+
+        <TextView
+            android:id="@+id/tv_detail_suit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="忌"
+            android:textColor="@color/color_red"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_detail_avoid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

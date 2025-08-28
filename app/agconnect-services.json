@@ -23,7 +23,7 @@
 		"project_id":"9105163812218562569",
 		"app_id":"100043239",
 		"api_key":"CgB6e3x9dH1qV7WuMVw8qvZyd7nc1TaBOIGhSN5zvcwX5k7Ye627WPd5fh+iI6XuchPYfWX5LTmorjkiErNR9kC1",
-		"package_name":"com.goodtech.tq"
+		"package_name":"com.chunjing.tq"
 	},
 	"oauth_client":{
 		"client_id":"100043239",
@@ -31,7 +31,7 @@
 	},
 	"app_info":{
 		"app_id":"100043239",
-		"package_name":"com.goodtech.tq"
+		"package_name":"com.chunjing.tq"
 	},
 	"service":{
 		"analytics":{
@@ -57,12 +57,12 @@
 	"configuration_version":"3.0",
 	"appInfos":[
 		{
-			"package_name":"com.goodtech.tq",
+			"package_name":"com.chunjing.tq",
 			"client":{
 				"app_id":"100043239"
 			},
 			"app_info":{
-				"package_name":"com.goodtech.tq",
+				"package_name":"com.chunjing.tq",
 				"app_id":"100043239"
 			},
 			"oauth_client":{

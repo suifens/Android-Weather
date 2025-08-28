@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_air_quality">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bodyTempLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1.2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/cl1"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/air_item_title"
+                android:text="体感温度"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.13" />
+
+            <TextView
+                android:id="@+id/tvBodyTemp"
+                style="@style/AlternateStyle"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.6"
+                tools:text="26°" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1.7"
+            app:layout_constraintLeft_toRightOf="@+id/bodyTempLayout"
+            app:layout_constraintRight_toLeftOf="@+id/cl2"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/title_wind"
+                style="@style/air_item_title"
+                android:text="大风："
+                app:layout_constraintBottom_toTopOf="@+id/tv_so2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread" />
+
+            <TextView
+                android:id="@+id/tvWind"
+                style="@style/air_item_value"
+                app:layout_constraintBaseline_toBaselineOf="@+id/title_wind"
+                app:layout_constraintLeft_toRightOf="@+id/title_wind"
+                tools:text="122" />
+
+            <TextView
+                android:id="@+id/tv_so2"
+                style="@style/air_item_title"
+                android:text="气压："
+                app:layout_constraintBottom_toTopOf="@+id/tv_co"
+                app:layout_constraintLeft_toLeftOf="@+id/title_wind"
+                app:layout_constraintTop_toBottomOf="@+id/title_wind" />
+
+            <TextView
+                android:id="@+id/tvPressure"
+                style="@style/air_item_value"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_so2"
+                app:layout_constraintLeft_toRightOf="@+id/tv_so2"
+                tools:text="1018.0" />
+
+            <TextView
+                style="@style/air_item_value"
+                android:text=" 毫巴"
+                android:textSize="12sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_so2"
+                app:layout_constraintLeft_toRightOf="@+id/tvPressure" />
+
+            <TextView
+                android:id="@+id/tv_co"
+                style="@style/air_item_title"
+                android:text="紫外线指数："
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@+id/title_wind"
+                app:layout_constraintTop_toBottomOf="@+id/tv_so2" />
+
+            <TextView
+                android:id="@+id/tvUvIndex"
+                style="@style/air_item_value"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_co"
+                app:layout_constraintLeft_toRightOf="@+id/tv_co"
+                tools:text="90" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1.4"
+            app:layout_constraintLeft_toRightOf="@+id/cl1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_pm10"
+                style="@style/air_item_title"
+                android:text="湿度："
+                app:layout_constraintBottom_toTopOf="@+id/tv_no2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvRh"
+                style="@style/air_item_value"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_pm10"
+                app:layout_constraintLeft_toRightOf="@+id/tv_pm10"
+                tools:text="90%" />
+
+            <TextView
+                android:id="@+id/tv_no2"
+                style="@style/air_item_title"
+                android:text="露点："
+                app:layout_constraintBottom_toTopOf="@+id/tv_o3"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_pm10" />
+
+            <TextView
+                android:id="@+id/tvDewpt"
+                style="@style/air_item_value"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_no2"
+                app:layout_constraintLeft_toRightOf="@+id/tv_no2"
+                tools:text="122" />
+
+            <TextView
+                android:id="@+id/tv_o3"
+                style="@style/air_item_title"
+                android:text="能见度："
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_no2" />
+
+            <TextView
+                android:id="@+id/tvVisibility"
+                style="@style/air_item_value"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_o3"
+                app:layout_constraintLeft_toRightOf="@+id/tv_o3"
+                tools:text="12" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>

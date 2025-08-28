@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_10"
+    android:padding="24dp"
+    android:divider="@drawable/divider_height_12"
+    android:showDividers="middle"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/Black_Text"
+        android:text="@string/travel_t1"
+        android:textSize="16sp"
+        android:textColor="@color/color_515151" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/travel_m1"
+        android:textSize="14sp"
+        android:textColor="@color/color_515151_50" />
+
+    <TextView
+        style="@style/Black_Text"
+        android:text="@string/travel_t2"
+        android:textSize="16sp"
+        android:textColor="@color/color_515151" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/travel_m2"
+        android:textSize="14sp"
+        android:textColor="@color/color_515151_50" />
+
+    <TextView
+        style="@style/Black_Text"
+        android:text="@string/travel_t3"
+        android:textSize="16sp"
+        android:textColor="@color/color_515151" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/travel_m3"
+        android:textSize="14sp"
+        android:textColor="@color/color_515151_50" />
+
+    <TextView
+        style="@style/Black_Text"
+        android:text="@string/travel_t4"
+        android:textSize="16sp"
+        android:textColor="@color/color_515151" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/travel_m4"
+        android:textSize="14sp"
+        android:textColor="@color/color_515151_50" />
+
+    <TextView
+        style="@style/Black_Text"
+        android:text="@string/travel_t5"
+        android:textSize="16sp"
+        android:textColor="@color/color_515151" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/travel_m5"
+        android:textSize="14sp"
+        android:textColor="@color/color_515151_50" />
+
+</LinearLayout>
+

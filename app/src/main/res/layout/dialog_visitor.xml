@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout4"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="440dp"
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp"
+    android:background="@drawable/bg_bottom_round"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="温馨提示"
+        android:textAlignment="center"
+        android:textColor="@color/color_theme"
+        android:textSize="24dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/visitorMsgTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:lineSpacingExtra="6dp"
+        android:text="@string/msg_disagree"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/btn_dialog_confirm"
+        style="@style/ConfirmButtonStyle"
+        android:layout_marginTop="40dp"
+        android:text="同意协议进入"
+        />
+
+    <Button
+        android:id="@+id/btn_dialog_visitor"
+        style="@style/CustomButtonStyle"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/sl_btn_theme_10"
+        android:text="游客模式访问"
+        android:textColor="@color/color_theme"
+        />
+
+    <Button
+        android:id="@+id/btn_dialog_cancel"
+        style="@style/ClearButtonStyle"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/btn_u_sign_out"
+        android:textColor="#A5A5A5"
+        />
+
+</LinearLayout>

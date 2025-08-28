@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="300dp"
-    android:background="@drawable/bg_circle_white_12"
+    android:background="@drawable/bg_white_r20"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     >
@@ -24,7 +24,7 @@
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
         android:lineSpacingExtra="6dp"
-        android:textColor="@color/color_4a4a4a"
+        android:textColor="@color/color_515151"
         android:textSize="16sp" />
 
     <Button

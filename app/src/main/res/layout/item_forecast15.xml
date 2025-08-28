@@ -1,83 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="66dp"
-    android:layout_height="wrap_content"
+    android:id="@+id/dayItem"
+    android:layout_width="78dp"
+    android:layout_height="460dp"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_week"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/color_333"
+        android:layout_height="20dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/white"
         android:textSize="14sp"
-        tools:text="@string/today" />
+        tools:text="今天"
+        />
 
     <TextView
         android:id="@+id/tv_date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/color_999"
+        android:layout_height="17dp"
+        android:textColor="@color/white_50"
         android:textSize="12sp"
         tools:text="08/01" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:layout_marginTop="2dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivDay"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+        <TextView
+            android:id="@+id/dayRainfallTv"
+            style="@style/AlternateStyle"
+            android:layout_height="18dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/color_8ee8ff"
+            android:layout_marginTop="-4dp"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tv_day_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/color_666"
+        style="@style/Black_Text"
+        android:layout_height="22dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:gravity="center"
+        android:textColor="@color/white"
         android:textSize="14sp"
-        tools:text="晴" />
+        android:lines="1"
+        android:ellipsize="middle"
+        tools:text="大部分地区多云" />
 
-    <ImageView
-        android:id="@+id/ivDay"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="8dp"
-        tools:src="@drawable/icon10" />
+    <TextView
+        android:id="@+id/tv_day_temp"
+        style="@style/AlternateStyle"
+        android:layout_height="28dp"
+        android:textColor="@color/white_80"
+        android:textSize="20sp"
+        tools:text="20°" />
 
-    <com.goodtech.tq.views.TempChart
+    <com.chunjing.tq.view.TempChart
         android:id="@+id/tempChart"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_marginTop="16dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="2dp" />
 
-    <ImageView
-        android:id="@+id/iv_night"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        tools:src="@drawable/icon10" />
+    <TextView
+        android:id="@+id/tv_night_temp"
+        style="@style/AlternateStyle"
+        android:layout_height="28dp"
+        android:textColor="@color/white_80"
+        android:textSize="20sp"
+        tools:text="20°" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:layout_marginTop="2dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivNight"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            />
+
+        <TextView
+            android:id="@+id/nightRainfallTv"
+            style="@style/AlternateStyle"
+            android:layout_height="18dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/color_8ee8ff"
+            android:layout_marginTop="-4dp"
+            android:visibility="gone"
+            />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_night_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/color_666"
+        style="@style/Black_Text"
+        android:layout_height="22dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:gravity="center"
+        android:textColor="@color/white"
         android:textSize="14sp"
-        tools:text="晴" />
+        android:lines="1"
+        android:ellipsize="middle"
+        tools:text="大部分地区多云" />
 
     <TextView
         android:id="@+id/tv_wind"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/color_999"
-        android:textSize="13sp"
+        android:layout_height="17dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/white_80"
+        android:textSize="12sp"
         tools:text="东风" />
 
     <TextView
         android:id="@+id/tv_wind_scale"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/color_999"
-        android:textSize="13sp"
+        android:layout_height="18dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="@drawable/bg_48afea_4"
+        android:textColor="@color/white"
+        android:textSize="12sp"
         tools:text="3级" />
 
 </LinearLayout>

@@ -2,47 +2,59 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".cityList.CityListActivity">
+    android:background="@drawable/gradient_weather_main"
+    tools:context=".ui.activity.CityListActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/private_station_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/gradient_007bff_00c4ff"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/button_city_cancel"
-            android:layout_width="60dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="7dp"
-            android:layout_marginBottom="4dp"
-            android:background="@color/color_clear"
-            android:text="@string/button_cancel"
+        <ImageView
+            android:id="@+id/backButton"
+            style="@style/ItemButtonStyle"
+            android:src="@drawable/ic_back_w"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            style="@style/BarTitleStyle"
+            android:text="@string/title_city_list"
             android:textColor="@color/white"
-            android:textSize="18dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/backButton"
+            app:layout_constraintStart_toEndOf="@+id/backButton"
+            app:layout_constraintTop_toTopOf="@+id/backButton" />
 
-        <ImageButton
-            android:id="@+id/button_close"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="7dp"
-            android:layout_marginBottom="4dp"
-            android:background="@color/color_clear"
-            android:src="@drawable/ic_close"
+        <ImageView
+            android:id="@+id/gridImgView"
+            style="@style/ItemButtonStyle"
+            android:padding="6dp"
+            android:src="@drawable/ic_collection_s"
+            android:layout_marginBottom="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/pagerImgView" />
+
+        <ImageView
+            android:id="@+id/pagerImgView"
+            style="@style/ItemButtonStyle"
+            android:padding="6dp"
+            android:src="@drawable/ic_pager_n"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/editButton" />
 
         <Button
-            android:id="@+id/button_city_edit"
+            android:id="@+id/editButton"
             android:layout_width="60dp"
             android:layout_height="44dp"
             android:layout_marginEnd="7dp"
@@ -50,86 +62,46 @@
             android:background="@color/color_clear"
             android:text="@string/button_edit"
             android:textColor="@color/white"
-            android:textSize="18dp"
+            android:textSize="16sp"
+            android:alpha="0.6"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="我的城市"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/private_station_bar"
-        app:layout_constraintBottom_toTopOf="@+id/bannerContainer">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_city"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <LinearLayout
-            android:id="@+id/city_add"
-            android:layout_width="160dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:background="@drawable/sl_btn_007bff"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
-
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:src="@drawable/ic_add" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="添加城市"
-                android:textSize="16dp"
-                android:textColor="@color/white"
-                />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_bottom"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="6.4:1"
+        android:paddingTop="15dp"
+        android:paddingBottom="10dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-        android:id="@+id/bannerContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" >
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/private_station_bar" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="490dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_round"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_pager"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

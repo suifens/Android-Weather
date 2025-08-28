@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dWidgetBtn"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:viewBindingIgnore="true"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/divBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/bg_radius12_theme_15"
+            />
+
+        <LinearLayout
+            android:id="@+id/llLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            >
+
+            <ImageView
+                android:id="@+id/dLocationImgView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:srcCompat="@drawable/ic_loc_w" />
+
+            <TextView
+                android:id="@+id/dtvLocation"
+                android:layout_width="0dp"
+                android:layout_height="18dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="middle"
+                android:lines="1"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llWeather"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/llLocation"
+            android:layout_marginTop="14dp"
+            >
+
+            <ImageView
+                android:id="@+id/divWeather"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="14dp"
+                tools:src="@drawable/icon44" />
+
+            <TextView
+                android:id="@+id/dtvTemp"
+                style="@style/AlternateStyle"
+                android:layout_marginStart="6dp"
+                android:textColor="@color/white"
+                android:textSize="50sp"
+                tools:text="29°" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/dtvWeather"
+                    style="@style/Black_Text"
+                    android:layout_width="wrap_content"
+                    android:ellipsize="middle"
+                    android:lines="1"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="36dp"
+                    tools:text="今天有晴转多云的天气今天有晴转多云的天气" />
+
+                <TextView
+                    android:id="@+id/dtvParse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:lines="1"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    tools:text="东南偏东风 3级｜湿度122434dk" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/dQualityImgV"
+            android:layout_width="32dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_alignTop="@+id/llWeather"
+            android:layout_alignParentEnd="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@+id/llWeather"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_radius_white_10"
+            >
+
+            <ImageView
+                android:id="@+id/umbrellaImgV"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                app:srcCompat="@drawable/ic_umbrella" />
+
+            <TextView
+                android:id="@+id/rainTip"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:lines="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="6dp"
+                android:text="未来两小时大概率有雨"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/choseImgV"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                app:srcCompat="@drawable/ic_chose_r" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

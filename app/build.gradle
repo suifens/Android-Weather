@@ -1,118 +1,202 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.huawei.agconnect'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+//    id 'com.huawei.agconnect'
+//    id 'mediation-auto-adapter'
+}
 
 android {
-    dataBinding {
-        enabled true
-    }
 
     signingConfigs {
         config {
-            keyAlias 'weather'
+            keyAlias 'simpleweather'
             keyPassword 'Tq123456'
-            storeFile file('../archive/weather.jks')
+            storeFile file('../archive/simpleweather.jks')
             storePassword 'Tq123456'
+            v1SigningEnabled true //是否开启V1签名
+            v2SigningEnabled true //是否开启V2签名
         }
     }
 
-    compileSdkVersion 33
-
+    namespace "com.chunjing.tq"
+    compileSdk 35
     defaultConfig {
-        applicationId "com.goodtech.tq"
-        minSdkVersion 21
-        targetSdkVersion 33
-        versionCode 1035
-        versionName "10.3.5"
+        applicationId "com.chunjing.tq"
+        minSdk 24
+        targetSdk 35
+        versionCode 527
+        versionName "5.2.7"
         signingConfig signingConfigs.config
-        multiDexEnabled true
 
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。
-            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
         }
 
-//        广告应用ID
-//        buildConfigField 'String', 'PGE_APP_ID', '5353290'
-        manifestPlaceholders = [JPUSH_PKGNAME : applicationId,
-                                JPUSH_APPKEY  : "e2416540f4d3f0081fbef6df", //JPush 上注册的包名对应的 Appkey.
-                                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
-                                MEIZU_APPKEY  : "MZ-3465e4112e2141f6b1438a648a5f6670",
-                                MEIZU_APPID   : "MZ-146740",
-                                XIAOMI_APPID  : "MI-2882303761517596193",
-                                XIAOMI_APPKEY : "MI-5321759614193",
-                                OPPO_APPKEY   : "OP-86qoYufhhbWG84k0gkg0SScc0",
-                                OPPO_APPID    : "OP-3574478",
-                                OPPO_APPSECRET: "OP-254Ebdc6DA2c044f855c2EebC89041f",
-                                VIVO_APPKEY   : "af805fb3b61c6f4daf4e082c506b6275",
-                                VIVO_APPID    : "100111470"]
+        buildConfigField 'String', 'PGE_APP_ID', '"5542717"'    //应用ID
+        buildConfigField 'String', 'PGE_INT_POS_ID', '"103159496"'  //插屏广告 id
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "a9ba12249d1be37e2ece903d", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+                XIAOMI_APPID : "MI-2882303761520205268",
+                XIAOMI_APPKEY : "MI-5752020573268",
+                OPPO_APPKEY : "OP-86qoYufhhbWG84k0gkg0SScc0",
+                OPPO_APPID : "OP-3574478",
+                OPPO_APPSECRET : "OP-254Ebdc6DA2c044f855c2EebC89041f",
+                VIVO_APPKEY : "fdff4c490503389e37efcd828f346321",
+                VIVO_APPID : "105612556"
+        ]
     }
 
     flavorDimensions "default"
     productFlavors {
         xiaomi {
             buildConfigField 'int', 'BAIDU_CHANNEL', '10'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "xiaomi"]
+            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
+            manifestPlaceholders=[app_name:"纯净天气预报"]
         }
-        huawei {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
-            manifestPlaceholders = [app_name: "天气预报纯净版", umeng_channel: "huawei"]
+//        huawei {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        oppo {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        vivo {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"vivo"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        honor {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"honor"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        yyb {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        meizu {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"meizu"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        kupai {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"kupai"'
+//            manifestPlaceholders=[app_name:"气天天气"]
+//        }
+//        anzhi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"anzhi"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        wdj {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"wandoujia"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        baidu {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"baidu"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+//        flavor360 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"360"'
+//            manifestPlaceholders=[app_name:"纯净天气预报"]
+//        }
+        // 天气
+        xiaomi_tianqi {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
+            manifestPlaceholders=[app_name:"天气"]
         }
-        oppo {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            manifestPlaceholders = [app_name: "预知天气预报纯净版", umeng_channel: "oppo"]
+//        huawei_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+//        oppo_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+//        vivo_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"vivo"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+//        yyb_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"yyb"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+//        meizu_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"meizu"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+//        sougou_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '4'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"sougou"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+//        anzhi_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"anzhi"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+//        wdj_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"wandoujia"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+//        baidu_tianqi {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"baidu"'
+//            manifestPlaceholders=[app_name:"天气"]
+//        }
+    }
+
+    buildTypes {
+        release {
+//            zipAlignEnabled true
+//            shrinkResources true
+            minifyEnabled true
+            signingConfig signingConfigs.config
+            buildConfigField 'boolean', 'DEBUG_MODE', 'false'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        oppo1 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            manifestPlaceholders = [app_name: "一古天气预报", umeng_channel: "oppo"]
+        debug {
+            minifyEnabled true
+            signingConfig signingConfigs.config
+            buildConfigField 'boolean', 'DEBUG_MODE', 'true'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        oppo2 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
-            manifestPlaceholders = [app_name: "一古预知天气预报", umeng_channel: "oppo"]
-        }
-        vivo {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '7'
-            manifestPlaceholders = [app_name: "预知天气预报", umeng_channel: "vivo"]
-        }
-        yyb {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '9'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "yyb"]
-        }
-        meizu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "meizu"]
-        }
-        kupai {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '13'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "kupai"]
-        }
-        anzhi {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders = [app_name: "天气预报苹果版", umeng_channel: "anzhi"]
-        }
-        wdj {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "wandoujia"]
-        }
-        baidu {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "baidu"]
-        }
-        flavor360 {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "360"]
-        }
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     def fileArray = []
     // 自定义APK安装包名
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "${defaultConfig.applicationId}-${getTime()}.apk"
-        }
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+//                outputFileName = "${defaultConfig.applicationId}-${getTime()}.apk"
+                outputFileName = "${defaultConfig.applicationId}-${variant.productFlavors[0].name}-v${defaultConfig.versionName}.apk"
+            }
     }
 
     build {
@@ -123,19 +207,15 @@ android {
         }
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
-            buildConfigField 'boolean', 'DEBUG_MODE', 'false'
-        }
-        debug {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
-            buildConfigField 'boolean', 'DEBUG_MODE', 'true'
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        viewBinding true
     }
 
     sourceSets {
@@ -143,145 +223,83 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-}
-
-static def getTime() {
-    return new Date().format("yyMMdd", TimeZone.getDefault())
-}
-
-
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
-    implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
-    implementation fileTree(dir: 'libs', include: '*.jar')
-    implementation project(':cropimage')
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
-    implementation 'com.google.android.material:material:1.9.0'
-    //noinspection GradleCompatible
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    //noinspection GradleCompatible
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    //noinspection GradleCompatible
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation project(':weatherlib')
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-//    implementation 'org.litepal.android:core:1.4.1'
-    //网络加载图片工具
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    // umeng
-    //集成示例
-    implementation 'com.umeng.umsdk:common:9.5.4'//必选
-    implementation 'com.umeng.umsdk:asms:1.6.3'//必选
-    //网络请求
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation 'com.squareup.okio:okio:2.10.0'
-    implementation 'com.google.code.gson:gson:2.10'
-    //eventbus
-    implementation 'org.greenrobot:eventbus:3.3.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
-    implementation 'com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:1.0.0'
     //  下拉刷新控件
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.3'
-    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-//    implementation 'com.tencent.wcdb:wcdb-android:1.0.2'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    //  适配器BaseRecyclerViewAdapterHelper
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.11'
-    //  android util code
-    implementation 'com.blankj:utilcodex:1.31.1'
-    //  flex css布局
-    implementation 'com.google.android:flexbox:2.0.1'
-    //  日历
-    implementation 'com.haibin:calendarview:3.7.1'
-    //  mmkv存储
-    implementation 'com.tencent:mmkv-static:1.2.7'
-    //  权限请求
-//    implementation 'com.github.tbruyelle:rxpermissions:0.12'
-    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    //  room
+    implementation 'com.google.dagger:hilt-android:2.52'
+    kapt 'com.google.dagger:hilt-compiler:2.52'
+    kapt 'androidx.room:room-compiler:2.6.1'
+
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.20'
+
+    //  高德定位功能
+    implementation 'com.amap.api:location:6.4.7'
+
+    // umeng
+    //集成示例
+    implementation 'com.umeng.umsdk:common:9.7.7'//必选
+    implementation 'com.umeng.umsdk:asms:1.8.3'//必选
 
     implementation 'com.github.gzu-liyujiang.AndroidPicker:Common:4.1.11'
     implementation 'com.github.gzu-liyujiang.AndroidPicker:WheelPicker:4.1.11'
-    //微信开放平台，登录
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.4.0'
-    //  相机/相册
-    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
-
-    //  极光推送
-    implementation 'cn.jiguang.sdk:jcore:4.2.4'  // 此处以JCore 2.7.2 版本为例。
-    implementation 'cn.jiguang.sdk:jpush:4.9.0'  // 此处以JPush 4.0.0 版本为例
-    // 接入华为厂商
-    implementation 'com.huawei.hms:push:6.5.0.300'
-    implementation 'cn.jiguang.sdk.plugin:huawei:4.9.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
-    // 接入魅族厂商
-    implementation 'cn.jiguang.sdk.plugin:meizu:4.8.0'
-    // 接入 VIVO 厂商
-    implementation 'cn.jiguang.sdk.plugin:vivo:4.9.0'
-    // 接入 OPPO 厂商
-    implementation 'cn.jiguang.sdk.plugin:oppo:4.9.0'
-    implementation(name: 'com.heytap.msp_3.1.0', ext: 'aar')
-    //以下为 OPPO 3.1.0 aar需要依赖
-//    implementation 'commons-codec:commons-codec:1.9'
-//    implementation 'androidx.annotation:annotation:1.1.0'
-    // 接入小米厂商
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.9.0'
+    //  弹窗
+    implementation 'com.github.li-xiaojun:XPopup:2.10.0'
+    //  eventbus
+    implementation("org.greenrobot:eventbus:3.3.1")
 
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
-    implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.tencent.bugly:crashreport:4.1.9.3'
 
-    def support_version = "28.0.0" //建议使用的26以上的support库版本，建议使用28最新的即可。
-    // supprot库依赖，SDK内部依赖如下support，请确保添加
-    implementation "com.android.support:appcompat-v7:$support_version"
-    implementation "com.android.support:recyclerview-v7:$support_version"
+    // <editor-fold defaultstate="collapsed" desc="分享">
+    //  QQ
+    implementation 'com.tencent.tauth:qqopensdk:3.52.0'
+    //微信开放平台，登录
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.4.0'
+    // </editor-fold>
 
-    //<editor-fold desc="广告">
+    // <editor-fold defaultstate="collapsed" desc="极光推送">
+    //  极光推送
+    implementation 'cn.jiguang.sdk:jpush:5.7.0'  // 此处以JPush 4.0.0 版本为例
+    //  接入华为厂商
+    implementation 'com.huawei.hms:push:6.12.0.300'
+    implementation 'cn.jiguang.sdk.plugin:huawei:5.7.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
+    // 接入 VIVO 厂商
+//    implementation 'cn.jiguang.sdk.plugin:vivo:5.5.3'
+    // 接入 OPPO 厂商
+    implementation 'cn.jiguang.sdk.plugin:oppo:5.7.0'
+    implementation files('libs/com.heytap.msp_3.5.3.aar')
+    // 接入小米厂商
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:5.7.0'
+    // </editor-fold>
 
-    implementation "com.pangle.cn:mediation-sdk:5.7.0.5"  //融合SDK
-    implementation "com.pangle.cn:mediation-ks-adapter:3.3.53.1"//ks adapter 快手
-    implementation "com.pangle.cn:mediation-gdt-adapter:4.542.1412.1" //gdt adapter 优汇量
-    implementation "com.pangle.cn:mediation-baidu-adapter:9.3223.1"//baidu adapter
+    //融合基础包，必须引入
+//    implementation "com.pangle.cn:mediation-sdk:6.4.3.6"
+//    implementation "com.pangle.cn:mediation-ks-adapter:3.3.67.1.0"//ks adapter
+//    implementation "com.pangle.cn:mediation-gdt-adapter:4.575.1445.0" //gdt adapter
+//    implementation "com.pangle.cn:mediation-baidu-adapter:9.37.0"//baidu adapter
 
-    //Baidu
-    implementation(name: 'Baidu_MobAds_SDK_v9.3223', ext: 'aar')
-    //GDT 优汇量
-    implementation(name: 'GDTSDK.unionNormal.4.542.1412', ext: 'aar')
-    //ks 快手
-    implementation(name: 'kssdk-ad-3.3.53', ext: 'aar')
-
-    //</editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="视频">
-
-    //  必选，内部默认使用系统mediaplayer进行解码
-    implementation 'xyz.doikki.android.dkplayer:dkplayer-java:3.3.7'
-    //  包含StandardVideoController的实现
-    implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
-    //  使用exoplayer进行解码
-    implementation 'xyz.doikki.android.dkplayer:player-exo:3.3.7'
-    //  可选，如需要缓存或者抖音预加载功能请引入此库
-    implementation 'xyz.doikki.android.dkplayer:videocache:3.3.7'
-
-// </editor-fold>
-
-    //  定位功能
-    implementation 'com.amap.api:location:latest.integration'
-    //  弹窗
-    implementation 'com.github.li-xiaojun:XPopup:2.9.19'
+//    implementation(name: "Baidu_MobAds_SDK_v9.37", ext: 'aar')
+//    implementation(name: "GDTSDK.unionNormal.4.603.1473", ext: 'aar')
+//    implementation(name: "kssdk-ad-3.3.69", ext: 'aar')
+//    implementation(name: "mediation_baidu_adapter_9.37.0", ext: 'aar')
+//    implementation(name: "mediation_gdt_adapter_4.603.1473.0", ext: 'aar')
+//    implementation(name: "mediation_ks_adapter_3.3.69.0", ext: 'aar')
+//
+//    implementation(name: 'open_ad_sdk', ext: 'aar')
 
 }
