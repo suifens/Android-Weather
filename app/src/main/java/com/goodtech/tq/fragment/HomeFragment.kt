@@ -103,9 +103,7 @@ class HomeFragment : BaseFragment() {
         val cityModesFromSp = LocationSpHelper.getCityListAndLocation()
         if (cityModesFromSp.size != cityModes.size || isNeedReload) {
             cityModes = cityModesFromSp.toMutableList()
-            isNeedReload = true
         }
-
         reloadView()
     }
 
@@ -190,6 +188,10 @@ class HomeFragment : BaseFragment() {
         super.onResume()
         isCurrent = true
         if (isNeedReload) {
+            val cityModesFromSp = LocationSpHelper.getCityListAndLocation()
+            if (cityModesFromSp.size != cityModes.size || isNeedReload) {
+                cityModes = cityModesFromSp.toMutableList()
+            }
             reloadView()
         }
     }
