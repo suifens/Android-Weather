@@ -39,10 +39,14 @@ object DJXHolder {
             .newUser(true)
             .build()
 
-        // 配置青少年模式，可选
         config.privacyController = object : IDJXPrivacyController() {
+            // 配置青少年模式，true青少年模式，false正常模式。默认为false，青少年开启后不返回短剧内容
             override fun isTeenagerMode(): Boolean {
                 return false
+            }
+            //  true仅有备案号、false全量内容(默认)
+            override fun isOnlyICPNumber(): Boolean {
+                return true
             }
         }
 
