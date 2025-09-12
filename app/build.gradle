@@ -19,12 +19,12 @@ android {
     }
 
     namespace "com.goodtech.tq"
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.goodtech.tq"
-        minSdkVersion 24
-        targetSdkVersion 35
+        minSdk 24
+        targetSdk 36
         versionCode 1504
         versionName "15.0.4"
         signingConfig signingConfigs.config
