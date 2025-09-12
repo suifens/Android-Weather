@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <!-- Status Bar -->
+    <View
+        android:id="@+id/private_station_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white" />
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="看视频去广告"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <!-- Ad Removal Status Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_gradient_blue"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="去广告时长"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="剩余: "
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/remaining_time_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00天06小时"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/renew_button"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="续时长"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:background="@drawable/bg_button_orange"
+                android:paddingHorizontal="16dp"
+                android:minWidth="0dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="看视频领去广告时长、免费享无广告天气预报"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:background="@drawable/bg_info_banner"
+            android:padding="12dp"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Video Tasks Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获得去广告权益时长"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="每天可以领取7次去广告时长奖励,全部看完"
+                android:textColor="@color/color_8f"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="可获得4天无广告天气预报"
+                android:textColor="@color/color_8f"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Video Tasks Grid -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:rowCount="4"
+                android:layout_marginBottom="16dp">
+
+                <include
+                    android:id="@+id/video_task_1"
+                    layout="@layout/item_video_task"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <include
+                    android:id="@+id/video_task_2"
+                    layout="@layout/item_video_task"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <include
+                    android:id="@+id/video_task_3"
+                    layout="@layout/item_video_task"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <include
+                    android:id="@+id/video_task_4"
+                    layout="@layout/item_video_task"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <include
+                    android:id="@+id/video_task_5"
+                    layout="@layout/item_video_task"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <include
+                    android:id="@+id/video_task_6"
+                    layout="@layout/item_video_task"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <include
+                    android:id="@+id/video_task_7"
+                    layout="@layout/item_video_task"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+            </GridLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="第2天可重新领取7次奖励"
+                android:textColor="@color/color_8f"
+                android:textSize="12sp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Daily Rewards Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="连续7天看视频领取奖励,必得免费7~100天"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无广告天气预报"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Daily Rewards Grid -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="2">
+
+                <Button
+                    android:id="@+id/day_1_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:text="第1天"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_daily_reward_current"
+                    android:layout_margin="4dp" />
+
+                <Button
+                    android:id="@+id/day_2_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:text="第2天"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_daily_reward_locked"
+                    android:layout_margin="4dp" />
+
+                <Button
+                    android:id="@+id/day_3_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:text="第3天"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_daily_reward_locked"
+                    android:layout_margin="4dp" />
+
+                <Button
+                    android:id="@+id/day_4_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:text="第4天"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_daily_reward_locked"
+                    android:layout_margin="4dp" />
+
+                <Button
+                    android:id="@+id/day_5_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:text="第5天"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_daily_reward_locked"
+                    android:layout_margin="4dp" />
+
+                <Button
+                    android:id="@+id/day_6_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:text="第6天"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_daily_reward_locked"
+                    android:layout_margin="4dp" />
+
+                <Button
+                    android:id="@+id/day_7_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:text="第7天"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:background="@drawable/bg_daily_reward_locked"
+                    android:layout_margin="4dp" />
+
+            </GridLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -71,4 +71,11 @@
     <color name="color_383838">#383838</color>
     <color name="color_515151">#515151</color>
 
+    <!-- Ad removal page colors -->
+    <color name="color_orange">#FF8550</color>
+    <color name="color_light_orange">#FFF0E6</color>
+    <color name="color_light_blue">#E6F3FF</color>
+    <color name="color_blue_gradient_start">#4A90E2</color>
+    <color name="color_blue_gradient_end">#357ABD</color>
+
 </resources>

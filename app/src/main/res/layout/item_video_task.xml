@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_video_task_locked"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/video_number_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="第1个视频"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/reward_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+6小时"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/claim_button"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:text="去领取"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:background="@drawable/bg_button_claim"
+        android:minWidth="0dp"
+        android:padding="0dp" />
+
+</LinearLayout>

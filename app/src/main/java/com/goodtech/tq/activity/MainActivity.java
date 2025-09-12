@@ -25,6 +25,7 @@ import com.goodtech.tq.app.App;
 import com.goodtech.tq.fragment.DrawDramaFragment;
 import com.goodtech.tq.fragment.HomeFragment;
 import com.goodtech.tq.fragment.VideoDrawFragment;
+import com.goodtech.tq.modules.removeAd.RemoveAdActivity;
 import com.goodtech.tq.httpClient.ApiResponseHandler;
 import com.goodtech.tq.httpClient.ErrorCode;
 import com.goodtech.tq.httpClient.JuHeHelper;
@@ -32,6 +33,7 @@ import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.views.popup.UpdatePopup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.lxj.xpopup.XPopup;
@@ -53,6 +55,9 @@ public class MainActivity extends BaseActivity {
     private MainPagerAdapter mPagerAdapter;
     private List<Fragment> mFragmentList;
     
+    // 悬浮按钮
+    private FloatingActionButton mFabRemoveAd;
+    
     // 状态变量
     private int mCurrentTabIndex = 0;
     private long mBackTime;
@@ -70,6 +75,7 @@ public class MainActivity extends BaseActivity {
         initColors();
         setupViewPager();
         setupTabs();
+        setupFab();
         handleIntent();
         initApp();
 //        registerEventBus();
@@ -114,6 +120,20 @@ public class MainActivity extends BaseActivity {
         
         // 设置初始选中状态
         changeTab(false);
+    }
+
+    /**
+     * 设置悬浮按钮
+     * 初始化去广告悬浮按钮并设置点击事件
+     */
+    private void setupFab() {
+        mFabRemoveAd = findViewById(R.id.fab_remove_ad);
+        if (mFabRemoveAd != null) {
+            mFabRemoveAd.setOnClickListener(v -> {
+                // 启动去广告页面
+//                RemoveAdActivity.startActivity(MainActivity.this);
+            });
+        }
     }
 
     private void handleIntent() {

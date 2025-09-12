@@ -112,4 +112,23 @@
     <string name="demo_ad">广告</string>
     <string name="demo_reward_feedback">激励反馈</string>
 
+    <!-- Ad removal page strings -->
+    <string name="title_remove_ad">看视频去广告</string>
+    <string name="ad_removal_duration">去广告时长</string>
+    <string name="remaining_time">剩余: %1$s天%2$s小时</string>
+    <string name="renew_duration">续时长</string>
+    <string name="watch_video_info">看视频领去广告时长、免费享无广告天气预报</string>
+    <string name="get_ad_removal_benefits">获得去广告权益时长</string>
+    <string name="daily_reward_info">每天可以领取7次去广告时长奖励,全部看完</string>
+    <string name="reward_description">可获得4天无广告天气预报</string>
+    <string name="video_task_format">第%1$d个视频</string>
+    <string name="reward_hours_format">+%1$d小时</string>
+    <string name="claim_reward">去领取</string>
+    <string name="claimed_reward">已领取</string>
+    <string name="daily_reset_info">第2天可重新领取7次奖励</string>
+    <string name="continuous_reward_title">连续7天看视频领取奖励,必得免费7~100天</string>
+    <string name="ad_free_weather">无广告天气预报</string>
+    <string name="day_format">第%1$d天</string>
+    <string name="desc_remove_ad">去广告</string>
+
 </resources>

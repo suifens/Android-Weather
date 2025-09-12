@@ -93,6 +93,7 @@
             android:name=".modules.others.video.VideoActivity"
             android:exported="false" />
         <activity android:name=".modules.signing.SigningActivity" />
+        <activity android:name=".modules.removeAd.RemoveAdActivity" />
         <activity android:name=".activity.WidgetSettingActivity" />
         <activity android:name=".modules.others.taifeng.TyphoonActivity" />
         <activity android:name=".modules.others.dymovies.DyMoviesActivity" />

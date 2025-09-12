@@ -22,8 +22,6 @@ import com.goodtech.tq.activity.MyActivityManager
 import com.goodtech.tq.activity.SettingActivity
 import com.goodtech.tq.activity.SplashActivity
 import com.goodtech.tq.ad.TTAdManagerHolder
-import com.goodtech.tq.common.bus.Bus
-import com.goodtech.tq.common.bus.event.DJXStartEvent
 import com.goodtech.tq.helpers.DatabaseHelper
 import com.goodtech.tq.jpush.JPushHelper
 import com.goodtech.tq.location.helper.LocationHelper

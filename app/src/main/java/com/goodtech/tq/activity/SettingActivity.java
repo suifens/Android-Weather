@@ -14,6 +14,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.FrameLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.annotation.RequiresApi;
 
 import com.blankj.utilcode.util.ScreenUtils;
@@ -27,6 +29,7 @@ import com.goodtech.tq.ad.AdFeedActivity;
 import com.goodtech.tq.base.callback.DataCallback;
 import com.goodtech.tq.modules.others.test.MyTestActivity;
 import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
+import com.goodtech.tq.modules.removeAd.RemoveAdActivity;
 import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity;
 import com.goodtech.tq.modules.video.djx.DrawDramaActivity;
 import com.goodtech.tq.utils.Constants;
@@ -48,6 +51,9 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
     private View adContainer;
     private TTFeedAd mFeedAd;
     private boolean mLoadSuccess = false;
+    
+    // 悬浮按钮
+    private FloatingActionButton mFabRemoveAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +90,9 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
         findViewById(R.id.layout_agreement).setOnClickListener(this);
         findViewById(R.id.layout_info_list).setOnClickListener(this);
         findViewById(R.id.layout_share_list).setOnClickListener(this);
+        
+        // 设置悬浮按钮
+        setupFab();
     }
 
     @Override
@@ -186,6 +195,20 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
                     Constants.URL_SHARE_LIST,
                     getResources().getString(R.string.title_share_list),
                     "Share List");
+        }
+    }
+
+    /**
+     * 设置悬浮按钮
+     * 初始化去广告悬浮按钮并设置点击事件
+     */
+    private void setupFab() {
+        mFabRemoveAd = findViewById(R.id.fab_remove_ad);
+        if (mFabRemoveAd != null) {
+            mFabRemoveAd.setOnClickListener(v -> {
+                // 启动去广告页面
+//                RemoveAdActivity.startActivity(SettingActivity.this);
+            });
         }
     }
 
