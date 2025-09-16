@@ -77,12 +77,12 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         super.setupCacheViews()
         mRefreshLayout = mCacheView as SmartRefreshLayout
         mRecyclerView = mCacheView.findViewById(R.id.recycler_view)
-        
+
         // 设置RecyclerView的缓存策略
         mRecyclerView.setItemViewCacheSize(11) // 设置较大的缓存大小
         mRecyclerView.recycledViewPool.setMaxRecycledViews(0, 0) // 禁用视图回收池
         mRecyclerView.setHasFixedSize(true) // 固定大小，避免重新测量
-        
+
         mAdapter = WeatherAdapter()
         mAdapter.setWeatherHeaderListener(this)
         mAdapter.setAdLoadCallback(object : WeatherAdapter.AdLoadCallback {
@@ -93,16 +93,19 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 //                            Thread { loadBannerAd() }.start()
 //                        }
                     }
+
                     4 -> {
                         if (!isFirstAdLoaded && SpUtils.getInstance().isAgreePermission()) {
                             Thread { loadFirstAd() }.start()
                         }
                     }
+
                     6 -> {
                         if (!isSecondAdLoaded && SpUtils.getInstance().isAgreePermission()) {
                             Thread { loadSecondAd() }.start()
                         }
                     }
+
                     9 -> {
                         if (!isThirdAdLoaded && SpUtils.getInstance().isAgreePermission()) {
                             Thread { loadThirdAd() }.start()
@@ -112,7 +115,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
             }
         })
         mRecyclerView.adapter = mAdapter
-        
+
         // 添加间距
         mRecyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
@@ -136,7 +139,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                 outRect.bottom = SizeUtils.dp2px(5f)
             }
         })
-        
+
         initView()
     }
 
@@ -156,6 +159,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                         val alpha = scrollY.toFloat() / stateBar.height
                         stateBar.alpha = alpha
                     }
+
                     scrollY > stateBar.height -> stateBar.alpha = 1f
                     else -> stateBar.alpha = 0f
                 }
@@ -192,11 +196,11 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         if (isFirstLoad) {
             isFirstLoad = false
             if (SpUtils.getInstance().isAgreePermission()) {
-                mHandler.postDelayed({ 
-                    Thread { 
+                mHandler.postDelayed({
+                    Thread {
                         initAdLoader()
 //                        loadBannerAd()
-                    }.start() 
+                    }.start()
                 }, 500)
             }
         }
@@ -213,14 +217,15 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-        val fetching = WeatherHttpHelper.getInstance().fetchWeather(mCityMode) { success, weather, errCode ->
-            mHandler.post {
-                if (weather != null && mCityMode != null) {
-                    changeWeather(weather, mCityMode!!)
+        val fetching =
+            WeatherHttpHelper.getInstance().fetchWeather(mCityMode) { success, weather, errCode ->
+                mHandler.post {
+                    if (weather != null && mCityMode != null) {
+                        changeWeather(weather, mCityMode!!)
+                    }
+                    refreshLayout.finishRefresh()
                 }
-                refreshLayout.finishRefresh()
             }
-        }
 
         if (!fetching) {
             mHandler.postDelayed({ refreshLayout.finishRefresh() }, 300)
@@ -239,35 +244,36 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         if (mHadLoad) {
             mHandler.post {
                 // 先尝试加载本地缓存数据
-                if (mWeatherModel == null && mCityMode != null) {
-                    val cachedModel = WeatherSpHelper.getWeatherModel(mCityMode!!.getPoiId())
-                    if (cachedModel != null) {
-                        mWeatherModel = cachedModel
-                        mAdapter.setData(cachedModel, mCityMode)
-                    }
-                }
-
-                val alarm = WeatherSpHelper.getAlarm(mWeatherModel!!.poiId)
-                if (alarm != null) {
-                    val list = Gson().fromJson<ArrayList<JuheAlarmModel?>?>(
-                        alarm,
-                        object : TypeToken<ArrayList<JuheAlarmModel?>?>() {}.getType()
-                    )
-                    if (list != null && list.isNotEmpty()) {
-                        mWeatherModel?.alarmModel = list[0]
-                    }
-                }
-                // 如果有新数据则更新
                 mWeatherModel?.let { model ->
+                    if (mCityMode != null) {
+                        val cachedModel = WeatherSpHelper.getWeatherModel(mCityMode!!.getPoiId())
+                        if (cachedModel != null) {
+                            mWeatherModel = cachedModel
+                            mAdapter.setData(cachedModel, mCityMode)
+                        }
+                    }
+
+                    val alarm = WeatherSpHelper.getAlarm(model.poiId)
+                    if (alarm != null) {
+                        val list = Gson().fromJson<ArrayList<JuheAlarmModel?>?>(
+                            alarm,
+                            object : TypeToken<ArrayList<JuheAlarmModel?>?>() {}.getType()
+                        )
+                        if (list != null && list.isNotEmpty()) {
+                            mWeatherModel?.alarmModel = list[0]
+                        }
+                    }
+                    // 如果有新数据则更新
                     mAdapter.setData(model, mCityMode)
                 }
+
             }
         }
     }
 
     private fun loadBannerAd() {
         if (isAd0Loaded) return
-        
+
         val height = 0 // 设置一个合适的banner高度
 
         AdManager.getInstance().loadExpressAd(
@@ -291,7 +297,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     private fun loadFirstAd() {
         if (isFirstAdLoaded) return
-        
+
         loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID, adWidth, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
                 if (data != null) {
@@ -307,7 +313,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     private fun loadSecondAd() {
         if (isSecondAdLoaded) return
-        
+
         loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID2, adWidth, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
                 if (data != null) {
@@ -424,7 +430,12 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
         activity?.let {
             if (!SpUtils.getInstance().isAgreePermission()) {
                 (it as BaseActivity).showPermissionDialog(it) {
-                    SigningActivity.redirectTo(requireActivity(), mWeatherModel?.hourlies?.get(0), mCityMode, 0)
+                    SigningActivity.redirectTo(
+                        requireActivity(),
+                        mWeatherModel?.hourlies?.get(0),
+                        mCityMode,
+                        0
+                    )
                 }
                 return
             }
