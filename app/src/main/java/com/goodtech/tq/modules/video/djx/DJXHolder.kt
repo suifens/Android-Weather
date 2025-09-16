@@ -48,6 +48,10 @@ object DJXHolder {
             override fun isOnlyICPNumber(): Boolean {
                 return true
             }
+
+            override fun isCanUsePhoneState(): Boolean {
+                return false
+            }
         }
 
         // 配置隐私控制开关，可选

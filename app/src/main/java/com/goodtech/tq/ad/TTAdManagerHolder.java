@@ -79,13 +79,13 @@ public class TTAdManagerHolder {
                  */
                 .useMediation(true)
                 .supportMultiProcess(true)
-                .customController(new TTCustomController() {
-                    @Override
-                    public boolean isCanUseWifiState() {
-                        return false;
-                    }
-                })
-//                .customController(getTTCustomController()) //如果您需要设置隐私策略请参考该api
+//                .customController(new TTCustomController() {
+//                    @Override
+//                    public boolean isCanUseWifiState() {
+//                        return false;
+//                    }
+//                })
+                .customController(getTTCustomController()) //如果您需要设置隐私策略请参考该api
 //                .setMediationConfig(new MediationConfig.Builder() //可设置聚合特有参数详细设置请参考该api
 //                        .setMediationConfigUserInfoForSegment(getUserInfoForSegment())//如果您需要配置流量分组信息请参考该api
 //                        .build())
@@ -112,8 +112,13 @@ public class TTAdManagerHolder {
         return new TTCustomController() {
 
             @Override
+            public boolean isCanUsePhoneState() {
+                return false;
+            }
+
+            @Override
             public boolean isCanUseWifiState() {
-                return super.isCanUseWifiState();
+                return false;
             }
 
             @Override

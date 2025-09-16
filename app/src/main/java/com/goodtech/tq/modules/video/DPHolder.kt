@@ -66,6 +66,10 @@ object DPHolder {
                 override fun isTeenagerMode(): Boolean {
                     return isTeenMode
                 }
+
+                override fun isCanUsePhoneState(): Boolean {
+                    return false
+                }
             }
         }
 
