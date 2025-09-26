@@ -24,6 +24,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
          * 启动去广告页面的静态方法
          * @param context 上下文
          */
+        @JvmStatic
         fun startActivity(context: Context) {
             val intent = Intent(context, RemoveAdActivity::class.java)
             context.startActivity(intent)

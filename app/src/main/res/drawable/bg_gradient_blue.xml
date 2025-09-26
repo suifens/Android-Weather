@@ -6,3 +6,4 @@
         android:endColor="@color/color_blue_gradient_end"
         android:angle="135" />
 </shape>
+

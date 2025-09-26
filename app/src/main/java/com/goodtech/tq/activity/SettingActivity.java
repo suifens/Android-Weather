@@ -9,12 +9,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.widget.FrameLayout;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.RequiresApi;
 
@@ -26,7 +25,6 @@ import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
 import com.goodtech.tq.ad.AdFeedActivity;
-import com.goodtech.tq.base.callback.DataCallback;
 import com.goodtech.tq.modules.others.test.MyTestActivity;
 import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.modules.removeAd.RemoveAdActivity;
@@ -34,7 +32,6 @@ import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity;
 import com.goodtech.tq.modules.video.djx.DrawDramaActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
-// import com.qq.e.comm.managers.setting.GlobalSetting;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
@@ -53,7 +50,7 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
     private boolean mLoadSuccess = false;
     
     // 悬浮按钮
-    private FloatingActionButton mFabRemoveAd;
+    private ImageButton mFabRemoveAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,7 +204,7 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
         if (mFabRemoveAd != null) {
             mFabRemoveAd.setOnClickListener(v -> {
                 // 启动去广告页面
-//                RemoveAdActivity.startActivity(SettingActivity.this);
+                RemoveAdActivity.startActivity(SettingActivity.this);
             });
         }
     }

@@ -78,6 +78,8 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar.ImmerseStatusBar"
         tools:replace="android:label,android:icon,android:theme,android:networkSecurityConfig,android:allowBackup">
+        <activity android:name=".modules.removeAd.RemoveAdActivity"
+            android:exported="false" />
         <activity android:name=".activity.PeripheralActivity"
             android:exported="false" />
         <activity
@@ -93,7 +95,6 @@
             android:name=".modules.others.video.VideoActivity"
             android:exported="false" />
         <activity android:name=".modules.signing.SigningActivity" />
-        <activity android:name=".modules.removeAd.RemoveAdActivity" />
         <activity android:name=".activity.WidgetSettingActivity" />
         <activity android:name=".modules.others.taifeng.TyphoonActivity" />
         <activity android:name=".modules.others.dymovies.DyMoviesActivity" />

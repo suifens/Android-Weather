@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,6 @@ import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.utils.IntentReceiver;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.views.popup.UpdatePopup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.lxj.xpopup.XPopup;
@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity {
     private List<Fragment> mFragmentList;
     
     // 悬浮按钮
-    private FloatingActionButton mFabRemoveAd;
+    private ImageButton mFabRemoveAd;
     
     // 状态变量
     private int mCurrentTabIndex = 0;
@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity {
         if (mFabRemoveAd != null) {
             mFabRemoveAd.setOnClickListener(v -> {
                 // 启动去广告页面
-//                RemoveAdActivity.startActivity(MainActivity.this);
+                RemoveAdActivity.startActivity(MainActivity.this);
             });
         }
     }

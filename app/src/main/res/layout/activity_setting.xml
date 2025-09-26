@@ -740,19 +740,16 @@
     </androidx.core.widget.NestedScrollView>
 
     <!-- 去广告悬浮按钮 -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <ImageButton
         android:id="@+id/fab_remove_ad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="去广告"
-        app:backgroundTint="@color/color_orange"
-        app:fabSize="normal"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="14dp"
+        android:background="@color/color_clear"
+        android:src="@drawable/ic_remove_ad"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_remove_ad"
-        app:tint="@color/white"
-        android:visibility="gone"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
