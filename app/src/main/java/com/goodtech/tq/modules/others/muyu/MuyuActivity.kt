@@ -1,7 +1,6 @@
 package com.goodtech.tq.modules.others.muyu
 
 import android.content.SharedPreferences
-import com.goodtech.tq.modules.others.muyu.MuyuSettingsActivity
 import com.lxj.xpopup.XPopup
 import android.os.Build
 import android.os.Bundle
@@ -13,27 +12,16 @@ import android.view.Gravity
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+import com.gengee.insaitlib.ext.clickNoRepeat
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.BaseActivity
+import com.goodtech.tq.databinding.ActivityMuyuBinding
 import java.util.Random
 
 class MuyuActivity : BaseActivity() {
 
-    private lateinit var muyuImage: ImageView
-    private lateinit var blessingContainer: FrameLayout
-    private lateinit var countText: TextView
-    private lateinit var currentBlessingText: TextView
-    private lateinit var currentBlessingIcon: ImageView
-    
-    private lateinit var blessingMerit: LinearLayout
-    private lateinit var blessingHappiness: LinearLayout
-    private lateinit var blessingHealth: LinearLayout
-    private lateinit var blessingWealth: LinearLayout
-    
-    private lateinit var settingsButton: ImageView
+    private lateinit var binding: ActivityMuyuBinding
     
     private var currentBlessingType = BlessingType.MERIT
     private val handler = Handler(Looper.getMainLooper())
@@ -57,29 +45,30 @@ class MuyuActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_muyu)
+        binding = ActivityMuyuBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         prefs = getSharedPreferences("MuyuPrefs", MODE_PRIVATE)
+
+        configStationBar(binding.headerBar);
         
-        initViews()
+        // 确保 clipChildren 和 clipToPadding 在代码层面生效
+        binding.root.clipChildren = false
+        binding.root.clipToPadding = false
+        binding.blessingTypeBar.clipChildren = false
+        binding.blessingTypeBar.clipToPadding = false
+        binding.blessingMerit.clipChildren = false
+        binding.blessingMerit.clipToPadding = false
+        binding.blessingHappiness.clipChildren = false
+        binding.blessingHappiness.clipToPadding = false
+        binding.blessingHealth.clipChildren = false
+        binding.blessingHealth.clipToPadding = false
+        binding.blessingWealth.clipChildren = false
+        binding.blessingWealth.clipToPadding = false
+        
         loadSavedData()
         setupClickListeners()
         updateUI()
-    }
-
-    private fun initViews() {
-        muyuImage = findViewById(R.id.muyuImage)
-        blessingContainer = findViewById(R.id.blessingContainer)
-        countText = findViewById(R.id.countText)
-        currentBlessingText = findViewById(R.id.currentBlessingText)
-        currentBlessingIcon = findViewById(R.id.currentBlessingIcon)
-        
-        blessingMerit = findViewById(R.id.blessingMerit)
-        blessingHappiness = findViewById(R.id.blessingHappiness)
-        blessingHealth = findViewById(R.id.blessingHealth)
-        blessingWealth = findViewById(R.id.blessingWealth)
-        
-        settingsButton = findViewById(R.id.settingsButton)
     }
 
     private fun loadSavedData() {
@@ -88,28 +77,31 @@ class MuyuActivity : BaseActivity() {
     }
 
     private fun setupClickListeners() {
+
+        binding.backButton.clickNoRepeat { finish() }
+
         // 木鱼点击
-        muyuImage.setOnClickListener {
+        binding.muyuImage.setOnClickListener {
             onMuyuClicked()
         }
 
         // 祝福类型选择
-        blessingMerit.setOnClickListener {
+        binding.blessingMerit.setOnClickListener {
             switchBlessingType(BlessingType.MERIT)
         }
-        blessingHappiness.setOnClickListener {
+        binding.blessingHappiness.setOnClickListener {
             switchBlessingType(BlessingType.HAPPINESS)
         }
-        blessingHealth.setOnClickListener {
+        binding.blessingHealth.setOnClickListener {
             switchBlessingType(BlessingType.HEALTH)
         }
-        blessingWealth.setOnClickListener {
+        binding.blessingWealth.setOnClickListener {
             switchBlessingType(BlessingType.WEALTH)
         }
 
         // 设置按钮
-        settingsButton.setOnClickListener {
-            val popup = MuyuSettingsActivity(this)
+        binding.settingsButton.setOnClickListener {
+            val popup = MuyuSettingsPopup(this)
             XPopup.Builder(this)
                 .isDestroyOnDismiss(true)
                 .asCustom(popup)
@@ -125,19 +117,66 @@ class MuyuActivity : BaseActivity() {
 
     private fun updateUI() {
         // 更新木鱼图片
-        muyuImage.setImageResource(currentBlessingType.muyuRes)
+        binding.muyuImage.setImageResource(currentBlessingType.muyuRes)
         
         // 更新当前祝福类型显示
-        currentBlessingText.text = currentBlessingType.displayName
-        currentBlessingIcon.setImageResource(currentBlessingType.iconRes)
+        binding.currentBlessingText.text = currentBlessingType.displayName
+        binding.currentBlessingIcon.setImageResource(currentBlessingType.iconRes)
+        
+        // 更新选中状态的图片缩放
+        updateBlessingIconsScale()
         
         // 更新计数
         updateCount()
     }
+    
+    private fun updateBlessingIconsScale() {
+        // 重置所有图标为正常大小
+        binding.blessingMeritIcon.scaleX = 1.0f
+        binding.blessingMeritIcon.scaleY = 1.0f
+        binding.blessingHappinessIcon.scaleX = 1.0f
+        binding.blessingHappinessIcon.scaleY = 1.0f
+        binding.blessingHealthIcon.scaleX = 1.0f
+        binding.blessingHealthIcon.scaleY = 1.0f
+        binding.blessingWealthIcon.scaleX = 1.0f
+        binding.blessingWealthIcon.scaleY = 1.0f
+        
+        // 将当前选中的图标放大到1.3倍（带动画效果）
+        when (currentBlessingType) {
+            BlessingType.MERIT -> {
+                binding.blessingMeritIcon.animate()
+                    .scaleX(1.3f)
+                    .scaleY(1.3f)
+                    .setDuration(200)
+                    .start()
+            }
+            BlessingType.HAPPINESS -> {
+                binding.blessingHappinessIcon.animate()
+                    .scaleX(1.3f)
+                    .scaleY(1.3f)
+                    .setDuration(200)
+                    .start()
+            }
+            BlessingType.HEALTH -> {
+                binding.blessingHealthIcon.animate()
+                    .scaleX(1.3f)
+                    .scaleY(1.3f)
+                    .setDuration(200)
+                    .start()
+            }
+            BlessingType.WEALTH -> {
+                binding.blessingWealthIcon.animate()
+                    .scaleX(1.3f)
+                    .scaleY(1.3f)
+                    .setDuration(200)
+                    .start()
+            }
+        }
+    }
 
     private fun updateCount() {
         val count = getCount(currentBlessingType)
-        countText.text = count.toString()
+        binding.countText.text = count.toString()
     }
 
     private fun getCount(type: BlessingType): Int {
@@ -195,12 +234,12 @@ class MuyuActivity : BaseActivity() {
     }
 
     private fun animateMuyuClick() {
-        muyuImage.animate()
+        binding.muyuImage.animate()
             .scaleX(0.9f)
             .scaleY(0.9f)
             .setDuration(100)
             .withEndAction {
-                muyuImage.animate()
+                binding.muyuImage.animate()
                     .scaleX(1.0f)
                     .scaleY(1.0f)
                     .setDuration(100)
@@ -216,17 +255,17 @@ class MuyuActivity : BaseActivity() {
 
         // 获取木鱼图片在屏幕上的位置
         val muyuLocation = IntArray(2)
-        muyuImage.getLocationOnScreen(muyuLocation)
+        binding.muyuImage.getLocationOnScreen(muyuLocation)
         
         // 获取容器的位置
         val containerLocation = IntArray(2)
-        blessingContainer.getLocationOnScreen(containerLocation)
+        binding.blessingContainer.getLocationOnScreen(containerLocation)
         
         // 计算祝福语应该从木鱼顶部开始的位置（相对于容器）
         // muyuLocation[1] 是木鱼在屏幕上的Y坐标
         // containerLocation[1] 是容器在屏幕上的Y坐标
         // muyuImage.height / 2 是木鱼高度的一半，让文字从木鱼顶部开始
-        val startY = (muyuLocation[1] - containerLocation[1] - muyuImage.height / 2).toFloat()
+        val startY = (muyuLocation[1] - containerLocation[1] - binding.muyuImage.height / 2).toFloat()
         
         // 随机水平偏移，让多个祝福语错开显示（-80到+80像素之间）
         val horizontalOffset = (random.nextFloat() - 0.5f) * 160f
@@ -252,8 +291,8 @@ class MuyuActivity : BaseActivity() {
             translationX = horizontalOffset
         }
 
-        blessingContainer.addView(blessingText)
-        blessingContainer.requestLayout()
+        binding.blessingContainer.addView(blessingText)
+        binding.blessingContainer.requestLayout()
 
         // 从木鱼顶部开始，一直向上移动并渐变消失
         // 使用 ObjectAnimator 来同时控制 alpha 和 translationY
@@ -271,7 +310,7 @@ class MuyuActivity : BaseActivity() {
                     .setDuration(1500)
                     .setInterpolator(LinearInterpolator())
                     .withEndAction {
-                        blessingContainer.removeView(blessingText)
+                        binding.blessingContainer.removeView(blessingText)
                     }
                     .start()
             }
