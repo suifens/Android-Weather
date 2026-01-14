@@ -35,13 +35,15 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 
-@SuppressLint("NonConstantResourceId")
+@SuppressLint({"NonConstantResourceId", "StringFormatMatches"})
 public class PermissionActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String boldStr = "请仔细阅读《隐私政策》及《用户协议》内容,我们将严格按照前述政策，为您提供更好的服务。若您是14岁以下未成年人，请您务必要求您的监护人仔细阅读本协议，并在征得您的监护人同意的前提下使用我们的产品。";
     private static final String agreementStr = "《用户协议》";
     private static final String privateStr = "《隐私政策》";
     private TextView mSpannableTv;
+    private TextView mTitleTv2;
+    private TextView nameTitleTv;
 
     public static void redirectTo(Context ctx) {
         Intent intent = new Intent(ctx, PermissionActivity.class);
@@ -59,6 +61,13 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         stationBar.setLayoutParams(bars);
 
         mSpannableTv = findViewById(R.id.tv_spannable);
+        mTitleTv2 = findViewById(R.id.title2);
+        nameTitleTv = findViewById(R.id.nameTitleTv);
+
+        String appName = AppUtils.getAppName();
+        String formatTitle2 = getString(R.string.permission_title2);
+        mTitleTv2.setText(String.format(formatTitle2, appName));
+        nameTitleTv.setText(appName);
 
         configSpannable();
 
@@ -67,7 +76,9 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     }
 
     private void configSpannable() {
-        String permissionStr = getString(R.string.permission_title1);
+        String formatStr = getString(R.string.permission_title1);
+        String appName = AppUtils.getAppName();
+        String permissionStr = String.format(formatStr, appName, appName, appName);
         SpannableString spannableString = new SpannableString(permissionStr);
         int agreementStart = permissionStr.indexOf(agreementStr);
         int agreementEnd = agreementStart + agreementStr.length();

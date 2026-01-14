@@ -67,22 +67,22 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-        xiaomi {
-//            applicationIdSuffix ".yyb"
-            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
-            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
-        }
+//        xiaomi {
+////            applicationIdSuffix ".yyb"
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
+//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
+//        }
 //        xiaomi1 {
 //            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
 //            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
 //        }
-//        huawei {
-//            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
-//            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
-//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "huawei"]
-//        }
+        huawei {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
+            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "huawei"]
+        }
 //        oppo {
 //            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
