@@ -80,6 +80,8 @@
         tools:replace="android:label,android:icon,android:theme,android:networkSecurityConfig,android:allowBackup">
         <activity android:name=".modules.removeAd.RemoveAdActivity"
             android:exported="false" />
+        <activity android:name=".modules.others.muyu.MuyuActivity"
+            android:exported="false" />
         <activity android:name=".activity.PeripheralActivity"
             android:exported="false" />
         <activity

@@ -65,7 +65,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
      */
     override fun initEvent() {
         // 返回按钮点击事件
-        mBinding.backButton.setOnClickListener { finish() }
+        mBinding.buttonBack.setOnClickListener { finish() }
         
         // 续时长按钮点击事件
         mBinding.renewButton.setOnClickListener { 

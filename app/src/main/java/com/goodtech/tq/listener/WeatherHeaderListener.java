@@ -24,6 +24,8 @@ public interface WeatherHeaderListener {
 
     void onWarningBtn();
 
+    void onMuyu();
+
     void onShortPlayer();
     void onMiniVideo();
 

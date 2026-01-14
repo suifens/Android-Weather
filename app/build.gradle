@@ -19,7 +19,7 @@ android {
     }
 
     namespace "com.goodtech.tq"
-    compileSdk 35
+    compileSdkVersion 36
 
     defaultConfig {
         applicationId "com.goodtech.tq"

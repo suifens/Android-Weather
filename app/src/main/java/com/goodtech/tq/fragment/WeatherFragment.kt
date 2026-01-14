@@ -32,6 +32,7 @@ import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.modules.others.airQuality.AirQualityActivity
 import com.goodtech.tq.modules.others.calendar.CalendarActivity
 import com.goodtech.tq.modules.others.constellation.ConstellationActivity
+import com.goodtech.tq.modules.others.muyu.MuyuActivity
 import com.goodtech.tq.modules.others.taifeng.TyphoonActivity
 import com.goodtech.tq.modules.others.test.MyTestActivity
 import com.goodtech.tq.modules.signing.SigningActivity
@@ -440,6 +441,12 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                 return
             }
             SigningActivity.redirectTo(it, mWeatherModel?.hourlies?.get(0), mCityMode, 0)
+        }
+    }
+
+    override fun onMuyu() {
+        activity?.let {
+            startActivity(Intent(it, MuyuActivity::class.java))
         }
     }
 

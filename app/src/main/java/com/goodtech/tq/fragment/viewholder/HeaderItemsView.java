@@ -62,6 +62,12 @@ public class HeaderItemsView extends LinearLayout {
                 listener.onSignIn();
             }
         });
+
+        findViewById(R.id.item_muyu).setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onMuyu();
+            }
+        });
     }
 
     private void init() {
