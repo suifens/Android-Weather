@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF8F2"
+    android:background="@drawable/bg_gradient_merit"
     android:clipChildren="false"
     android:clipToPadding="false"
     tools:context=".modules.others.muyu.MuyuActivity">
@@ -108,7 +109,7 @@
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/currentBlessingLayout"
         app:layout_constraintBottom_toTopOf="@id/muyuContainer"
-        app:layout_constraintHeight_percent="0.25">
+        app:layout_constraintHeight_percent="0.3">
 
     </FrameLayout>
 
@@ -117,6 +118,7 @@
         android:id="@+id/muyuContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/blessingTypeBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -129,9 +131,19 @@
             android:contentDescription="木鱼"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            />
 
     </FrameLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="26dp"
+        android:background="@drawable/bg_circle_white_50"
+        app:layout_constraintBottom_toBottomOf="@+id/blessingTypeBar"
+        app:layout_constraintStart_toStartOf="@+id/blessingTypeBar"
+        app:layout_constraintEnd_toEndOf="@+id/blessingTypeBar"
+        />
 
     <!-- 祝福类型选择栏 -->
     <LinearLayout
@@ -145,7 +157,9 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingBottom="20dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         app:layout_constraintBottom_toTopOf="@id/adContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -157,8 +171,8 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:clickable="true"
             android:focusable="true"
             android:clipChildren="false"
@@ -175,9 +189,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="功德圆满"
+                android:fontFamily="sans-serif-medium"
                 android:textSize="12sp"
                 android:textColor="@color/black"
-                android:layout_marginTop="4dp" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -187,8 +202,8 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:clickable="true"
             android:focusable="true"
             android:clipChildren="false"
@@ -207,7 +222,8 @@
                 android:text="幸福安康"
                 android:textSize="12sp"
                 android:textColor="@color/black"
-                android:layout_marginTop="4dp" />
+                android:fontFamily="sans-serif-medium"
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -217,8 +233,8 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:clickable="true"
             android:focusable="true"
             android:clipChildren="false"
@@ -237,7 +253,8 @@
                 android:text="无病无灾"
                 android:textSize="12sp"
                 android:textColor="@color/black"
-                android:layout_marginTop="4dp" />
+                android:fontFamily="sans-serif-medium"
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -247,8 +264,8 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:clickable="true"
             android:focusable="true"
             android:clipChildren="false"
@@ -267,7 +284,8 @@
                 android:text="暴美暴富"
                 android:textSize="12sp"
                 android:textColor="@color/black"
-                android:layout_marginTop="4dp" />
+                android:fontFamily="sans-serif-medium"
+                 />
         </LinearLayout>
 
     </LinearLayout>
