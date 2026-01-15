@@ -1,15 +1,14 @@
 package com.goodtech.tq.modules.others.muyu
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.goodtech.tq.R
+import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.databinding.DialogMuyuSettingsBinding
 import com.lxj.xpopup.core.BottomPopupView
 
 class MuyuSettingsPopup(context: Context) : BottomPopupView(context) {
 
     private lateinit var binding: DialogMuyuSettingsBinding
-    private lateinit var prefs: SharedPreferences
 
     override fun getImplLayoutId(): Int = R.layout.dialog_muyu_settings
 
@@ -17,30 +16,28 @@ class MuyuSettingsPopup(context: Context) : BottomPopupView(context) {
         super.onCreate()
         binding = DialogMuyuSettingsBinding.bind(popupImplView)
         
-        prefs = context.getSharedPreferences("MuyuPrefs", Context.MODE_PRIVATE)
-        
         loadSettings()
         setupListeners()
         updateCounts()
     }
 
     private fun loadSettings() {
-        binding.vibrationSwitch.isChecked = prefs.getBoolean("vibration_enabled", true)
-        binding.soundSwitch.isChecked = prefs.getBoolean("sound_enabled", true)
-        binding.blessingTextSwitch.isChecked = prefs.getBoolean("blessing_text_enabled", true)
+        binding.vibrationSwitch.isChecked = SpUtils.getInstance().getBoolean("vibration_enabled", true)
+        binding.soundSwitch.isChecked = SpUtils.getInstance().getBoolean("sound_enabled", true)
+        binding.blessingTextSwitch.isChecked = SpUtils.getInstance().getBoolean("blessing_text_enabled", true)
     }
 
     private fun setupListeners() {
         binding.vibrationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("vibration_enabled", isChecked).apply()
+            SpUtils.getInstance().putBoolean("vibration_enabled", isChecked)
         }
 
         binding.soundSwitch.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("sound_enabled", isChecked).apply()
+            SpUtils.getInstance().putBoolean("sound_enabled", isChecked)
         }
 
         binding.blessingTextSwitch.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("blessing_text_enabled", isChecked).apply()
+            SpUtils.getInstance().putBoolean("blessing_text_enabled", isChecked)
         }
 
         binding.meritClear.setOnClickListener {
@@ -65,10 +62,10 @@ class MuyuSettingsPopup(context: Context) : BottomPopupView(context) {
     }
 
     private fun updateCounts() {
-        val meritCount = prefs.getInt("count_MERIT", 0)
-        val happinessCount = prefs.getInt("count_HAPPINESS", 0)
-        val healthCount = prefs.getInt("count_HEALTH", 0)
-        val wealthCount = prefs.getInt("count_WEALTH", 0)
+        val meritCount = SpUtils.getInstance().getInt("count_MERIT", 0)
+        val happinessCount = SpUtils.getInstance().getInt("count_HAPPINESS", 0)
+        val healthCount = SpUtils.getInstance().getInt("count_HEALTH", 0)
+        val wealthCount = SpUtils.getInstance().getInt("count_WEALTH", 0)
         
         binding.meritCount.text = meritCount.toString()
         binding.happinessCount.text = happinessCount.toString()
@@ -93,7 +90,7 @@ class MuyuSettingsPopup(context: Context) : BottomPopupView(context) {
     }
 
     private fun clearCount(type: String) {
-        prefs.edit().putInt("count_$type", 0).apply()
+        SpUtils.getInstance().putInt("count_$type", 0)
         updateCounts()
     }
 

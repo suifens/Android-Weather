@@ -1,6 +1,6 @@
 package com.goodtech.tq.modules.others.muyu
 
-import android.content.SharedPreferences
+import com.goodtech.tq.utils.SpUtils
 import com.lxj.xpopup.XPopup
 import android.os.Build
 import android.os.Bundle
@@ -8,24 +8,39 @@ import android.os.Handler
 import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
+import com.bytedance.sdk.openadsdk.TTAdDislike.DislikeInteractionCallback
+import com.bytedance.sdk.openadsdk.TTNativeExpressAd
 import com.gengee.insaitlib.ext.clickNoRepeat
+import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.BaseActivity
+import com.goodtech.tq.ad.AdManager
+import com.goodtech.tq.app.App.Companion.instance
+import com.goodtech.tq.base.callback.DataCallback
 import com.goodtech.tq.databinding.ActivityMuyuBinding
 import java.util.Random
 
 class MuyuActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMuyuBinding
-    
+    private var mBannerAd: TTNativeExpressAd? = null
     private var currentBlessingType = BlessingType.MERIT
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var prefs: SharedPreferences
     
     // 祝福类型枚举
     enum class BlessingType(val displayName: String, val iconRes: Int, val muyuRes: Int, val smallIconRes: Int) {
@@ -48,8 +63,6 @@ class MuyuActivity : BaseActivity() {
         binding = ActivityMuyuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        prefs = getSharedPreferences("MuyuPrefs", MODE_PRIVATE)
-
         configStationBar(binding.headerBar);
         
         // 确保 clipChildren 和 clipToPadding 在代码层面生效
@@ -69,10 +82,11 @@ class MuyuActivity : BaseActivity() {
         loadSavedData()
         setupClickListeners()
         updateUI()
+        loadAd()
     }
 
     private fun loadSavedData() {
-        val savedType = prefs.getInt("currentBlessingType", BlessingType.MERIT.ordinal)
+        val savedType = SpUtils.getInstance().getInt("currentBlessingType", BlessingType.MERIT.ordinal)
         currentBlessingType = BlessingType.values()[savedType]
     }
 
@@ -111,7 +125,7 @@ class MuyuActivity : BaseActivity() {
 
     private fun switchBlessingType(type: BlessingType) {
         currentBlessingType = type
-        prefs.edit().putInt("currentBlessingType", type.ordinal).apply()
+        SpUtils.getInstance().putInt("currentBlessingType", type.ordinal)
         updateUI()
     }
 
@@ -128,6 +142,67 @@ class MuyuActivity : BaseActivity() {
         
         // 更新计数
         updateCount()
+    }
+
+    private fun loadAd() {
+        lifecycleScope.launch {
+            try {
+                val ad = loadExpressAdAsync(
+                    BuildConfig.PGE_HOME_BANNER_POS_ID,
+                    SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat()),
+                    0
+                )
+                
+                // 在主线程更新 UI
+                withContext(Dispatchers.Main) {
+                    if (ad != null) {
+                        mBannerAd = ad
+                        binding.adContainer.visibility = View.VISIBLE
+                        binding.adContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                        showExpressAd(binding.adContainer, ad)
+                    } else {
+                        binding.adContainer.visibility = View.GONE
+                        binding.adContainer.layoutParams.height = 0
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("MuyuActivity", "loadAd error: ${e.message}", e)
+                withContext(Dispatchers.Main) {
+                    binding.adContainer.visibility = View.GONE
+                    binding.adContainer.layoutParams.height = 0
+                }
+            }
+        }
+    }
+    
+    private suspend fun loadExpressAdAsync(
+        codeId: String,
+        width: Int,
+        height: Int
+    ): TTNativeExpressAd? = suspendCancellableCoroutine { continuation ->
+        AdManager.getInstance().loadExpressAd(
+            this,
+            codeId,
+            width,
+            height,
+            object : DataCallback<TTNativeExpressAd> {
+                override fun onComplete(data: TTNativeExpressAd?, errorMsg: String?) {
+                    if (continuation.isActive) {
+                        if (data != null) {
+                            continuation.resume(data)
+                        } else {
+                            Log.e("MuyuActivity", "loadExpressAd error: $errorMsg")
+                            continuation.resume(null)
+                        }
+                    }
+                }
+            }
+        )
+        
+        // 如果协程被取消，可以在这里处理
+        continuation.invokeOnCancellation {
+            // 可以在这里取消广告加载（如果 AdManager 支持）
+        }
     }
     
     private fun updateBlessingIconsScale() {
@@ -180,12 +255,12 @@ class MuyuActivity : BaseActivity() {
     }
 
     private fun getCount(type: BlessingType): Int {
-        return prefs.getInt("count_${type.name}", 0)
+        return SpUtils.getInstance().getInt("count_${type.name}", 0)
     }
 
     private fun incrementCount(type: BlessingType) {
         val current = getCount(type)
-        prefs.edit().putInt("count_${type.name}", current + 1).apply()
+        SpUtils.getInstance().putInt("count_${type.name}", current + 1)
         if (type == currentBlessingType) {
             updateCount()
         }
@@ -193,9 +268,9 @@ class MuyuActivity : BaseActivity() {
 
     private fun onMuyuClicked() {
         // 检查设置
-        val showBlessingText = prefs.getBoolean("blessing_text_enabled", true)
-        val vibrationEnabled = prefs.getBoolean("vibration_enabled", true)
-        val soundEnabled = prefs.getBoolean("sound_enabled", true)
+        val showBlessingText = SpUtils.getInstance().getBoolean("blessing_text_enabled", true)
+        val vibrationEnabled = SpUtils.getInstance().getBoolean("vibration_enabled", true)
+        val soundEnabled = SpUtils.getInstance().getBoolean("sound_enabled", true)
 
         // 增加计数
         incrementCount(currentBlessingType)
@@ -322,8 +397,69 @@ class MuyuActivity : BaseActivity() {
         updateCount()
     }
 
+    private fun showExpressAd(container: FrameLayout, ad: TTNativeExpressAd) {
+        container.visibility = View.VISIBLE
+        container.background = container.context.getDrawable(R.drawable.bg_round_8)
+        container.removeAllViews()
+        bindDislike(ad, container)
+        ad.setExpressInteractionListener(object : TTNativeExpressAd.ExpressAdInteractionListener {
+            override fun onAdClicked(view: View?, type: Int) {
+                // 广告点击回调
+            }
+
+            override fun onAdShow(view: View?, type: Int) {
+                // 广告展示回调
+            }
+
+            override fun onRenderFail(view: View?, msg: String?, code: Int) {
+                // 渲染失败回调
+                container.visibility = View.GONE
+                container.layoutParams.height = 0
+            }
+
+            override fun onRenderSuccess(view: View?, width: Float, height: Float) {
+                // 渲染成功回调
+                ad.expressAdView?.let { adView ->
+                    // 如果广告视图已经有父视图，先移除
+                    (adView.parent as? ViewGroup)?.removeView(adView)
+                    container.removeAllViews()
+                    container.addView(adView)
+                }
+            }
+        })
+        ad.render()
+    }
+
+    private fun bindDislike(ad: TTNativeExpressAd, container: FrameLayout) {
+
+        //使用默认模板中默认dislike弹出样式
+        ad.setDislikeCallback(instance.mainActivity, object : DislikeInteractionCallback {
+            override fun onShow() {
+            }
+
+            override fun onSelected(position: Int, value: String, enforce: Boolean) {
+                container.removeAllViews()
+                mBannerAd = null
+            }
+
+            override fun onCancel() {
+
+            }
+        })
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        mBannerAd?.let {
+            try {
+                it.expressAdView?.let { adView ->
+                    (adView.parent as? ViewGroup)?.removeView(adView)
+                }
+                it.destroy()
+            } catch (e: Exception) {
+                Log.e("TAG", "removeAdView error: ${e.message}")
+            }
+        }
         handler.removeCallbacksAndMessages(null)
     }
 }
