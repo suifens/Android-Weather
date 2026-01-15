@@ -25,8 +25,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdk 24
         targetSdk 35
-        versionCode 1505
-        versionName "15.0.5"
+        versionCode 1510
+        versionName "15.1.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -67,16 +67,16 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-//        xiaomi {
+        xiaom
+//        xiaomi1 {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
+//            manifestPlaceholders = [app_name: "更云天气预i {
 ////            applicationIdSuffix ".yyb"
 //            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
 //            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
-//        }
-//        xiaomi1 {
-//            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
-//            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
-//            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
+//        }报", umeng_channel: "xiaomi"]
 //        }
         huawei {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
@@ -340,7 +340,7 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:3.2.0")
 
     // 赋能小视频 SDK
-    implementation ('com.pangle.cn:pangrowth-sdk:4.4.1.0'){
+    implementation ('com.pangle.cn:pangrowth-sdk:4.8.1.0'){
         exclude group: 'com.pangle.cn', module: 'partner-live-sdk'
         exclude group: 'com.pangle.cn', module: 'pangrowth-novel-sdk'
         exclude group: 'com.pangle.cn', module: 'pangrowth-game-sdk'
@@ -349,7 +349,7 @@ dependencies {
         exclude group: 'com.pangle.cn', module: 'partner-luckycat-api-sdk'
         exclude group: 'com.pangle.cn', module: 'pangrowth-luckycat-api'
     }
-    implementation 'com.pangle.cn:pangrowth-base:2.9.0.4'
-    implementation 'com.pangle.cn:pangrowth-djx-sdk-lite:2.9.0.4'
+    implementation 'com.pangle.cn:pangrowth-base:2.9.0.7'
+    implementation 'com.pangle.cn:pangrowth-djx-sdk-lite:2.9.0.7'
 
 }

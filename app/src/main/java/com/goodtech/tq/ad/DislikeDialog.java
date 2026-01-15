@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,6 @@ import androidx.annotation.NonNull;
 import com.bytedance.sdk.openadsdk.DislikeInfo;
 import com.bytedance.sdk.openadsdk.FilterWord;
 import com.bytedance.sdk.openadsdk.TTDislikeDialogAbstract;
-import com.bytedance.sdk.openadsdk.dislike.TTDislikeListView;
 import com.goodtech.tq.R;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class DislikeDialog extends TTDislikeDialogAbstract {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        TTDislikeListView listView = (TTDislikeListView) findViewById(R.id.lv_dislike_custom);
+        ListView listView = (ListView) findViewById(R.id.lv_dislike_custom);
         listView.setAdapter(new MyDislikeAdapter());
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
