@@ -131,6 +131,13 @@ public class SplashActivity extends BaseActivity {
             return;
         }
 
+        // 检查是否在去广告有效期内
+        if (com.goodtech.tq.utils.AdRemovalManager.INSTANCE.isAdRemovalActive()) {
+            // 在去广告有效期内，直接跳转到主页面，不加载广告
+            goToMainActivity();
+            return;
+        }
+
         viewModel.loadSplashAd();
         
         // 设置广告加载超时

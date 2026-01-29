@@ -2,8 +2,12 @@ package com.goodtech.tq.modules.removeAd
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import com.blankj.utilcode.util.BarUtils
 import com.gengee.insaitlib.ui.base.BaseVmActivity
+import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.R
 import com.goodtech.tq.databinding.ActivityRemoveAdBinding
 import com.goodtech.tq.modules.removeAd.model.DailyReward
@@ -11,6 +15,10 @@ import com.goodtech.tq.modules.removeAd.model.DailyRewardStatus
 import com.goodtech.tq.modules.removeAd.model.VideoTask
 import com.goodtech.tq.modules.removeAd.model.VideoTaskStatus
 import com.goodtech.tq.modules.removeAd.viewmodel.RemoveAdViewModel
+import com.bytedance.sdk.openadsdk.AdSlot
+import com.bytedance.sdk.openadsdk.TTAdNative
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd
+import com.bytedance.sdk.openadsdk.TTAdSdk
 
 /**
  * 去广告页面Activity
@@ -20,6 +28,10 @@ import com.goodtech.tq.modules.removeAd.viewmodel.RemoveAdViewModel
 class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewModel>() {
 
     companion object {
+        private const val TAG = "RemoveAdActivity"
+        // 奖励视频广告位ID（如果没有配置，使用默认值，需要根据实际情况修改）
+        private const val REWARD_VIDEO_AD_ID = "102948965" // 使用与 DrawDramaActivity 相同的广告位ID
+        
         /**
          * 启动去广告页面的静态方法
          * @param context 上下文
@@ -30,6 +42,13 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
             context.startActivity(intent)
         }
     }
+    
+    // 当前正在处理的视频任务索引
+    private var currentVideoTaskIndex: Int = -1
+    // 当前奖励视频广告
+    private var mRewardVideoAd: TTRewardVideoAd? = null
+    // 是否已获得奖励
+    private var isRewardArrived: Boolean = false
 
     /**
      * 准备数据，当前页面无需额外数据
@@ -152,10 +171,116 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         // 为每个视频任务的领取按钮设置点击事件
         videoTasks.forEachIndexed { index, taskView ->
             taskView.claimButton.setOnClickListener {
-                // 调用ViewModel方法领取视频奖励
-                viewModel.claimVideoReward(index)
+                // 获取当前任务
+                val tasks = viewModel.videoTasksLiveData.value
+                if (tasks != null && index < tasks.size && tasks[index].status == VideoTaskStatus.AVAILABLE) {
+                    // 播放奖励视频广告
+                    currentVideoTaskIndex = index
+                    loadAndShowRewardVideoAd(tasks[index].rewardHours)
+                }
             }
         }
+    }
+    
+    /**
+     * 加载并播放奖励视频广告
+     * @param rewardHours 奖励时长（小时）
+     */
+    private fun loadAndShowRewardVideoAd(rewardHours: Int) {
+        isRewardArrived = false
+        mRewardVideoAd = null
+        
+        val adSlot = AdSlot.Builder()
+            .setCodeId(REWARD_VIDEO_AD_ID)
+            .build()
+        
+        TTAdSdk.getAdManager().createAdNative(this).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {
+            override fun onError(code: Int, message: String?) {
+                Log.e(TAG, "加载奖励视频广告失败: code=$code, message=$message")
+                Toast.makeText(this@RemoveAdActivity, "广告加载失败，请稍后重试", Toast.LENGTH_SHORT).show()
+            }
+            
+            override fun onRewardVideoAdLoad(ad: TTRewardVideoAd?) {
+                ad?.apply {
+                    setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener {
+                        override fun onAdShow() {
+                            Log.d(TAG, "奖励视频广告展示")
+                        }
+                        
+                        override fun onAdVideoBarClick() {
+                            Log.d(TAG, "奖励视频广告点击")
+                        }
+                        
+                        override fun onAdClose() {
+                            Log.d(TAG, "奖励视频广告关闭")
+                            mRewardVideoAd = null
+                        }
+                        
+                        override fun onVideoComplete() {
+                            Log.d(TAG, "奖励视频广告播放完成")
+                        }
+                        
+                        override fun onVideoError() {
+                            Log.e(TAG, "奖励视频广告播放出错")
+                            Toast.makeText(this@RemoveAdActivity, "广告播放出错", Toast.LENGTH_SHORT).show()
+                            mRewardVideoAd = null
+                        }
+                        
+                        override fun onRewardVerify(
+                            rewardVerify: Boolean,
+                            rewardAmount: Int,
+                            rewardName: String,
+                            errorCode: Int,
+                            errorMsg: String
+                        ) {
+                            // 已废弃，使用 onRewardArrived
+                        }
+                        
+                        override fun onRewardArrived(isRewardValid: Boolean, rewardType: Int, extraInfo: Bundle) {
+                            Log.d(TAG, "奖励到达: isRewardValid=$isRewardValid")
+                            isRewardArrived = isRewardValid
+                            
+                            if (isRewardValid && currentVideoTaskIndex >= 0) {
+                                // 视频广告完整观看完成，保存去广告时间并更新UI
+                                val tasks = viewModel.videoTasksLiveData.value
+                                if (tasks != null && currentVideoTaskIndex < tasks.size) {
+                                    val rewardHours = tasks[currentVideoTaskIndex].rewardHours
+                                    viewModel.claimVideoReward(currentVideoTaskIndex, rewardHours)
+                                    
+                                    // 显示提示信息
+                                    Toast.makeText(
+                                        this@RemoveAdActivity,
+                                        "恭喜！获得去广告${rewardHours}小时",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            } else {
+                                Toast.makeText(this@RemoveAdActivity, "请完整观看视频", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        
+                        override fun onSkippedVideo() {
+                            Log.d(TAG, "用户跳过了视频")
+                            if (!isRewardArrived) {
+                                Toast.makeText(this@RemoveAdActivity, "请完整观看视频才能获得奖励", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    })
+                    
+                    // 展示广告
+                    mRewardVideoAd = this
+                    this.showRewardVideoAd(this@RemoveAdActivity)
+                }
+            }
+            
+            override fun onRewardVideoCached() {
+                Log.d(TAG, "奖励视频广告缓存完成")
+            }
+            
+            override fun onRewardVideoCached(ad: TTRewardVideoAd?) {
+                Log.d(TAG, "奖励视频广告缓存完成（带参数）")
+            }
+        })
     }
 
     /**
@@ -259,5 +384,12 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                 }
             }
         }
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        // 释放广告资源
+        mRewardVideoAd?.getMediationManager()?.destroy()
+        mRewardVideoAd = null
     }
 }

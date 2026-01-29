@@ -232,6 +232,13 @@ public class SplashViewModel extends AndroidViewModel {
     }
 
     public void loadSplashAd() {
+        // 检查是否在去广告有效期内
+        if (com.goodtech.tq.utils.AdRemovalManager.INSTANCE.isAdRemovalActive()) {
+            // 在去广告有效期内，不加载广告
+            isAdLoaded.postValue(false);
+            return;
+        }
+        
         // 检查队列中是否有有效的广告
         AdCacheItem validAd = getValidAdFromQueue();
         if (validAd != null) {

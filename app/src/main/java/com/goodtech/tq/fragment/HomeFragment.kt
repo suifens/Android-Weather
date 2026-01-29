@@ -454,6 +454,13 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun initAdLoader() {
+        // 检查是否在去广告有效期内
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            // 在去广告有效期内，不加载广告
+            mLoadSuccess = false
+            return
+        }
+        
         mLoadSuccess = false
         adNativeLoader = TTAdSdk.getAdManager().createAdNative(requireActivity())
         val adSlot = AdSlot.Builder()

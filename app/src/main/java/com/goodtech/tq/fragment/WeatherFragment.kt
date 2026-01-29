@@ -274,6 +274,11 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     private fun loadBannerAd() {
         if (isAd0Loaded) return
+        
+        // 检查是否在去广告有效期内
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            return
+        }
 
         val height = 0 // 设置一个合适的banner高度
 
@@ -298,6 +303,11 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     private fun loadFirstAd() {
         if (isFirstAdLoaded) return
+        
+        // 检查是否在去广告有效期内
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            return
+        }
 
         loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID, adWidth, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
@@ -314,6 +324,11 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     private fun loadSecondAd() {
         if (isSecondAdLoaded) return
+        
+        // 检查是否在去广告有效期内
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            return
+        }
 
         loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID2, adWidth, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {
@@ -330,6 +345,11 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     private fun loadThirdAd() {
         if (isThirdAdLoaded) return
+        
+        // 检查是否在去广告有效期内
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            return
+        }
 
         loadFeedAd(BuildConfig.PGE_EXPRESS_POS_ID3, adWidth, object : DataCallback<TTFeedAd> {
             override fun onComplete(data: TTFeedAd?, errorMsg: String?) {

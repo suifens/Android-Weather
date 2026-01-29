@@ -258,6 +258,14 @@ class MuyuActivity : BaseActivity() {
     }
 
     private fun loadAd() {
+        // 检查是否在去广告有效期内
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            // 在去广告有效期内，不加载广告
+            binding.adContainer.visibility = View.GONE
+            binding.adContainer.layoutParams.height = 0
+            return
+        }
+        
         lifecycleScope.launch {
             try {
                 val ad = loadExpressAdAsync(

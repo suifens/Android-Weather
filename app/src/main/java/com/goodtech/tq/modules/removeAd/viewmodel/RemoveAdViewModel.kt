@@ -6,6 +6,7 @@ import com.goodtech.tq.modules.removeAd.model.DailyReward
 import com.goodtech.tq.modules.removeAd.model.DailyRewardStatus
 import com.goodtech.tq.modules.removeAd.model.VideoTask
 import com.goodtech.tq.modules.removeAd.model.VideoTaskStatus
+import com.goodtech.tq.utils.AdRemovalManager
 
 /**
  * 去广告页面ViewModel
@@ -24,14 +25,19 @@ class RemoveAdViewModel : ViewModel() {
 
     // 当前剩余时长数据
     private var remainingDays = 0
-    private var remainingHours = 6
+    private var remainingHours = 0
 
     /**
      * 加载去广告相关数据
      * 初始化剩余时长、视频任务和每日奖励数据
      */
     fun loadAdRemovalData() {
-        // 加载当前去广告状态
+        // 从 AdRemovalManager 加载当前去广告状态
+        val (days, hours) = AdRemovalManager.getRemainingTime()
+        remainingDays = days
+        remainingHours = hours
+        
+        // 更新剩余时长显示
         updateRemainingTime()
         loadVideoTasks()
         loadDailyRewards()
@@ -83,8 +89,9 @@ class RemoveAdViewModel : ViewModel() {
     /**
      * 领取视频奖励
      * @param taskIndex 任务索引（0-6）
+     * @param rewardHours 奖励时长（小时），默认24小时（1天）
      */
-    fun claimVideoReward(taskIndex: Int) {
+    fun claimVideoReward(taskIndex: Int, rewardHours: Int = 24) {
         val currentTasks = videoTasksLiveData.value?.toMutableList() ?: return
         
         // 检查任务是否可领取
@@ -92,15 +99,13 @@ class RemoveAdViewModel : ViewModel() {
             // 标记任务为已完成
             currentTasks[taskIndex] = currentTasks[taskIndex].copy(status = VideoTaskStatus.COMPLETED)
             
-            // 添加奖励时长
-            val rewardHours = currentTasks[taskIndex].rewardHours
-            remainingHours += rewardHours
+            // 保存去广告时间到 AdRemovalManager（默认1天）
+            AdRemovalManager.addAdRemovalTime(rewardHours)
             
-            // 如果小时数超过24，转换为天数
-            if (remainingHours >= 24) {
-                remainingDays += remainingHours / 24
-                remainingHours %= 24
-            }
+            // 重新加载剩余时长
+            val (days, hours) = AdRemovalManager.getRemainingTime()
+            remainingDays = days
+            remainingHours = hours
             
             // 解锁下一个任务（如果存在）
             if (taskIndex + 1 < currentTasks.size) {
