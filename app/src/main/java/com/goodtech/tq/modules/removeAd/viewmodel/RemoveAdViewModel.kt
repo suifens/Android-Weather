@@ -1,5 +1,6 @@
 package com.goodtech.tq.modules.removeAd.viewmodel
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.goodtech.tq.modules.removeAd.model.DailyReward
@@ -13,11 +14,13 @@ import com.goodtech.tq.utils.AdRemovalManager
  * 负责管理去广告相关的业务逻辑和数据状态
  * 包括：剩余时长管理、视频任务状态、每日奖励状态等
  */
+@SuppressLint("DefaultLocale")
 class RemoveAdViewModel : ViewModel() {
 
     // LiveData用于观察数据变化
     /** 剩余时长LiveData，格式：剩余: XX天XX小时 */
-    val remainingTimeLiveData = MutableLiveData<String>()
+    val remainingDayLiveData = MutableLiveData<String>()
+    val remainingHourLiveData = MutableLiveData<String>()
     /** 视频任务列表LiveData */
     val videoTasksLiveData = MutableLiveData<List<VideoTask>>()
     /** 每日奖励列表LiveData */
@@ -48,8 +51,8 @@ class RemoveAdViewModel : ViewModel() {
      * 将天数和小时数格式化为显示文本
      */
     private fun updateRemainingTime() {
-        val timeText = "剩余: ${String.format("%02d", remainingDays)}天${String.format("%02d", remainingHours)}小时"
-        remainingTimeLiveData.value = timeText
+        remainingDayLiveData.value = String.format("%02d", remainingDays)
+        remainingHourLiveData.value = String.format("%02d", remainingHours)
     }
 
     /**

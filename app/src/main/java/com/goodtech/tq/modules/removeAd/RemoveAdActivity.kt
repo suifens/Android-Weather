@@ -4,10 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.blankj.utilcode.util.BarUtils
+import com.bytedance.sdk.openadsdk.AdSlot
+import com.bytedance.sdk.openadsdk.TTAdNative
+import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd
 import com.gengee.insaitlib.ui.base.BaseVmActivity
-import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.R
 import com.goodtech.tq.databinding.ActivityRemoveAdBinding
 import com.goodtech.tq.modules.removeAd.model.DailyReward
@@ -15,10 +19,6 @@ import com.goodtech.tq.modules.removeAd.model.DailyRewardStatus
 import com.goodtech.tq.modules.removeAd.model.VideoTask
 import com.goodtech.tq.modules.removeAd.model.VideoTaskStatus
 import com.goodtech.tq.modules.removeAd.viewmodel.RemoveAdViewModel
-import com.bytedance.sdk.openadsdk.AdSlot
-import com.bytedance.sdk.openadsdk.TTAdNative
-import com.bytedance.sdk.openadsdk.TTRewardVideoAd
-import com.bytedance.sdk.openadsdk.TTAdSdk
 
 /**
  * 去广告页面Activity
@@ -71,6 +71,9 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         configStationBar(mBinding.privateStationBar)
         // 设置状态栏为浅色模式（黑色文字）
         BarUtils.setStatusBarLightMode(this, true)
+
+        //  配置station
+        configStationBar(findViewById<View?>(R.id.private_station_bar))
         
         // 初始化视频任务视图
         setupVideoTasks()
@@ -108,8 +111,12 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         viewModel.loadAdRemovalData()
         
         // 观察剩余时长数据变化
-        viewModel.remainingTimeLiveData.observe(this) { remainingTime ->
-            mBinding.remainingTimeText.text = remainingTime
+        viewModel.remainingDayLiveData.observe(this) { remainingTime ->
+            mBinding.remainingDayText.text = remainingTime
+        }
+
+        viewModel.remainingHourLiveData.observe(this) { remainingTime ->
+            mBinding.remainingHourText.text = remainingTime
         }
         
         // 观察视频任务数据变化
@@ -128,16 +135,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
      * 初始化7个视频任务的显示文本
      */
     private fun setupVideoTasks() {
-        // 获取所有视频任务视图
-        val videoTasks = listOf(
-            mBinding.videoTask1, mBinding.videoTask2, mBinding.videoTask3, mBinding.videoTask4,
-            mBinding.videoTask5, mBinding.videoTask6, mBinding.videoTask7
-        )
-        
-        // 为每个视频任务设置编号文本
-        videoTasks.forEachIndexed { index, taskView ->
-            taskView.videoNumberText.text = "第${index + 1}个视频"
-        }
+        // 视频编号会在 updateVideoTasks 中设置，这里不需要单独设置
     }
 
     /**
@@ -145,16 +143,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
      * 初始化7天连续签到的显示文本
      */
     private fun setupDailyRewards() {
-        // 获取所有每日奖励按钮
-        val dailyRewards = listOf(
-            mBinding.day1Button, mBinding.day2Button, mBinding.day3Button, mBinding.day4Button,
-            mBinding.day5Button, mBinding.day6Button, mBinding.day7Button
-        )
-        
-        // 为每个天数按钮设置文本
-        dailyRewards.forEachIndexed { index, dayButton ->
-            dayButton.text = "第${index + 1}天"
-        }
+        // 文本会在 updateDailyRewards 中设置
     }
 
     /**
@@ -170,7 +159,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         
         // 为每个视频任务的领取按钮设置点击事件
         videoTasks.forEachIndexed { index, taskView ->
-            taskView.claimButton.setOnClickListener {
+            taskView.setOnClaimClickListener {
                 // 获取当前任务
                 val tasks = viewModel.videoTasksLiveData.value
                 if (tasks != null && index < tasks.size && tasks[index].status == VideoTaskStatus.AVAILABLE) {
@@ -319,28 +308,30 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         tasks.forEachIndexed { index, task ->
             if (index < videoTasks.size) {
                 val taskView = videoTasks[index]
-                // 设置奖励时长文本
-                taskView.rewardText.text = "+${task.rewardHours}小时"
+                // 设置视频编号
+                taskView.setVideoNumber(task.taskNumber)
+                // 设置奖励时长
+                taskView.setRewardHours(task.rewardHours)
                 
                 // 根据任务状态设置不同的UI样式
                 when (task.status) {
                     VideoTaskStatus.COMPLETED -> {
-                        // 已领取状态：橙色背景，按钮不可点击
-                        taskView.claimButton.text = "已领取"
-                        taskView.claimButton.isEnabled = false
-                        taskView.root.setBackgroundResource(R.drawable.bg_video_task_completed)
+                        // 已领取状态：选中状态（橙色背景）
+                        taskView.setState(com.goodtech.tq.modules.removeAd.view.VideoTaskView.TaskState.SELECTED)
+                        taskView.setButtonText("已领取")
+                        taskView.setButtonEnabled(false)
                     }
                     VideoTaskStatus.AVAILABLE -> {
-                        // 可领取状态：浅橙色背景，按钮可点击
-                        taskView.claimButton.text = "去领取"
-                        taskView.claimButton.isEnabled = true
-                        taskView.root.setBackgroundResource(R.drawable.bg_video_task_available)
+                        // 可领取状态：当前状态（浅橙色背景）
+                        taskView.setState(com.goodtech.tq.modules.removeAd.view.VideoTaskView.TaskState.CURRENT)
+                        taskView.setButtonText("去领取")
+                        taskView.setButtonEnabled(true)
                     }
                     VideoTaskStatus.LOCKED -> {
-                        // 未解锁状态：灰色背景，按钮不可点击
-                        taskView.claimButton.text = "去领取"
-                        taskView.claimButton.isEnabled = false
-                        taskView.root.setBackgroundResource(R.drawable.bg_video_task_locked)
+                        // 未解锁状态：未来状态（浅橙色背景+灰色边框）
+                        taskView.setState(com.goodtech.tq.modules.removeAd.view.VideoTaskView.TaskState.FUTURE)
+                        taskView.setButtonText("去领取")
+                        taskView.setButtonEnabled(false)
                     }
                 }
             }
@@ -363,23 +354,22 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         rewards.forEachIndexed { index, reward ->
             if (index < dailyRewards.size) {
                 val dayButton = dailyRewards[index]
-                
+                // 设置天数文本
+                dayButton.setDayText(reward.dayNumber)
+
                 // 根据奖励状态设置不同的UI样式
                 when (reward.status) {
                     DailyRewardStatus.COMPLETED -> {
-                        // 已完成状态：蓝色背景，白色文字
-                        dayButton.setBackgroundResource(R.drawable.bg_daily_reward_completed)
-                        dayButton.setTextColor(resources.getColor(android.R.color.white, null))
+                        // 已完成状态：选中状态（蓝色背景，白色文字，带对勾图标）
+                        dayButton.setSelectedState(true)
                     }
                     DailyRewardStatus.CURRENT -> {
-                        // 当前天状态：蓝色背景，白色文字
-                        dayButton.setBackgroundResource(R.drawable.bg_daily_reward_current)
-                        dayButton.setTextColor(resources.getColor(android.R.color.white, null))
+                        // 当前天状态：选中状态（蓝色背景，白色文字，带对勾图标）
+                        dayButton.setSelectedState(true)
                     }
                     DailyRewardStatus.LOCKED -> {
-                        // 未解锁状态：浅蓝色背景，灰色文字
-                        dayButton.setBackgroundResource(R.drawable.bg_daily_reward_locked)
-                        dayButton.setTextColor(resources.getColor(R.color.color_8f, null))
+                        // 未解锁状态：未选中状态（白色背景，蓝色文字，无图标）
+                        dayButton.setSelectedState(false)
                     }
                 }
             }
