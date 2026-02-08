@@ -36,6 +36,7 @@ import com.goodtech.tq.databinding.FragmentDrawDramaBinding
 import com.goodtech.tq.modules.video.djx.DefaultAdListener
 import com.goodtech.tq.modules.video.djx.DefaultDramaListener
 import com.goodtech.tq.modules.video.djx.DefaultDrawListener
+import com.goodtech.tq.utils.AdRemovalManager
 import com.goodtech.tq.utils.TipHelper
 
 class DrawDramaFragment : BaseFragment() {
@@ -207,6 +208,21 @@ class DrawDramaFragment : BaseFragment() {
                                     override fun onRewardArrived(isRewardValid: Boolean, rewardType: Int, extraInfo: Bundle) {
                                         val result = DJXRewardAdResult(isRewardValid)
                                         isRewardArrived = isRewardValid
+                                        
+                                        // 如果视频完整播放且有效，检查并领取视频任务奖励
+                                        if (isRewardValid) {
+                                            // 检查是否有可领取的视频任务
+                                            val currentTask = AdRemovalManager.getCurrentAvailableVideoTask()
+                                            if (currentTask != null) {
+                                                // 自动领取视频任务奖励（内部会自动更新连续观看天数）
+                                                val rewardResult = AdRemovalManager.claimVideoTaskReward()
+                                                if (rewardResult != null && rewardResult.first) {
+                                                    val (_, rewardHours) = rewardResult
+                                                    Log.d(TAG, "视频任务奖励已领取: rewardHours=$rewardHours")
+                                                }
+                                            }
+                                        }
+                                        
                                         callback.onRewardVerify(result)
                                         TipHelper.dismissProgressDialog()
                                     }

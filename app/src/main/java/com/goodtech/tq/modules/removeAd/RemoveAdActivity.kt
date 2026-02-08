@@ -208,17 +208,17 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         // 返回按钮点击事件
         mBinding.buttonBack.setOnClickListener { finish() }
         
-        // 续时长按钮点击事件 - 实现去领取功能
+        // 续时长按钮点击事件 - 跳转到MainActivity的DrawDramaFragment
         mBinding.renewButton.setOnClickListener { 
             // 检查是否有可领取的视频任务
             val currentTask = com.goodtech.tq.utils.AdRemovalManager.getCurrentAvailableVideoTask()
             if (currentTask != null) {
-                val (taskIndex, rewardHours) = currentTask
-                // 显示加载动画
-                com.goodtech.tq.utils.TipHelper.showProgressDialog(this, false)
-                // 播放奖励视频广告
-                currentVideoTaskIndex = taskIndex
-                loadAndShowRewardVideoAd(rewardHours)
+                // 返回到MainActivity并切换到DrawDramaFragment
+                val intent = android.content.Intent(this, com.goodtech.tq.activity.MainActivity::class.java)
+                intent.putExtra("SWITCH_TO_DRAMA_TAB", true)
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP or android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+                finish()
             } else {
                 // 没有可领取的任务
                 Toast.makeText(

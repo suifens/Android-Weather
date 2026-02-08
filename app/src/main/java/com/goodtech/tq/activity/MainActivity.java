@@ -124,6 +124,15 @@ public class MainActivity extends BaseActivity {
         if (tabIndex != 0 && tabIndex < mFragmentList.size()) {
             mViewPager.setCurrentItem(tabIndex, false);
         }
+        
+        // 检查是否需要切换到短剧标签页（从RemoveAdActivity返回时）
+        boolean switchToDrama = getIntent().getBooleanExtra("SWITCH_TO_DRAMA_TAB", false);
+        if (switchToDrama) {
+            // 延迟切换，确保Activity已完全初始化
+            mViewPager.post(() -> {
+                switchToDramaTab();
+            });
+        }
     }
 
     private void initApp() {

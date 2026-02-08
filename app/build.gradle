@@ -67,16 +67,16 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-        xiaom
+        xiaomi {
+//            applicationIdSuffix ".yyb"
+            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
+            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
+        }
 //        xiaomi1 {
 //            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
-//            manifestPlaceholders = [app_name: "更云天气预i {
-////            applicationIdSuffix ".yyb"
-//            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
-//            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
 //            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "xiaomi"]
-//        }报", umeng_channel: "xiaomi"]
 //        }
         huawei {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
