@@ -57,52 +57,87 @@ class RemoveAdViewModel : ViewModel() {
 
     /**
      * 加载视频任务数据
-     * 初始化7个视频任务的状态和奖励时长
+     * 从 AdRemovalManager 读取任务状态，初始化7个视频任务的状态和奖励时长
      */
     private fun loadVideoTasks() {
-        val tasks = listOf(
-            VideoTask(1, 6, VideoTaskStatus.COMPLETED),    // 第1个视频：6小时，已领取
-            VideoTask(2, 18, VideoTaskStatus.AVAILABLE),   // 第2个视频：18小时，可领取
-            VideoTask(3, 18, VideoTaskStatus.LOCKED),      // 第3个视频：18小时，未解锁
-            VideoTask(4, 12, VideoTaskStatus.LOCKED),      // 第4个视频：12小时，未解锁
-            VideoTask(5, 12, VideoTaskStatus.LOCKED),      // 第5个视频：12小时，未解锁
-            VideoTask(6, 12, VideoTaskStatus.LOCKED),      // 第6个视频：12小时，未解锁
-            VideoTask(7, 24, VideoTaskStatus.LOCKED)       // 第7个视频：24小时，未解锁
-        )
+        val tasks = mutableListOf<VideoTask>()
+        
+        // 视频任务奖励时长配置（对应任务1-7）
+        val rewards = listOf(6, 18, 18, 12, 12, 12, 24)
+        
+        // 查找第一个可领取的任务索引
+        val currentTask = AdRemovalManager.getCurrentAvailableVideoTask()
+        val availableTaskIndex = currentTask?.first ?: -1
+        
+        for (i in 0 until 7) {
+            val taskNumber = i + 1
+            val rewardHours = rewards[i]
+            val isCompleted = AdRemovalManager.isVideoTaskCompleted(i)
+            
+            val status = when {
+                isCompleted -> VideoTaskStatus.COMPLETED  // 已完成
+                i == availableTaskIndex -> VideoTaskStatus.AVAILABLE  // 当前可领取
+                i < availableTaskIndex -> VideoTaskStatus.COMPLETED  // 已完成（之前的任务）
+                else -> VideoTaskStatus.LOCKED  // 未解锁（后续任务）
+            }
+            
+            tasks.add(VideoTask(taskNumber, rewardHours, status))
+        }
+        
         videoTasksLiveData.value = tasks
     }
 
     /**
      * 加载每日奖励数据
-     * 初始化7天连续签到的状态
+     * 根据连续观看视频天数来判断每日奖励状态
      */
     private fun loadDailyRewards() {
-        val rewards = listOf(
-            DailyReward(1, DailyRewardStatus.CURRENT),     // 第1天：当前天
-            DailyReward(2, DailyRewardStatus.LOCKED),      // 第2天：未解锁
-            DailyReward(3, DailyRewardStatus.LOCKED),      // 第3天：未解锁
-            DailyReward(4, DailyRewardStatus.LOCKED),      // 第4天：未解锁
-            DailyReward(5, DailyRewardStatus.LOCKED),      // 第5天：未解锁
-            DailyReward(6, DailyRewardStatus.LOCKED),      // 第6天：未解锁
-            DailyReward(7, DailyRewardStatus.LOCKED)       // 第7天：未解锁
-        )
+        // 获取连续观看天数（会自动处理每日重置）
+        val continuousDays = AdRemovalManager.getContinuousDays()
+        
+        val rewards = mutableListOf<DailyReward>()
+        
+        for (dayIndex in 0 until 7) {
+            val dayNumber = dayIndex + 1
+            val isClaimed = AdRemovalManager.isDailyRewardClaimed(dayIndex)
+            
+            val status = when {
+                isClaimed -> {
+                    // 已领取
+                    DailyRewardStatus.COMPLETED
+                }
+                dayNumber <= continuousDays -> {
+                    // 当前可领取：连续天数已达到或超过该天数
+                    DailyRewardStatus.CURRENT
+                }
+                else -> {
+                    // 未解锁：连续天数还未达到
+                    DailyRewardStatus.LOCKED
+                }
+            }
+            
+            rewards.add(DailyReward(dayNumber, status))
+        }
+        
         dailyRewardsLiveData.value = rewards
     }
 
     /**
      * 领取视频奖励
      * @param taskIndex 任务索引（0-6）
-     * @param rewardHours 奖励时长（小时），默认24小时（1天）
+     * @param rewardHours 奖励时长（小时）
+     * 注意：此方法现在主要用于 RemoveAdActivity 中的手动领取
+     * DrawDramaFragment 中的自动领取会直接调用 AdRemovalManager.claimVideoTaskReward()
      */
-    fun claimVideoReward(taskIndex: Int, rewardHours: Int = 24) {
+    fun claimVideoReward(taskIndex: Int, rewardHours: Int) {
         val currentTasks = videoTasksLiveData.value?.toMutableList() ?: return
         
         // 检查任务是否可领取
         if (taskIndex < currentTasks.size && currentTasks[taskIndex].status == VideoTaskStatus.AVAILABLE) {
-            // 标记任务为已完成
-            currentTasks[taskIndex] = currentTasks[taskIndex].copy(status = VideoTaskStatus.COMPLETED)
+            // 标记任务为已完成（同步到 AdRemovalManager，使用相同的 key 格式）
+            com.goodtech.tq.utils.SpUtils.getInstance().putBoolean("video_task_completed_${taskIndex}", true)
             
-            // 保存去广告时间到 AdRemovalManager（默认1天）
+            // 保存去广告时间到 AdRemovalManager
             AdRemovalManager.addAdRemovalTime(rewardHours)
             
             // 重新加载剩余时长
@@ -110,13 +145,8 @@ class RemoveAdViewModel : ViewModel() {
             remainingDays = days
             remainingHours = hours
             
-            // 解锁下一个任务（如果存在）
-            if (taskIndex + 1 < currentTasks.size) {
-                currentTasks[taskIndex + 1] = currentTasks[taskIndex + 1].copy(status = VideoTaskStatus.AVAILABLE)
-            }
-            
-            // 更新UI
-            videoTasksLiveData.value = currentTasks
+            // 重新加载任务列表以同步状态
+            loadVideoTasks()
             updateRemainingTime()
         }
     }
@@ -124,22 +154,44 @@ class RemoveAdViewModel : ViewModel() {
     /**
      * 领取每日奖励
      * @param dayIndex 天数索引（0-6）
+     * 根据连续观看天数来判断是否可以领取
      */
     fun claimDailyReward(dayIndex: Int) {
         val currentRewards = dailyRewardsLiveData.value?.toMutableList() ?: return
         
-        // 检查是否为当前天
+        // 检查是否为当前可领取的天数
         if (dayIndex < currentRewards.size && currentRewards[dayIndex].status == DailyRewardStatus.CURRENT) {
-            // 标记当前天为已完成
-            currentRewards[dayIndex] = currentRewards[dayIndex].copy(status = DailyRewardStatus.COMPLETED)
+            // 获取连续观看天数
+            val continuousDays = AdRemovalManager.getContinuousDays()
+            val dayNumber = dayIndex + 1
             
-            // 解锁下一天（如果存在）
-            if (dayIndex + 1 < currentRewards.size) {
-                currentRewards[dayIndex + 1] = currentRewards[dayIndex + 1].copy(status = DailyRewardStatus.CURRENT)
+            // 检查连续天数是否达到要求
+            if (dayNumber <= continuousDays) {
+                // 标记为已领取
+                AdRemovalManager.markDailyRewardClaimed(dayIndex)
+                
+                // 根据天数给予对应的去广告时长奖励
+                // 第1-3天：各1天（24小时）
+                // 第4-6天：各2天（48小时）
+                // 第7天：7-100天随机（这里简化为7天，可以根据需求调整）
+                val rewardDays = when {
+                    dayNumber <= 3 -> 1  // 1-3天：1天
+                    dayNumber <= 6 -> 2  // 4-6天：2天
+                    else -> 7  // 第7天：7天（可以改为随机7-100天）
+                }
+                
+                // 增加去广告时长
+                AdRemovalManager.addAdRemovalTime(rewardDays * 24)
+                
+                // 重新加载剩余时长
+                val (days, hours) = AdRemovalManager.getRemainingTime()
+                remainingDays = days
+                remainingHours = hours
+                
+                // 重新加载奖励列表以更新UI
+                loadDailyRewards()
+                updateRemainingTime()
             }
-            
-            // 更新UI
-            dailyRewardsLiveData.value = currentRewards
         }
     }
 

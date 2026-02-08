@@ -2,7 +2,13 @@ package com.goodtech.tq.modules.removeAd
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -19,6 +25,7 @@ import com.goodtech.tq.modules.removeAd.model.DailyRewardStatus
 import com.goodtech.tq.modules.removeAd.model.VideoTask
 import com.goodtech.tq.modules.removeAd.model.VideoTaskStatus
 import com.goodtech.tq.modules.removeAd.viewmodel.RemoveAdViewModel
+import androidx.core.graphics.toColorInt
 
 /**
  * 去广告页面Activity
@@ -68,17 +75,125 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
      */
     override fun initView() {
         // 配置状态栏适配
-        configStationBar(mBinding.privateStationBar)
+        configStationBar(mBinding.topBar)
         // 设置状态栏为浅色模式（黑色文字）
         BarUtils.setStatusBarLightMode(this, true)
-
-        //  配置station
-        configStationBar(findViewById<View?>(R.id.private_station_bar))
+        // 设置富文本
+        setupRichText()
         
         // 初始化视频任务视图
         setupVideoTasks()
         // 初始化每日奖励视图
         setupDailyRewards()
+    }
+    
+    /**
+     * 设置富文本样式
+     * 将关键数字和文字设置为橙色（#FF953B）并加粗
+     */
+    private fun setupRichText() {
+        // 设置 video_tasks_desc1 的富文本
+        val desc1Text = "每天可以领取7次去广告时长奖励,全部看完\n可获得4天无广告天气预报"
+        val desc1Spannable = SpannableString(desc1Text)
+        
+        // 高亮 "7次" - 橙色 + 粗体
+        val index7ci = desc1Text.indexOf("领取7次")
+        if (index7ci >= 0) {
+            desc1Spannable.setSpan(
+                ForegroundColorSpan("#FF953B".toColorInt()),
+                index7ci,
+                index7ci + 2,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            desc1Spannable.setSpan(
+                StyleSpan(Typeface.BOLD),
+                index7ci,
+                index7ci + 2,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        
+        // 高亮 "4天无广告" - 橙色 + 粗体
+        val index4tian = desc1Text.indexOf("4天无广告")
+        if (index4tian >= 0) {
+            desc1Spannable.setSpan(
+                ForegroundColorSpan("#FF953B".toColorInt()),
+                index4tian,
+                index4tian + 5,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            desc1Spannable.setSpan(
+                StyleSpan(Typeface.BOLD),
+                index4tian,
+                index4tian + 5,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        
+        mBinding.videoTasksDesc1.text = desc1Spannable
+        
+        // 设置 daily_rewards_title1 的富文本
+        val title1Text = "连续7天看视频领取奖励,必得免费7~100天无广告天气预报"
+        val title1Spannable = SpannableString(title1Text)
+        
+        // 高亮 "连续7天" - 橙色 + 粗体
+        val indexLianxu7 = title1Text.indexOf("连续7天")
+        if (indexLianxu7 >= 0) {
+            title1Spannable.setSpan(
+                ForegroundColorSpan("#FF953B".toColorInt()),
+                indexLianxu7,
+                indexLianxu7 + 4,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            title1Spannable.setSpan(
+                StyleSpan(Typeface.BOLD),
+                indexLianxu7,
+                indexLianxu7 + 4,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        
+        // 高亮 "7~100天无广告" - 橙色 + 粗体
+        val index7to100 = title1Text.indexOf("7~100天无广告")
+        if (index7to100 >= 0) {
+            title1Spannable.setSpan(
+                ForegroundColorSpan("#FF953B".toColorInt()),
+                index7to100,
+                index7to100 + 8,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            title1Spannable.setSpan(
+                StyleSpan(Typeface.BOLD),
+                index7to100,
+                index7to100 + 8,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        
+        mBinding.dailyRewardsTitle1.text = title1Spannable
+        
+        // 设置 video_tasks_note 的富文本
+        val noteText = "第2天可重新领取7次奖励"
+        val noteSpannable = SpannableString(noteText)
+        
+        // 高亮 "7次" - 橙色 + 粗体
+        val index7ciNote = noteText.indexOf("7次")
+        if (index7ciNote >= 0) {
+            noteSpannable.setSpan(
+                ForegroundColorSpan("#FF953B".toColorInt()),
+                index7ciNote,
+                index7ciNote + 2,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            noteSpannable.setSpan(
+                StyleSpan(Typeface.BOLD),
+                index7ciNote,
+                index7ciNote + 2,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        
+        mBinding.videoTasksNote.text = noteSpannable
     }
 
     /**
@@ -89,10 +204,23 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         // 返回按钮点击事件
         mBinding.buttonBack.setOnClickListener { finish() }
         
-        // 续时长按钮点击事件
+        // 续时长按钮点击事件 - 实现去领取功能
         mBinding.renewButton.setOnClickListener { 
-            // 处理续时长操作
-            viewModel.renewDuration()
+            // 检查是否有可领取的视频任务
+            val currentTask = com.goodtech.tq.utils.AdRemovalManager.getCurrentAvailableVideoTask()
+            if (currentTask != null) {
+                val (taskIndex, rewardHours) = currentTask
+                // 播放奖励视频广告
+                currentVideoTaskIndex = taskIndex
+                loadAndShowRewardVideoAd(rewardHours)
+            } else {
+                // 没有可领取的任务
+                Toast.makeText(
+                    this@RemoveAdActivity,
+                    "所有视频任务已完成，明天再来吧！",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
         
         // 设置视频任务点击监听器
@@ -229,19 +357,31 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                             Log.d(TAG, "奖励到达: isRewardValid=$isRewardValid")
                             isRewardArrived = isRewardValid
                             
-                            if (isRewardValid && currentVideoTaskIndex >= 0) {
-                                // 视频广告完整观看完成，保存去广告时间并更新UI
-                                val tasks = viewModel.videoTasksLiveData.value
-                                if (tasks != null && currentVideoTaskIndex < tasks.size) {
-                                    val rewardHours = tasks[currentVideoTaskIndex].rewardHours
-                                    viewModel.claimVideoReward(currentVideoTaskIndex, rewardHours)
+                            if (isRewardValid) {
+                                // 视频广告完整观看完成，按照 video_tasks_grid 的逻辑增加去广告时长
+                                val rewardResult = com.goodtech.tq.utils.AdRemovalManager.claimVideoTaskReward()
+                                if (rewardResult != null && rewardResult.first) {
+                                    val rewardHours = rewardResult.second
+                                    
+                                    // 重新加载数据以更新UI（包括每日奖励，因为连续观看天数已更新）
+                                    viewModel.loadAdRemovalData()
                                     
                                     // 显示提示信息
+                                    val continuousDays = com.goodtech.tq.utils.AdRemovalManager.getContinuousDays()
                                     Toast.makeText(
                                         this@RemoveAdActivity,
-                                        "恭喜！获得去广告${rewardHours}小时",
+                                        "恭喜！获得去广告${rewardHours}小时\n连续观看${continuousDays}天",
                                         Toast.LENGTH_LONG
                                     ).show()
+                                    
+                                    Log.d(TAG, "视频任务奖励领取成功: 任务奖励${rewardHours}小时，连续观看${continuousDays}天")
+                                } else {
+                                    Toast.makeText(
+                                        this@RemoveAdActivity,
+                                        "所有视频任务已完成，明天再来吧！",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    Log.w(TAG, "视频任务奖励领取失败或所有任务已完成")
                                 }
                             } else {
                                 Toast.makeText(this@RemoveAdActivity, "请完整观看视频", Toast.LENGTH_SHORT).show()

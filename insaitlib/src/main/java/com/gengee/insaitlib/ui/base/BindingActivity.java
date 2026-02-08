@@ -80,11 +80,11 @@ public abstract class BindingActivity<T extends ViewBinding> extends AppCompatAc
      * 配置station bar
      */
     public void configStationBar(View stationBar) {
-        ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(stationBar.getLayoutParams());
-        bars.height = bars.height + BarUtils.getStatusBarHeight();
-        stationBar.setLayoutParams(bars);
-
         immersionStatusBar();
+
+        ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(stationBar.getLayoutParams());
+        bars.height += BarUtils.getStatusBarHeight();
+        stationBar.setLayoutParams(bars);
     }
 
     /**

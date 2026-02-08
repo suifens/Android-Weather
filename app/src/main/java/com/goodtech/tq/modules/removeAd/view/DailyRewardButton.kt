@@ -22,8 +22,18 @@ class DailyRewardButton @JvmOverloads constructor(
 
     private var isSelectedState: Boolean = false
     private var checkmarkDrawable: Drawable? = null
+    private var defaultPaddingLeft: Int = 0
+    private var defaultPaddingTop: Int = 0
+    private var defaultPaddingRight: Int = 0
+    private var defaultPaddingBottom: Int = 0
 
     init {
+        // 保存默认 padding
+        defaultPaddingLeft = paddingLeft
+        defaultPaddingTop = paddingTop
+        defaultPaddingRight = paddingRight
+        defaultPaddingBottom = paddingBottom
+        
         // 设置按钮属性
         gravity = Gravity.CENTER
         textSize = 14f
@@ -69,13 +79,18 @@ class DailyRewardButton @JvmOverloads constructor(
 
             // 设置右侧图标（对勾图标）
             checkmarkDrawable?.let { drawable ->
-                val iconSize = SizeUtils.dp2px(15f)
+                val iconSize = SizeUtils.dp2px(20f)
                 drawable.setBounds(0, 0, iconSize, iconSize)
                 // 设置右侧图标，左侧、顶部、底部为null
                 setCompoundDrawables(null, null, drawable, null)
+                // 设置图标距离右边的距离为 10dp
+                val paddingEnd = SizeUtils.dp2px(6f)
+                setPadding(defaultPaddingLeft, defaultPaddingTop, paddingEnd, defaultPaddingBottom)
             } ?: run {
                 // 如果没有图标，移除所有图标
                 setCompoundDrawables(null, null, null, null)
+                // 恢复默认 padding
+                setPadding(defaultPaddingLeft, defaultPaddingTop, defaultPaddingRight, defaultPaddingBottom)
             }
         } else {
             // 未选中状态：白色背景，蓝色文字，浅蓝色边框，没有图标
@@ -84,6 +99,8 @@ class DailyRewardButton @JvmOverloads constructor(
 
             // 移除图标
             setCompoundDrawables(null, null, null, null)
+            // 恢复默认 padding
+            setPadding(defaultPaddingLeft, defaultPaddingTop, defaultPaddingRight, defaultPaddingBottom)
         }
     }
 }
