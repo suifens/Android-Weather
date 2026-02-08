@@ -3,11 +3,15 @@ package com.goodtech.tq.modules.removeAd.viewmodel
 import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.goodtech.tq.modules.removeAd.model.DailyReward
 import com.goodtech.tq.modules.removeAd.model.DailyRewardStatus
 import com.goodtech.tq.modules.removeAd.model.VideoTask
 import com.goodtech.tq.modules.removeAd.model.VideoTaskStatus
 import com.goodtech.tq.utils.AdRemovalManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * 去广告页面ViewModel
@@ -33,15 +37,23 @@ class RemoveAdViewModel : ViewModel() {
     /**
      * 加载去广告相关数据
      * 初始化剩余时长、视频任务和每日奖励数据
+     * 使用协程异步加载，不阻塞主线程
      */
     fun loadAdRemovalData() {
-        // 从 AdRemovalManager 加载当前去广告状态
-        val (days, hours) = AdRemovalManager.getRemainingTime()
-        remainingDays = days
-        remainingHours = hours
+        viewModelScope.launch {
+            // 在后台线程加载数据
+            withContext(Dispatchers.IO) {
+                // 从 AdRemovalManager 加载当前去广告状态
+                val (days, hours) = AdRemovalManager.getRemainingTime()
+                remainingDays = days
+                remainingHours = hours
+            }
+            
+            // 在主线程更新UI
+            updateRemainingTime()
+        }
         
-        // 更新剩余时长显示
-        updateRemainingTime()
+        // 并行加载视频任务和每日奖励（不阻塞）
         loadVideoTasks()
         loadDailyRewards()
     }
@@ -58,68 +70,90 @@ class RemoveAdViewModel : ViewModel() {
     /**
      * 加载视频任务数据
      * 从 AdRemovalManager 读取任务状态，初始化7个视频任务的状态和奖励时长
+     * 优化：缓存奖励配置，减少重复计算
      */
     private fun loadVideoTasks() {
-        val tasks = mutableListOf<VideoTask>()
-        
-        // 视频任务奖励时长配置（对应任务1-7）
-        val rewards = listOf(6, 18, 18, 12, 12, 12, 24)
-        
-        // 查找第一个可领取的任务索引
-        val currentTask = AdRemovalManager.getCurrentAvailableVideoTask()
-        val availableTaskIndex = currentTask?.first ?: -1
-        
-        for (i in 0 until 7) {
-            val taskNumber = i + 1
-            val rewardHours = rewards[i]
-            val isCompleted = AdRemovalManager.isVideoTaskCompleted(i)
+        viewModelScope.launch(Dispatchers.Default) {
+            val tasks = mutableListOf<VideoTask>()
             
-            val status = when {
-                isCompleted -> VideoTaskStatus.COMPLETED  // 已完成
-                i == availableTaskIndex -> VideoTaskStatus.AVAILABLE  // 当前可领取
-                i < availableTaskIndex -> VideoTaskStatus.COMPLETED  // 已完成（之前的任务）
-                else -> VideoTaskStatus.LOCKED  // 未解锁（后续任务）
+            // 视频任务奖励时长配置（对应任务1-7）- 缓存配置
+            val rewards = listOf(6, 18, 18, 12, 12, 12, 24)
+            
+            // 查找第一个可领取的任务索引（批量检查，减少 SharedPreferences 访问）
+            val currentTask = AdRemovalManager.getCurrentAvailableVideoTask()
+            val availableTaskIndex = currentTask?.first ?: -1
+            
+            // 批量检查任务完成状态
+            val completedStatus = BooleanArray(7) { i ->
+                AdRemovalManager.isVideoTaskCompleted(i)
             }
             
-            tasks.add(VideoTask(taskNumber, rewardHours, status))
+            for (i in 0 until 7) {
+                val taskNumber = i + 1
+                val rewardHours = rewards[i]
+                val isCompleted = completedStatus[i]
+                
+                val status = when {
+                    isCompleted -> VideoTaskStatus.COMPLETED  // 已完成
+                    i == availableTaskIndex -> VideoTaskStatus.AVAILABLE  // 当前可领取
+                    i < availableTaskIndex -> VideoTaskStatus.COMPLETED  // 已完成（之前的任务）
+                    else -> VideoTaskStatus.LOCKED  // 未解锁（后续任务）
+                }
+                
+                tasks.add(VideoTask(taskNumber, rewardHours, status))
+            }
+            
+            // 在主线程更新 LiveData
+            withContext(Dispatchers.Main) {
+                videoTasksLiveData.value = tasks
+            }
         }
-        
-        videoTasksLiveData.value = tasks
     }
 
     /**
      * 加载每日奖励数据
      * 根据连续观看视频天数来判断每日奖励状态
+     * 优化：批量检查状态，减少 SharedPreferences 访问
      */
     private fun loadDailyRewards() {
-        // 获取连续观看天数（会自动处理每日重置）
-        val continuousDays = AdRemovalManager.getContinuousDays()
-        
-        val rewards = mutableListOf<DailyReward>()
-        
-        for (dayIndex in 0 until 7) {
-            val dayNumber = dayIndex + 1
-            val isClaimed = AdRemovalManager.isDailyRewardClaimed(dayIndex)
+        viewModelScope.launch(Dispatchers.Default) {
+            // 获取连续观看天数（会自动处理每日重置）
+            val continuousDays = AdRemovalManager.getContinuousDays()
             
-            val status = when {
-                isClaimed -> {
-                    // 已领取
-                    DailyRewardStatus.COMPLETED
-                }
-                dayNumber <= continuousDays -> {
-                    // 当前可领取：连续天数已达到或超过该天数
-                    DailyRewardStatus.CURRENT
-                }
-                else -> {
-                    // 未解锁：连续天数还未达到
-                    DailyRewardStatus.LOCKED
-                }
+            // 批量检查每日奖励领取状态
+            val claimedStatus = BooleanArray(7) { dayIndex ->
+                AdRemovalManager.isDailyRewardClaimed(dayIndex)
             }
             
-            rewards.add(DailyReward(dayNumber, status))
+            val rewards = mutableListOf<DailyReward>()
+            
+            for (dayIndex in 0 until 7) {
+                val dayNumber = dayIndex + 1
+                val isClaimed = claimedStatus[dayIndex]
+                
+                val status = when {
+                    isClaimed -> {
+                        // 已领取
+                        DailyRewardStatus.COMPLETED
+                    }
+                    dayNumber <= continuousDays -> {
+                        // 当前可领取：连续天数已达到或超过该天数
+                        DailyRewardStatus.CURRENT
+                    }
+                    else -> {
+                        // 未解锁：连续天数还未达到
+                        DailyRewardStatus.LOCKED
+                    }
+                }
+                
+                rewards.add(DailyReward(dayNumber, status))
+            }
+            
+            // 在主线程更新 LiveData
+            withContext(Dispatchers.Main) {
+                dailyRewardsLiveData.value = rewards
+            }
         }
-        
-        dailyRewardsLiveData.value = rewards
     }
 
     /**

@@ -78,12 +78,16 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         configStationBar(mBinding.topBar)
         // 设置状态栏为浅色模式（黑色文字）
         BarUtils.setStatusBarLightMode(this, true)
-        // 设置富文本
-        setupRichText()
         
-        // 初始化视频任务视图
+        // 延迟非关键操作，先显示页面
+        mBinding.root.post {
+            // 设置富文本（延迟执行，不阻塞页面显示）
+            setupRichText()
+        }
+        
+        // 初始化视频任务视图（空方法，实际数据在 initData 中加载）
         setupVideoTasks()
-        // 初始化每日奖励视图
+        // 初始化每日奖励视图（空方法，实际数据在 initData 中加载）
         setupDailyRewards()
     }
     
@@ -210,6 +214,8 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
             val currentTask = com.goodtech.tq.utils.AdRemovalManager.getCurrentAvailableVideoTask()
             if (currentTask != null) {
                 val (taskIndex, rewardHours) = currentTask
+                // 显示加载动画
+                com.goodtech.tq.utils.TipHelper.showProgressDialog(this, false)
                 // 播放奖励视频广告
                 currentVideoTaskIndex = taskIndex
                 loadAndShowRewardVideoAd(rewardHours)
@@ -235,8 +241,10 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
      * 加载去广告数据并观察数据变化
      */
     override fun initData() {
-        // 加载去广告相关数据
-        viewModel.loadAdRemovalData()
+        // 先快速显示剩余时长（同步加载，最快显示）
+        val (days, hours) = com.goodtech.tq.utils.AdRemovalManager.getRemainingTime()
+        mBinding.remainingDayText.text = String.format("%02d", days)
+        mBinding.remainingHourText.text = String.format("%02d", hours)
         
         // 观察剩余时长数据变化
         viewModel.remainingDayLiveData.observe(this) { remainingTime ->
@@ -255,6 +263,11 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         // 观察每日奖励数据变化
         viewModel.dailyRewardsLiveData.observe(this) { rewards ->
             updateDailyRewards(rewards)
+        }
+        
+        // 延迟加载完整数据（不阻塞页面显示）
+        mBinding.root.post {
+            viewModel.loadAdRemovalData()
         }
     }
 
@@ -291,6 +304,8 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                 // 获取当前任务
                 val tasks = viewModel.videoTasksLiveData.value
                 if (tasks != null && index < tasks.size && tasks[index].status == VideoTaskStatus.AVAILABLE) {
+                    // 显示加载动画
+                    com.goodtech.tq.utils.TipHelper.showProgressDialog(this@RemoveAdActivity, false)
                     // 播放奖励视频广告
                     currentVideoTaskIndex = index
                     loadAndShowRewardVideoAd(tasks[index].rewardHours)
@@ -314,6 +329,8 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         TTAdSdk.getAdManager().createAdNative(this).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {
             override fun onError(code: Int, message: String?) {
                 Log.e(TAG, "加载奖励视频广告失败: code=$code, message=$message")
+                // 隐藏加载动画
+                com.goodtech.tq.utils.TipHelper.dismissProgressDialog()
                 Toast.makeText(this@RemoveAdActivity, "广告加载失败，请稍后重试", Toast.LENGTH_SHORT).show()
             }
             
@@ -322,6 +339,8 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                     setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener {
                         override fun onAdShow() {
                             Log.d(TAG, "奖励视频广告展示")
+                            // 视频广告已展示，隐藏加载动画
+                            com.goodtech.tq.utils.TipHelper.dismissProgressDialog()
                         }
                         
                         override fun onAdVideoBarClick() {
@@ -331,6 +350,11 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                         override fun onAdClose() {
                             Log.d(TAG, "奖励视频广告关闭")
                             mRewardVideoAd = null
+                            
+                            // 如果奖励已领取，直接返回
+                            if (isRewardArrived) {
+                                finish()
+                            }
                         }
                         
                         override fun onVideoComplete() {
@@ -339,6 +363,8 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                         
                         override fun onVideoError() {
                             Log.e(TAG, "奖励视频广告播放出错")
+                            // 隐藏加载动画
+                            com.goodtech.tq.utils.TipHelper.dismissProgressDialog()
                             Toast.makeText(this@RemoveAdActivity, "广告播放出错", Toast.LENGTH_SHORT).show()
                             mRewardVideoAd = null
                         }
