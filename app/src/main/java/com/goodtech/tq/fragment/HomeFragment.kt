@@ -39,6 +39,7 @@ import com.goodtech.tq.location.helper.LocationHelper
 import com.goodtech.tq.models.CityMode
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.modules.cityList.CityListActivity
+import com.goodtech.tq.modules.removeAd.RemoveAdActivity
 import com.goodtech.tq.modules.signing.SigningActivity
 import com.goodtech.tq.utils.IntentReceiver
 import com.goodtech.tq.utils.SpUtils
@@ -155,6 +156,11 @@ class HomeFragment : BaseFragment() {
                 return@setOnClickListener
             }
             onSignClick()
+        }
+
+        // 去广告悬浮按钮
+        binding.fabRemoveAd.setOnClickListener {
+            RemoveAdActivity.startActivity(requireActivity())
         }
     }
 

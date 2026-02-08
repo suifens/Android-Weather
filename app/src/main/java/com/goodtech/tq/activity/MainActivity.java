@@ -55,9 +55,6 @@ public class MainActivity extends BaseActivity {
     private MainPagerAdapter mPagerAdapter;
     private List<Fragment> mFragmentList;
     
-    // 悬浮按钮
-    private ImageButton mFabRemoveAd;
-    
     // 状态变量
     private int mCurrentTabIndex = 0;
     private long mBackTime;
@@ -75,7 +72,6 @@ public class MainActivity extends BaseActivity {
         initColors();
         setupViewPager();
         setupTabs();
-        setupFab();
         handleIntent();
         initApp();
 //        registerEventBus();
@@ -120,20 +116,6 @@ public class MainActivity extends BaseActivity {
         
         // 设置初始选中状态
         changeTab(false);
-    }
-
-    /**
-     * 设置悬浮按钮
-     * 初始化去广告悬浮按钮并设置点击事件
-     */
-    private void setupFab() {
-        mFabRemoveAd = findViewById(R.id.fab_remove_ad);
-        if (mFabRemoveAd != null) {
-            mFabRemoveAd.setOnClickListener(v -> {
-                // 启动去广告页面
-                RemoveAdActivity.startActivity(MainActivity.this);
-            });
-        }
     }
 
     private void handleIntent() {
