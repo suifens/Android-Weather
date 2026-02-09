@@ -77,7 +77,7 @@ class RemoveAdViewModel : ViewModel() {
             val tasks = mutableListOf<VideoTask>()
             
             // 视频任务奖励时长配置（对应任务1-7）- 缓存配置
-            val rewards = listOf(6, 18, 18, 12, 12, 12, 24)
+            val rewards = listOf(6, 18, 18, 12, 12, 6, 24)
             
             // 查找第一个可领取的任务索引（批量检查，减少 SharedPreferences 访问）
             val currentTask = AdRemovalManager.getCurrentAvailableVideoTask()
@@ -209,13 +209,14 @@ class RemoveAdViewModel : ViewModel() {
                 // 第4-6天：各2天（48小时）
                 // 第7天：7-100天随机（这里简化为7天，可以根据需求调整）
                 val rewardDays = when {
-                    dayNumber <= 3 -> 1  // 1-3天：1天
-                    dayNumber <= 6 -> 2  // 4-6天：2天
+                    dayNumber <= 3 -> 0  // 1-3天：1天
+                    dayNumber <= 6 -> 0  // 4-6天：2天
                     else -> 7  // 第7天：7天（可以改为随机7-100天）
                 }
                 
                 // 增加去广告时长
-                AdRemovalManager.addAdRemovalTime(rewardDays * 24)
+//                AdRemovalManager.addAdRemovalTime(rewardDays * 24)
+                AdRemovalManager.addAdRemovalTime(rewardDays)
                 
                 // 重新加载剩余时长
                 val (days, hours) = AdRemovalManager.getRemainingTime()

@@ -194,6 +194,11 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
 
     override fun onResume() {
         super.onResume()
+        
+        // 检查去广告状态，如果有效则移除已加载的广告
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            removeAllAds()
+        }
         if (isFirstLoad) {
             isFirstLoad = false
             if (SpUtils.getInstance().isAgreePermission()) {
@@ -399,6 +404,54 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                 Log.e(TAG, "removeAdView error: ${e.message}")
             }
         }
+    }
+    
+    /**
+     * 如果需要，移除所有已加载的广告（公开方法，供外部调用）
+     */
+    fun removeAllAdsIfNeeded() {
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            removeAllAds()
+        }
+    }
+    
+    /**
+     * 移除所有已加载的广告
+     */
+    private fun removeAllAds() {
+        // 移除 Banner 广告
+        mBannerAd?.let {
+            try {
+                it.expressAdView?.let { adView ->
+                    (adView.parent as? ViewGroup)?.removeView(adView)
+                }
+                it.destroy()
+                mBannerAd = null
+                mAdapter.setAd0(null)
+                isAd0Loaded = false
+            } catch (e: Exception) {
+                Log.e(TAG, "removeBannerAd error: ${e.message}")
+            }
+        }
+        
+        // 移除信息流广告
+        removeAdView(mGMNativeAd)
+        mGMNativeAd = null
+        mAdapter.setAd1(null)
+        isFirstAdLoaded = false
+        
+        removeAdView(mGMNativeAd2)
+        mGMNativeAd2 = null
+        mAdapter.setAd2(null)
+        isSecondAdLoaded = false
+        
+        removeAdView(mGMNativeAd3)
+        mGMNativeAd3 = null
+        mAdapter.setAd3(null)
+        isThirdAdLoaded = false
+        
+        // 刷新适配器
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroy() {

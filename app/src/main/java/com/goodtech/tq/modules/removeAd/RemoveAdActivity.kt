@@ -25,7 +25,15 @@ import com.goodtech.tq.modules.removeAd.model.DailyRewardStatus
 import com.goodtech.tq.modules.removeAd.model.VideoTask
 import com.goodtech.tq.modules.removeAd.model.VideoTaskStatus
 import com.goodtech.tq.modules.removeAd.viewmodel.RemoveAdViewModel
+import com.goodtech.tq.eventbus.MessageEvent
+import org.greenrobot.eventbus.EventBus
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.lifecycleScope
+import com.goodtech.tq.BuildConfig
+import com.goodtech.tq.views.popup.RewardPopup
+import com.lxj.xpopup.XPopup
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * 去广告页面Activity
@@ -137,7 +145,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         mBinding.videoTasksDesc1.text = desc1Spannable
         
         // 设置 daily_rewards_title1 的富文本
-        val title1Text = "连续7天看视频领取奖励,必得免费7~100天无广告天气预报"
+        val title1Text = "连续7天看视频领取奖励,必得免费7~720小时(1个月)无广告天气预报"
         val title1Spannable = SpannableString(title1Text)
         
         // 高亮 "连续7天" - 橙色 + 粗体
@@ -158,7 +166,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         }
         
         // 高亮 "7~100天无广告" - 橙色 + 粗体
-        val index7to100 = title1Text.indexOf("7~100天无广告")
+        val index7to100 = title1Text.indexOf("7~720小时(1个月)无广告")
         if (index7to100 >= 0) {
             title1Spannable.setSpan(
                 ForegroundColorSpan("#FF953B".toColorInt()),
@@ -323,7 +331,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         mRewardVideoAd = null
         
         val adSlot = AdSlot.Builder()
-            .setCodeId(REWARD_VIDEO_AD_ID)
+            .setCodeId(BuildConfig.PGE_INT_POS_ID)
             .build()
         
         TTAdSdk.getAdManager().createAdNative(this).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {
@@ -350,11 +358,6 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                         override fun onAdClose() {
                             Log.d(TAG, "奖励视频广告关闭")
                             mRewardVideoAd = null
-                            
-                            // 如果奖励已领取，直接返回
-                            if (isRewardArrived) {
-                                finish()
-                            }
                         }
                         
                         override fun onVideoComplete() {
@@ -392,13 +395,32 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                                     // 重新加载数据以更新UI（包括每日奖励，因为连续观看天数已更新）
                                     viewModel.loadAdRemovalData()
                                     
-                                    // 显示提示信息
+                                    // 发送事件通知首页刷新并移除广告
+                                    org.greenrobot.eventbus.EventBus.getDefault().post(
+                                        com.goodtech.tq.eventbus.MessageEvent().needReload(true)
+                                    )
+                                    
+                                    // 获取连续观看天数
                                     val continuousDays = com.goodtech.tq.utils.AdRemovalManager.getContinuousDays()
-                                    Toast.makeText(
-                                        this@RemoveAdActivity,
-                                        "恭喜！获得去广告${rewardHours}小时\n连续观看${continuousDays}天",
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                                    
+                                    // 检查是否连续7天完成且第7天奖励未领取
+                                    val isDay7RewardClaimed = com.goodtech.tq.utils.AdRemovalManager.isDailyRewardClaimed(6)
+                                    
+                                    if (continuousDays >= 7 && !isDay7RewardClaimed) {
+                                        // 连续7天完成且第7天奖励未领取，显示奖励弹窗
+                                        Log.d(TAG, "连续7天完成，显示奖励弹窗")
+                                        lifecycleScope.launch {
+                                            delay(500) // 延迟500ms显示，让Toast先显示
+                                            showReward()
+                                        }
+                                    } else {
+                                        // 显示提示信息
+                                        Toast.makeText(
+                                            this@RemoveAdActivity,
+                                            "恭喜！获得去广告${rewardHours}小时\n连续观看${continuousDays}天",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
                                     
                                     Log.d(TAG, "视频任务奖励领取成功: 任务奖励${rewardHours}小时，连续观看${continuousDays}天")
                                 } else {
@@ -409,6 +431,12 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                                     ).show()
                                     Log.w(TAG, "视频任务奖励领取失败或所有任务已完成")
                                 }
+
+                                lifecycleScope.launch {
+                                    delay(1000)
+                                    mRewardVideoAd = null
+                                }
+
                             } else {
                                 Toast.makeText(this@RemoveAdActivity, "请完整观看视频", Toast.LENGTH_SHORT).show()
                             }
@@ -444,18 +472,18 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
      */
     private fun setupDailyRewardListeners() {
         // 获取所有每日奖励按钮
-        val dailyRewards = listOf(
-            mBinding.day1Button, mBinding.day2Button, mBinding.day3Button, mBinding.day4Button,
-            mBinding.day5Button, mBinding.day6Button, mBinding.day7Button
-        )
-        
+//        val dailyRewards = listOf(
+//            mBinding.day1Button, mBinding.day2Button, mBinding.day3Button, mBinding.day4Button,
+//            mBinding.day5Button, mBinding.day6Button, mBinding.day7Button
+//        )
+//
         // 为每个天数按钮设置点击事件
-        dailyRewards.forEachIndexed { index, dayButton ->
-            dayButton.setOnClickListener {
-                // 调用ViewModel方法领取每日奖励
-                viewModel.claimDailyReward(index)
-            }
-        }
+//        dailyRewards.forEachIndexed { index, dayButton ->
+//            dayButton.setOnClickListener {
+//                // 调用ViewModel方法领取每日奖励
+//                viewModel.claimDailyReward(index)
+//            }
+//        }
     }
 
     /**
@@ -540,6 +568,15 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                 }
             }
         }
+    }
+
+    private fun showReward() {
+        viewModel.claimDailyReward(6)
+        val popup = RewardPopup(this)
+        XPopup.Builder(this)
+            .isDestroyOnDismiss(true)
+            .asCustom(popup)
+            .show()
     }
     
     override fun onDestroy() {

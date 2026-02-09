@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="200dp"
+    android:background="@drawable/bg_circle_white_12"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/img_fireworks"
+        android:layout_marginTop="25dp" />
+
+    <TextView
+        android:id="@+id/titleTv"
+        style="@style/Black_Text"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:text="恭喜获得7小时无广告时长"
+        />
+
+    <TextView
+        android:id="@+id/tv_dialog_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="30dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:lineSpacingExtra="6dp"
+        android:textColor="@color/color_4a4a4a"
+        android:textSize="16sp"
+        android:text="连续完成7天看视频去广告打卡任务，获得7小时无广告时长"
+        />
+
+    <Button
+        android:id="@+id/btn_dialog_confirm"
+        style="@style/ConfirmButtonStyle"
+        android:layout_width="160dp"
+        android:layout_marginBottom="20dp"
+        android:text="开心收下" />
+
+
+</LinearLayout>

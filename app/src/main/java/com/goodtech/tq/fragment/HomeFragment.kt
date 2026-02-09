@@ -193,6 +193,17 @@ class HomeFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         isCurrent = true
+        
+        // 检查去广告状态，如果有效则移除广告
+        if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+            // 通知所有 WeatherFragment 移除广告
+            fragmentList.forEach { fragment ->
+                if (fragment is WeatherFragment) {
+                    fragment.removeAllAdsIfNeeded()
+                }
+            }
+        }
+        
         if (isNeedReload) {
             val cityModesFromSp = LocationSpHelper.getCityListAndLocation()
             if (cityModesFromSp.size != cityModes.size || isNeedReload) {
@@ -261,6 +272,11 @@ class HomeFragment : BaseFragment() {
 
         if (event.loadIntAd) {
             // 广告相关逻辑
+            // 检查去广告状态，如果有效则不加载广告
+            if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+                return
+            }
+            
             if (System.currentTimeMillis() - SpUtils.getInstance().getLong(
                     BuildConfig.PGE_INT_POS_ID,
                     0L
@@ -285,6 +301,17 @@ class HomeFragment : BaseFragment() {
         
         if (event.isNeedReload) {
             isNeedReload = true
+            // 检查去广告状态，如果有效则刷新并移除广告
+            if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
+                // 刷新所有 Fragment，移除广告
+                reloadView()
+                // 通知所有 WeatherFragment 移除广告
+                fragmentList.forEach { fragment ->
+                    if (fragment is WeatherFragment) {
+                        fragment.removeAllAdsIfNeeded()
+                    }
+                }
+            }
         }
         
         if (event.getFetchCId().isNotEmpty()) {
@@ -464,6 +491,7 @@ class HomeFragment : BaseFragment() {
         if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
             // 在去广告有效期内，不加载广告
             mLoadSuccess = false
+            mTTFullScreenVideoAd = null
             return
         }
         

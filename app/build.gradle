@@ -45,7 +45,8 @@ android {
         buildConfigField 'String', 'PGE_EXPRESS_POS_ID2', '"102498280"' //动态信息流 id
         buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"103501276"' //动态信息流 id
         buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"103501633"' //日历动态信息流 id
-        buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
+//        buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
+        buildConfigField 'String', 'PGE_INT_POS_ID', '"103885268"'  //插屏广告 id
 
 //        广告应用ID
 //        buildConfigField 'String', 'PGE_APP_ID', '5353290'
