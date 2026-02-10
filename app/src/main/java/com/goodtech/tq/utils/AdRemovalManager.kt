@@ -80,19 +80,31 @@ object AdRemovalManager {
     
     /**
      * 获取剩余去广告时长（天和小时）
+     * 仅用于兼容旧逻辑，如果需要分钟请使用 getRemainingTimeDetail
      * @return Pair<天数, 小时数>
      */
     fun getRemainingTime(): Pair<Int, Int> {
+        val (days, hours, _) = getRemainingTimeDetail()
+        return Pair(days, hours)
+    }
+    
+    /**
+     * 获取剩余去广告时长（天、小时、分钟）
+     * @return Triple<天数, 小时数, 分钟数>
+     */
+    fun getRemainingTimeDetail(): Triple<Int, Int, Int> {
         val remainingMillis = getRemainingTimeMillis()
         if (remainingMillis <= 0) {
-            return Pair(0, 0)
+            return Triple(0, 0, 0)
         }
         
-        val totalHours = (remainingMillis / (1000 * 60 * 60)).toInt()
+        val totalMinutes = (remainingMillis / (1000 * 60)).toInt()
+        val totalHours = totalMinutes / 60
         val days = totalHours / 24
         val hours = totalHours % 24
+        val minutes = totalMinutes % 60
         
-        return Pair(days, hours)
+        return Triple(days, hours, minutes)
     }
     
     /**

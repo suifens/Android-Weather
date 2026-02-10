@@ -101,6 +101,7 @@
                     android:textSize="45sp" />
 
                 <TextView
+                    android:id="@+id/remaining_day_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
@@ -122,6 +123,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/remaining_hour_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"

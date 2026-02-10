@@ -250,9 +250,20 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
      */
     override fun initData() {
         // 先快速显示剩余时长（同步加载，最快显示）
-        val (days, hours) = com.goodtech.tq.utils.AdRemovalManager.getRemainingTime()
-        mBinding.remainingDayText.text = String.format("%02d", days)
-        mBinding.remainingHourText.text = String.format("%02d", hours)
+        val (days, hours, minutes) = com.goodtech.tq.utils.AdRemovalManager.getRemainingTimeDetail()
+        if (days >= 1) {
+            // 剩余时长 >= 1 天：显示「天数 + 小时」
+            mBinding.remainingDayText.text = String.format("%02d", days)
+            mBinding.remainingHourText.text = String.format("%02d", hours)
+            mBinding.remainingDayUnit.text = "天"
+            mBinding.remainingHourUnit.text = "小时"
+        } else {
+            // 剩余时长 < 1 天：显示「小时 + 分钟」
+            mBinding.remainingDayText.text = String.format("%02d", hours)
+            mBinding.remainingHourText.text = String.format("%02d", minutes)
+            mBinding.remainingDayUnit.text = "小时"
+            mBinding.remainingHourUnit.text = "分钟"
+        }
         
         // 观察剩余时长数据变化
         viewModel.remainingDayLiveData.observe(this) { remainingTime ->
@@ -261,6 +272,15 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
 
         viewModel.remainingHourLiveData.observe(this) { remainingTime ->
             mBinding.remainingHourText.text = remainingTime
+        }
+        
+        // 观察单位变化
+        viewModel.remainingDayUnitLiveData.observe(this) { unit ->
+            mBinding.remainingDayUnit.text = unit
+        }
+
+        viewModel.remainingHourUnitLiveData.observe(this) { unit ->
+            mBinding.remainingHourUnit.text = unit
         }
         
         // 观察视频任务数据变化

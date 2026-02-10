@@ -22,9 +22,12 @@ import kotlinx.coroutines.withContext
 class RemoveAdViewModel : ViewModel() {
 
     // LiveData用于观察数据变化
-    /** 剩余时长LiveData，格式：剩余: XX天XX小时 */
+    /** 剩余时长数字 LiveData */
     val remainingDayLiveData = MutableLiveData<String>()
     val remainingHourLiveData = MutableLiveData<String>()
+    /** 剩余时长单位 LiveData（天/小时/分钟 动态切换） */
+    val remainingDayUnitLiveData = MutableLiveData<String>()
+    val remainingHourUnitLiveData = MutableLiveData<String>()
     /** 视频任务列表LiveData */
     val videoTasksLiveData = MutableLiveData<List<VideoTask>>()
     /** 每日奖励列表LiveData */
@@ -33,6 +36,7 @@ class RemoveAdViewModel : ViewModel() {
     // 当前剩余时长数据
     private var remainingDays = 0
     private var remainingHours = 0
+    private var remainingMinutes = 0
 
     /**
      * 加载去广告相关数据
@@ -44,9 +48,10 @@ class RemoveAdViewModel : ViewModel() {
             // 在后台线程加载数据
             withContext(Dispatchers.IO) {
                 // 从 AdRemovalManager 加载当前去广告状态
-                val (days, hours) = AdRemovalManager.getRemainingTime()
+                val (days, hours, minutes) = AdRemovalManager.getRemainingTimeDetail()
                 remainingDays = days
                 remainingHours = hours
+                remainingMinutes = minutes
             }
             
             // 在主线程更新UI
@@ -60,11 +65,21 @@ class RemoveAdViewModel : ViewModel() {
 
     /**
      * 更新剩余时长显示
-     * 将天数和小时数格式化为显示文本
+     * - 剩余时长 >= 1 天：显示「XX天YY小时」
+     * - 剩余时长 < 1 天：显示「XX小时YY分钟」
      */
     private fun updateRemainingTime() {
-        remainingDayLiveData.value = String.format("%02d", remainingDays)
-        remainingHourLiveData.value = String.format("%02d", remainingHours)
+        if (remainingDays >= 1) {
+            remainingDayLiveData.value = String.format("%02d", remainingDays)
+            remainingHourLiveData.value = String.format("%02d", remainingHours)
+            remainingDayUnitLiveData.value = "天"
+            remainingHourUnitLiveData.value = "小时"
+        } else {
+            remainingDayLiveData.value = String.format("%02d", remainingHours)
+            remainingHourLiveData.value = String.format("%02d", remainingMinutes)
+            remainingDayUnitLiveData.value = "小时"
+            remainingHourUnitLiveData.value = "分钟"
+        }
     }
 
     /**
@@ -175,9 +190,10 @@ class RemoveAdViewModel : ViewModel() {
             AdRemovalManager.addAdRemovalTime(rewardHours)
             
             // 重新加载剩余时长
-            val (days, hours) = AdRemovalManager.getRemainingTime()
+            val (days, hours, minutes) = AdRemovalManager.getRemainingTimeDetail()
             remainingDays = days
             remainingHours = hours
+            remainingMinutes = minutes
             
             // 重新加载任务列表以同步状态
             loadVideoTasks()
@@ -219,9 +235,10 @@ class RemoveAdViewModel : ViewModel() {
                 AdRemovalManager.addAdRemovalTime(rewardDays)
                 
                 // 重新加载剩余时长
-                val (days, hours) = AdRemovalManager.getRemainingTime()
+                val (days, hours, minutes) = AdRemovalManager.getRemainingTimeDetail()
                 remainingDays = days
                 remainingHours = hours
+                remainingMinutes = minutes
                 
                 // 重新加载奖励列表以更新UI
                 loadDailyRewards()
