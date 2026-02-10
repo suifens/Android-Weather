@@ -45,7 +45,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
     companion object {
         private const val TAG = "RemoveAdActivity"
         // 奖励视频广告位ID（如果没有配置，使用默认值，需要根据实际情况修改）
-        private const val REWARD_VIDEO_AD_ID = "102948965" // 使用与 DrawDramaActivity 相同的广告位ID
+        private const val REWARD_VIDEO_AD_ID = "103885268" // 使用与 DrawDramaActivity 相同的广告位ID
         
         /**
          * 启动去广告页面的静态方法
@@ -331,7 +331,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         mRewardVideoAd = null
         
         val adSlot = AdSlot.Builder()
-            .setCodeId(BuildConfig.PGE_INT_POS_ID)
+            .setCodeId(REWARD_VIDEO_AD_ID)
             .build()
         
         TTAdSdk.getAdManager().createAdNative(this).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {

@@ -25,8 +25,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdk 24
         targetSdk 35
-        versionCode 1510
-        versionName "15.1.0"
+        versionCode 1600
+        versionName "16.0.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -45,8 +45,7 @@ android {
         buildConfigField 'String', 'PGE_EXPRESS_POS_ID2', '"102498280"' //动态信息流 id
         buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"103501276"' //动态信息流 id
         buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"103501633"' //日历动态信息流 id
-//        buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
-        buildConfigField 'String', 'PGE_INT_POS_ID', '"103885268"'  //插屏广告 id
+        buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
 
 //        广告应用ID
 //        buildConfigField 'String', 'PGE_APP_ID', '5353290'
@@ -68,7 +67,7 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-        xiaom
+//        xiaom
 //        xiaomi1 {
 //            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
@@ -84,6 +83,16 @@ android {
             buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
             manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "huawei"]
         }
+        lianxiang {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"lianxiang"'
+            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "lianxiang"]
+        }
+//        wdj {
+//            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
+//            buildConfigField 'String', 'UMENG_CHANNEL', '"wandoujia"'
+//            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "wandoujia"]
+//        }
 //        oppo {
 //            buildConfigField 'int', 'BAIDU_CHANNEL', '6'
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"oppo"'
@@ -129,13 +138,6 @@ android {
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"anzhi"'
 //            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "anzhi"]
 //        }
-
-        wdj {
-            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
-            buildConfigField 'String', 'UMENG_CHANNEL', '"wandoujia"'
-            manifestPlaceholders = [app_name: "天气预报", umeng_channel: "wandoujia"]
-        }
-
 //        baidu {
 //            buildConfigField 'int', 'BAIDU_CHANNEL', '1'
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"baidu"'
