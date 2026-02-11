@@ -118,7 +118,7 @@ object AdRemovalManager {
     /**
      * 视频任务奖励时长配置（对应任务1-7）
      */
-    private val videoTaskRewards = listOf(6, 18, 18, 12, 12, 12, 24) // 小时数
+    private val videoTaskRewards = listOf(6, 18, 18, 12, 12, 6, 24) // 小时数
     
     /**
      * 检查并重置每日视频任务（如果需要）

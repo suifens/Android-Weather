@@ -408,8 +408,10 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     
     /**
      * 如果需要，移除所有已加载的广告（公开方法，供外部调用）
+     * 仅在 mAdapter 已初始化时执行，避免 ViewPager 中未创建视图的 Fragment 崩溃
      */
     fun removeAllAdsIfNeeded() {
+        if (!::mAdapter.isInitialized) return
         if (com.goodtech.tq.utils.AdRemovalManager.isAdRemovalActive()) {
             removeAllAds()
         }
@@ -419,6 +421,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
      * 移除所有已加载的广告
      */
     private fun removeAllAds() {
+        if (!::mAdapter.isInitialized) return
         // 移除 Banner 广告
         mBannerAd?.let {
             try {
