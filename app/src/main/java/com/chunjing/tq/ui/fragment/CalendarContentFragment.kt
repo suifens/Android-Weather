@@ -113,7 +113,7 @@ class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, C
         viewModel.curHour.observe(this) {
             val view = mBinding.hourAlmanac
             if (it != null) {
-                view.tvHours.text = "${it.time}时：${it.getHourString()}"
+                view.tvHours.text = "${it.time}时：${it.hours}"
                 view.tvDes.text = it.des
                 view.tvDetailSuit.text = it.yi
                 view.tvDetailAvoid.text = it.ji

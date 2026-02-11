@@ -360,12 +360,12 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
         var needShow = false
         val showTime = SpUtils.instance.getLong(CACHE_RECOMMEND_TIME, 0)
         if (System.currentTimeMillis() > showTime) {
-            val interval = SpUtils.instance.getInt(CACHE_RECOMMEND_INTERVAL, 3)
+//            val interval = SpUtils.instance.getInt(CACHE_RECOMMEND_INTERVAL, 3)
             SpUtils.instance.putLong(
                 CACHE_RECOMMEND_TIME,
-                System.currentTimeMillis() + interval * DateUtil.dayMillis()
+                System.currentTimeMillis() + 7 * DateUtil.dayMillis()
             )
-            SpUtils.instance.putInt(CACHE_RECOMMEND_INTERVAL, interval + 3)
+//            SpUtils.instance.putInt(CACHE_RECOMMEND_INTERVAL, interval + 3)
             needShow = true
         }
         return needShow

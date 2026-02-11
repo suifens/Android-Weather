@@ -36,12 +36,12 @@ data class HourAlmanac (
     val yi: String
 ) {
     var time: String = ""
-    fun getHourString() : String {
-        val times = hours.split("-")
-        val startTime = if (times[0].toInt() >= 10) times[0] else "0${times[0]}"
-        val endTime = if (times[1].toInt() >= 10) times[1] else "0${times[1]}"
-        return "$startTime:00-$endTime:00"
-    }
+//    fun getHourString() : String {
+//        val times = hours.split("-")
+//        val startTime = if (times[0].toInt() >= 10) times[0] else "0${times[0]}"
+//        val endTime = if (times[1].toInt() >= 10) times[1] else "0${times[1]}"
+//        return "$startTime:00-$endTime:00"
+//    }
 }
 
 

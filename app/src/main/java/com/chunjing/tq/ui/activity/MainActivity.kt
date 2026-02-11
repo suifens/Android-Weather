@@ -1,5 +1,6 @@
 package com.chunjing.tq.ui.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -35,6 +36,9 @@ import com.chunjing.tq.ui.base.BaseActivity
 import com.chunjing.tq.ui.fragment.CalendarFragment
 import com.chunjing.tq.ui.fragment.SettingsFragment
 import com.chunjing.tq.utils.ContentUtil
+import com.chunjing.tq.utils.ShareFileUtils
+import java.io.File
+import java.io.FileOutputStream
 import com.goodtech.weatherlib.extension.startActivity
 import com.goodtech.weatherlib.extension.toast
 import com.goodtech.weatherlib.net.LoadState
@@ -43,6 +47,7 @@ import com.lxj.xpopup.XPopup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -151,14 +156,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         mainViewModel.getCacheLocation()
         checkUpdate()
 
-//        CoroutineScope(Dispatchers.IO).launch {
-//            delay(4000L)
-//            if (mainViewModel.needShowRecommendAlert()) {
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    showRecommendAlert()
-//                }
-//            }
-//        }
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(4000L)
+            if (mainViewModel.needShowRecommendAlert()) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    showRecommendAlert()
+                }
+            }
+        }
     }
 
     //<editor-fold desc="滑动返回">
@@ -298,15 +303,27 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
         XPopup.Builder(context)
             .isDestroyOnDismiss(true)   //  只使用一次
+            .dismissOnTouchOutside(false)
             .asCustom(popup)
             .show()
     }
 
     /**
-     * 分享按钮点击
+     * 分享按钮点击：调用系统分享，分享 share_recommend 图片
      */
+    @SuppressLint("ResourceType")
     private fun shareBtnPressed() {
-        startActivity<RecommendShareActivity>()
+        try {
+            val cacheFile = File(cacheDir, "share_recommend.webp")
+            resources.openRawResource(R.drawable.share_recommend).use { input ->
+                FileOutputStream(cacheFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+            ShareFileUtils.shareImage(this, cacheFile.absolutePath)
+        } catch (e: Exception) {
+            toast("分享失败")
+        }
     }
 
     private var hadShowAd = false

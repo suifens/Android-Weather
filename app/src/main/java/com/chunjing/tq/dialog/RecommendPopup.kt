@@ -5,6 +5,9 @@ import android.content.Context
 import android.widget.Button
 import android.widget.ImageView
 import com.chunjing.tq.R
+import com.chunjing.tq.ui.activity.vm.CACHE_RECOMMEND_TIME
+import com.goodtech.weatherlib.utils.DateUtil
+import com.goodtech.weatherlib.utils.SpUtils
 import com.lxj.xpopup.core.CenterPopupView
 
 /**
@@ -32,6 +35,14 @@ class RecommendPopup(context: Context) : CenterPopupView(context) {
 
         findViewById<Button>(R.id.shareBtn).setOnClickListener {
             listener?.onClick(it)
+        }
+
+        findViewById<Button>(R.id.forgetBtn).setOnClickListener {
+            SpUtils.instance.putLong(
+                CACHE_RECOMMEND_TIME,
+                System.currentTimeMillis() + 30 * DateUtil.dayMillis()
+            )
+            dismiss()
         }
     }
 
