@@ -14,6 +14,7 @@ import com.goodtech.weatherlib.net.HttpUtils
 import com.goodtech.weatherlib.utils.SpUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.delay
 
 
 class CalendarViewModel(val app: Application) : BaseViewModel(app) {
@@ -116,44 +117,55 @@ class CalendarViewModel(val app: Application) : BaseViewModel(app) {
                 }
             }
             val holidayList = arrayListOf<Holiday>()
-            var count = 0
-            for (i in 1..11) {
-                @SuppressLint("DefaultLocale")
-                val yearMonth = String.format("%s-%d", year, i)
-                val url: String = String.format(JUHE_MONTH_HOLIDAY, yearMonth)
-                val result = HttpUtils.get<CalendarBean<HolidayBean>>(url)
-                result?.let {
-                    count++
-                    it.result!!.data.let { data ->
-                        data.holiday_array.let { dataList ->
-                            for (holiday in dataList) {
-                                var isContain = false
-                                for (j in holidayList.indices.reversed()) {
-                                    val lastDay: Holiday = holidayList[j]
-                                    if (lastDay.name == holiday.name) {
-                                        isContain = true
-                                        break
-                                    }
+            for (i in 1..12) {
+                try {
+                    if (i > 1) {
+                        delay(300)  // 避免聚合 API 速率限制
+                    }
+                    @SuppressLint("DefaultLocale")
+                    val yearMonth = String.format("%s-%d", year, i)
+                    val url: String = String.format(JUHE_MONTH_HOLIDAY, yearMonth)
+                    val result = HttpUtils.get<CalendarBean<HolidayBean>>(url)
+                    result?.result?.data?.holiday_array?.let { dataList ->
+                        for (holiday in dataList) {
+                            var isContain = false
+                            for (j in holidayList.indices.reversed()) {
+                                val lastDay: Holiday = holidayList[j]
+                                if (lastDay.name == holiday.name) {
+                                    isContain = true
+                                    break
                                 }
-                                if (!isContain) {
-                                    holidayList.add(holiday)
-                                }
+                            }
+                            if (!isContain) {
+                                holidayList.add(holiday)
                             }
                         }
                     }
+                } catch (e: Exception) {
+                    // 单月失败不影响其他月份，继续执行
                 }
             }
-            if (count == 11) {
-                if (holidayList.size > 0) {
-                    mHolidayList.postValue(holidayList)
-                    mHolidayMap[year] = holidayList
-                    SpUtils.instance.putString(
-                        "holiday-$year",
-                        Gson().toJson(holidayList)
-                    )
-                } else {
-                    mHolidayList.postValue(holidayList)
-                }
+//            if (count == 11) {
+//                if (holidayList.size > 0) {
+//                    mHolidayList.postValue(holidayList)
+//                    mHolidayMap[year] = holidayList
+//                    SpUtils.instance.putString(
+//                        "holiday-$year",
+//                        Gson().toJson(holidayList)
+//                    )
+//                } else {
+//                    mHolidayList.postValue(holidayList)
+//                }
+//            }
+            if (holidayList.isNotEmpty()) {
+                mHolidayList.postValue(holidayList)
+                mHolidayMap[year] = holidayList
+                SpUtils.instance.putString(
+                    "holiday-$year",
+                    Gson().toJson(holidayList)
+                )
+            } else {
+                mHolidayList.postValue(holidayList)
             }
         }
 

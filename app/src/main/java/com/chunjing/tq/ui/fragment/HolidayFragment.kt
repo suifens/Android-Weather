@@ -10,18 +10,18 @@ import com.chunjing.tq.adapter.HolidayAdapter
 import com.chunjing.tq.calendarVM
 import com.chunjing.tq.databinding.FragmentHolidayBinding
 import com.chunjing.tq.ui.activity.vm.CalendarViewModel
+import com.chunjing.tq.ui.base.BaseViewModel
 import com.chunjing.tq.ui.base.BaseVmFragment
 import com.goodtech.weatherlib.view.SpaceItemDecoration
 
 @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
-class HolidayFragment : BaseVmFragment<FragmentHolidayBinding, CalendarViewModel>() {
+class HolidayFragment : BaseVmFragment<FragmentHolidayBinding, BaseViewModel>() {
 
     private var mAdapter: HolidayAdapter? = null
 
     override fun bindView() = FragmentHolidayBinding.inflate(layoutInflater)
 
     override fun initView(view: View?) {
-        viewModel = calendarVM
         mAdapter = HolidayAdapter(requireContext(), arrayListOf())
         mBinding.recyclerView.adapter = mAdapter
         mBinding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -36,18 +36,19 @@ class HolidayFragment : BaseVmFragment<FragmentHolidayBinding, CalendarViewModel
                 mAdapter!!.data = it
                 mAdapter!!.notifyDataSetChanged()
             }
-            mBinding.tvYear.text = "${viewModel.mHolidayYear}假期"
+            mBinding.tvYear.text = "${calendarVM.mHolidayYear}假期"
         }
     }
 
     override fun loadData() {
+
     }
 
     override fun onResume() {
         super.onResume()
         if (mAdapter != null) {
-            if (viewModel.mHolidayList.value != null) {
-                mAdapter!!.data = viewModel.mHolidayList.value!!
+            if (calendarVM.mHolidayList.value != null) {
+                mAdapter!!.data = calendarVM.mHolidayList.value!!
                 mBinding.emptyView.visibility = View.GONE
             } else {
                 mAdapter!!.data = arrayListOf()
@@ -55,6 +56,6 @@ class HolidayFragment : BaseVmFragment<FragmentHolidayBinding, CalendarViewModel
             }
             mAdapter!!.notifyDataSetChanged()
         }
-        mBinding.tvYear.text = "${viewModel.mHolidayYear}假期"
+        mBinding.tvYear.text = "${calendarVM.mHolidayYear}假期"
     }
 }

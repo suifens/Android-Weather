@@ -16,6 +16,7 @@ import com.chunjing.tq.R
 import com.chunjing.tq.calendarVM
 import com.chunjing.tq.databinding.FragmentCalendarContentBinding
 import com.chunjing.tq.ui.activity.vm.CalendarViewModel
+import com.chunjing.tq.ui.base.BaseViewModel
 import com.chunjing.tq.ui.base.BaseVmFragment
 import com.goodtech.weatherlib.utils.CalendarUtil
 import com.haibin.calendarview.Calendar
@@ -23,7 +24,7 @@ import com.haibin.calendarview.CalendarView
 import java.util.*
 
 @SuppressLint("SetTextI18n")
-class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, CalendarViewModel>(),
+class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, BaseViewModel>(),
     CalendarView.OnCalendarSelectListener,
     CalendarView.OnYearChangeListener {
 
@@ -37,7 +38,6 @@ class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, C
     override fun bindView() = FragmentCalendarContentBinding.inflate(layoutInflater)
 
     override fun initView(view: View?) {
-        viewModel = calendarVM
         mBinding.calendarView.setOnCalendarSelectListener(this)
         mBinding.calendarView.setOnYearChangeListener(this)
 
@@ -76,14 +76,14 @@ class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, C
     }
 
     override fun initEvent() {
-        viewModel.dayDetail.observe(this) {
+        calendarVM.dayDetail.observe(this) {
             mBinding.detailLayout.tvLunarDay.text = it.lunar
             mBinding.detailLayout.tvLunar.text = "${it.lunarYear}(${it.animalsYear})年"
             mBinding.detailLayout.tvDetailSuit.text = it.suit
             mBinding.detailLayout.tvDetailAvoid.text = it.avoid
         }
 
-        viewModel.mHolidayList.observe(this) {
+        calendarVM.mHolidayList.observe(this) {
             val map: MutableMap<String, Calendar> = HashMap()
             for (holiday in it) {
                 if (holiday.list != null) {
@@ -97,7 +97,7 @@ class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, C
             mBinding.calendarView.setSchemeDate(map)
         }
 
-        viewModel.dayAlmanac.observe(this) {
+        calendarVM.dayAlmanac.observe(this) {
             val view = mBinding.dayAlmanac
             view.tvWuxing.text = it.wuxing
             view.tvChongsha.text = it.chongsha
@@ -106,11 +106,11 @@ class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, C
             view.tvBaiji.text = it.baiji
         }
 
-        viewModel.hoursAlmanac.observe(this) {
+        calendarVM.hoursAlmanac.observe(this) {
             onHourBtnClick(mBinding.hourAlmanac.btn1, 0)
         }
 
-        viewModel.curHour.observe(this) {
+        calendarVM.curHour.observe(this) {
             val view = mBinding.hourAlmanac
             if (it != null) {
                 view.tvHours.text = "${it.time}时：${it.hours}"
@@ -154,9 +154,9 @@ class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, C
     private fun getData(millis: Long) {
         updateHoliday(millis)
         val day = CalendarUtil.longToString(millis, "yyyy-M-d")
-        viewModel.getDayDetails(day)
-        viewModel.getDayAlmanac(day)
-        viewModel.getHoursAlmanac(day)
+        calendarVM.getDayDetails(day)
+        calendarVM.getDayAlmanac(day)
+        calendarVM.getHoursAlmanac(day)
     }
 
     private fun getSchemeCalendar(date: Long, color: Int, text: String): Calendar {
@@ -174,7 +174,7 @@ class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, C
         setButtonSelected(btn, true)
         mLastBtn = btn
 
-        viewModel.selectedHour(index)
+        calendarVM.selectedHour(index)
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -198,7 +198,7 @@ class CalendarContentFragment : BaseVmFragment<FragmentCalendarContentBinding, C
             year += 1
         }
         val yearStr = year.toString()
-        viewModel.getHolidays(yearStr)
+        calendarVM.getHolidays(yearStr)
     }
 
     class CalendarPicker : DatePicker {

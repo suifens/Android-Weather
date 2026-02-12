@@ -16,7 +16,7 @@
         android:id="@+id/tvHoliday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginStart="18dp"
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/white"
@@ -45,7 +45,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginStart="18dp"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tools:text="北京市" />
 
     <TextView
@@ -59,7 +59,7 @@
         android:lines="2"
         android:ellipsize="end"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tools:text="北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市" />
 
 </RelativeLayout>
