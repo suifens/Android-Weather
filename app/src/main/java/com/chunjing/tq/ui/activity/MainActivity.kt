@@ -238,17 +238,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var isFirstLoad = true
     override fun onResume() {
         super.onResume()
-//        checkLocation()
         dismissLoading()
         isShowing = true
 
-//        if (isFirstLoad && ContentUtil.permissionGranted) {
-//            isFirstLoad = false
-//            loadInterstitialFullAd()
-//        }
-//        if (!hadShowAd) {
-//            showInterstitialFullAd()
-//        }
+        if (isFirstLoad && ContentUtil.permissionGranted) {
+            isFirstLoad = false
+            loadInterstitialFullAd()
+        }
     }
 
     override fun onPause() {

@@ -102,7 +102,8 @@ open class MyApp : BaseApp() {
         /// bug收集
         CrashReport.initCrashReport(applicationContext, "8c7abb6cd2", false)
 
-//        TTAdManagerHolder.init(this)
+        // 初始化穿山甲广告 SDK
+        TTAdManagerHolder.init(this)
     }
 
     open fun getJPushRegId(): String? {

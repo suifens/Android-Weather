@@ -72,7 +72,7 @@ public class TTAdManagerHolder {
                 /**
                  * 上线前需要关闭debug开关，否则会影响性能
                  */
-                .debug(true)
+                .debug(false)
                 /**
                  * 使用聚合功能此开关必须设置为true，默认为false，不会初始化聚合模板，聚合功能会吟唱
                  */

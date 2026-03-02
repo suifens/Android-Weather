@@ -1,11 +1,13 @@
 package com.chunjing.tq.ui.activity
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.*
+import com.bytedance.sdk.openadsdk.TTSplashAd
 import com.chunjing.tq.R
+import com.chunjing.tq.ad.AdManager
 import com.chunjing.tq.databinding.ActivitySplashBinding
 import com.chunjing.tq.db.AppRepo
 import com.chunjing.tq.ext.checkGPSOpen
@@ -23,12 +25,14 @@ import kotlinx.coroutines.withContext
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
+    private val TAG = "SplashActivity"
+    private var isAdShowing = false
+    private var isDataReady = false
+    private var citySize = 0
+
     private fun startIntent() {
         lifecycleScope.launch {
-            var citySize: Int
-
             withContext(Dispatchers.IO) {
-                val start = System.currentTimeMillis()
                 val cities = AppRepo.getInstance().getCities()
                 citySize = cities.size
 
@@ -39,14 +43,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                 getScreenInfo()
 
                 if (AppRepo.getInstance().getCache<String>("Version") == null) {
-                    /// 第一次安装
                     copyVideo()
                 }
 
                 if (AppRepo.getInstance()
                         .getCache<String>("Version") != AppUtils.getAppVersionName()
                 ) {
-                    //  新版本
                     AppRepo.getInstance().saveCache(
                         "Weather_Bg_Update", TimeUtils.millis2String(
                             0L,
@@ -55,28 +57,78 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                     )
                     AppRepo.getInstance().saveCache("Version", AppUtils.getAppVersionName())
                 }
-                //  获取背景资料
                 mainViewModel.fetchWeatherBg()
                 mainViewModel.fetchCalendarBg()
 
                 if (NetworkUtils.isConnected() && checkGPSOpen() && checkGPSPermission()) {
                     mainViewModel.getLocation()
                 }
-
-                delay(1200L)
             }
-            if (citySize == 0) {
-                if (ContentUtil.permissionGranted) {
-                    AddCityActivity.startActivity(this@SplashActivity, true)
-                } else {
-                    startActivity<PermissionActivity>()
-                }
-            } else {
-                startActivity<MainActivity>()
-//                MainActivity.startActivity(this@SplashActivity, 0)
-            }
-            finish()
+            isDataReady = true
+            tryGoNext()
         }
+    }
+
+    private fun loadSplashAd() {
+        if (!ContentUtil.permissionGranted) {
+            isAdShowing = false
+            tryGoNext()
+            return
+        }
+
+        AdManager.loadSplashAd(this, mBinding.splashContainer, object : AdManager.AdCallback<TTSplashAd> {
+            override fun onSuccess(ad: TTSplashAd) {
+                Log.d(TAG, "开屏广告加载成功")
+                ad.setSplashAdListener(object : TTSplashAd.SplashAdListener {
+                    override fun onSplashAdShow(ad: TTSplashAd?) {
+                        Log.d(TAG, "开屏广告展示")
+                    }
+
+                    override fun onSplashAdClick(ad: TTSplashAd?) {
+                        Log.d(TAG, "开屏广告点击")
+                    }
+
+                    override fun onSplashAdClose(ad: TTSplashAd?, closeType: Int) {
+                        Log.d(TAG, "开屏广告关闭: $closeType")
+                        mBinding.splashContainer.removeAllViews()
+                        isAdShowing = false
+                        tryGoNext()
+                    }
+                })
+                val splashView = ad.splashView
+                if (splashView != null) {
+                    mBinding.splashContainer.removeAllViews()
+                    mBinding.splashContainer.addView(splashView)
+                    isAdShowing = true
+                }
+            }
+
+            override fun onFail(code: Int, msg: String) {
+                Log.e(TAG, "开屏广告加载失败: $code, $msg")
+                isAdShowing = false
+                tryGoNext()
+            }
+        })
+    }
+
+    private fun tryGoNext() {
+        if (isAdShowing || !isDataReady) {
+            return
+        }
+        goNext()
+    }
+
+    private fun goNext() {
+        if (citySize == 0) {
+            if (ContentUtil.permissionGranted) {
+                AddCityActivity.startActivity(this@SplashActivity, true)
+            } else {
+                startActivity<PermissionActivity>()
+            }
+        } else {
+            startActivity<MainActivity>()
+        }
+        finish()
     }
 
     private fun copyVideo() {
@@ -145,6 +197,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     override fun onStart() {
         super.onStart()
         startIntent()
+        loadSplashAd()
     }
     // </editor-fold>
 }

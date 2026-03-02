@@ -38,7 +38,10 @@ android {
         }
 
         buildConfigField 'String', 'PGE_APP_ID', '"5542717"'    //应用ID
+        buildConfigField 'String', 'PGE_SPLASH_POS_ID', '"103159495"'  //开屏广告 id
         buildConfigField 'String', 'PGE_INT_POS_ID', '"103159496"'  //插屏广告 id
+        buildConfigField 'String', 'PGE_BANNER_POS_ID', '"103159497"'  //Banner广告 id
+        buildConfigField 'String', 'PGE_FEED_POS_ID', '"103159498"'  //信息流广告 id
         manifestPlaceholders = [
                 JPUSH_PKGNAME: applicationId,
                 JPUSH_APPKEY : "a9ba12249d1be37e2ece903d", //JPush 上注册的包名对应的 Appkey.
