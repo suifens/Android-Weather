@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Looper
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -12,7 +13,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
-import com.blankj.utilcode.util.BarUtils
 import com.bytedance.sdk.openadsdk.AdSlot
 import com.bytedance.sdk.openadsdk.TTAdNative
 import com.bytedance.sdk.openadsdk.TTAdSdk
@@ -60,41 +60,30 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
     }
 
     /**
-     * 初始化视图
-     * 配置状态栏、设置视频任务和每日奖励的初始状态
+     * 初始化视图 - 仅做必要操作，优先让首帧快速显示
      */
     override fun initView() {
-        // 配置状态栏适配
+        // 配置状态栏（必须，否则布局错位）
         configStationBar(mBinding.topBar)
-        // 设置状态栏为浅色模式（黑色文字）
-        BarUtils.setStatusBarLightMode(this, true)
-
-        // 延迟非关键操作，先显示页面
-        mBinding.root.post {
-            // 设置富文本（延迟执行，不阻塞页面显示）
+        // 富文本延后到首帧绘制完成后执行，避免阻塞首屏
+        Looper.myQueue().addIdleHandler {
             setupRichText()
+            false // 只执行一次
         }
-
-        // 初始化视频任务视图（空方法，实际数据在 initData 中加载）
-        setupVideoTasks()
-        // 初始化每日奖励视图（空方法，实际数据在 initData 中加载）
-        setupDailyRewards()
     }
 
+    private val orangeColor by lazy { "#FF953B".toColorInt() }
+
     /**
-     * 设置富文本样式
-     * 将关键数字和文字设置为橙色（#FF953B）并加粗
+     * 设置富文本样式（IdleHandler 中执行，不阻塞首帧）
      */
     private fun setupRichText() {
-        // 设置 video_tasks_desc1 的富文本
         val desc1Text = "每天可以领取7次去广告时长奖励,全部看完\n可获得4天无广告天气预报"
         val desc1Spannable = SpannableString(desc1Text)
-
-        // 高亮 "7次" - 橙色 + 粗体
         val index7ci = desc1Text.indexOf("领取7次")
         if (index7ci >= 0) {
             desc1Spannable.setSpan(
-                ForegroundColorSpan("#FF953B".toColorInt()),
+                ForegroundColorSpan(orangeColor),
                 index7ci,
                 index7ci + 2,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -111,7 +100,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         val index4tian = desc1Text.indexOf("4天无广告")
         if (index4tian >= 0) {
             desc1Spannable.setSpan(
-                ForegroundColorSpan("#FF953B".toColorInt()),
+                ForegroundColorSpan(orangeColor),
                 index4tian,
                 index4tian + 5,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -134,7 +123,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         val indexLianxu7 = title1Text.indexOf("连续7天")
         if (indexLianxu7 >= 0) {
             title1Spannable.setSpan(
-                ForegroundColorSpan("#FF953B".toColorInt()),
+                ForegroundColorSpan(orangeColor),
                 indexLianxu7,
                 indexLianxu7 + 4,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -151,7 +140,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         val index7to100 = title1Text.indexOf("7~720小时(1个月)无广告")
         if (index7to100 >= 0) {
             title1Spannable.setSpan(
-                ForegroundColorSpan("#FF953B".toColorInt()),
+                ForegroundColorSpan(orangeColor),
                 index7to100,
                 index7to100 + 8,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -174,7 +163,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
         val index7ciNote = noteText.indexOf("7次")
         if (index7ciNote >= 0) {
             noteSpannable.setSpan(
-                ForegroundColorSpan("#FF953B".toColorInt()),
+                ForegroundColorSpan(orangeColor),
                 index7ciNote,
                 index7ciNote + 2,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -227,74 +216,37 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
     }
 
     /**
-     * 初始化数据
-     * 加载去广告数据并观察数据变化
+     * 初始化数据 - 同步显示关键信息，异步加载完整数据
      */
     override fun initData() {
-        // 先快速显示剩余时长（同步加载，最快显示）
+        // 1. 同步设置剩余时长，最快显示（MMKV 读取极快）
+        updateRemainingTimeUi()
+
+        // 2. 注册 LiveData 观察者
+        viewModel.remainingDayLiveData.observe(this) { mBinding.remainingDayText.text = it }
+        viewModel.remainingHourLiveData.observe(this) { mBinding.remainingHourText.text = it }
+        viewModel.remainingDayUnitLiveData.observe(this) { mBinding.remainingDayUnit.text = it }
+        viewModel.remainingHourUnitLiveData.observe(this) { mBinding.remainingHourUnit.text = it }
+        viewModel.videoTasksLiveData.observe(this) { updateVideoTasks(it) }
+        viewModel.dailyRewardsLiveData.observe(this) { updateDailyRewards(it) }
+
+        // 3. 直接启动异步加载（ViewModel 内部用协程，不阻塞主线程）
+        viewModel.loadAdRemovalData()
+    }
+
+    private fun updateRemainingTimeUi() {
         val (days, hours, minutes) = AdRemovalManager.getRemainingTimeDetail()
         if (days >= 1) {
-            // 剩余时长 >= 1 天：显示「天数 + 小时」
-            mBinding.remainingDayText.text = String.format("%02d", days)
-            mBinding.remainingHourText.text = String.format("%02d", hours)
+            mBinding.remainingDayText.text = "%02d".format(days)
+            mBinding.remainingHourText.text = "%02d".format(hours)
             mBinding.remainingDayUnit.text = "天"
             mBinding.remainingHourUnit.text = "小时"
         } else {
-            // 剩余时长 < 1 天：显示「小时 + 分钟」
-            mBinding.remainingDayText.text = String.format("%02d", hours)
-            mBinding.remainingHourText.text = String.format("%02d", minutes)
+            mBinding.remainingDayText.text = "%02d".format(hours)
+            mBinding.remainingHourText.text = "%02d".format(minutes)
             mBinding.remainingDayUnit.text = "小时"
             mBinding.remainingHourUnit.text = "分钟"
         }
-
-        // 观察剩余时长数据变化
-        viewModel.remainingDayLiveData.observe(this) { remainingTime ->
-            mBinding.remainingDayText.text = remainingTime
-        }
-
-        viewModel.remainingHourLiveData.observe(this) { remainingTime ->
-            mBinding.remainingHourText.text = remainingTime
-        }
-
-        // 观察单位变化
-        viewModel.remainingDayUnitLiveData.observe(this) { unit ->
-            mBinding.remainingDayUnit.text = unit
-        }
-
-        viewModel.remainingHourUnitLiveData.observe(this) { unit ->
-            mBinding.remainingHourUnit.text = unit
-        }
-
-        // 观察视频任务数据变化
-        viewModel.videoTasksLiveData.observe(this) { tasks ->
-            updateVideoTasks(tasks)
-        }
-
-        // 观察每日奖励数据变化
-        viewModel.dailyRewardsLiveData.observe(this) { rewards ->
-            updateDailyRewards(rewards)
-        }
-
-        // 延迟加载完整数据（不阻塞页面显示）
-        mBinding.root.post {
-            viewModel.loadAdRemovalData()
-        }
-    }
-
-    /**
-     * 设置视频任务视图
-     * 初始化7个视频任务的显示文本
-     */
-    private fun setupVideoTasks() {
-        // 视频编号会在 updateVideoTasks 中设置，这里不需要单独设置
-    }
-
-    /**
-     * 设置每日奖励视图
-     * 初始化7天连续签到的显示文本
-     */
-    private fun setupDailyRewards() {
-        // 文本会在 updateDailyRewards 中设置
     }
 
     /**

@@ -27,7 +27,7 @@ class DailyRewardButton @JvmOverloads constructor(
         textSize = 14f
         minHeight = SizeUtils.dp2px(40f)
         minWidth = 0
-        checkmarkDrawable = ContextCompat.getDrawable(context, R.drawable.ic_chose)
+        checkmarkDrawable = ContextCompat.getDrawable(context, R.drawable.ic_seclected_org)
         setSelectedState(false)
     }
 
@@ -50,7 +50,7 @@ class DailyRewardButton @JvmOverloads constructor(
             } ?: setCompoundDrawables(null, null, null, null)
         } else {
             setBackgroundResource(R.drawable.bg_daily_reward_unselected)
-            setTextColor(ContextCompat.getColor(context, R.color.color_theme))
+            setTextColor(ContextCompat.getColor(context, R.color.color_42a0fb))
             setCompoundDrawables(null, null, null, null)
             setPadding(defaultPaddingLeft, defaultPaddingTop, defaultPaddingRight, defaultPaddingBottom)
         }

@@ -203,17 +203,7 @@
 
                 <include layout="@layout/item_setting"
                     android:id="@+id/layout_private"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/color_line"
-                    />
-
-                <include layout="@layout/item_setting"
-                    android:id="@+id/layout_remove_ad"
-                    />
-
+                
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
