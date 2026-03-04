@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import com.bytedance.sdk.openadsdk.AdSlot
 import com.bytedance.sdk.openadsdk.CSJAdError
 import com.bytedance.sdk.openadsdk.CSJSplashAd
+import android.os.Bundle
 import com.bytedance.sdk.openadsdk.TTAdNative
 import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.bytedance.sdk.openadsdk.TTRewardVideoAd
 import com.bytedance.sdk.openadsdk.TTNativeExpressAd
 import com.chunjing.tq.BuildConfig
 
@@ -170,6 +172,47 @@ object AdManager {
                 Log.e(TAG, "信息流广告加载失败: $code, $msg")
                 callback.onFail(code, msg ?: "加载失败")
             }
+        })
+    }
+
+    /**
+     * 加载并展示激励视频广告（用于去广告功能）
+     * @param codeId 激励视频广告位ID
+     * @param onReward 观看完成并获得奖励时回调，参数为是否有效
+     * @param onError 加载或展示失败时回调
+     */
+    fun loadRewardVideoAd(
+        activity: Activity,
+        codeId: String,
+        onReward: (isRewardValid: Boolean) -> Unit,
+        onError: (code: Int, msg: String) -> Unit
+    ) {
+        val adSlot = AdSlot.Builder().setCodeId(codeId).build()
+        TTAdSdk.getAdManager().createAdNative(activity).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {
+            override fun onError(code: Int, message: String?) {
+                Log.e(TAG, "激励视频加载失败: code=$code, msg=$message")
+                onError(code, message ?: "加载失败")
+            }
+
+            override fun onRewardVideoAdLoad(ad: TTRewardVideoAd?) {
+                ad ?: run { onError(-1, "广告为空"); return }
+                ad.setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener {
+                    override fun onAdShow() {}
+                    override fun onAdVideoBarClick() {}
+                    override fun onAdClose() {}
+                    override fun onVideoComplete() {}
+                    override fun onVideoError() { onError(-1, "播放出错") }
+                    override fun onRewardVerify(rewardVerify: Boolean, rewardAmount: Int, rewardName: String, errorCode: Int, errorMsg: String) {}
+                    override fun onRewardArrived(isRewardValid: Boolean, rewardType: Int, extraInfo: Bundle) {
+                        onReward(isRewardValid)
+                    }
+                    override fun onSkippedVideo() {}
+                })
+                ad.showRewardVideoAd(activity)
+            }
+
+            override fun onRewardVideoCached() {}
+            override fun onRewardVideoCached(ad: TTRewardVideoAd?) {}
         })
     }
 

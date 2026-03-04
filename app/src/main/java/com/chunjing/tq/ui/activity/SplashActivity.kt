@@ -15,6 +15,7 @@ import com.chunjing.tq.ext.checkGPSPermission
 import com.chunjing.tq.ext.startWidgetService
 import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.base.BaseActivity
+import com.chunjing.tq.utils.AdRemovalManager
 import com.chunjing.tq.utils.ContentUtil
 import com.goodtech.weatherlib.extension.startActivity
 import kotlinx.coroutines.Dispatchers
@@ -71,6 +72,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
     private fun loadSplashAd() {
         if (!ContentUtil.permissionGranted) {
+            isAdShowing = false
+            tryGoNext()
+            return
+        }
+        // 去广告有效期内不加载开屏广告
+        if (AdRemovalManager.isAdRemovalActive()) {
             isAdShowing = false
             tryGoNext()
             return

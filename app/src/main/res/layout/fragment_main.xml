@@ -114,4 +114,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
+    <!-- 去广告悬浮按钮 -->
+    <ImageButton
+        android:id="@+id/fab_remove_ad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/color_clear"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="70dp"
+        android:src="@drawable/ic_remove_ad"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

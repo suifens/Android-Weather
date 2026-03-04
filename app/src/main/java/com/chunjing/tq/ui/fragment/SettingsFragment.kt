@@ -15,11 +15,13 @@ import com.blankj.utilcode.util.PermissionUtils
 import com.chunjing.tq.R
 import com.chunjing.tq.databinding.FragmentSettingBinding
 import com.chunjing.tq.ext.*
+import com.chunjing.tq.modules.removeAd.RemoveAdActivity
 import com.chunjing.tq.ui.activity.AboutActivity
 import com.chunjing.tq.ui.activity.ContactActivity
 import com.chunjing.tq.ui.activity.WidgetSettingActivity
 import com.chunjing.tq.ui.base.BaseFragment
 import com.chunjing.tq.ui.base.BaseWebActivity
+import com.goodtech.weatherlib.ext.clickNoRepeat
 import com.goodtech.weatherlib.extension.startActivity
 import com.goodtech.weatherlib.utils.SpUtils
 
@@ -114,7 +116,9 @@ class SettingsFragment : BaseFragment<FragmentSettingBinding>() {
     }
 
     override fun initEvent() {
-
+        mBinding.fabRemoveAd.clickNoRepeat {
+            RemoveAdActivity.startActivity(requireContext())
+        }
     }
 
     @SuppressLint("SetTextI18n")

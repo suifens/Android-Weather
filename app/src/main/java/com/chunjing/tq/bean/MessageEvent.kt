@@ -9,6 +9,8 @@ data class MessageEvent(
     var locationChanged: Boolean = false,
     //  选中的城市
     var selectedCityId: String = "",
+    //  去广告后需要刷新界面（隐藏广告）
+    var needReload: Boolean = false,
 )
 
 

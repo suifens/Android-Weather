@@ -88,11 +88,11 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
      * 配置station bar
      */
     public void configStationBar(View stationBar) {
+        immersionStatusBar();
+
         ConstraintLayout.LayoutParams bars = new ConstraintLayout.LayoutParams(stationBar.getLayoutParams());
         bars.height = bars.height + BarUtils.getStatusBarHeight();
         stationBar.setLayoutParams(bars);
-
-        immersionStatusBar();
     }
 
     /**

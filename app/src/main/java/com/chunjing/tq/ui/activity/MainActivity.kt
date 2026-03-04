@@ -35,6 +35,7 @@ import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.base.BaseActivity
 import com.chunjing.tq.ui.fragment.CalendarFragment
 import com.chunjing.tq.ui.fragment.SettingsFragment
+import com.chunjing.tq.utils.AdRemovalManager
 import com.chunjing.tq.utils.ContentUtil
 import com.chunjing.tq.utils.ShareFileUtils
 import java.io.File
@@ -243,7 +244,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         if (isFirstLoad && ContentUtil.permissionGranted) {
             isFirstLoad = false
-            loadInterstitialFullAd()
+            if (!AdRemovalManager.isAdRemovalActive()) {
+                loadInterstitialFullAd()
+            }
         }
     }
 

@@ -71,6 +71,11 @@
         tools:targetApi="31"
         tools:replace="android:label,android:allowBackup" >
         <activity
+            android:name=".modules.removeAd.RemoveAdActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
             android:name=".ui.activity.PeripheralActivity"
             android:exported="false"
             android:launchMode="singleTask"
@@ -392,11 +397,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/pangle_file_paths" />
         </provider>
-
-        <provider
-            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
-            android:authorities="${applicationId}.TTMultiProvider"
-            android:exported="false" />
         <!-- 穿山甲 end================== -->
 
         <!-- baidu start================== -->
@@ -443,12 +443,13 @@
         <activity
             android:name="com.qq.e.ads.PortraitADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:replace="android:configChanges" />
         <activity
             android:name="com.qq.e.ads.LandscapeADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape"
-            tools:replace="android:screenOrientation" />
+            tools:replace="android:screenOrientation,android:configChanges" />
 
         <!-- 声明SDK所需要的组件 -->
         <service
@@ -458,7 +459,8 @@
 
         <activity
             android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            tools:replace="android:configChanges" />
         <!-- GDT end================== -->
 
 

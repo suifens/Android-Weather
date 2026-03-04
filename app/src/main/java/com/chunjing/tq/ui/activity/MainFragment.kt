@@ -16,9 +16,11 @@ import com.chunjing.tq.db.entity.CityEntity
 import com.chunjing.tq.db.entity.WeatherBgEntity
 import com.chunjing.tq.imageLoader
 import com.chunjing.tq.mainViewModel
+import com.chunjing.tq.modules.removeAd.RemoveAdActivity
 import com.chunjing.tq.ui.activity.vm.MainViewModel
 import com.chunjing.tq.ui.base.BaseVmFragment
 import com.chunjing.tq.ui.fragment.WeatherFragment
+import com.goodtech.weatherlib.ext.clickNoRepeat
 import com.goodtech.weatherlib.extension.startActivity
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -109,6 +111,10 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
             } else {
                 mCurIndex = it
             }
+        }
+        mBinding.fabRemoveAd.clickNoRepeat {
+            // 启动去广告页面
+            RemoveAdActivity.startActivity(requireActivity())
         }
     }
 

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/private_station_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_remove_ad"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/button_back"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginBottom="4dp"
+                android:background="@color/color_clear"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="看视频去广告"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/status_section"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:layout_constraintTop_toBottomOf="@id/top_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <TextView
+                android:id="@+id/status_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="去广告时长"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:alpha="0.8"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <LinearLayout
+                android:id="@+id/remainingLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/status_title"
+                >
+
+                <TextView
+                    android:id="@+id/remaining_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="剩余: "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/status_title" />
+
+                <com.chunjing.tq.utils.font.AlternateBoldTextView
+                    android:id="@+id/remaining_day_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:textColor="@color/white"
+                    android:textSize="40sp" />
+
+                <TextView
+                    android:id="@+id/remaining_day_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="天"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:padding="4dp"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/status_title" />
+
+                <com.chunjing.tq.utils.font.AlternateBoldTextView
+                    android:id="@+id/remaining_hour_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:textColor="@color/white"
+                    android:textSize="40sp"
+                    />
+
+                <TextView
+                    android:id="@+id/remaining_hour_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="小时"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:padding="4dp"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/status_title" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/renew_button"
+                android:layout_width="67dp"
+                android:layout_height="30dp"
+                android:text="续时长"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:background="@drawable/bg_button_orange"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintTop_toTopOf="@id/remainingLayout"
+                app:layout_constraintBottom_toBottomOf="@id/remainingLayout"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/info_banner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="看视频领去广告时长、免费享无广告天气预报"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:background="@drawable/bg_circle_white_10"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/remainingLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/private_station_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Video Tasks Section -->
+            <TextView
+                android:id="@+id/video_tasks_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获得去广告权益时长"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/video_tasks_desc1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="每天可以领取7次去广告时长奖励,全部看完\n可获得4天无广告天气预报"
+                android:textColor="@color/color_8f"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/video_tasks_title"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <!-- Video Tasks Grid -->
+            <GridLayout
+                android:id="@+id/video_tasks_grid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="2"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/video_tasks_desc1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <com.chunjing.tq.modules.removeAd.view.VideoTaskView
+                    android:id="@+id/video_task_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.VideoTaskView
+                    android:id="@+id/video_task_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.VideoTaskView
+                    android:id="@+id/video_task_3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.VideoTaskView
+                    android:id="@+id/video_task_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.VideoTaskView
+                    android:id="@+id/video_task_5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.VideoTaskView
+                    android:id="@+id/video_task_6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.VideoTaskView
+                    android:id="@+id/video_task_7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+            </GridLayout>
+
+            <TextView
+                android:id="@+id/video_tasks_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="第2天可重新领取7次奖励"
+                android:textColor="@color/color_8f"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:padding="10dp"
+                app:layout_constraintTop_toBottomOf="@id/video_tasks_grid"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F6F6F6"
+                app:layout_constraintTop_toBottomOf="@id/video_tasks_note"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <!-- Daily Rewards Section -->
+            <TextView
+                android:id="@+id/daily_rewards_title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="连续7天看视频领取奖励,必得免费7~100天无广告天气预报"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:padding="10dp"
+                app:layout_constraintTop_toBottomOf="@id/video_tasks_note"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <!-- Daily Rewards Grid -->
+            <GridLayout
+                android:id="@+id/daily_rewards_grid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="2"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/daily_rewards_title1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+
+                <com.chunjing.tq.modules.removeAd.view.DailyRewardButton
+                    android:id="@+id/day_1_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.DailyRewardButton
+                    android:id="@+id/day_2_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.DailyRewardButton
+                    android:id="@+id/day_3_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.DailyRewardButton
+                    android:id="@+id/day_4_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.DailyRewardButton
+                    android:id="@+id/day_5_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.DailyRewardButton
+                    android:id="@+id/day_6_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+                <com.chunjing.tq.modules.removeAd.view.DailyRewardButton
+                    android:id="@+id/day_7_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp" />
+
+            </GridLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
