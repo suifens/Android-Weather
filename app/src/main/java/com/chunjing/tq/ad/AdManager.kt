@@ -2,14 +2,14 @@ package com.chunjing.tq.ad
 
 import android.app.Activity
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import com.bytedance.sdk.openadsdk.AdSlot
-import com.bytedance.sdk.openadsdk.TTAdConstant
+import com.bytedance.sdk.openadsdk.CSJAdError
+import com.bytedance.sdk.openadsdk.CSJSplashAd
 import com.bytedance.sdk.openadsdk.TTAdNative
 import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.bytedance.sdk.openadsdk.TTNativeExpressAd
-import com.bytedance.sdk.openadsdk.TTSplashAd
-import com.bytedance.sdk.openadsdk.mediation.ad.MediationAdSlot
 import com.chunjing.tq.BuildConfig
 
 object AdManager {
@@ -24,67 +24,62 @@ object AdManager {
 
     /**
      * 加载开屏广告
+     * @param onAdClose 广告关闭时的回调，可为 null
      */
     fun loadSplashAd(
         activity: Activity,
         container: ViewGroup,
-        callback: AdCallback<TTSplashAd>
+        callback: AdCallback<CSJSplashAd>,
+        onAdClose: (() -> Unit)? = null
     ) {
+        val width = activity.resources.displayMetrics.widthPixels
+        val height = activity.resources.displayMetrics.heightPixels
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(activity)
         val adSlot = AdSlot.Builder()
             .setCodeId(BuildConfig.PGE_SPLASH_POS_ID)
-            .setExpressViewAcceptedSize(
-                activity.resources.displayMetrics.widthPixels.toFloat(),
-                activity.resources.displayMetrics.heightPixels.toFloat()
-            )
+            .setExpressViewAcceptedSize(width.toFloat(), height.toFloat())
             .build()
 
         adNativeLoader.loadSplashAd(adSlot, object : TTAdNative.CSJSplashAdListener {
-            override fun onSplashLoadSuccess(ad: TTSplashAd?) {
+            override fun onSplashLoadSuccess(ad: CSJSplashAd) {
                 Log.d(TAG, "开屏广告加载成功")
             }
 
-            override fun onSplashLoadFail(ad: TTSplashAd?, code: Int, msg: String?) {
-                Log.e(TAG, "开屏广告加载失败: $code, $msg")
-                callback.onFail(code, msg ?: "加载失败")
+            override fun onSplashLoadFail(csjAdError: CSJAdError) {
+                Log.e(TAG, "开屏广告加载失败: ${csjAdError.code}, ${csjAdError.msg}")
+                callback.onFail(csjAdError.code, csjAdError.msg ?: "加载失败")
             }
 
-            override fun onSplashRenderSuccess(ad: TTSplashAd?) {
+            override fun onSplashRenderSuccess(ad: CSJSplashAd) {
                 Log.d(TAG, "开屏广告渲染成功")
-                ad?.let {
-                    callback.onSuccess(it)
-                    showSplashAd(activity, container, it)
+                ad.setSplashAdListener(object : CSJSplashAd.SplashAdListener {
+                    override fun onSplashAdShow(csjSplashAd: CSJSplashAd) {
+                        Log.d(TAG, "开屏广告展示")
+                    }
+
+                    override fun onSplashAdClick(csjSplashAd: CSJSplashAd) {
+                        Log.d(TAG, "开屏广告点击")
+                    }
+
+                    override fun onSplashAdClose(csjSplashAd: CSJSplashAd, closeType: Int) {
+                        Log.d(TAG, "开屏广告关闭: $closeType")
+                        container.removeAllViews()
+                        onAdClose?.invoke()
+                    }
+                })
+                val splashView: View? = ad.splashView
+                if (splashView != null) {
+                    container.removeAllViews()
+                    container.addView(splashView)
                 }
+                callback.onSuccess(ad)
             }
 
-            override fun onSplashRenderFail(ad: TTSplashAd?, code: Int, msg: String?) {
-                Log.e(TAG, "开屏广告渲染失败: $code, $msg")
-                callback.onFail(code, msg ?: "渲染失败")
+            override fun onSplashRenderFail(ad: CSJSplashAd, csjAdError: CSJAdError) {
+                Log.e(TAG, "开屏广告渲染失败: ${csjAdError.code}, ${csjAdError.msg}")
+                callback.onFail(csjAdError.code, csjAdError.msg ?: "渲染失败")
             }
         }, AD_TIME_OUT)
-    }
-
-    private fun showSplashAd(activity: Activity, container: ViewGroup, ad: TTSplashAd) {
-        ad.setSplashAdListener(object : TTSplashAd.SplashAdListener {
-            override fun onSplashAdShow(ad: TTSplashAd?) {
-                Log.d(TAG, "开屏广告展示")
-            }
-
-            override fun onSplashAdClick(ad: TTSplashAd?) {
-                Log.d(TAG, "开屏广告点击")
-            }
-
-            override fun onSplashAdClose(ad: TTSplashAd?, closeType: Int) {
-                Log.d(TAG, "开屏广告关闭: $closeType")
-                container.removeAllViews()
-            }
-        })
-
-        val splashView = ad.splashView
-        if (splashView != null) {
-            container.removeAllViews()
-            container.addView(splashView)
-        }
     }
 
     /**

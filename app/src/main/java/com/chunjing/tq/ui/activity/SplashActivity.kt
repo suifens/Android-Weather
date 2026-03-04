@@ -5,7 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.*
-import com.bytedance.sdk.openadsdk.TTSplashAd
+import com.bytedance.sdk.openadsdk.CSJSplashAd
 import com.chunjing.tq.R
 import com.chunjing.tq.ad.AdManager
 import com.chunjing.tq.databinding.ActivitySplashBinding
@@ -76,39 +76,23 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             return
         }
 
-        AdManager.loadSplashAd(this, mBinding.splashContainer, object : AdManager.AdCallback<TTSplashAd> {
-            override fun onSuccess(ad: TTSplashAd) {
-                Log.d(TAG, "开屏广告加载成功")
-                ad.setSplashAdListener(object : TTSplashAd.SplashAdListener {
-                    override fun onSplashAdShow(ad: TTSplashAd?) {
-                        Log.d(TAG, "开屏广告展示")
-                    }
-
-                    override fun onSplashAdClick(ad: TTSplashAd?) {
-                        Log.d(TAG, "开屏广告点击")
-                    }
-
-                    override fun onSplashAdClose(ad: TTSplashAd?, closeType: Int) {
-                        Log.d(TAG, "开屏广告关闭: $closeType")
-                        mBinding.splashContainer.removeAllViews()
-                        isAdShowing = false
-                        tryGoNext()
-                    }
-                })
-                val splashView = ad.splashView
-                if (splashView != null) {
-                    mBinding.splashContainer.removeAllViews()
-                    mBinding.splashContainer.addView(splashView)
+        AdManager.loadSplashAd(this, mBinding.splashContainer,
+            object : AdManager.AdCallback<CSJSplashAd> {
+                override fun onSuccess(ad: CSJSplashAd) {
                     isAdShowing = true
                 }
-            }
 
-            override fun onFail(code: Int, msg: String) {
-                Log.e(TAG, "开屏广告加载失败: $code, $msg")
+                override fun onFail(code: Int, msg: String) {
+                    Log.e(TAG, "开屏广告加载失败: $code, $msg")
+                    isAdShowing = false
+                    tryGoNext()
+                }
+            },
+            onAdClose = {
                 isAdShowing = false
                 tryGoNext()
             }
-        })
+        )
     }
 
     private fun tryGoNext() {
