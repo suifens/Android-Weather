@@ -8,10 +8,13 @@ import com.bytedance.sdk.openadsdk.AdSlot
 import com.bytedance.sdk.openadsdk.CSJAdError
 import com.bytedance.sdk.openadsdk.CSJSplashAd
 import android.os.Bundle
+import com.bytedance.sdk.openadsdk.TTAdDislike
 import com.bytedance.sdk.openadsdk.TTAdNative
 import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.bytedance.sdk.openadsdk.TTFeedAd
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd
 import com.bytedance.sdk.openadsdk.TTNativeExpressAd
+import com.bytedance.sdk.openadsdk.mediation.ad.MediationExpressRenderListener
 import com.chunjing.tq.BuildConfig
 
 object AdManager {
@@ -217,7 +220,77 @@ object AdManager {
     }
 
     /**
-     * 展示信息流广告
+     * 加载 TTFeedAd 类型信息流广告（使用 loadFeedAd 接口）
+     * 支持模板(Express)和原生(Native)两种形式，当前仅展示模板广告
+     */
+    fun loadTTFeedAd(
+        activity: Activity,
+        codeId: String = BuildConfig.PGE_FEED_POS_ID,
+        width: Int,
+        callback: AdCallback<TTFeedAd>
+    ) {
+        val adSlot = AdSlot.Builder()
+            .setCodeId(codeId)
+            .setExpressViewAcceptedSize(width.toFloat(), 0F)
+            .setAdCount(1)
+            .build()
+
+        TTAdSdk.getAdManager().createAdNative(activity).loadFeedAd(adSlot, object : TTAdNative.FeedAdListener {
+            override fun onError(code: Int, msg: String?) {
+                Log.e(TAG, "TTFeedAd 加载失败: code=$code, msg=$msg")
+                callback.onFail(code, msg ?: "加载失败")
+            }
+
+            override fun onFeedAdLoad(ads: MutableList<TTFeedAd>?) {
+                if (ads.isNullOrEmpty()) {
+                    callback.onFail(-1, "广告列表为空")
+                    return
+                }
+                Log.d(TAG, "TTFeedAd 加载成功")
+                callback.onSuccess(ads[0])
+            }
+        })
+    }
+
+    /**
+     * 展示 TTFeedAd 信息流广告
+     * 支持模板(Express)类型；原生(Native)类型需要 FeedAdUtils，当前不展示
+     */
+    fun showTTFeedAd(activity: Activity, container: ViewGroup, feedAd: TTFeedAd) {
+        feedAd.setDislikeCallback(activity, object : TTAdDislike.DislikeInteractionCallback {
+            override fun onShow() {}
+            override fun onSelected(position: Int, value: String?, enforce: Boolean) {
+                container.removeAllViews()
+            }
+            override fun onCancel() {}
+        })
+
+        val manager = feedAd.mediationManager
+        if (manager != null && manager.isExpress) {
+            feedAd.setExpressRenderListener(object : MediationExpressRenderListener {
+                override fun onRenderSuccess(view: View?, w: Float, h: Float, b: Boolean) {
+                    Log.d(TAG, "TTFeedAd Express 渲染成功")
+                    val expressView = feedAd.adView
+                    if (expressView != null) {
+                        (expressView.parent as? ViewGroup)?.removeView(expressView)
+                        container.removeAllViews()
+                        container.addView(expressView)
+                    }
+                }
+                override fun onRenderFail(view: View?, msg: String?, code: Int) {
+                    Log.e(TAG, "TTFeedAd Express 渲染失败: code=$code, msg=$msg")
+                }
+                override fun onAdClick() { Log.d(TAG, "TTFeedAd 点击") }
+                override fun onAdShow() { Log.d(TAG, "TTFeedAd 展示") }
+            })
+            feedAd.render()
+        } else {
+            Log.w(TAG, "TTFeedAd 为非模板类型，需要 FeedAdUtils 支持，当前不展示")
+        }
+    }
+
+    /**
+     * 展示信息流广告（TTNativeExpressAd 模板广告）
      */
     fun showFeedAd(container: ViewGroup, ad: TTNativeExpressAd) {
         ad.setExpressInteractionListener(object : TTNativeExpressAd.ExpressAdInteractionListener {

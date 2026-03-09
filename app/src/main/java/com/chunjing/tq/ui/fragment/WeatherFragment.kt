@@ -8,14 +8,18 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chunjing.tq.R
+import com.bytedance.sdk.openadsdk.TTFeedAd
+import com.chunjing.tq.ad.AdManager
 import com.chunjing.tq.adapter.Forecast15dAdapter
 import com.chunjing.tq.adapter.ForecastHourlyAdapter
 import com.chunjing.tq.adapter.LifeListAdapter
 import com.chunjing.tq.bean.Daily
 import com.chunjing.tq.bean.Hourly
+import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.bean.LifeEntity
 import com.chunjing.tq.bean.LifeItemBean
 import com.chunjing.tq.bean.WeatherBean
@@ -34,6 +38,7 @@ import com.chunjing.tq.dialog.AlarmPopup
 import com.chunjing.tq.dialog.DailyListPopup
 import com.chunjing.tq.dialog.LifeDetailsPopup
 import com.chunjing.tq.dialog.TravelPopup
+import com.chunjing.tq.BuildConfig
 import com.chunjing.tq.ext.LINK_CAILING
 import com.chunjing.tq.ext.LINK_TAIFENG
 import com.chunjing.tq.mainViewModel
@@ -42,6 +47,7 @@ import com.chunjing.tq.ui.activity.PeripheralActivity
 import com.chunjing.tq.ui.base.BaseVmFragment
 import com.chunjing.tq.ui.base.BaseWebActivity
 import com.chunjing.tq.ui.fragment.vm.WeatherViewModel
+import com.chunjing.tq.utils.AdRemovalManager
 import com.chunjing.tq.utils.AqiHelper
 import com.chunjing.tq.utils.ContentUtil
 import com.goodtech.weatherlib.extension.startActivity
@@ -49,12 +55,16 @@ import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.utils.DateUtil
 import com.goodtech.weatherlib.utils.WeatherUtils
 import com.lxj.xpopup.XPopup
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *  天气详情页面
  *
  * @constructor Create empty Weather fragment
  */
+@SuppressLint("SetTextI18n")
 class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>() {
     private val TAG = "WeatherFragment"
 
@@ -85,6 +95,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     private lateinit var forecast15dBinding: LayoutForecast15dBinding
     //  生活服务
     private lateinit var lifeIndicatorBinding: LayoutLifeIndicatorBinding
+    private var isAdLoadAttempted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +117,9 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     override fun onStart() {
         super.onStart()
         viewModel.loadCache(mCityId)
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
     }
 
     override fun onPause() {
@@ -133,6 +147,24 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         viewModel.lifeLiveData.value?.let {
             mLifeAdapter?.updateData(it)
+        }
+
+        // 从去广告页返回时，若在去广告期间则隐藏广告
+        if (AdRemovalManager.isAdRemovalActive()) {
+            hideAd()
+            return
+        }
+        // 第一次显示时异步请求广告
+        if (!isAdLoadAttempted) {
+            isAdLoadAttempted = true
+            view?.post { loadTTFeedAd() }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
         }
     }
 
@@ -200,6 +232,49 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         }
     }
 
+    /**
+     * 加载并展示 TTFeedAd 信息流广告（参考 Demo 中 WeatherFragment 的广告实现）
+     * 若在去广告有效期内则不加载
+     */
+    private fun loadTTFeedAd() {
+        if (AdRemovalManager.isAdRemovalActive()) {
+            mBinding.adBannerContainer.visibility = View.GONE
+            mBinding.adBannerContainer.removeAllViews()
+            return
+        }
+        val activity = requireActivity()
+        val width = SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat()) - 40
+        AdManager.loadTTFeedAd(activity, BuildConfig.PGE_FEED_POS_ID, width, object : AdManager.AdCallback<TTFeedAd> {
+            override fun onSuccess(ad: TTFeedAd) {
+                if (AdRemovalManager.isAdRemovalActive()) {
+                    hideAd()
+                    return
+                }
+                mBinding.adBannerContainer.visibility = View.VISIBLE
+                AdManager.showTTFeedAd(activity, mBinding.adBannerContainer, ad)
+            }
+
+            override fun onFail(code: Int, msg: String) {
+                Log.e(TAG, "TTFeedAd 加载失败: code=$code, msg=$msg")
+            }
+        })
+    }
+
+    /**
+     * 隐藏广告
+     */
+    private fun hideAd() {
+        mBinding.adBannerContainer.visibility = View.GONE
+        mBinding.adBannerContainer.removeAllViews()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MessageEvent) {
+        if (event.needReload) {
+            hideAd()
+        }
+    }
+
     override fun initEvent() {
         mBinding.refreshLayout.setOnRefreshListener {
             loadData()
@@ -262,7 +337,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         viewModel.loadCache(mCityId)
     }
 
-    @SuppressLint("SetTextI18n")
     fun showWeatherNow(now: WeatherBean) {
         mWeather = now
         //  当前天气
