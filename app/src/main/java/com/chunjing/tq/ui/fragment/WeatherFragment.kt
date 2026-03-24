@@ -237,6 +237,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
      * 若在去广告有效期内则不加载
      */
     private fun loadTTFeedAd() {
+        if (!isAdded) return
         if (AdRemovalManager.isAdRemovalActive()) {
             mBinding.adBannerContainer.visibility = View.GONE
             mBinding.adBannerContainer.removeAllViews()
@@ -246,12 +247,13 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         val width = SizeUtils.px2dp(ScreenUtils.getScreenWidth().toFloat()) - 40
         AdManager.loadTTFeedAd(activity, BuildConfig.PGE_FEED_POS_ID, width, object : AdManager.AdCallback<TTFeedAd> {
             override fun onSuccess(ad: TTFeedAd) {
+                if (!isAdded) return
                 if (AdRemovalManager.isAdRemovalActive()) {
                     hideAd()
                     return
                 }
                 mBinding.adBannerContainer.visibility = View.VISIBLE
-                AdManager.showTTFeedAd(activity, mBinding.adBannerContainer, ad)
+                AdManager.showTTFeedAd(requireActivity(), mBinding.adBannerContainer, ad)
             }
 
             override fun onFail(code: Int, msg: String) {

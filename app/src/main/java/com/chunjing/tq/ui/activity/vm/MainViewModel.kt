@@ -1,12 +1,12 @@
 package com.chunjing.tq.ui.activity.vm
 
 import android.app.Application
+import android.location.Geocoder
+import android.location.Location
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.amap.api.location.AMapLocation
-import com.amap.api.location.AMapLocationClient
-import com.amap.api.location.AMapLocationClientOption
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chunjing.tq.MyApp
@@ -30,11 +30,18 @@ import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.utils.DateUtil
 import com.goodtech.weatherlib.utils.SpUtils
 import com.goodtech.weatherlib.utils.WeatherUtils
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 
@@ -308,41 +315,69 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
 
     fun getLocation() {
         loadState.postValue(LoadState.Start("正在获取位置..."))
-        //初始化定位
-        AMapLocationClient.updatePrivacyShow(app, true, true)
-        AMapLocationClient.updatePrivacyAgree(app, true)
-        val mLocationClient = AMapLocationClient(app)
-        //声明AMapLocationClientOption对象
-        val mLocationOption = AMapLocationClientOption()
-        //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
-        mLocationOption.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
-        //设置定位间隔,单位毫秒,默认为2000ms，最低1000ms。
-        mLocationOption.interval = 3000
-        //单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
-        mLocationOption.httpTimeOut = 15000
-        //获取最近3s内精度最高的一次定位结果
-        mLocationOption.isOnceLocationLatest = true
-        //设置定位回调监听
-        mLocationClient.setLocationListener { aMapLocation ->
-            if (aMapLocation.errorCode == 0) {
-                val city = location2CityEntity(aMapLocation)
-                curLocation.value = city
-                launchSilent {
-                    AppRepo.getInstance().addCity(city)
-                    lasLocation = System.currentTimeMillis()
-//                    AppRepo.getInstance().saveCache(LAST_LOCATION_TIME, System.currentTimeMillis())
-                }
-            } else {
-                loadState.value = LoadState.Error("获取定位失败,请重试")
-            }
-            loadState.value = LoadState.Finish
-            mLocationClient.onDestroy()
-        }
-        //给定位客户端对象设置定位参数
-        mLocationClient.setLocationOption(mLocationOption)
-        //启动定位
-        mLocationClient.startLocation()
+        val fusedClient = LocationServices.getFusedLocationProviderClient(app)
+        val tokenSource = CancellationTokenSource()
 
+        try {
+            fusedClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, tokenSource.token)
+                .addOnSuccessListener { location ->
+                    if (location != null) {
+                        handleLocationSuccess(location)
+                    } else {
+                        requestSingleUpdateFallback(fusedClient)
+                    }
+                }
+                .addOnFailureListener {
+                    requestSingleUpdateFallback(fusedClient)
+                }
+        } catch (securityException: SecurityException) {
+            loadState.postValue(LoadState.Error("定位权限不足，请重试"))
+            loadState.postValue(LoadState.Finish)
+        } catch (e: Exception) {
+            loadState.postValue(LoadState.Error("获取定位失败,请重试"))
+            loadState.postValue(LoadState.Finish)
+        }
+    }
+
+    private fun requestSingleUpdateFallback(fusedClient: com.google.android.gms.location.FusedLocationProviderClient) {
+        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2000L)
+            .setWaitForAccurateLocation(true)
+            .setMaxUpdates(1)
+            .setDurationMillis(15000L)
+            .build()
+
+        val callback = object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                fusedClient.removeLocationUpdates(this)
+                val location = result.lastLocation
+                if (location != null) {
+                    handleLocationSuccess(location)
+                } else {
+                    loadState.postValue(LoadState.Error("获取定位失败,请重试"))
+                    loadState.postValue(LoadState.Finish)
+                }
+            }
+        }
+
+        try {
+            fusedClient.requestLocationUpdates(request, callback, Looper.getMainLooper())
+        } catch (securityException: SecurityException) {
+            loadState.postValue(LoadState.Error("定位权限不足，请重试"))
+            loadState.postValue(LoadState.Finish)
+        } catch (e: Exception) {
+            loadState.postValue(LoadState.Error("获取定位失败,请重试"))
+            loadState.postValue(LoadState.Finish)
+        }
+    }
+
+    private fun handleLocationSuccess(location: Location) {
+        val city = location2CityEntity(location)
+        curLocation.postValue(city)
+        launchSilent {
+            AppRepo.getInstance().addCity(city)
+            lasLocation = System.currentTimeMillis()
+        }
+        loadState.postValue(LoadState.Finish)
     }
 
     fun getCacheLocation() {
@@ -371,15 +406,36 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
         return needShow
     }
 
-    private fun location2CityEntity(location: AMapLocation): CityEntity {
+    private fun location2CityEntity(location: Location): CityEntity {
         val cityEntity = CityEntity()
+        var cityName = ""
+        var district = ""
+        var poiName = ""
+        var cityCode = ""
+
+        try {
+            val geocoder = Geocoder(app, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            val address = addresses?.firstOrNull()
+            cityName = address?.locality ?: address?.subAdminArea ?: ""
+            district = address?.subLocality ?: address?.subAdminArea ?: ""
+            poiName = address?.featureName ?: ""
+            cityCode = address?.postalCode ?: ""
+        } catch (e: Exception) {
+            // ignore geocoder errors and keep fallback values
+        }
+
+        val fallbackName = if (cityName.isBlank()) "当前位置" else cityName
         cityEntity.cityId = LOCATION_ID
-        cityEntity.cityName = location.city
-        cityEntity.cityCode = location.cityCode
-        cityEntity.shortName = location.city
-        cityEntity.mergerName = "${location.district} ${location.poiName}"
+        cityEntity.cityName = fallbackName
+        cityEntity.cityCode = cityCode
+        cityEntity.shortName = fallbackName
+        cityEntity.mergerName = listOf(district, poiName).filter { it.isNotBlank() }.joinToString(" ")
         cityEntity.latitude = location.latitude.toString()
         cityEntity.longitude = location.longitude.toString()
+        if (cityEntity.mergerName.isBlank()) {
+            cityEntity.mergerName = "${cityEntity.latitude}, ${cityEntity.longitude}"
+        }
         cityEntity.setLocal()
         return cityEntity
     }
