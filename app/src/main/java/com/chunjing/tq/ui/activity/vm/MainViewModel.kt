@@ -3,7 +3,6 @@ package com.chunjing.tq.ui.activity.vm
 import android.app.Application
 import android.location.Geocoder
 import android.location.Location
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -30,12 +29,10 @@ import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.utils.DateUtil
 import com.goodtech.weatherlib.utils.SpUtils
 import com.goodtech.weatherlib.utils.WeatherUtils
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
+import com.mapzen.android.lost.api.LocationListener
+import com.mapzen.android.lost.api.LocationRequest
+import com.mapzen.android.lost.api.LocationServices
+import com.mapzen.android.lost.api.LostApiClient
 import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.File
@@ -71,6 +68,8 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
     private val mBgMap = HashMap<String, WeatherBgEntity>()
 
     private val mWeatherMap = HashMap<String, WeatherBean>()
+    private var lostApiClient: LostApiClient? = null
+    private var locationListener: LocationListener? = null
 
     init {
     }
@@ -315,21 +314,13 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
 
     fun getLocation() {
         loadState.postValue(LoadState.Start("正在获取位置..."))
-        val fusedClient = LocationServices.getFusedLocationProviderClient(app)
-        val tokenSource = CancellationTokenSource()
-
+        val client = lostApiClient ?: createLostApiClient()
+        if (client.isConnected()) {
+            requestSingleUpdateFallback(client)
+            return
+        }
         try {
-            fusedClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, tokenSource.token)
-                .addOnSuccessListener { location ->
-                    if (location != null) {
-                        handleLocationSuccess(location)
-                    } else {
-                        requestSingleUpdateFallback(fusedClient)
-                    }
-                }
-                .addOnFailureListener {
-                    requestSingleUpdateFallback(fusedClient)
-                }
+            client.connect()
         } catch (securityException: SecurityException) {
             loadState.postValue(LoadState.Error("定位权限不足，请重试"))
             loadState.postValue(LoadState.Finish)
@@ -339,38 +330,85 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
         }
     }
 
-    private fun requestSingleUpdateFallback(fusedClient: com.google.android.gms.location.FusedLocationProviderClient) {
-        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2000L)
-            .setWaitForAccurateLocation(true)
-            .setMaxUpdates(1)
-            .setDurationMillis(15000L)
-            .build()
+    private fun createLostApiClient(): LostApiClient {
+        val client = LostApiClient.Builder(app)
+            .addConnectionCallbacks(object : LostApiClient.ConnectionCallbacks {
+                override fun onConnected() {
+                    requestSingleUpdateFallback(lostApiClient ?: return)
+                }
 
-        val callback = object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult) {
-                fusedClient.removeLocationUpdates(this)
-                val location = result.lastLocation
-                if (location != null) {
-                    handleLocationSuccess(location)
-                } else {
+                override fun onConnectionSuspended() {
                     loadState.postValue(LoadState.Error("获取定位失败,请重试"))
                     loadState.postValue(LoadState.Finish)
                 }
+            })
+            .build()
+        lostApiClient = client
+        return client
+    }
+
+    private fun requestSingleUpdateFallback(client: LostApiClient) {
+        val request = LocationRequest.create()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(2000L)
+            .setFastestInterval(1000L)
+
+        clearLocationListener()
+        locationListener = LocationListener { location ->
+            clearLocationListener()
+            if (location != null) {
+                handleLocationSuccess(location)
+            } else {
+                loadState.postValue(LoadState.Error("获取定位失败,请重试"))
+                loadState.postValue(LoadState.Finish)
             }
         }
 
         try {
-            fusedClient.requestLocationUpdates(request, callback, Looper.getMainLooper())
+            val lastKnown = LocationServices.FusedLocationApi.getLastLocation(client)
+            if (lastKnown != null) {
+                handleLocationSuccess(lastKnown)
+                return
+            }
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                client,
+                request,
+                locationListener ?: return
+            )
         } catch (securityException: SecurityException) {
+            clearLocationListener()
             loadState.postValue(LoadState.Error("定位权限不足，请重试"))
             loadState.postValue(LoadState.Finish)
         } catch (e: Exception) {
+            clearLocationListener()
             loadState.postValue(LoadState.Error("获取定位失败,请重试"))
             loadState.postValue(LoadState.Finish)
         }
     }
 
+    private fun clearLocationListener() {
+        val client = lostApiClient
+        val listener = locationListener
+        if (client != null && client.isConnected() && listener != null) {
+            try {
+                LocationServices.FusedLocationApi.removeLocationUpdates(client, listener)
+            } catch (_: Exception) {
+                // ignore cleanup errors
+            }
+        }
+        locationListener = null
+    }
+
     private fun handleLocationSuccess(location: Location) {
+        clearLocationListener()
+        val client = lostApiClient
+        if (client != null && client.isConnected()) {
+            try {
+                client.disconnect()
+            } catch (_: Exception) {
+                // ignore disconnect errors
+            }
+        }
         val city = location2CityEntity(location)
         curLocation.postValue(city)
         launchSilent {
@@ -632,6 +670,12 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
 
     override fun onCleared() {
         super.onCleared()
+        clearLocationListener()
+        try {
+            lostApiClient?.disconnect()
+        } catch (_: Exception) {
+            // ignore disconnect errors
+        }
         timer?.cancel()
     }
 

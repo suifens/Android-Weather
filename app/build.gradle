@@ -251,8 +251,8 @@ dependencies {
 
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.20'
 
-    //  Google FLP 定位
-    implementation 'com.google.android.gms:play-services-location:21.3.0'
+    //  LOST 定位（无 Google Play 服务依赖）
+    implementation 'com.mapzen.android:lost:3.0.4'
 
     // umeng
     //集成示例

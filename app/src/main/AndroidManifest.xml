@@ -201,6 +201,9 @@
             android:value="e723ff6bd86ffecbd6045c0d596e1724" />
 
         <service android:name="com.amap.api.location.APSService" /> <!-- </editor-fold> -->
+        <service
+            android:name="com.mapzen.android.lost.internal.GeofencingIntentService"
+            android:exported="false" />
         <!-- <editor-fold default-state="collapsed" desc="小组件"> -->
         <receiver
             android:name=".widget.WeatherWidgetSmall"
