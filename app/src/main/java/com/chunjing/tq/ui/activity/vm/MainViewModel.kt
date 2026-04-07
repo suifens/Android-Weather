@@ -3,7 +3,6 @@ package com.chunjing.tq.ui.activity.vm
 import android.app.Application
 import android.location.Geocoder
 import android.location.Location
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -30,12 +29,9 @@ import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.utils.DateUtil
 import com.goodtech.weatherlib.utils.SpUtils
 import com.goodtech.weatherlib.utils.WeatherUtils
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
+import com.wkq.location.LocationConfig
+import com.wkq.location.LocationKit
+import com.wkq.location.LocationType
 import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.File
@@ -315,52 +311,28 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
 
     fun getLocation() {
         loadState.postValue(LoadState.Start("正在获取位置..."))
-        val fusedClient = LocationServices.getFusedLocationProviderClient(app)
-        val tokenSource = CancellationTokenSource()
-
         try {
-            fusedClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, tokenSource.token)
-                .addOnSuccessListener { location ->
-                    if (location != null) {
-                        handleLocationSuccess(location)
-                    } else {
-                        requestSingleUpdateFallback(fusedClient)
-                    }
-                }
-                .addOnFailureListener {
-                    requestSingleUpdateFallback(fusedClient)
-                }
-        } catch (securityException: SecurityException) {
-            loadState.postValue(LoadState.Error("定位权限不足，请重试"))
-            loadState.postValue(LoadState.Finish)
-        } catch (e: Exception) {
-            loadState.postValue(LoadState.Error("获取定位失败,请重试"))
-            loadState.postValue(LoadState.Finish)
-        }
-    }
+            val config = LocationConfig()
+                .setLocationType(LocationType.FUSION)
+                .setMinTimeMs(1000L)
+                .setMinDistanceM(1f)
+                .setFilter(true)
+                .setFilterMin(1f)
+                .setFilterMax(200f)
+                .setTimeout(8000L)
 
-    private fun requestSingleUpdateFallback(fusedClient: com.google.android.gms.location.FusedLocationProviderClient) {
-        val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2000L)
-            .setWaitForAccurateLocation(true)
-            .setMaxUpdates(1)
-            .setDurationMillis(15000L)
-            .build()
-
-        val callback = object : LocationCallback() {
-            override fun onLocationResult(result: LocationResult) {
-                fusedClient.removeLocationUpdates(this)
-                val location = result.lastLocation
-                if (location != null) {
+            LocationKit.init(app, config)
+            LocationKit.startLocation { result ->
+                val location = result.location
+                if (result.success && location != null) {
+                    LocationKit.stopLocation()
                     handleLocationSuccess(location)
                 } else {
-                    loadState.postValue(LoadState.Error("获取定位失败,请重试"))
+                    LocationKit.stopLocation()
+                    loadState.postValue(LoadState.Error("获取定位失败: ${result.msg}"))
                     loadState.postValue(LoadState.Finish)
                 }
             }
-        }
-
-        try {
-            fusedClient.requestLocationUpdates(request, callback, Looper.getMainLooper())
         } catch (securityException: SecurityException) {
             loadState.postValue(LoadState.Error("定位权限不足，请重试"))
             loadState.postValue(LoadState.Finish)

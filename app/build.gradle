@@ -251,8 +251,7 @@ dependencies {
 
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.20'
 
-    //  Google FLP 定位
-    implementation 'com.google.android.gms:play-services-location:21.3.0'
+    //  原生定位（LocationKit）源码已内置到 app/src/main/java/com/wkq/location
 
     // umeng
     //集成示例
