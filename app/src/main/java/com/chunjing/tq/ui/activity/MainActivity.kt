@@ -38,9 +38,6 @@ import com.chunjing.tq.ui.fragment.SettingsFragment
 import com.chunjing.tq.utils.AdRemovalManager
 import com.chunjing.tq.utils.ContentUtil
 import com.chunjing.tq.utils.ShareFileUtils
-import java.io.File
-import java.io.FileOutputStream
-import com.goodtech.weatherlib.extension.startActivity
 import com.goodtech.weatherlib.extension.toast
 import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.utils.SpUtils
@@ -48,8 +45,9 @@ import com.lxj.xpopup.XPopup
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
@@ -157,14 +155,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         mainViewModel.getCacheLocation()
         checkUpdate()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(4000L)
-            if (mainViewModel.needShowRecommendAlert()) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    showRecommendAlert()
-                }
-            }
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            delay(4000L)
+//            if (mainViewModel.needShowRecommendAlert()) {
+//                CoroutineScope(Dispatchers.Main).launch {
+//                    showRecommendAlert()
+//                }
+//            }
+//        }
     }
 
     //<editor-fold desc="滑动返回">
