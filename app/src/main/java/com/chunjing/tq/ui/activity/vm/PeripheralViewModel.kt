@@ -1,7 +1,5 @@
 package com.chunjing.tq.ui.activity.vm
 
-import android.app.Application
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.constant.TimeConstants
 import com.blankj.utilcode.util.TimeUtils
@@ -15,7 +13,7 @@ import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_NOW
 /**
  * 周边天气ViewModel
  */
-class PeripheralViewModel(private val app: Application) : BaseViewModel(app) {
+class PeripheralViewModel : BaseViewModel() {
 
     val cities = MutableLiveData<List<CityEntity>>()
     private val weatherMap = mutableMapOf<String, WeatherBean>()

@@ -1,7 +1,6 @@
 package com.chunjing.tq.ui.activity.vm
 
 import android.annotation.SuppressLint
-import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.chunjing.tq.R
 import com.chunjing.tq.bean.calendar.*
@@ -10,6 +9,7 @@ import com.chunjing.tq.ext.JUHE_DAY_DETAIL
 import com.chunjing.tq.ext.JUHE_HOURS_ALMANAC
 import com.chunjing.tq.ext.JUHE_MONTH_HOLIDAY
 import com.chunjing.tq.ui.base.BaseViewModel
+import com.goodtech.weatherlib.BaseApp
 import com.goodtech.weatherlib.net.HttpUtils
 import com.goodtech.weatherlib.utils.SpUtils
 import com.google.gson.Gson
@@ -17,7 +17,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.delay
 
 
-class CalendarViewModel(val app: Application) : BaseViewModel(app) {
+class CalendarViewModel : BaseViewModel() {
 
     val dayDetail = MutableLiveData<DayDetail>()
     val dayAlmanac = MutableLiveData<DayAlmanac>()
@@ -26,7 +26,7 @@ class CalendarViewModel(val app: Application) : BaseViewModel(app) {
     var mHolidayList = MutableLiveData<List<Holiday>>()
     var mHolidayYear: String = "" //  加载假期的年份
 
-    val hourArray = app.resources.getStringArray(R.array.double_hour)
+    val hourArray = BaseApp.context.resources.getStringArray(R.array.double_hour)
 
     private val mDayDetails: MutableMap<String, DayDetail?> = HashMap()
     private val mDayAlmanacs: MutableMap<String, DayAlmanac?> = HashMap()

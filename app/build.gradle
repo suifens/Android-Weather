@@ -250,6 +250,7 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.6.1'
 
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.20'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:2.0.20'
 
     //  LOST 定位（无 Google Play 服务依赖）
     implementation 'com.mapzen.android:lost:3.0.4'

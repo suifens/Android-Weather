@@ -1,6 +1,5 @@
 package com.chunjing.tq.ui.activity.vm
 
-import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.chunjing.tq.bean.WeatherBean
 import com.chunjing.tq.db.AppRepo
@@ -9,7 +8,7 @@ import com.chunjing.tq.db.entity.LOCATION_ID
 import com.chunjing.tq.ui.base.BaseViewModel
 import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_NOW
 
-class CityManagerViewModel(app: Application) : BaseViewModel(app) {
+class CityManagerViewModel : BaseViewModel() {
 
     val cities = MutableLiveData<List<CityEntity>>()
 

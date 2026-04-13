@@ -1,6 +1,5 @@
 package com.chunjing.tq.ui.activity.vm
 
-import android.app.Application
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
@@ -21,6 +20,7 @@ import com.chunjing.tq.ext.JUHE_SOUL
 import com.chunjing.tq.ext.LAST_LOCATION_TIME
 import com.chunjing.tq.ext.WEATHER_URL
 import com.chunjing.tq.ui.base.BaseViewModel
+import com.goodtech.weatherlib.BaseApp
 import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_DAY
 import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_NOW
 import com.chunjing.tq.utils.ContentUtil
@@ -46,7 +46,7 @@ import java.util.TimerTask
 const val CACHE_RECOMMEND_TIME = "recommend_time"
 const val CACHE_RECOMMEND_INTERVAL = "recommend_interval"
 
-class MainViewModel(val app: Application) : BaseViewModel(app) {
+class MainViewModel : BaseViewModel() {
 
     val cities = MutableLiveData<List<CityEntity>>()
     val weatherMap = MutableLiveData<HashMap<String, WeatherBean>>()
@@ -331,7 +331,7 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
     }
 
     private fun createLostApiClient(): LostApiClient {
-        val client = LostApiClient.Builder(app)
+        val client = LostApiClient.Builder(BaseApp.context)
             .addConnectionCallbacks(object : LostApiClient.ConnectionCallbacks {
                 override fun onConnected() {
                     requestSingleUpdateFallback(lostApiClient ?: return)
@@ -452,7 +452,7 @@ class MainViewModel(val app: Application) : BaseViewModel(app) {
         var cityCode = ""
 
         try {
-            val geocoder = Geocoder(app, Locale.getDefault())
+            val geocoder = Geocoder(BaseApp.context, Locale.getDefault())
             val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
             val address = addresses?.firstOrNull()
             cityName = address?.locality ?: address?.subAdminArea ?: ""

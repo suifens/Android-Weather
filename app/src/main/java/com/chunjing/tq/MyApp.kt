@@ -1,6 +1,5 @@
 package com.chunjing.tq
 
-import android.app.Application
 import android.text.TextUtils
 import android.util.Log
 import androidx.lifecycle.ViewModelStore
@@ -24,8 +23,8 @@ import kotlin.properties.Delegates
 /**
  * com.chunjing.tq
  */
-val calendarVM: CalendarViewModel by lazy { MyApp.calendarVM}
-val mainViewModel: MainViewModel by lazy { MyApp.mainViewModel }
+val calendarVM: CalendarViewModel by lazy { MyApp.calendarVmInstance}
+val mainViewModel: MainViewModel by lazy { MyApp.mainViewModelInstance }
 val imageLoader: ImageLoader by lazy { MyApp.imageLoader }
 
 open class MyApp : BaseApp() {
@@ -33,8 +32,8 @@ open class MyApp : BaseApp() {
     private var mJPushRegId: String? = null
 
     companion object {
-        lateinit var calendarVM: CalendarViewModel
-        lateinit var mainViewModel: MainViewModel
+        lateinit var calendarVmInstance: CalendarViewModel
+        lateinit var mainViewModelInstance: MainViewModel
 
         val imageLoader: ImageLoader by lazy {
             ImageLoader.Builder(context)
@@ -51,8 +50,8 @@ open class MyApp : BaseApp() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        calendarVM = getAppViewModelProvider()[CalendarViewModel::class.java]
-        mainViewModel = getAppViewModelProvider()[MainViewModel::class.java]
+        calendarVmInstance = getAppViewModelProvider()[CalendarViewModel::class.java]
+        mainViewModelInstance = getAppViewModelProvider()[MainViewModel::class.java]
         MMKV.initialize(this)
 
         try {

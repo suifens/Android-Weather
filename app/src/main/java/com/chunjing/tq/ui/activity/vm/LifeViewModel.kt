@@ -1,6 +1,5 @@
 package com.chunjing.tq.ui.activity.vm
 
-import android.app.Application
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.chunjing.tq.bean.juhe.JuheBean
@@ -14,7 +13,7 @@ import com.goodtech.weatherlib.net.HttpUtils
 /**
  * com.chunjing.tq.ui.activity.vm
  */
-class LifeViewModel(val app: Application) : BaseViewModel(app) {
+class LifeViewModel : BaseViewModel() {
 
     val lifeLiveData = MutableLiveData<LifeEntity?>()
 

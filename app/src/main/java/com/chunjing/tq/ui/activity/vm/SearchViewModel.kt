@@ -1,6 +1,5 @@
 package com.chunjing.tq.ui.activity.vm
 
-import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.TimeUtils
 import com.chunjing.tq.R
@@ -10,11 +9,12 @@ import com.chunjing.tq.db.AppRepo
 import com.chunjing.tq.db.entity.CityEntity
 import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.base.BaseViewModel
+import com.goodtech.weatherlib.BaseApp
 import com.goodtech.weatherlib.net.HttpUtils
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 
-class SearchViewModel(private val app: Application) : BaseViewModel(app) {
+class SearchViewModel : BaseViewModel() {
 
     val searchResult = MutableLiveData<List<CityEntity>>()
 
@@ -41,7 +41,7 @@ class SearchViewModel(private val app: Application) : BaseViewModel(app) {
      */
     fun getTopCity() {
         launchSilent {
-            val stringArray = app.resources.getStringArray(R.array.top_city)
+            val stringArray = BaseApp.context.resources.getStringArray(R.array.top_city)
             val cityList = ArrayList<CityEntity>()
             for (name in stringArray) {
                 val cities = AppRepo.getInstance().searchCity(name)

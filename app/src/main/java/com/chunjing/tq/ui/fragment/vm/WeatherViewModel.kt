@@ -1,7 +1,6 @@
 package com.chunjing.tq.ui.fragment.vm
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
@@ -18,6 +17,7 @@ import com.chunjing.tq.db.entity.WeatherBgEntity
 import com.chunjing.tq.ext.*
 import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.base.BaseViewModel
+import com.goodtech.weatherlib.BaseApp
 import com.goodtech.weatherlib.net.HttpUtils
 import com.goodtech.weatherlib.utils.SpUtils
 import com.goodtech.weatherlib.utils.Utils
@@ -32,7 +32,7 @@ const val CACHE_ALARM_NOW = "alarm_"
 const val CACHE_LIFE = "life_"
 const val CACHE_JUHE_WEATHER = "juhe_weather_"
 
-class WeatherViewModel(val app: Application) : BaseViewModel(app) {
+class WeatherViewModel : BaseViewModel() {
 
     val weatherNow = MutableLiveData<WeatherBean>()
     val curCity = MutableLiveData<CityEntity>()
@@ -262,7 +262,7 @@ class WeatherViewModel(val app: Application) : BaseViewModel(app) {
         }
 
         var cityCode: String? = null
-        val list: ArrayList<CityCode> = getCityCodes(app.baseContext)
+        val list: ArrayList<CityCode> = getCityCodes(BaseApp.context)
         for (cityCodeMode in list) {
             if (cityCodeMode.city_name.contains(cityName)) {
                 cityCode = cityCodeMode.city_code

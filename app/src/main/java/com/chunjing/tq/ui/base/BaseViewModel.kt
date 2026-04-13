@@ -1,17 +1,18 @@
 package com.chunjing.tq.ui.base
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.LogUtils
 import com.chunjing.tq.BuildConfig
 import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.net.exception.ExceptionUtils
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 
-open class BaseViewModel(app: Application) : AndroidViewModel(app) {
+open class BaseViewModel : ViewModel() {
 
     // 加载状态
     val loadState = MutableLiveData<LoadState>()
@@ -20,9 +21,6 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
      * 是否登录
      */
     val isLogin = MutableLiveData<Boolean>()
-
-//    @Volatile
-//    private var runningCount = 0
 
     private var runningCount = AtomicInteger(0)
 
@@ -55,14 +53,12 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 if (loadingType == 0) {
                     runningCount.getAndIncrement()
-//                    //LogUtils.LOGE("runningCount + : $runningCount")
                     loadState.value = LoadState.Start()
                 }
                 withContext(Dispatchers.IO) {
                     block.invoke(this)
                 }
             } catch (e: Throwable) {
-                // handle error
                 val error = ExceptionUtils.parseException(e)
                 if (BuildConfig.DEBUG) {
                     e.printStackTrace()
@@ -79,7 +75,6 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
                     if (runningCount.get() > 0) {
                         runningCount.getAndDecrement()
                     }
-//                    //LogUtils.LOGE("runningCount - : $runningCount")
                     loadState.value = LoadState.Finish
                 }
             }
