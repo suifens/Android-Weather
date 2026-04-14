@@ -5,6 +5,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,11 +16,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
-import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.helpers.LocationSpHelper;
@@ -32,19 +30,26 @@ import com.goodtech.tq.views.popup.TopTitlePopup;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.enums.PopupPosition;
+import com.mapzen.android.lost.api.LocationListener;
+import com.mapzen.android.lost.api.LocationRequest;
+import com.mapzen.android.lost.api.LocationServices;
+import com.mapzen.android.lost.api.LostApiClient;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * com.goodtech.tq.location.service
  */
 public class LocationHelper {
 
-    private static final String TAG = "LocationSpHelper";
+    private static final String TAG = "LocationHelper";
     //  获取定位时间
     public static final String LOCATION_TIME = "LOCATION_TIME";
 
-    private AMapLocationClient mLocationClient = null;
-    //声明AMapLocationClientOption对象
-    private AMapLocationClientOption mLocationOption = null;
+    private LostApiClient mLostApiClient = null;
+    private LocationRequest mLocationRequest = null;
 
     private Context mContext;
 
@@ -121,7 +126,7 @@ public class LocationHelper {
         if (context.getClass() == Activity.class) {
             TipHelper.showProgressDialog((Activity) context);
         }
-        if (mLocationClient == null) {
+        if (mLostApiClient == null) {
             configClient();
             return;
         }
@@ -129,24 +134,36 @@ public class LocationHelper {
     }
 
     private void configClient() {
-        AMapLocationClient.updatePrivacyShow(mContext, true, true);
-        AMapLocationClient.updatePrivacyAgree(mContext, true);
         try {
-            mLocationClient = new AMapLocationClient(mContext);
-            //设置定位回调监听
-            mLocationClient.setLocationListener(mLocationListener);
+            mLocationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(1000)
+                    .setFastestInterval(500);
 
-            //初始化AMapLocationClientOption对象
-            mLocationOption = new AMapLocationClientOption();
-            //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
-            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+            mLostApiClient = new LostApiClient.Builder(mContext)
+                    .addConnectionCallbacks(new LostApiClient.ConnectionCallbacks() {
+                        @Override
+                        public void onConnected() {
+                            isLocating = start(mContext);
+                        }
 
-            isLocating = start(mContext);
+                        @Override
+                        public void onConnectionSuspended() {
+                            removeTicker();
+                            TipHelper.dismissProgressDialog();
+                            Log.e(TAG, "定位服务连接中断");
+                        }
+                    })
+                    .build();
+            mLostApiClient.connect();
         } catch (Exception e) {
-
+            removeTicker();
+            TipHelper.dismissProgressDialog();
+            Log.e(TAG, "初始化定位客户端失败", e);
         }
     }
 
+    @SuppressLint("MissingPermission")
     private Boolean start(Context context) {
         startTicker();
         if (!PermissionUtil.isLocationEnabled(context)) {
@@ -169,31 +186,41 @@ public class LocationHelper {
             }
             return false;
         }
-        if (mLocationClient != null) {
+        if (mLostApiClient != null) {
+            if (!mLostApiClient.isConnected()) {
+                mLostApiClient.connect();
+                return true;
+            }
             if (context.getClass() == Activity.class) {
                 TipHelper.showProgressDialog((Activity) context);
             }
 
-            //获取一次定位结果：
-            //该方法默认为false。
-            mLocationOption.setOnceLocation(true);
-
-            //获取最近3s内精度最高的一次定位结果：
-            //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会，默认为false。
-            mLocationOption.setOnceLocationLatest(true);
-            //给定位客户端对象设置定位参数
-            mLocationClient.setLocationOption(mLocationOption);
-            //启动定位
-            mLocationClient.startLocation();
-            return true;
+            try {
+                LocationServices.FusedLocationApi.requestLocationUpdates(
+                        mLostApiClient, mLocationRequest, mLocationListener
+                );
+                return true;
+            } catch (Exception e) {
+                removeTicker();
+                TipHelper.dismissProgressDialog();
+                Log.e(TAG, "请求定位失败", e);
+                return false;
+            }
         }
         return false;
     }
 
     public void stop() {
         removeTicker();
-        if (mLocationClient != null) {
-            mLocationClient.stopLocation();
+        if (mLostApiClient != null) {
+            try {
+                if (mLostApiClient.isConnected()) {
+                    LocationServices.FusedLocationApi.removeLocationUpdates(mLostApiClient, mLocationListener);
+                    mLostApiClient.disconnect();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "停止定位失败", e);
+            }
         }
     }
 
@@ -202,12 +229,13 @@ public class LocationHelper {
      * 定位结果回调，重写onReceiveLocation方法，可以直接拷贝如下代码到自己工程中修改
      *
      */
-    private AMapLocationListener mLocationListener = new AMapLocationListener() {
+    private final LocationListener mLocationListener = new LocationListener() {
         @Override
-        public void onLocationChanged(AMapLocation location) {
+        public void onLocationChanged(Location location) {
+            Address address = getAddressFromLocation(location);
 
             //保存
-            LocationSpHelper.saveWithLocation(location);
+            LocationSpHelper.saveWithLocation(location, address);
             mHandler.postDelayed(() -> {
                 LocationHelper.getInstance().stop();
             }, 300);
@@ -220,7 +248,6 @@ public class LocationHelper {
             if (null != location) {
 
                 {
-                    int tag = 1;
                     StringBuffer sb = new StringBuffer(256);
                     sb.append("time : ");
                     /**
@@ -228,32 +255,43 @@ public class LocationHelper {
                      * location.getTime() 是指服务端出本次结果的时间，如果位置不发生变化，则时间不变
                      */
                     sb.append(location.getTime());
-                    sb.append("\nlocType : ");// 定位类型
-                    sb.append(location.getLocationType());
                     sb.append("\nlatitude : ");// 纬度
                     sb.append(location.getLatitude());
                     sb.append("\nlongtitude : ");// 经度
                     sb.append(location.getLongitude());
-                    sb.append("\nProvince : ");// 获取省份
-                    sb.append(location.getProvince());
-                    sb.append("\nCountry : ");// 国家名称
-                    sb.append(location.getCountry());
-                    sb.append("\ncitycode : ");// 城市编码
-                    sb.append(location.getCityCode());
-                    sb.append("\ncity : ");// 城市
-                    sb.append(location.getCity());
-                    sb.append("\nDistrict : ");// 区
-                    sb.append(location.getDistrict());
-                    sb.append("\nStreet : ");// 街道
-                    sb.append(location.getStreet());
-                    sb.append("\naddr : ");// 地址信息
-                    sb.append(location.getAddress());
-                    sb.append("\nStreetNumber : ");// 获取街道号码
+                    if (address != null) {
+                        sb.append("\nProvince : ");
+                        sb.append(address.getAdminArea());
+                        sb.append("\ncity : ");
+                        sb.append(address.getLocality());
+                        sb.append("\nDistrict : ");
+                        sb.append(address.getSubLocality());
+                        sb.append("\nStreet : ");
+                        sb.append(address.getThoroughfare());
+                        sb.append("\naddr : ");
+                        sb.append(address.getAddressLine(0));
+                    }
                     Log.d(TAG, "onReceiveLocation: " + sb.toString());
                 }
             }
         }
     };
+
+    private Address getAddressFromLocation(Location location) {
+        if (location == null || mContext == null) {
+            return null;
+        }
+        try {
+            Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                return addresses.get(0);
+            }
+        } catch (IOException | IllegalArgumentException e) {
+            Log.e(TAG, "逆地理编码失败", e);
+        }
+        return null;
+    }
 
     protected Handler mHandler = new Handler(Looper.getMainLooper());
 

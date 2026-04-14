@@ -14,11 +14,13 @@ import android.view.View
 import android.widget.Toast
 import com.blankj.utilcode.util.BarUtils
 import com.bytedance.sdk.openadsdk.AdSlot
+import com.bytedance.sdk.openadsdk.TTAdLoadType
 import com.bytedance.sdk.openadsdk.TTAdNative
 import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd
 import com.gengee.insaitlib.ui.base.BaseVmActivity
 import com.goodtech.tq.R
+import com.goodtech.tq.app.App
 import com.goodtech.tq.databinding.ActivityRemoveAdBinding
 import com.goodtech.tq.modules.removeAd.model.DailyReward
 import com.goodtech.tq.modules.removeAd.model.DailyRewardStatus
@@ -45,7 +47,8 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
     companion object {
         private const val TAG = "RemoveAdActivity"
         // 奖励视频广告位ID（如果没有配置，使用默认值，需要根据实际情况修改）
-        private const val REWARD_VIDEO_AD_ID = "103885268" // 使用与 DrawDramaActivity 相同的广告位ID
+        private const val REWARD_VIDEO_AD_ID = "102948965" // 与 DrawDramaFragment 保持一致
+        private const val MAX_LOAD_RETRY = 2
         
         /**
          * 启动去广告页面的静态方法
@@ -64,6 +67,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
     private var mRewardVideoAd: TTRewardVideoAd? = null
     // 是否已获得奖励
     private var isRewardArrived: Boolean = false
+    private var rewardLoadRetryCount: Int = 0
 
     /**
      * 准备数据，当前页面无需额外数据
@@ -349,20 +353,50 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
     private fun loadAndShowRewardVideoAd(rewardHours: Int) {
         isRewardArrived = false
         mRewardVideoAd = null
-        
+        rewardLoadRetryCount = 0
+        requestRewardVideoAd(rewardHours)
+    }
+
+    private fun requestRewardVideoAd(rewardHours: Int) {
+        // 首次安装时 SDK 可能还在异步初始化，先触发初始化并重试
+        if (!TTAdSdk.isInitSuccess()) {
+            App.instance.startUsingApp(this)
+            if (rewardLoadRetryCount < MAX_LOAD_RETRY) {
+                rewardLoadRetryCount++
+                mBinding.root.postDelayed({ requestRewardVideoAd(rewardHours) }, 800)
+                return
+            }
+        }
+
         val adSlot = AdSlot.Builder()
             .setCodeId(REWARD_VIDEO_AD_ID)
+            .setAdLoadType(TTAdLoadType.LOAD)
             .build()
-        
+
         TTAdSdk.getAdManager().createAdNative(this).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {
             override fun onError(code: Int, message: String?) {
                 Log.e(TAG, "加载奖励视频广告失败: code=$code, message=$message")
-                // 隐藏加载动画
-                com.goodtech.tq.utils.TipHelper.dismissProgressDialog()
-                Toast.makeText(this@RemoveAdActivity, "广告加载失败，请稍后重试", Toast.LENGTH_SHORT).show()
+                if (rewardLoadRetryCount < MAX_LOAD_RETRY) {
+                    rewardLoadRetryCount++
+                    mBinding.root.postDelayed({ requestRewardVideoAd(rewardHours) }, 600)
+                } else {
+                    // 隐藏加载动画
+                    com.goodtech.tq.utils.TipHelper.dismissProgressDialog()
+                    Toast.makeText(this@RemoveAdActivity, "广告加载失败，请稍后重试", Toast.LENGTH_SHORT).show()
+                }
             }
             
             override fun onRewardVideoAdLoad(ad: TTRewardVideoAd?) {
+                if (ad == null) {
+                    if (rewardLoadRetryCount < MAX_LOAD_RETRY) {
+                        rewardLoadRetryCount++
+                        mBinding.root.postDelayed({ requestRewardVideoAd(rewardHours) }, 600)
+                    } else {
+                        com.goodtech.tq.utils.TipHelper.dismissProgressDialog()
+                        Toast.makeText(this@RemoveAdActivity, "广告暂不可用，请稍后重试", Toast.LENGTH_SHORT).show()
+                    }
+                    return
+                }
                 ad?.apply {
                     setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener {
                         override fun onAdShow() {

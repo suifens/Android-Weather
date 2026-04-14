@@ -1,7 +1,5 @@
 package com.goodtech.tq.location;
 
-import com.amap.api.location.AMapLocation;
-
 import java.io.Serializable;
 
 /**
@@ -109,16 +107,13 @@ public class Location implements Serializable {
         this.addrStr = addrStr;
     }
 
-    public static Location location(AMapLocation bdLocation) {
+    public static Location location(android.location.Location rawLocation) {
         Location location = new Location();
-        location.latitude = bdLocation.getLatitude();
-        location.longitude = bdLocation.getLongitude();
-        location.province = bdLocation.getProvince();
-        location.cityCode = bdLocation.getCityCode();
-        location.city = bdLocation.getCity();
-        location.district = bdLocation.getDistrict();
-        location.street = bdLocation.getStreet();
-        location.addrStr = bdLocation.getAddress();
+        if (rawLocation == null) {
+            return location;
+        }
+        location.latitude = rawLocation.getLatitude();
+        location.longitude = rawLocation.getLongitude();
         return location;
     }
 

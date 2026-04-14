@@ -1,8 +1,9 @@
 package com.goodtech.tq.helpers;
 
 import android.text.TextUtils;
+import android.location.Address;
+import android.location.Location;
 
-import com.amap.api.location.AMapLocation;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
@@ -26,10 +27,11 @@ public class LocationSpHelper {
     /**
      * 保存当前定位
      */
-    public static void saveWithLocation(AMapLocation location) {
+    public static void saveWithLocation(Location location, Address address) {
         CityMode cityMode = new CityMode();
         cityMode.setLocation(true);
-        if (location == null || TextUtils.isEmpty(location.getDistrict())) {
+        String district = getDistrict(address);
+        if (location == null || TextUtils.isEmpty(district)) {
             if (getLocation() != null) {
                 EventBus.getDefault().post(new MessageEvent().setLocation(false));
             }
@@ -39,8 +41,8 @@ public class LocationSpHelper {
             cityMode.setCid(1000);
             cityMode.setLat(String.valueOf(location.getLatitude()));
             cityMode.setLon(String.valueOf(location.getLongitude()));
-            cityMode.setCity(location.getDistrict());
-            cityMode.setMergerName(String.format("%s %s", location.getDistrict(), location.getPoiName()));
+            cityMode.setCity(district);
+            cityMode.setMergerName(String.format("%s %s", district, getPoiName(address)));
             //  获取天气信息
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(App.instance);
             httpHelper.getBaseUrl(() -> httpHelper.fetchWeather(cityMode));
@@ -50,6 +52,38 @@ public class LocationSpHelper {
         SpUtils.getInstance().putString(Constants.SP_LOCATION, json);
 
         EventBus.getDefault().post(new MessageEvent().setLocation(cityMode.getCid() != 0));
+    }
+
+    private static String getDistrict(Address address) {
+        if (address == null) {
+            return "";
+        }
+        if (!TextUtils.isEmpty(address.getSubLocality())) {
+            return address.getSubLocality();
+        }
+        if (!TextUtils.isEmpty(address.getLocality())) {
+            return address.getLocality();
+        }
+        if (!TextUtils.isEmpty(address.getSubAdminArea())) {
+            return address.getSubAdminArea();
+        }
+        if (!TextUtils.isEmpty(address.getAdminArea())) {
+            return address.getAdminArea();
+        }
+        return "";
+    }
+
+    private static String getPoiName(Address address) {
+        if (address == null) {
+            return "";
+        }
+        if (!TextUtils.isEmpty(address.getFeatureName())) {
+            return address.getFeatureName();
+        }
+        if (!TextUtils.isEmpty(address.getThoroughfare())) {
+            return address.getThoroughfare();
+        }
+        return "";
     }
 
     /**

@@ -332,8 +332,8 @@ dependencies {
 
 // </editor-fold>
 
-    //  定位功能
-//    implementation 'com.amap.api:location:latest.integration'
+    //  定位功能（高德定位 -> LOST）
+    implementation 'com.mapzen.android:lost:3.0.4'
     //  弹窗
     implementation 'com.github.li-xiaojun:XPopup:2.10.0'
 
