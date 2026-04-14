@@ -7,8 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.chunjing.tq.MyApp
-import com.chunjing.tq.bean.*
+import com.chunjing.tq.bean.CalendarBgBean
+import com.chunjing.tq.bean.Daily
+import com.chunjing.tq.bean.VersionBean
+import com.chunjing.tq.bean.WeatherBean
+import com.chunjing.tq.bean.WeatherBgBean
 import com.chunjing.tq.bean.juhe.JuheBean
 import com.chunjing.tq.bean.juhe.JuheSoul
 import com.chunjing.tq.db.AppRepo
@@ -17,13 +20,12 @@ import com.chunjing.tq.db.entity.CityEntity
 import com.chunjing.tq.db.entity.LOCATION_ID
 import com.chunjing.tq.db.entity.WeatherBgEntity
 import com.chunjing.tq.ext.JUHE_SOUL
-import com.chunjing.tq.ext.LAST_LOCATION_TIME
 import com.chunjing.tq.ext.WEATHER_URL
 import com.chunjing.tq.ui.base.BaseViewModel
-import com.goodtech.weatherlib.BaseApp
 import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_DAY
 import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_NOW
 import com.chunjing.tq.utils.ContentUtil
+import com.goodtech.weatherlib.BaseApp
 import com.goodtech.weatherlib.net.HttpUtils
 import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.utils.DateUtil
@@ -34,7 +36,11 @@ import com.mapzen.android.lost.api.LocationRequest
 import com.mapzen.android.lost.api.LocationServices
 import com.mapzen.android.lost.api.LostApiClient
 import kotlinx.coroutines.launch
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -47,6 +53,10 @@ const val CACHE_RECOMMEND_TIME = "recommend_time"
 const val CACHE_RECOMMEND_INTERVAL = "recommend_interval"
 
 class MainViewModel : BaseViewModel() {
+    private companion object {
+        const val LOCATION_INTERVAL_SECONDS = 15 * 60
+        const val MAX_LAST_KNOWN_AGE_MS = 2 * 60 * 1000L
+    }
 
     val cities = MutableLiveData<List<CityEntity>>()
     val weatherMap = MutableLiveData<HashMap<String, WeatherBean>>()
@@ -366,7 +376,9 @@ class MainViewModel : BaseViewModel() {
 
         try {
             val lastKnown = LocationServices.FusedLocationApi.getLastLocation(client)
-            if (lastKnown != null) {
+            val isRecentLocation = lastKnown != null &&
+                    (System.currentTimeMillis() - lastKnown.time) <= MAX_LAST_KNOWN_AGE_MS
+            if (isRecentLocation) {
                 handleLocationSuccess(lastKnown)
                 return
             }
@@ -463,17 +475,15 @@ class MainViewModel : BaseViewModel() {
             // ignore geocoder errors and keep fallback values
         }
 
-        val fallbackName = if (cityName.isBlank()) "当前位置" else cityName
+        val fallbackName = cityName.ifBlank { "当前位置" }
         cityEntity.cityId = LOCATION_ID
         cityEntity.cityName = fallbackName
         cityEntity.cityCode = cityCode
         cityEntity.shortName = fallbackName
-        cityEntity.mergerName = listOf(district, poiName).filter { it.isNotBlank() }.joinToString(" ")
+        cityEntity.mergerName =
+            listOf(district, poiName).filter { it.isNotBlank() }.joinToString(" ").ifBlank { fallbackName }
         cityEntity.latitude = location.latitude.toString()
         cityEntity.longitude = location.longitude.toString()
-        if (cityEntity.mergerName.isBlank()) {
-            cityEntity.mergerName = "${cityEntity.latitude}, ${cityEntity.longitude}"
-        }
         cityEntity.setLocal()
         return cityEntity
     }
@@ -652,7 +662,7 @@ class MainViewModel : BaseViewModel() {
 //                if (onTimeChangeListener!=null){
 //                    onTimeChangeListener.onTimeChanged(currentSecond)
 //                }
-                if (currentSecond == 1000 * 60 * 15) {
+                if (currentSecond >= LOCATION_INTERVAL_SECONDS) {
                     needLocation.postValue(true)
                     currentSecond = 0
                 }

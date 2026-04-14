@@ -128,6 +128,14 @@ class WeatherViewModel : BaseViewModel() {
         }
     }
 
+    fun refreshWithCity(city: CityEntity) {
+        curCity.postValue(city)
+        fetchWeatherData(city)
+        fetchAlarmData(city)
+        fetchLifeData(city)
+        fetchQueryData(city)
+    }
+
     //  获取背景
     fun getWeatherBgEntity(weather: WeatherBean, isItem: Boolean) {
         launchSilent {

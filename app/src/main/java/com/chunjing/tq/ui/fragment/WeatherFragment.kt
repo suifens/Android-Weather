@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
@@ -33,6 +34,7 @@ import com.chunjing.tq.databinding.LayoutForecastHourlyBinding
 import com.chunjing.tq.databinding.LayoutLifeIndicatorBinding
 import com.chunjing.tq.databinding.LayoutTomorrowTempBinding
 import com.chunjing.tq.db.entity.CityEntity
+import com.chunjing.tq.db.entity.LOCATION_ID
 import com.chunjing.tq.db.entity.WeatherBgEntity
 import com.chunjing.tq.dialog.AlarmPopup
 import com.chunjing.tq.dialog.DailyListPopup
@@ -41,6 +43,8 @@ import com.chunjing.tq.dialog.TravelPopup
 import com.chunjing.tq.BuildConfig
 import com.chunjing.tq.ext.LINK_CAILING
 import com.chunjing.tq.ext.LINK_TAIFENG
+import com.chunjing.tq.ext.checkGPSOpen
+import com.chunjing.tq.ext.checkGPSPermission
 import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.activity.LifeActivity
 import com.chunjing.tq.ui.activity.PeripheralActivity
@@ -54,6 +58,7 @@ import com.goodtech.weatherlib.extension.startActivity
 import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.utils.DateUtil
 import com.goodtech.weatherlib.utils.WeatherUtils
+import com.blankj.utilcode.util.NetworkUtils
 import com.lxj.xpopup.XPopup
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -279,7 +284,17 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     override fun initEvent() {
         mBinding.refreshLayout.setOnRefreshListener {
-            loadData()
+            val host = requireActivity()
+            if (mCityId == LOCATION_ID &&
+                NetworkUtils.isConnected() &&
+                host.checkGPSOpen() &&
+                host.checkGPSPermission()
+            ) {
+                // 本地城市下拉刷新时优先触发重新定位，避免沿用旧坐标
+                mainViewModel.getLocation()
+            } else {
+                loadData()
+            }
         }
 
         //  城市
@@ -332,6 +347,12 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         viewModel.nearbyCities.observe(this) {
 
+        }
+
+        mainViewModel.curLocation.observe(this) { city ->
+            if (mCityId == LOCATION_ID && city.isLocal()) {
+                viewModel.refreshWithCity(city)
+            }
         }
     }
 
