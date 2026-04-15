@@ -426,6 +426,7 @@ class MainViewModel : BaseViewModel() {
         launchSilent {
             AppRepo.getInstance().addCity(city)
             lasLocation = System.currentTimeMillis()
+            getCitiesCache()
         }
         loadState.postValue(LoadState.Finish)
     }

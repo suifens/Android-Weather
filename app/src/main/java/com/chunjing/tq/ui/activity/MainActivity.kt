@@ -117,10 +117,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun initEvent() {
 
-        mainViewModel.curLocation.observe(this) {
-            mainViewModel.fetchWeather(it)
-        }
-
         mainViewModel.cities.observe(this) {
             mainViewModel.getWeathers()
         }
