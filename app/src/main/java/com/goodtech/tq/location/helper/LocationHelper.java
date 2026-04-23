@@ -65,6 +65,25 @@ public class LocationHelper {
     }
 
     private boolean isLocating = false;
+    private boolean isLocationRequesting = false;
+    private final Object locationLock = new Object();
+
+    private boolean tryAcquireLocationRequest() {
+        synchronized (locationLock) {
+            if (isLocationRequesting) {
+                Log.d(TAG, "skip duplicated location request");
+                return false;
+            }
+            isLocationRequesting = true;
+            return true;
+        }
+    }
+
+    private void releaseLocationRequest() {
+        synchronized (locationLock) {
+            isLocationRequesting = false;
+        }
+    }
 
     @SuppressLint("CheckResult")
     public void startWithDelay(final Context context) {
@@ -76,8 +95,7 @@ public class LocationHelper {
      * isForce 是否强制定位
      */
     public void startWithDelay(final Context context, boolean isForce) {
-
-        if (isLocating) {
+        if (!tryAcquireLocationRequest()) {
             return;
         }
 
@@ -87,6 +105,8 @@ public class LocationHelper {
 
             if (System.currentTimeMillis() - locationTime > 5 * 60 * 1000 || isForce) {
                 startLocation(context);
+            } else {
+                releaseLocationRequest();
             }
 
         } else if (!TimeUtils.isCurrentDay(SpUtils.getInstance().getLong(Constants.TIME_LOCATION_CANCEL, 0L))
@@ -106,6 +126,7 @@ public class LocationHelper {
                         if (isAllGranted) {
                             startLocation(context);
                         } else {
+                            releaseLocationRequest();
                             if (isForce) {
                                 Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
                             }
@@ -115,13 +136,14 @@ public class LocationHelper {
                     }
             ).request();
         } else {
+            releaseLocationRequest();
             //  取消定位权限判断的时间
             // Toast.makeText(context, "没有定位权限，无法获取您的位置", Toast.LENGTH_LONG).show();
         }
     }
 
     private void startLocation(final Context context) {
-        stop();
+        stop(false);
         mContext = context;
         if (context.getClass() == Activity.class) {
             TipHelper.showProgressDialog((Activity) context);
@@ -131,6 +153,9 @@ public class LocationHelper {
             return;
         }
         isLocating = start(context);
+        if (!isLocating) {
+            releaseLocationRequest();
+        }
     }
 
     private void configClient() {
@@ -150,6 +175,7 @@ public class LocationHelper {
                         @Override
                         public void onConnectionSuspended() {
                             removeTicker();
+                            releaseLocationRequest();
                             TipHelper.dismissProgressDialog();
                             Log.e(TAG, "定位服务连接中断");
                         }
@@ -158,6 +184,7 @@ public class LocationHelper {
             mLostApiClient.connect();
         } catch (Exception e) {
             removeTicker();
+            releaseLocationRequest();
             TipHelper.dismissProgressDialog();
             Log.e(TAG, "初始化定位客户端失败", e);
         }
@@ -168,6 +195,7 @@ public class LocationHelper {
         startTicker();
         if (!PermissionUtil.isLocationEnabled(context)) {
             removeTicker();
+            releaseLocationRequest();
             TipHelper.dismissProgressDialog();
             if (Utils.isActivityAlive(context)) {
                 (new Handler(Looper.getMainLooper())).post(() -> {
@@ -202,16 +230,25 @@ public class LocationHelper {
                 return true;
             } catch (Exception e) {
                 removeTicker();
+                releaseLocationRequest();
                 TipHelper.dismissProgressDialog();
                 Log.e(TAG, "请求定位失败", e);
                 return false;
             }
         }
+        releaseLocationRequest();
         return false;
     }
 
     public void stop() {
+        stop(true);
+    }
+
+    private void stop(boolean shouldReleaseRequest) {
         removeTicker();
+        if (shouldReleaseRequest) {
+            releaseLocationRequest();
+        }
         if (mLostApiClient != null) {
             try {
                 if (mLostApiClient.isConnected()) {
@@ -243,6 +280,8 @@ public class LocationHelper {
             if (location != null) {
                 SpUtils.getInstance().putLong(Constants.TIME_LOCATION, System.currentTimeMillis());
             }
+            TipHelper.dismissProgressDialog();
+            releaseLocationRequest();
 
             // TODO Auto-generated method stub
             if (null != location) {
@@ -318,7 +357,7 @@ public class LocationHelper {
             long now = SystemClock.uptimeMillis();
             long next = now + (1000 - now % 1000);
             if (scanCount++ > 10) {
-                removeTicker();
+                stop();
             } else {
                 mHandler.postAtTime(mCheckTicker, next);
             }

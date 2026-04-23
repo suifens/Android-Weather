@@ -31,12 +31,20 @@ public class LocationSpHelper {
         CityMode cityMode = new CityMode();
         cityMode.setLocation(true);
         String district = getDistrict(address);
-        if (location == null || TextUtils.isEmpty(district)) {
+        if (location == null) {
             if (getLocation() != null) {
                 EventBus.getDefault().post(new MessageEvent().setLocation(false));
             }
             return;
         } else {
+            if (TextUtils.isEmpty(district)) {
+                CityMode lastLocation = getLocation();
+                if (lastLocation != null && !TextUtils.isEmpty(lastLocation.getCity())) {
+                    district = lastLocation.getCity();
+                } else {
+                    district = "当前位置";
+                }
+            }
             cityMode.setListNum(0);
             cityMode.setCid(1000);
             cityMode.setLat(String.valueOf(location.getLatitude()));

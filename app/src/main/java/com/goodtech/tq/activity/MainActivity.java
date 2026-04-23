@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity {
         initColors();
         setupViewPager();
         setupTabs();
-        handleIntent();
+        handleIntent(getIntent());
         initApp();
 //        registerEventBus();
     }
@@ -118,10 +118,13 @@ public class MainActivity extends BaseActivity {
         changeTab(false);
     }
 
-    private void handleIntent() {
-        // 处理Intent，可以设置初始tab
-        int tabIndex = getIntent().getIntExtra("RESUME_TAB_INDEX", 0);
-        if (tabIndex != 0 && tabIndex < mFragmentList.size()) {
+    private void handleIntent(Intent intent) {
+        if (intent == null) {
+            return;
+        }
+        // singleTask 复用场景下也要重新处理目标 tab
+        int tabIndex = intent.getIntExtra("RESUME_TAB_INDEX", -1);
+        if (tabIndex >= 0 && tabIndex < mFragmentList.size()) {
             mViewPager.setCurrentItem(tabIndex, false);
         }
     }
@@ -160,6 +163,13 @@ public class MainActivity extends BaseActivity {
             MobclickAgent.onResume(this);
         }
         Log.e(TAG, "onResume: ");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
     }
 
     @Override

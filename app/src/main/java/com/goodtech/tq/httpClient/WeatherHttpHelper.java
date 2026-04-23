@@ -105,9 +105,15 @@ public class WeatherHttpHelper {
     }
 
     public boolean fetchWeather(final CityMode cityMode, final ApiCallback callback) {
+        return fetchWeather(cityMode, false, callback);
+    }
+
+    public boolean fetchWeather(final CityMode cityMode, boolean forceUpdate, final ApiCallback callback) {
 
         if (cityMode == null) {
-            callback.onResponse(false, null, null);
+            if (callback != null) {
+                callback.onResponse(false, null, null);
+            }
             return false;
         }
 
@@ -124,7 +130,16 @@ public class WeatherHttpHelper {
                     needUpdate = true;
                 }
             }
-//            new Thread(() -> getWeather(cityMode, callback));
+            if (forceUpdate) {
+                needUpdate = true;
+            }
+            if (!needUpdate) {
+                if (callback != null) {
+                    WeatherModel cachedModel = WeatherSpHelper.getWeatherModel(cityMode.getPoiId());
+                    callback.onResponse(cachedModel != null, cachedModel, null);
+                }
+                return true;
+            }
             getWeather(cityMode, callback);
             return true;
         }
