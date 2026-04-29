@@ -97,10 +97,6 @@ class HomeFragment : BaseFragment() {
             isFirstLoad = false
         }
 
-        if (LocationSpHelper.getLocation() != null && SpUtils.getInstance().isAgreePermission()) {
-            LocationHelper.getInstance().startWithDelay(requireActivity())
-        }
-
         val cityModesFromSp = LocationSpHelper.getCityListAndLocation()
         if (cityModesFromSp.size != cityModes.size || isNeedReload) {
             cityModes = cityModesFromSp.toMutableList()
@@ -291,10 +287,13 @@ class HomeFragment : BaseFragment() {
         }
 
         if (event.isSuccessLocation) {
-            // 定位成功
+            // 定位成功：同步首页城市列表、顶部地址，并强制把第 0 页 Fragment 绑到新 CityMode（含名称/经纬度）
             val cityMode = LocationSpHelper.getLocation()
             if (cityMode != null && cityModes.isNotEmpty()) {
                 cityModes[0] = cityMode
+                if (currIndex == 0) {
+                    setAddress(cityMode)
+                }
                 reloadWeather(0)
             }
         }
@@ -359,17 +358,18 @@ class HomeFragment : BaseFragment() {
     private fun reloadWeather(index: Int) {
         mHandler.post {
             val cityMode = cityModes[index]
-            if (cityMode.poiId.isNotEmpty()) {
-                val model = WeatherSpHelper.getWeatherModel(cityMode.poiId)
-                if (fragmentList.size > index) {
-                    val fragment = fragmentList[index] as WeatherFragment
-                    if (model != null) {
-                        fragment.changeWeather(model, cityMode)
-                    }
-                    if (index == currIndex) {
-                        changeBg(model)
-                    }
-                }
+            if (cityMode.poiId.isEmpty()) {
+                return@post
+            }
+            if (fragmentList.size <= index) {
+                return@post
+            }
+            val fragment = fragmentList[index] as WeatherFragment
+            val model = WeatherSpHelper.getWeatherModel(cityMode.poiId)
+            // 无缓存时也要更新 Fragment 的 CityMode，否则定位更新后名称/经纬度仍停留在旧对象上
+            fragment.changeWeather(model, cityMode)
+            if (index == currIndex) {
+                changeBg(model)
             }
         }
     }

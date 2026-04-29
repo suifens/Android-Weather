@@ -41,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
+import kotlin.math.abs
 
 class App : Application() {
 
@@ -332,11 +333,11 @@ class App : Application() {
         }
 
         when {
-            Math.abs(interval) > AD_SHOW_INTERVAL -> {
+            abs(interval) > AD_SHOW_INTERVAL -> {
                 activity.startActivity(Intent(activity, SplashActivity::class.java))
                 SpUtils.getInstance().putBoolean("hadShowInterstitialAD", false)
             }
-            Math.abs(interval) > LOCATION_UPDATE_INTERVAL && 
+            abs(interval) > LOCATION_UPDATE_INTERVAL &&
             SpUtils.getInstance().isAgreePermission &&
             PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION) -> {
                 LocationHelper.getInstance().startWithDelay(instance, true)

@@ -1,3 +1,15 @@
-rootProject.name='Weather'
+// 插件解析：不声明 google()，避免走 https://dl.google.com/dl/android/maven2（VPN/网络常不可用）
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://mirrors.huaweicloud.com/repository/google/' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'Weather'
 include ':app', ':cropimage', ':insaitlib'
 //include ':mediationAdapters:Util',':mediationAdapters:BDAdapter',':mediationAdapters:TTAdapter',':mediationAdapters:KSAdapter'

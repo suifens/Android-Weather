@@ -5,11 +5,11 @@ buildscript {
         kotlin_version = '2.0.20'
     }
     repositories {
+        // 不使用 google()，其默认指向 dl.google.com；仅用镜像
         maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://mirrors.huaweicloud.com/repository/google/' }
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        google()
-        maven { url "https://dl.google.com/dl/android/maven2/" }
         mavenLocal()
         mavenCentral()
 
@@ -44,11 +44,11 @@ buildscript {
 
 allprojects {
     repositories {
+        // 不使用 google()；AndroidX / Lint / Play 等 artifacts 从镜像拉取
         maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://mirrors.huaweicloud.com/repository/google/' }
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        google()
-        maven {url "https://dl.google.com/dl/android/maven2/"}
         mavenLocal()
         mavenCentral()
 
@@ -66,6 +66,31 @@ allprojects {
         //mintegral sdk依赖   引入mintegral sdk需要添加此maven
         maven {
             url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_support/"
+        }
+    }
+}
+
+// 无法访问 dl.google.com 时，extractReleaseAnnotations 会拉 lint 全家桶并失败。
+// 清空该任务默认行为，仅生成本地占位 typedefs.txt，供 syncReleaseLibJars 使用（内部库无对外注解 API 时一般可接受）。
+subprojects { sub ->
+    if (sub.name == 'cropimage' || sub.name == 'insaitlib') {
+        sub.afterEvaluate {
+            sub.tasks.configureEach { task ->
+                if (task.name.contains('lintVital')) {
+                    task.enabled = false
+                }
+            }
+            sub.tasks.matching { it.name == 'extractReleaseAnnotations' }.configureEach { extractTask ->
+                extractTask.actions.clear()
+                extractTask.doLast {
+                    def typedefDir = new File(sub.buildDir, 'intermediates/annotations_typedef_file/release/extractReleaseAnnotations')
+                    typedefDir.mkdirs()
+                    def typedefFile = new File(typedefDir, 'typedefs.txt')
+                    if (!typedefFile.exists()) {
+                        typedefFile.text = ''
+                    }
+                }
+            }
         }
     }
 }

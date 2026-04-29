@@ -25,8 +25,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdk 24
         targetSdk 35
-        versionCode 1600
-        versionName "16.0.0"
+        versionCode 1610
+        versionName "16.1.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 

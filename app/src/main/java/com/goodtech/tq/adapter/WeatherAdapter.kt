@@ -64,9 +64,11 @@ class WeatherAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
     private var weatherHeaderListener: WeatherHeaderListener? = null
     private var adLoadCallback: AdLoadCallback? = null
 
-    fun setData(model: WeatherModel, mode: CityMode?) {
+    fun setData(model: WeatherModel?, mode: CityMode?) {
         adLoadCallback?.onAdLoaded(0)
-        weatherModel = model
+        if (model != null) {
+            weatherModel = model
+        }
         cityMode = mode
         notifyDataSetChanged()
     }

@@ -74,7 +74,18 @@ public class MainActivity extends BaseActivity {
         setupTabs();
         handleIntent(getIntent());
         initApp();
+        requestInitialLocation();
 //        registerEventBus();
+    }
+
+    /**
+     * 进入主界面时强制定位一次（由 Main 统一触发，避免与 HomeFragment 重复）。
+     * singleTask 复用实例时不会再次走 onCreate，故自然满足「每次进入主流程只调一次」。
+     */
+    private void requestInitialLocation() {
+        if (SpUtils.getInstance().isAgreePermission()) {
+            LocationHelper.getInstance().startWithDelay(this, true);
+        }
     }
 
     private void initColors() {

@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    // 无法访问 dl.google.com 时，release 的 vital lint / 注解抽取会拉取 lint 全家桶；本地库可关闭以免构建失败
+    lint {
+        checkReleaseBuilds false
+    }
 }
 
 dependencies {

@@ -240,8 +240,10 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
     }
 
     fun changeWeather(model: WeatherModel?, cityMode: CityMode) {
-        mWeatherModel = model
         mCityMode = cityMode
+        if (model != null) {
+            mWeatherModel = model
+        }
         updateData()
     }
 
@@ -256,9 +258,18 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
                 withContext(Dispatchers.Main) {
                     if (!isAdded) return@withContext
                     if (mCityMode?.poiId != cityMode.poiId) return@withContext
-                    modelWithAlarm?.let { model ->
-                        mWeatherModel = model
-                        mAdapter.setData(model, cityMode)
+                    when {
+                        modelWithAlarm != null -> {
+                            mWeatherModel = modelWithAlarm
+                            mAdapter.setData(modelWithAlarm, cityMode)
+                        }
+                        mWeatherModel != null -> {
+                            // 定位城市 poiId 常为固定 cid，缓存未写入前仍用旧 Model，但必须刷新 CityMode（名称/坐标）
+                            mAdapter.setData(mWeatherModel, cityMode)
+                        }
+                        else -> {
+                            mAdapter.setData(null, cityMode)
+                        }
                     }
                 }
             }
