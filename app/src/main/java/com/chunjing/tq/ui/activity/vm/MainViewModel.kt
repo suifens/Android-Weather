@@ -35,7 +35,11 @@ import com.mapzen.android.lost.api.LocationListener
 import com.mapzen.android.lost.api.LocationRequest
 import com.mapzen.android.lost.api.LocationServices
 import com.mapzen.android.lost.api.LostApiClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -68,7 +72,14 @@ class MainViewModel : BaseViewModel() {
     val curBgEntity = MutableLiveData<WeatherBgEntity>()
 
     val curLocation = MutableLiveData<CityEntity>()
-    val needLocation = MutableLiveData<Boolean>()
+
+    /**
+     * 一次定位成功并写入 [curLocation] 后递增；首页定位 Tab 据此重新拉天气（下拉刷新重新定位等场景不依赖 curLocation 是否被判定为“未变”）。
+     */
+    val locationWeatherRefreshNonce = MutableLiveData<Long?>(null)
+
+    /** 默认 false，避免 Activity 订阅时粘性分发 null/true 与冷启动 [getLocation] 叠成两次请求 */
+    val needLocation = MutableLiveData(false)
 
     //  心灵鸡汤
     val todaySoul = MutableLiveData<String?>()
@@ -80,6 +91,48 @@ class MainViewModel : BaseViewModel() {
     private val mWeatherMap = HashMap<String, WeatherBean>()
     private var lostApiClient: LostApiClient? = null
     private var locationListener: LocationListener? = null
+
+    /** 合并短时间内的多次 [getLocation]（如冷启动 + needLocation 粘性、连续 connect/onConnected） */
+    @Volatile
+    private var locationRequestActive = false
+
+    @Synchronized
+    private fun tryBeginLocationRequest(): Boolean {
+        if (locationRequestActive) {
+            return false
+        }
+        locationRequestActive = true
+        return true
+    }
+
+    @Synchronized
+    private fun endLocationRequest() {
+        locationRequestActive = false
+    }
+
+    /** 定时定位请求被消费后复位，避免 needLocation 一直为 true 导致每次进首页再拉一次 */
+    fun acknowledgeNeedLocationRequest() {
+        needLocation.postValue(false)
+    }
+
+    /** 主界面 [MainActivity] 冷启动只触发一次定位，避免配置变更重建 Activity 时重复请求 */
+    private var mainStartupLocationInvoked = false
+
+    /** 添加城市返回首页时，优先选中该 cityId 对应 Tab（在 [getCitiesCache] 结果中解析） */
+    @Volatile
+    private var pendingSelectCityTabId: String? = null
+
+    @Synchronized
+    fun setPendingSelectCityTab(cityId: String) {
+        pendingSelectCityTabId = cityId
+    }
+
+    @Synchronized
+    fun consumePendingSelectCityTab(): String? {
+        val id = pendingSelectCityTabId
+        pendingSelectCityTabId = null
+        return id
+    }
 
     init {
     }
@@ -120,21 +173,47 @@ class MainViewModel : BaseViewModel() {
 
     fun getCitiesCache() {
         launchSilent {
-            val list = ArrayList<CityEntity>()
+            awaitCitiesCacheRefresh()
+        }
+    }
+
+    /**
+     * 从数据库拉取城市列表并更新 [cities]；用于添加城市后确保列表已含新城市再回首页。
+     */
+    suspend fun awaitCitiesCacheRefresh() {
+        val list = withContext(Dispatchers.IO) {
+            val out = ArrayList<CityEntity>()
             val location = AppRepo.getInstance().getCity(LOCATION_ID)
             if (location != null) {
-                list.add(location)
-                AppRepo.getInstance().getAdditionalCities().let { result ->
-                    list.addAll(result)
-                    cities.postValue(list)
-                }
+                out.add(location)
+                out.addAll(AppRepo.getInstance().getAdditionalCities())
             } else {
-                AppRepo.getInstance().getCities().let { result ->
-                    list.addAll(result)
-                    cities.postValue(list)
-                }
+                out.addAll(AppRepo.getInstance().getCities())
             }
+            out
         }
+        if (isCityListEquivalentForTabs(cities.value, list)) {
+            return
+        }
+        cities.postValue(list)
+    }
+
+    /** 城市 Tab 顺序与展示用字段一致时不再 post，避免触发首页 ViewPager 无意义重建 */
+    private fun isCityListEquivalentForTabs(
+        old: List<CityEntity>?,
+        new: List<CityEntity>
+    ): Boolean {
+        if (old == null || old.size != new.size) {
+            return false
+        }
+        for (i in new.indices) {
+            val a = old[i]
+            val b = new[i]
+            if (a.cityId != b.cityId) return false
+            if (a.latitude != b.latitude || a.longitude != b.longitude) return false
+            if (a.cityName != b.cityName || a.mergerName != b.mergerName) return false
+        }
+        return true
     }
 
     //  获取天气缓存
@@ -154,6 +233,19 @@ class MainViewModel : BaseViewModel() {
                     fetchWeather(city)
                 }
             }
+        }
+    }
+
+    private var getWeathersDebounceJob: Job? = null
+
+    /**
+     * cities 短时间多次 post（如定位前/后各一次）时合并为一次全量拉天气，减轻并发与重复请求。
+     */
+    fun scheduleGetWeathersDebounced() {
+        getWeathersDebounceJob?.cancel()
+        getWeathersDebounceJob = viewModelScope.launch {
+            delay(320)
+            getWeathers()
         }
     }
 
@@ -322,7 +414,22 @@ class MainViewModel : BaseViewModel() {
 
     // <editor-fold default-state="collapsed" desc="定位">
 
+    /**
+     * 若尚未因主界面冷启动发起过定位，则标记为已发起并返回 true；用于与下拉刷新、定时刷新区分。
+     */
+    @Synchronized
+    fun consumeMainStartupLocationInvoke(): Boolean {
+        if (mainStartupLocationInvoked) {
+            return false
+        }
+        mainStartupLocationInvoked = true
+        return true
+    }
+
     fun getLocation() {
+        if (!tryBeginLocationRequest()) {
+            return
+        }
         loadState.postValue(LoadState.Start("正在获取位置..."))
         val client = lostApiClient ?: createLostApiClient()
         if (client.isConnected()) {
@@ -332,9 +439,11 @@ class MainViewModel : BaseViewModel() {
         try {
             client.connect()
         } catch (securityException: SecurityException) {
+            endLocationRequest()
             loadState.postValue(LoadState.Error("定位权限不足，请重试"))
             loadState.postValue(LoadState.Finish)
         } catch (e: Exception) {
+            endLocationRequest()
             loadState.postValue(LoadState.Error("获取定位失败,请重试"))
             loadState.postValue(LoadState.Finish)
         }
@@ -348,6 +457,7 @@ class MainViewModel : BaseViewModel() {
                 }
 
                 override fun onConnectionSuspended() {
+                    endLocationRequest()
                     loadState.postValue(LoadState.Error("获取定位失败,请重试"))
                     loadState.postValue(LoadState.Finish)
                 }
@@ -369,6 +479,7 @@ class MainViewModel : BaseViewModel() {
             if (location != null) {
                 handleLocationSuccess(location)
             } else {
+                endLocationRequest()
                 loadState.postValue(LoadState.Error("获取定位失败,请重试"))
                 loadState.postValue(LoadState.Finish)
             }
@@ -389,10 +500,12 @@ class MainViewModel : BaseViewModel() {
             )
         } catch (securityException: SecurityException) {
             clearLocationListener()
+            endLocationRequest()
             loadState.postValue(LoadState.Error("定位权限不足，请重试"))
             loadState.postValue(LoadState.Finish)
         } catch (e: Exception) {
             clearLocationListener()
+            endLocationRequest()
             loadState.postValue(LoadState.Error("获取定位失败,请重试"))
             loadState.postValue(LoadState.Finish)
         }
@@ -421,12 +534,21 @@ class MainViewModel : BaseViewModel() {
                 // ignore disconnect errors
             }
         }
-        val city = location2CityEntity(location)
-        curLocation.postValue(city)
         launchSilent {
-            AppRepo.getInstance().addCity(city)
-            lasLocation = System.currentTimeMillis()
-            getCitiesCache()
+            try {
+                val city = location2CityEntity(location)
+                val resolvedCode = resolveLocationCityCode(city)
+                if (resolvedCode.isNotBlank()) {
+                    city.cityCode = resolvedCode
+                }
+                curLocation.postValue(city)
+                AppRepo.getInstance().addCity(city)
+                lasLocation = System.currentTimeMillis()
+                awaitCitiesCacheRefresh()
+                locationWeatherRefreshNonce.postValue(System.nanoTime())
+            } finally {
+                endLocationRequest()
+            }
         }
         loadState.postValue(LoadState.Finish)
     }
@@ -457,15 +579,19 @@ class MainViewModel : BaseViewModel() {
         return needShow
     }
 
+//    private var number = 0
     private fun location2CityEntity(location: Location): CityEntity {
         val cityEntity = CityEntity()
         var cityName = ""
         var district = ""
         var poiName = ""
         var cityCode = ""
+//        number += 1
 
         try {
             val geocoder = Geocoder(BaseApp.context, Locale.getDefault())
+//            val latitude = if (number%2 == 1) location.latitude else 39.9
+//            val longitude = if (number%2 == 1) location.longitude else 116.4
             val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
             val address = addresses?.firstOrNull()
             cityName = address?.locality ?: address?.subAdminArea ?: ""
@@ -486,7 +612,33 @@ class MainViewModel : BaseViewModel() {
         cityEntity.latitude = location.latitude.toString()
         cityEntity.longitude = location.longitude.toString()
         cityEntity.setLocal()
+        Log.e("TAG", "location2CityEntity: city = ${cityEntity.toString()}")
         return cityEntity
+    }
+
+    /**
+     * 定位得到的 cityCode 以 city.db 为准（010/021/0755...）。
+     * Geocoder 的 postalCode 常为空或为邮编，不适合作为业务 cityCode。
+     */
+    private suspend fun resolveLocationCityCode(city: CityEntity): String {
+        val candidates = linkedSetOf(
+            city.cityName,
+            city.shortName,
+            city.mergerName,
+            city.mergerName.substringBefore(" ").trim(),
+            city.cityName.removeSuffix("市").removeSuffix("县").removeSuffix("区").trim(),
+            city.shortName.removeSuffix("市").removeSuffix("县").removeSuffix("区").trim()
+        ).filter { it.isNotBlank() }
+
+        for (keyword in candidates) {
+            val match = AppRepo.getInstance()
+                .searchCity(keyword)
+                .firstOrNull { it.cityCode.isNotBlank() && !it.isLocal() }
+            if (match != null) {
+                return match.cityCode
+            }
+        }
+        return ""
     }
 
     // </editor-fold>
@@ -681,12 +833,14 @@ class MainViewModel : BaseViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        getWeathersDebounceJob?.cancel()
         clearLocationListener()
         try {
             lostApiClient?.disconnect()
         } catch (_: Exception) {
             // ignore disconnect errors
         }
+        endLocationRequest()
         timer?.cancel()
     }
 

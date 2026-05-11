@@ -349,7 +349,10 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         }
 
-        mainViewModel.curLocation.observe(this) { city ->
+        // 定位成功后由 MainViewModel 递增 nonce，避免仅依赖 curLocation 时偶发不触发重新拉天气
+        mainViewModel.locationWeatherRefreshNonce.observe(this) { nonce ->
+            if (nonce == null) return@observe
+            val city = mainViewModel.curLocation.value ?: return@observe
             if (mCityId == LOCATION_ID && city.isLocal()) {
                 viewModel.refreshWithCity(city)
             }
@@ -408,12 +411,12 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             }
         }
         //  彩铃
-        mCurrentBinding.cailingBtn.setOnClickListener {
-            BaseWebActivity.startActivity(requireContext(),
-                LINK_CAILING,
-                resources.getString(R.string.title_cailing),
-                "Ac_Cailing")
-        }
+//        mCurrentBinding.cailingBtn.setOnClickListener {
+//            BaseWebActivity.startActivity(requireContext(),
+//                LINK_CAILING,
+//                resources.getString(R.string.title_cailing),
+//                "Ac_Cailing")
+//        }
         //  出行
         mCurrentBinding.chuxingBtn.setOnClickListener {
             travelPopup = TravelPopup(requireContext())

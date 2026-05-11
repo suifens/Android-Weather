@@ -13,6 +13,7 @@ import com.chunjing.tq.adapter.FragmentPagerAdapter
 import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.databinding.FragmentMainBinding
 import com.chunjing.tq.db.entity.CityEntity
+import com.chunjing.tq.db.entity.LOCATION_ID
 import com.chunjing.tq.db.entity.WeatherBgEntity
 import com.chunjing.tq.imageLoader
 import com.chunjing.tq.mainViewModel
@@ -41,7 +42,7 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
     override fun initView(view: View?) {
 
         val bars = ConstraintLayout.LayoutParams(mBinding.privateStationBar.layoutParams)
-        bars.height = bars.height + BarUtils.getStatusBarHeight()
+        bars.height += BarUtils.getStatusBarHeight()
         mBinding.privateStationBar.layoutParams = bars
         
 //        configVideoView()
@@ -112,6 +113,22 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
                 mCurIndex = it
             }
         }
+
+        // 定位城市：随 curLocation 更新标题与内存列表（天气由 WeatherFragment 订阅 locationWeatherRefreshNonce 后 refreshWithCity 统一拉取）
+        mainViewModel.curLocation.observe(this) { city ->
+            if (!city.isLocal()) return@observe
+            if (city.latitude.isBlank() || city.longitude.isBlank()) return@observe
+
+            val locIndex = mCityList.indexOfFirst { it.cityId == LOCATION_ID }
+            if (locIndex >= 0) {
+                mCityList[locIndex] = city
+            }
+            if (locIndex >= 0 && mCurIndex == locIndex) {
+                mBinding.ivLoc.visibility = View.VISIBLE
+                mBinding.cityNameTv.text = city.mergerName.ifBlank { city.cityName }
+            }
+        }
+
         mBinding.fabRemoveAd.clickNoRepeat {
             // 启动去广告页面
             RemoveAdActivity.startActivity(requireActivity())
@@ -239,10 +256,19 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
      */
     private fun configCities(cityList: List<CityEntity>) {
 
+        val previousTabIds = mCityList.map { it.cityId }
+
         mCityList.clear()
         mCityList.addAll(cityList)
-        if (mCurIndex >= cityList.size || isNewCity) {
-            mCurIndex = cityList.size - 1
+
+        val pendingTabCityId = mainViewModel.consumePendingSelectCityTab()
+        if (!pendingTabCityId.isNullOrBlank()) {
+            val idx = cityList.indexOfFirst { it.cityId == pendingTabCityId }
+            mCurIndex = if (idx >= 0) idx else cityList.lastIndex.coerceAtLeast(0)
+            isNewCity = false
+        } else if (mCurIndex >= cityList.size || isNewCity) {
+            mCurIndex = (cityList.size - 1).coerceAtLeast(0)
+            isNewCity = false
         }
 
         cityList[mCurIndex].let {
@@ -258,26 +284,20 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
             if (cityList[mCurIndex].isLocal()) View.VISIBLE else View.INVISIBLE
         mBinding.cityNameTv.text = if (cityList[mCurIndex].isLocal()) cityList[mCurIndex].mergerName else cityList[mCurIndex].cityName
 
-        mBinding.llRound.removeAllViews()
+        val nextTabIds = cityList.map { it.cityId }
+        val sameTabStructure =
+            previousTabIds.isNotEmpty() && previousTabIds.size == nextTabIds.size && previousTabIds == nextTabIds
 
-        // 宽高参数
-        val size = SizeUtils.dp2px(4f)
-        val layoutParams = LinearLayout.LayoutParams(size, size)
-        // 设置间隔
-        layoutParams.rightMargin = 10
-
-        for (i in cityList.indices) {
-            // 创建底部指示器(小圆点)
-            val view = View(mContext)
-            view.setBackgroundResource(R.drawable.item_round)
-            view.isEnabled = false
-
-            // 添加到LinearLayout
-            mBinding.llRound.addView(view, layoutParams)
+        if (sameTabStructure) {
+            bindCityPageIndicators(cityList)
+            if (cityList.isNotEmpty()) {
+                mainViewModel.setCity(cityList[mCurIndex])
+                mBinding.viewPager.setCurrentItem(mCurIndex, false)
+            }
+            return
         }
-        // 小白点
-        mBinding.llRound.getChildAt(mCurIndex).isEnabled = true
-        mBinding.llRound.visibility = View.VISIBLE
+
+        bindCityPageIndicators(cityList)
 
         fragments.clear()
         for (city in cityList) {
@@ -288,6 +308,24 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
 
         mBinding.viewPager.adapter = FragmentPagerAdapter(this, fragments)
         mBinding.viewPager.currentItem = mCurIndex
+    }
+
+    private fun bindCityPageIndicators(cityList: List<CityEntity>) {
+        mBinding.llRound.removeAllViews()
+        val size = SizeUtils.dp2px(4f)
+        val layoutParams = LinearLayout.LayoutParams(size, size)
+        layoutParams.rightMargin = 10
+        for (i in cityList.indices) {
+            val view = View(mContext)
+            view.setBackgroundResource(R.drawable.item_round)
+            view.isEnabled = false
+            mBinding.llRound.addView(view, layoutParams)
+        }
+        if (cityList.isNotEmpty()) {
+            val dotIndex = mCurIndex.coerceIn(0, cityList.lastIndex)
+            mBinding.llRound.getChildAt(dotIndex).isEnabled = true
+        }
+        mBinding.llRound.visibility = View.VISIBLE
     }
 
 }

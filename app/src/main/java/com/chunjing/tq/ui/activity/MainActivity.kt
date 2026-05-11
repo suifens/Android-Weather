@@ -72,6 +72,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             mainViewModel.showIndex.postValue(1000)
             context.startActivity(intent)
         }
+
+        /** 从添加城市返回：不修改 showIndex，由 MainViewModel 的 pending + MainFragment 选中对应 Tab */
+        fun startActivityFromAddCity(context: Activity) {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            context.startActivity(intent)
+        }
     }
 
     private val TAG = "MainActivity"
@@ -118,13 +125,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun initEvent() {
 
         mainViewModel.cities.observe(this) {
-            mainViewModel.getWeathers()
+            mainViewModel.scheduleGetWeathersDebounced()
         }
 
-        mainViewModel.needLocation.observe(this) {
-            if (it) {
-                //  开始定位
-                checkLocation()
+        mainViewModel.needLocation.observe(this) { need ->
+            if (need == true) {
+                if (NetworkUtils.isConnected() && checkGPSOpen() && checkGPSPermission()) {
+                    mainViewModel.getLocation()
+                }
+                mainViewModel.acknowledgeNeedLocationRequest()
             }
         }
 
@@ -150,6 +159,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         mainViewModel.getCitiesCache()
         mainViewModel.getCacheLocation()
         checkUpdate()
+        requestInitialLocationOnce()
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            delay(4000L)
@@ -249,11 +259,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         isShowing = false
     }
 
-    private fun checkLocation() {
-        //  检测是否需要定位
-        if (NetworkUtils.isConnected() && checkGPSOpen() && checkGPSPermission()) {
-            mainViewModel.getLocation()
+    /**
+     * 冷启动进入主页后统一在此处请求一次定位，避免与闪屏阶段重复触发 [MainViewModel.getLocation]；
+     * 配置变更导致 Activity 重建时不会再次请求。
+     */
+    private fun requestInitialLocationOnce() {
+        if (!NetworkUtils.isConnected() || !checkGPSOpen() || !checkGPSPermission()) {
+            return
         }
+        if (!mainViewModel.consumeMainStartupLocationInvoke()) {
+            return
+        }
+        mainViewModel.getLocation()
     }
 
     private fun selectedTab(index: Int) {

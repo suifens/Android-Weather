@@ -10,8 +10,6 @@ import com.chunjing.tq.R
 import com.chunjing.tq.ad.AdManager
 import com.chunjing.tq.databinding.ActivitySplashBinding
 import com.chunjing.tq.db.AppRepo
-import com.chunjing.tq.ext.checkGPSOpen
-import com.chunjing.tq.ext.checkGPSPermission
 import com.chunjing.tq.ext.startWidgetService
 import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.base.BaseActivity
@@ -19,7 +17,7 @@ import com.chunjing.tq.utils.AdRemovalManager
 import com.chunjing.tq.utils.ContentUtil
 import com.goodtech.weatherlib.extension.startActivity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,9 +28,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     private var isAdShowing = false
     private var isDataReady = false
     private var citySize = 0
+    private var splashInitJob: Job? = null
 
     private fun startIntent() {
-        lifecycleScope.launch {
+        if (splashInitJob?.isActive == true) {
+            return
+        }
+        splashInitJob = lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val cities = AppRepo.getInstance().getCities()
                 citySize = cities.size
@@ -60,10 +62,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                 }
                 mainViewModel.fetchWeatherBg()
                 mainViewModel.fetchCalendarBg()
-
-                if (NetworkUtils.isConnected() && checkGPSOpen() && checkGPSPermission()) {
-                    mainViewModel.getLocation()
-                }
             }
             isDataReady = true
             tryGoNext()

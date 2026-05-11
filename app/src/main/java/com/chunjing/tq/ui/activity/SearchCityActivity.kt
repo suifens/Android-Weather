@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.chunjing.tq.adapter.SearchAdapter
@@ -21,6 +22,7 @@ import com.chunjing.tq.ui.base.BaseVmActivity
 import com.chunjing.tq.utils.ContentUtil
 import com.goodtech.weatherlib.ext.showSoftInput
 import com.goodtech.weatherlib.extension.startActivity
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 class SearchCityActivity : BaseVmActivity<ActivitySearchCityBinding, SearchViewModel>() {
@@ -90,32 +92,20 @@ class SearchCityActivity : BaseVmActivity<ActivitySearchCityBinding, SearchViewM
             showSearchResult(it)
         }
 
-        //  添加城市结束
-        viewModel.addFinish.observe(this) {
-
-            val cities = mainViewModel.cities.value!!
-            if (cities.size == 1) {
-                MainActivity.startActivity(this@SearchCityActivity, 0)
-            } else {
-
-                mainViewModel.setCityId(it)
-                val cities = mainViewModel.cities.value!!
-                var position = 1000
-                for (index in cities.indices) {
-                    val city = cities[index]
-                    if (city.cityId == it) {
-                        position = index
-                        break
-                    }
-                }
-                if (position == 1000) {
-                    MainActivity.startActivity(this, true)
+        //  添加城市结束：先同步刷新列表并带 pending，避免 cities 未更新时误走 showIndex=1000 且 onPause 清掉 isNewCity 后仍停在第一页
+        viewModel.addFinish.observe(this) { cityId ->
+            lifecycleScope.launch {
+                mainViewModel.setCityId(cityId)
+                mainViewModel.awaitCitiesCacheRefresh()
+                val tabIndex = mainViewModel.cities.value.orEmpty().indexOfFirst { it.cityId == cityId }
+                if (tabIndex >= 0) {
+                    MainActivity.startActivity(this@SearchCityActivity, tabIndex)
                 } else {
-                    MainActivity.startActivity(this, position)
+                    mainViewModel.setPendingSelectCityTab(cityId)
+                    MainActivity.startActivityFromAddCity(this@SearchCityActivity)
                 }
+                finish()
             }
-
-            finish()
         }
     }
 

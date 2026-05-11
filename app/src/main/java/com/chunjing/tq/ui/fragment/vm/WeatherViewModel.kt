@@ -47,8 +47,17 @@ class WeatherViewModel : BaseViewModel() {
     @SuppressLint("NullSafeMutableLiveData")
     fun loadCache(cityId: String) {
         launch {
-            AppRepo.getInstance().getCity(cityId)?.let { city ->
-                curCity.postValue(city)
+            val city = AppRepo.getInstance().getCity(cityId)
+            if (city == null && cityId == LOCATION_ID) {
+                mainViewModel.curLocation.value?.let { loc ->
+                    if (loc.isLocal()) {
+                        refreshWithCity(loc)
+                        return@launch
+                    }
+                }
+            }
+            city?.let {
+                curCity.postValue(it)
                 getPeripheralCities()
                 //  天气
                 val weather = AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + city.cityId)

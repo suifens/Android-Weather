@@ -10,6 +10,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
@@ -37,8 +38,6 @@ import com.goodtech.weatherlib.extension.startActivity
 import com.goodtech.weatherlib.extension.toast
 import com.goodtech.weatherlib.net.LoadState
 import com.lxj.xpopup.XPopup
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -153,7 +152,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
             if (fromLocation) {
                 fromLocation = false
                 viewModel.updateLocation(it)
-                CoroutineScope(Dispatchers.IO).launch {
+                lifecycleScope.launch {
                     if (fromSplash || firstLocation) {
                         startWidgetService()
                         delay(1000L)
@@ -224,7 +223,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
     }
 
     private fun addFinish(cityId: String) {
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
             startWidgetService()
 
             if (fromSplash) {
@@ -232,19 +231,13 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
                 MainActivity.startActivity(this@AddCityActivity, 0)
             } else {
                 mainViewModel.setCityId(cityId)
-                val cities = mainViewModel.cities.value!!
-                var position = 1000
-                for (index in cities.indices) {
-                    val city = cities[index]
-                    if (city.cityId == cityId) {
-                        position = index
-                        break
-                    }
-                }
-                if (position == 1000) {
-                    MainActivity.startActivity(this@AddCityActivity, true)
+                mainViewModel.awaitCitiesCacheRefresh()
+                val tabIndex = mainViewModel.cities.value.orEmpty().indexOfFirst { it.cityId == cityId }
+                if (tabIndex >= 0) {
+                    MainActivity.startActivity(this@AddCityActivity, tabIndex)
                 } else {
-                    MainActivity.startActivity(this@AddCityActivity, position)
+                    mainViewModel.setPendingSelectCityTab(cityId)
+                    MainActivity.startActivityFromAddCity(this@AddCityActivity)
                 }
             }
             finish()
@@ -399,7 +392,7 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
     }
 
     private fun changedSearchType(isSearch: Boolean) {
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch {
             if (isSearch) {
                 mBinding.backButton.visibility = View.GONE
                 mBinding.locationLayout.visibility = View.GONE
