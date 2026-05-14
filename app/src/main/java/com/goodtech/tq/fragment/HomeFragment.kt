@@ -210,6 +210,9 @@ class HomeFragment : BaseFragment() {
                 cityModes = cityModesFromSp.toMutableList()
             }
             reloadView()
+        } else {
+            // 兜底同步定位城市：防止在其他页面刷新定位后，回到首页顶部城市文案未更新
+            syncLatestLocationIfNeeded()
         }
     }
 
@@ -291,12 +294,8 @@ class HomeFragment : BaseFragment() {
         }
 
         if (event.isSuccessLocation) {
-            // 定位成功
-            val cityMode = LocationSpHelper.getLocation()
-            if (cityMode != null && cityModes.isNotEmpty()) {
-                cityModes[0] = cityMode
-                reloadWeather(0)
-            }
+            // 定位成功后强制同步一次列表与顶部城市文案
+            syncLatestLocationIfNeeded()
         }
         
         if (event.isNeedReload) {
@@ -440,6 +439,31 @@ class HomeFragment : BaseFragment() {
     private fun setAddress(cityMode: CityMode) {
         binding.imgLocation.visibility = if (cityMode.location) View.VISIBLE else View.GONE
         binding.tvAddress.text = cityMode.getMergerName()
+    }
+
+    private fun syncLatestLocationIfNeeded() {
+        val latestLocation = LocationSpHelper.getLocation() ?: return
+        val latestCityModes = LocationSpHelper.getCityListAndLocation()
+        if (latestCityModes.isEmpty()) return
+
+        val oldFirst = cityModes.firstOrNull()
+        cityModes = latestCityModes.toMutableList()
+
+        // 当前页是定位城市时，直接刷新顶部城市名称与对应天气
+        if (currIndex == 0) {
+            setAddress(cityModes[0])
+            reloadWeather(0)
+        }
+
+        // 城市数量变化或定位城市文本变化时，重建页面确保列表与指示器一致
+        val locationChanged = oldFirst == null ||
+            oldFirst.getMergerName() != latestLocation.getMergerName() ||
+            oldFirst.getLat() != latestLocation.getLat() ||
+            oldFirst.getLon() != latestLocation.getLon()
+        if (locationChanged || fragmentList.size != cityModes.size) {
+            isNeedReload = true
+            reloadView()
+        }
     }
 
     private fun setSignedIn(signedIn: Boolean) {

@@ -7,7 +7,9 @@ import android.location.Location;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
+import com.goodtech.tq.models.CityCodeMode;
 import com.goodtech.tq.models.CityMode;
+import com.goodtech.tq.modules.citySearch.CityHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.google.gson.Gson;
@@ -37,11 +39,24 @@ public class LocationSpHelper {
             }
             return;
         } else {
+            String cityName = getCityName(address, district);
+            String cityCode = getCityCodeByName(cityName, district);
+
             cityMode.setListNum(0);
-            cityMode.setCid(1000);
+            // lost 不直接返回高德 cityCode，这里通过本地 cityCode.json 进行城市码反查
+            if (!TextUtils.isEmpty(cityCode)) {
+                cityMode.setPoiId(cityCode);
+                try {
+                    cityMode.setCid(Integer.parseInt(cityCode));
+                } catch (NumberFormatException ignore) {
+                    cityMode.setCid(1000);
+                }
+            } else {
+                cityMode.setCid(1000);
+            }
             cityMode.setLat(String.valueOf(location.getLatitude()));
             cityMode.setLon(String.valueOf(location.getLongitude()));
-            cityMode.setCity(district);
+            cityMode.setCity(cityName);
             cityMode.setMergerName(String.format("%s %s", district, getPoiName(address)));
             //  获取天气信息
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(App.instance);
@@ -84,6 +99,55 @@ public class LocationSpHelper {
             return address.getThoroughfare();
         }
         return "";
+    }
+
+    private static String getCityName(Address address, String district) {
+        if (address != null) {
+            if (!TextUtils.isEmpty(address.getLocality())) {
+                return address.getLocality();
+            }
+            if (!TextUtils.isEmpty(address.getSubAdminArea())) {
+                return address.getSubAdminArea();
+            }
+            if (!TextUtils.isEmpty(address.getAdminArea())) {
+                return address.getAdminArea();
+            }
+        }
+        return district;
+    }
+
+    private static String getCityCodeByName(String cityName, String district) {
+        String normalizedCity = normalizeCityName(cityName);
+        String normalizedDistrict = normalizeCityName(district);
+        ArrayList<CityCodeMode> codes = CityHelper.getCityCodes(App.instance);
+        for (CityCodeMode code : codes) {
+            String name = normalizeCityName(code.getCity_name());
+            if (TextUtils.isEmpty(name)) {
+                continue;
+            }
+            if (!TextUtils.isEmpty(normalizedCity) && (name.contains(normalizedCity) || normalizedCity.contains(name))) {
+                return code.getCity_code();
+            }
+            if (!TextUtils.isEmpty(normalizedDistrict) && (name.contains(normalizedDistrict) || normalizedDistrict.contains(name))) {
+                return code.getCity_code();
+            }
+        }
+        return "";
+    }
+
+    private static String normalizeCityName(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return "";
+        }
+        return value
+                .replace("省", "")
+                .replace("市", "")
+                .replace("地区", "")
+                .replace("自治州", "")
+                .replace("盟", "")
+                .replace("县", "")
+                .replace("区", "")
+                .trim();
     }
 
     /**

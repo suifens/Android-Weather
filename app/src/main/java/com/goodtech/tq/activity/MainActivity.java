@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
         App.getInstance().setMainActivity(this);
         initColors();
         setupViewPager();
-        setupTabs();
+//        setupTabs();
         handleIntent();
         initApp();
 //        registerEventBus();
@@ -88,8 +88,8 @@ public class MainActivity extends BaseActivity {
         
         // 添加Fragment
         mFragmentList.add(new HomeFragment());
-        mFragmentList.add(new DrawDramaFragment());
-        mFragmentList.add(new VideoDrawFragment());
+//        mFragmentList.add(new DrawDramaFragment());
+//        mFragmentList.add(new VideoDrawFragment());
         
         mPagerAdapter = new MainPagerAdapter(this, mFragmentList);
         mViewPager.setAdapter(mPagerAdapter);
@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 mCurrentTabIndex = position;
-                changeTab(false);
+//                changeTab(false);
             }
         });
     }
@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity {
         mediator.attach();
         
         // 设置初始选中状态
-        changeTab(false);
+//        changeTab(false);
     }
 
     private void handleIntent() {

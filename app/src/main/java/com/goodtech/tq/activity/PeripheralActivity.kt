@@ -31,6 +31,14 @@ class PeripheralActivity : BaseVmActivity<ActivityPeripheralBinding, PeripheralV
         }
     }
 
+    /**
+     * Kotlin / R8 下父类泛型可能无法通过反射解析，显式提供 ViewModel 类型避免 ClassCastException。
+     */
+    @Suppress("UNCHECKED_CAST")
+    override fun getViewModelClass(): Class<PeripheralViewModel> {
+        return PeripheralViewModel::class.java as Class<PeripheralViewModel>
+    }
+
     private var mCityList: ArrayList<CityMode>? = null
     private var mAdapter: PeripheralAdapter? = null
 

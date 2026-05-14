@@ -44,6 +44,14 @@ import kotlinx.coroutines.launch
  */
 class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewModel>() {
 
+    /**
+     * Kotlin / R8 下父类泛型可能无法通过反射解析，显式提供 ViewModel 类型避免 ClassCastException。
+     */
+    @Suppress("UNCHECKED_CAST")
+    override fun getViewModelClass(): Class<RemoveAdViewModel> {
+        return RemoveAdViewModel::class.java as Class<RemoveAdViewModel>
+    }
+
     companion object {
         private const val TAG = "RemoveAdActivity"
         // 奖励视频广告位ID（如果没有配置，使用默认值，需要根据实际情况修改）

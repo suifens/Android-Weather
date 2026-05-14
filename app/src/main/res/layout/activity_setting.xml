@@ -64,6 +64,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/private_station_bar">
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center"
@@ -79,8 +80,8 @@
                         android:id="@+id/short_play_btn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@color/color_clear"
                         android:layout_weight="1"
+                        android:background="@color/color_clear"
                         app:srcCompat="@drawable/ic_csj" />
 
                     <View

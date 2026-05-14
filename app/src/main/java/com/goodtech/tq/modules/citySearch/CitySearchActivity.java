@@ -203,6 +203,9 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     public void onMessageEvent(MessageEvent event) {
         if (event.isSuccessLocation()) {
             mHandler.post(() -> mRecommendHeaderView.updateLocation());
+            // 手动刷新定位后，通知首页刷新城市列表与顶部城市信息
+            EventBus.getDefault().post(new MessageEvent().needReload(true));
+            EventBus.getDefault().post(new CityEvent().setCityIndex(0));
 
             App.instance.startIntent(CitySearchActivity.this);
 
@@ -224,6 +227,7 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
                 }
                 return;
             }
+            isRefresh = false;
         }
         TipHelper.dismissProgressDialog();
     }
