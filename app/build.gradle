@@ -25,8 +25,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdk 24
         targetSdk 35
-        versionCode 1620
-        versionName "16.2.0"
+        versionCode 1621
+        versionName "16.2.1"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -283,18 +283,18 @@ dependencies {
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc08'
 
     //  极光推送
-    implementation 'cn.jiguang.sdk:jpush:5.8.0'  // 此处以JPush 4.0.0 版本为例
+    implementation 'cn.jiguang.sdk:jpush:6.1.1'  // 此处以JPush 4.0.0 版本为例
     // 接入华为厂商
-    implementation 'com.huawei.hms:push:6.12.0.300'
-    implementation 'cn.jiguang.sdk.plugin:huawei:5.8.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
+    implementation 'com.huawei.hms:push:6.13.0.301'
+    implementation 'cn.jiguang.sdk.plugin:huawei:6.1.1'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
     // 接入魅族厂商
-    implementation 'cn.jiguang.sdk.plugin:meizu:5.8.0'
+    implementation 'cn.jiguang.sdk.plugin:meizu:6.1.1'
     // 接入 VIVO 厂商
 //    implementation 'cn.jiguang.sdk.plugin:vivo:5.8.0'
     // 接入 OPPO 厂商
-    implementation 'cn.jiguang.sdk.plugin:oppo:5.8.0'
+    implementation 'cn.jiguang.sdk.plugin:oppo:6.1.1'
     // 接入小米厂商
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:5.8.0'
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:6.1.1'
 
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如4.0.3
     implementation 'com.tencent.bugly:crashreport:latest.release'

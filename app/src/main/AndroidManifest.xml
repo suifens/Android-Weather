@@ -520,8 +520,9 @@
 
         <!--<editor-fold desc="meizu push config">-->
         <receiver android:name="cn.jpush.android.service.PluginMeizuPlatformsReceiver"
-            android:permission="com.meizu.flyme.permission.PUSH"
-            android:exported="true">
+            android:permission="com.meizu.cloud.push.permission.MESSAGE"
+            android:exported="true"
+            tools:replace="android:permission">
             <intent-filter>
                 <!-- 接收 push 消息 -->
                 <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
