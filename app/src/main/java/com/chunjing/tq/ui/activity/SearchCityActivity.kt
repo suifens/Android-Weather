@@ -95,7 +95,6 @@ class SearchCityActivity : BaseVmActivity<ActivitySearchCityBinding, SearchViewM
         //  添加城市结束：先同步刷新列表并带 pending，避免 cities 未更新时误走 showIndex=1000 且 onPause 清掉 isNewCity 后仍停在第一页
         viewModel.addFinish.observe(this) { cityId ->
             lifecycleScope.launch {
-                mainViewModel.setCityId(cityId)
                 mainViewModel.awaitCitiesCacheRefresh()
                 val tabIndex = mainViewModel.cities.value.orEmpty().indexOfFirst { it.cityId == cityId }
                 if (tabIndex >= 0) {

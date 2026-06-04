@@ -135,16 +135,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     override fun onResume() {
         super.onResume()
 
-//        mCityId.let {
-//            mainViewModel.setCityId(it)
-//        }
-        bgEntity?.let {
-            mainViewModel.setBgEntity(mCityId, it)
-        }
-        mWeather?.let {
-            mainViewModel.setWeather(mCityId, it)
-        }
-
         if (travelPopup != null && ContentUtil.travelCity != null) {
             travelPopup!!.setupTravelCity(ContentUtil.travelCity!!)
             ContentUtil.travelCity = null
@@ -152,6 +142,13 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         viewModel.lifeLiveData.value?.let {
             mLifeAdapter?.updateData(it)
+        }
+
+        // 切 Tab 时 weatherNow 可能已就绪且不会再次 post，需主动同步顶栏背景
+        if (mCityId == mainViewModel.curCityId) {
+            viewModel.weatherNow.value?.let {
+                mainViewModel.onCityWeatherUpdated(mCityId, it, forceBackground = true)
+            }
         }
 
         // 从去广告页返回时，若在去广告期间则隐藏广告
@@ -293,7 +290,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
                 // 本地城市下拉刷新时优先触发重新定位，避免沿用旧坐标
                 mainViewModel.getLocation()
             } else {
-                loadData()
+                viewModel.refreshCurrentWeather(mCityId)
             }
         }
 
@@ -307,13 +304,11 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         viewModel.curBgEntity.observe(this) {
             bgEntity = it
-            mainViewModel.setBgEntity(mCityId, it)
         }
 
         viewModel.weatherNow.observe(this) {
             showWeatherNow(it)
-            viewModel.getWeatherBgEntity(it, false)
-            mainViewModel.setWeather(mCityId, it)
+            mainViewModel.onCityWeatherUpdated(mCityId, it)
         }
 
         viewModel.warnings.observe(this) {
@@ -357,6 +352,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
                 viewModel.refreshWithCity(city)
             }
         }
+
     }
 
     override fun loadData() {

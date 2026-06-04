@@ -230,7 +230,6 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
                 mainViewModel.showIndex.postValue(0)
                 MainActivity.startActivity(this@AddCityActivity, 0)
             } else {
-                mainViewModel.setCityId(cityId)
                 mainViewModel.awaitCitiesCacheRefresh()
                 val tabIndex = mainViewModel.cities.value.orEmpty().indexOfFirst { it.cityId == cityId }
                 if (tabIndex >= 0) {

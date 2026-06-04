@@ -3,13 +3,12 @@ package com.chunjing.tq.ui.activity
 import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chunjing.tq.R
-import com.chunjing.tq.adapter.FragmentPagerAdapter
+import com.chunjing.tq.adapter.CityWeatherPagerAdapter
 import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.databinding.FragmentMainBinding
 import com.chunjing.tq.db.entity.CityEntity
@@ -29,8 +28,8 @@ import org.greenrobot.eventbus.ThreadMode
 
 class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
 
-    private val fragments: MutableList<Fragment> by lazy { ArrayList() }
     private val mCityList = ArrayList<CityEntity>()
+    private var cityPagerAdapter: CityWeatherPagerAdapter? = null
     private var mCityChanged: Boolean = false
     private var mCurIndex = 0
     private var isNewCity = false
@@ -58,7 +57,8 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
 //            startActivity<WeatherShareActivity>()
 //        }
 
-        mBinding.viewPager.adapter = FragmentPagerAdapter(this, fragments)
+        cityPagerAdapter = CityWeatherPagerAdapter(this)
+        mBinding.viewPager.adapter = cityPagerAdapter
         mBinding.viewPager.offscreenPageLimit = 5
 
         /// 滑动
@@ -78,7 +78,7 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
                 mCurIndex = i
 
                 if (mCityList.size > i) {
-                    mainViewModel.setCity(mCityList[i])
+                    mainViewModel.onCurrentCityChanged(mCityList[i])
                 }
             }
         })
@@ -101,9 +101,7 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
         }
 
         mainViewModel.curBgEntity.observe(this) {
-            if (isShowing) {
-                showBg(it)
-            }
+            showBg(it)
         }
 
         mainViewModel.showIndex.observe(this) {
@@ -146,16 +144,23 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
         super.onResume()
         isShowing = true
         if (mCityChanged) {
-            showLoading(true)
+//            showLoading(true)
             mainViewModel.getCitiesCache()
             mCityChanged = false
-        } else {
-            if (mCityList.isNotEmpty()) {
-                for (i in mainViewModel.cities.value!!.indices) {
-                    mBinding.llRound.getChildAt(i).isEnabled = mCurIndex == i
-                }
-                mBinding.viewPager.setCurrentItem(mCurIndex, true)
+        } else if (mCityList.isNotEmpty()) {
+            for (i in mainViewModel.cities.value!!.indices) {
+                mBinding.llRound.getChildAt(i).isEnabled = mCurIndex == i
             }
+            mBinding.viewPager.setCurrentItem(mCurIndex, true)
+        }
+        // 加城/从子页返回时，背景可能在 onPause 期间已 post，此处强制对齐当前 Tab
+        mBinding.viewPager.post {
+            if (!isAdded || mCityList.isEmpty() || mCurIndex !in mCityList.indices) {
+                return@post
+            }
+            mainViewModel.onCurrentCityChanged(mCityList[mCurIndex])
+            mainViewModel.syncHomeBackgroundForCurCity(force = true)
+            mainViewModel.curBgEntity.value?.let { showBg(it) }
         }
     }
 
@@ -180,6 +185,12 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
         if (event.cityChanged) {
             mCityChanged = true
         }
+        if (event.selectedCityId.isNotEmpty()) {
+            val idx = mCityList.indexOfFirst { it.cityId == event.selectedCityId }
+            if (idx >= 0) {
+                mCurIndex = idx
+            }
+        }
     }
 
     private var mBgEntity: WeatherBgEntity? = null
@@ -203,13 +214,12 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
 
     private fun showWeatherImg(bgEntity: WeatherBgEntity) {
         mBinding.weatherImgV.visibility = View.VISIBLE
-        val originDrawable = mBinding.weatherImgV.drawable
+        val cacheKey = "${bgEntity.tempType}_${bgEntity.timeType}"
         mBinding.weatherImgV.load(bgEntity.imgPath, imageLoader) {
-            if (originDrawable == null) {
-                placeholder(R.drawable.gradient_weather_main)
-            } else {
-                placeholder(originDrawable)
-            }
+            crossfade(true)
+            placeholder(R.drawable.gradient_weather_main)
+            memoryCacheKey(cacheKey)
+            diskCacheKey(cacheKey)
         }
     }
 
@@ -266,7 +276,13 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
             val idx = cityList.indexOfFirst { it.cityId == pendingTabCityId }
             mCurIndex = if (idx >= 0) idx else cityList.lastIndex.coerceAtLeast(0)
             isNewCity = false
-        } else if (mCurIndex >= cityList.size || isNewCity) {
+        } else {
+            val tabFromShowIndex = mainViewModel.showIndex.value
+            if (tabFromShowIndex != null && tabFromShowIndex in cityList.indices) {
+                mCurIndex = tabFromShowIndex
+            }
+        }
+        if (pendingTabCityId.isNullOrBlank() && (mCurIndex >= cityList.size || isNewCity)) {
             mCurIndex = (cityList.size - 1).coerceAtLeast(0)
             isNewCity = false
         }
@@ -291,23 +307,38 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
         if (sameTabStructure) {
             bindCityPageIndicators(cityList)
             if (cityList.isNotEmpty()) {
-                mainViewModel.setCity(cityList[mCurIndex])
                 mBinding.viewPager.setCurrentItem(mCurIndex, false)
+                applyCurrentCitySelection()
             }
             return
         }
 
         bindCityPageIndicators(cityList)
+        updateCityPager(cityList.map { it.cityId })
+        mBinding.viewPager.setCurrentItem(mCurIndex, false)
+        applyCurrentCitySelection()
+    }
 
-        fragments.clear()
-        for (city in cityList) {
-            val cityId = city.cityId
-            val weatherFragment = WeatherFragment.newInstance(cityId)
-            fragments.add(weatherFragment)
+    private fun updateCityPager(cityIds: List<String>) {
+        var adapter = cityPagerAdapter
+        if (adapter == null) {
+            adapter = CityWeatherPagerAdapter(this)
+            cityPagerAdapter = adapter
+            mBinding.viewPager.adapter = adapter
         }
+        adapter.applyCityIds(cityIds)
+    }
 
-        mBinding.viewPager.adapter = FragmentPagerAdapter(this, fragments)
-        mBinding.viewPager.currentItem = mCurIndex
+    /** 与当前 ViewPager Tab 对齐 curCityId，并刷新顶栏背景 */
+    private fun applyCurrentCitySelection() {
+        if (mCityList.isEmpty() || mCurIndex !in mCityList.indices) {
+            return
+        }
+        mBinding.viewPager.post {
+            if (isAdded) {
+                mainViewModel.onCurrentCityChanged(mCityList[mCurIndex])
+            }
+        }
     }
 
     private fun bindCityPageIndicators(cityList: List<CityEntity>) {

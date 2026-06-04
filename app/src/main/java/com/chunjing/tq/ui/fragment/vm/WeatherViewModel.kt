@@ -18,6 +18,7 @@ import com.chunjing.tq.ext.*
 import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.base.BaseViewModel
 import com.goodtech.weatherlib.BaseApp
+import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.net.HttpUtils
 import com.goodtech.weatherlib.utils.SpUtils
 import com.goodtech.weatherlib.utils.Utils
@@ -139,14 +140,45 @@ class WeatherViewModel : BaseViewModel() {
 
     fun refreshWithCity(city: CityEntity) {
         curCity.postValue(city)
-        fetchWeatherData(city)
+        fetchWeatherData(city, forceHomeBackground = true)
         fetchAlarmData(city)
         fetchLifeData(city)
         fetchQueryData(city)
     }
 
-    //  获取背景
-    fun getWeatherBgEntity(weather: WeatherBean, isItem: Boolean) {
+    /** 下拉刷新：强制拉网络并刷新顶栏背景 */
+    fun refreshCurrentWeather(cityId: String) {
+        launch {
+            val city = AppRepo.getInstance().getCity(cityId) ?: return@launch
+            curCity.postValue(city)
+            loadState.postValue(LoadState.Start())
+            fetchAlarmData(city)
+            fetchLifeData(city)
+            fetchQueryData(city)
+            mainViewModel.fetchWeather(city) { result ->
+                result?.let { weather ->
+                    weather.updateTime = System.currentTimeMillis()
+                    weatherNow.postValue(weather)
+                    if (city.cityId == mainViewModel.curCityId) {
+                        mainViewModel.onCityWeatherUpdated(
+                            city.cityId,
+                            weather,
+                            forceBackground = true,
+                        )
+                    }
+                }
+                loadState.postValue(LoadState.Finish)
+            }
+        }
+    }
+
+    /**
+     * @param cityId 首页天气 Tab 的城市 id；非空时仅当 [MainViewModel.curCityId] 与之一致才解析背景，避免离屏页查库/拉配置
+     */
+    fun getWeatherBgEntity(weather: WeatherBean, isItem: Boolean, cityId: String? = null) {
+        if (cityId != null && mainViewModel.curCityId != cityId) {
+            return
+        }
         launchSilent {
             mainViewModel.getWeatherBg(weather) { entity ->
                 entity?.let {
@@ -169,12 +201,19 @@ class WeatherViewModel : BaseViewModel() {
     /**
      * 实时天气获取
      */
-    private fun fetchWeatherData(city: CityEntity) {
+    private fun fetchWeatherData(city: CityEntity, forceHomeBackground: Boolean = false) {
         launch {
             mainViewModel.fetchWeather(city) { result ->
                 result?.let { weather ->
                     weather.updateTime = System.currentTimeMillis()
                     weatherNow.postValue(weather)
+                    if (forceHomeBackground && city.cityId == mainViewModel.curCityId) {
+                        mainViewModel.onCityWeatherUpdated(
+                            city.cityId,
+                            weather,
+                            forceBackground = true,
+                        )
+                    }
                 }
             }
         }

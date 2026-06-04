@@ -62,14 +62,13 @@ class SearchViewModel : BaseViewModel() {
             val city = AppRepo.getInstance().getCity(it.cityId)
             if (city == null) {
                 mainViewModel.addCity(it)
-                mainViewModel.fetchWeather(it)
-//                mainViewModel.getCitiesCache()
-                delay(1000L)
                 EventBus.getDefault().post(MessageEvent(cityChanged = true))
             }
-
-            addFinish.postValue(it.cityId)
-            EventBus.getDefault().post(MessageEvent(selectedCityId = it.cityId))
+            // 先拉天气再回首页，避免 curBgEntity 更新时首页仍不可见或 map 尚无数据
+            mainViewModel.fetchWeather(it) { _ ->
+                addFinish.postValue(it.cityId)
+                EventBus.getDefault().post(MessageEvent(selectedCityId = it.cityId))
+            }
         }
     }
 

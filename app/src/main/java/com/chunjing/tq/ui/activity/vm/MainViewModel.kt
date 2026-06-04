@@ -78,6 +78,112 @@ class MainViewModel : BaseViewModel() {
      */
     val locationWeatherRefreshNonce = MutableLiveData<Long?>(null)
 
+    private var homeBgRefreshJob: Job? = null
+    private var lastHomeBgKey: String? = null
+    /** 递增后使更早的 [getWeatherBg] 回调失效，避免晴/多云切换时旧回调覆盖新背景 */
+    private var homeBgRequestSeq = 0L
+
+    /**
+     * ViewPager 切换到某城市：更新 [curCityId]，并用已有天气刷新顶栏背景（无天气则等 [onCityWeatherUpdated]）。
+     */
+    fun onCurrentCityChanged(city: CityEntity) {
+        if (curCityId != city.cityId) {
+            lastHomeBgKey = null
+        }
+        curCityId = city.cityId
+        curCity.postValue(city)
+        homeBgRefreshJob?.cancel()
+        homeBgRefreshJob = viewModelScope.launch {
+            delay(50)
+            if (curCityId != city.cityId) {
+                return@launch
+            }
+            val weather = mWeatherMap[city.cityId]
+                ?: AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + city.cityId)
+            if (weather != null) {
+                curWeather.postValue(weather)
+                updateHomeBackground(city.cityId, weather)
+            }
+        }
+    }
+
+    /**
+     * 某城市天气更新（缓存/网络）；仅当 [cityId] 为当前选中城市时刷新顶栏背景。
+     * @param forceBackground 为 true 时跳过去重，用于加城回首页、下拉刷新等需强制重绘顶栏的场景
+     */
+    fun onCityWeatherUpdated(
+        cityId: String,
+        weather: WeatherBean,
+        forceBackground: Boolean = false,
+    ) {
+        mWeatherMap[cityId] = weather
+        weatherMap.postValue(mWeatherMap)
+        if (cityId != curCityId) {
+            return
+        }
+        curWeather.postValue(weather)
+        updateHomeBackground(cityId, weather, forceBackground)
+    }
+
+    /** 按当前 [curCityId] 再算一次顶栏背景（Fragment 可见时补偿 isShowing=false 期间错过的 post） */
+    fun syncHomeBackgroundForCurCity(force: Boolean = false) {
+        val cityId = curCityId
+        if (cityId.isEmpty()) {
+            return
+        }
+        mWeatherMap[cityId]?.let { weather ->
+            if (force) {
+                lastHomeBgKey = null
+            }
+            updateHomeBackground(cityId, weather, force)
+            return
+        }
+        launchSilent {
+            val weather = AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + cityId)
+                ?: return@launchSilent
+            if (cityId != curCityId) {
+                return@launchSilent
+            }
+            if (force) {
+                lastHomeBgKey = null
+            }
+            updateHomeBackground(cityId, weather, force)
+        }
+    }
+
+    private fun updateHomeBackground(
+        cityId: String,
+        weather: WeatherBean,
+        force: Boolean = false,
+    ) {
+        if (cityId.isEmpty() || cityId != curCityId) {
+            return
+        }
+        if (force) {
+            lastHomeBgKey = null
+        }
+        val requestSeq = ++homeBgRequestSeq
+        val wxIcon = weather.observation.wxIcon
+        homeBgRefreshJob?.cancel()
+        homeBgRefreshJob = viewModelScope.launch {
+            delay(50)
+            if (cityId != curCityId || requestSeq != homeBgRequestSeq) {
+                return@launch
+            }
+            getWeatherBg(weather) { entity ->
+                if (entity == null || cityId != curCityId || requestSeq != homeBgRequestSeq) {
+                    return@getWeatherBg
+                }
+                val bgKey =
+                    "${cityId}_${entity.tempType}_${entity.timeType}_${wxIcon}_${weather.updateTime}"
+                if (force || bgKey != lastHomeBgKey) {
+                    lastHomeBgKey = bgKey
+                    curBgEntity.postValue(entity)
+                }
+            }
+        }
+    }
+
     /** 默认 false，避免 Activity 订阅时粘性分发 null/true 与冷启动 [getLocation] 叠成两次请求 */
     val needLocation = MutableLiveData(false)
 
@@ -89,6 +195,10 @@ class MainViewModel : BaseViewModel() {
     private val mBgMap = HashMap<String, WeatherBgEntity>()
 
     private val mWeatherMap = HashMap<String, WeatherBean>()
+
+    /** 刚拉过实时天气的城市，下一次 [scheduleGetWeathersDebounced] 全量时跳过，避免加城后重复请求 */
+    private val skipDebouncedWeatherCityIds = mutableSetOf<String>()
+
     private var lostApiClient: LostApiClient? = null
     private var locationListener: LocationListener? = null
 
@@ -145,15 +255,11 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun setWeather(cityId: String, weather: WeatherBean) {
-        if (curCityId != cityId) {
-            return
-        }
-        curWeather.postValue(weather)
+        onCityWeatherUpdated(cityId, weather)
     }
 
     fun setCity(city: CityEntity) {
-        curCityId = city.cityId
-        curCity.postValue(city)
+        onCurrentCityChanged(city)
     }
 
     fun setCityId(cityId: String) {
@@ -225,11 +331,23 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
+    fun markWeatherFresh(cityId: String) {
+        synchronized(skipDebouncedWeatherCityIds) {
+            skipDebouncedWeatherCityIds.add(cityId)
+        }
+    }
+
     //  获取所有城市的天气
     fun getWeathers() {
         launch {
-            cities.value?.let {
-                for (city in it) {
+            val skipIds = synchronized(skipDebouncedWeatherCityIds) {
+                skipDebouncedWeatherCityIds.toSet().also { skipDebouncedWeatherCityIds.clear() }
+            }
+            cities.value?.let { list ->
+                for (city in list) {
+                    if (city.cityId in skipIds) {
+                        continue
+                    }
                     fetchWeather(city)
                 }
             }
@@ -286,11 +404,9 @@ class MainViewModel : BaseViewModel() {
                     }
                 }
                 Log.e("TAG", "fetchWeather: ${result.dailies.size}")
-                //  保存数据
                 AppRepo.getInstance().saveCache(CACHE_WEATHER_NOW + city.cityId, result)
-
-                mWeatherMap[city.cityId] = result
-                weatherMap.postValue(mWeatherMap)
+                markWeatherFresh(city.cityId)
+                onCityWeatherUpdated(city.cityId, result)
                 callback?.invoke(result)
             } else {
                 callback?.invoke(null)
@@ -353,10 +469,11 @@ class MainViewModel : BaseViewModel() {
             val tempType = WeatherUtils.getTempType(weather.observation.wxIcon)
             val timeType = WeatherUtils.getTimeType(weather.timeType())
             val key = "$tempType-$timeType"
-            val entity = if (mBgMap.contains(key))
+            val entity = if (mBgMap.contains(key)) {
                 mBgMap[key]
-            else
-                AppRepo.getInstance().getWeatherBg(tempType, timeType)
+            } else {
+                AppRepo.getInstance().getWeatherBg(tempType, timeType)?.also { mBgMap[key] = it }
+            }
 
             if (entity == null) {
                 fetchWeatherBg {
@@ -364,6 +481,7 @@ class MainViewModel : BaseViewModel() {
                         if (it != null && it) {
                             val result =
                                 AppRepo.getInstance().getWeatherBg(tempType, timeType)
+                            result?.let { loaded -> mBgMap[key] = loaded }
                             callback?.invoke(result)
                         } else {
                             callback?.invoke(null)
@@ -546,6 +664,9 @@ class MainViewModel : BaseViewModel() {
                 lasLocation = System.currentTimeMillis()
                 awaitCitiesCacheRefresh()
                 locationWeatherRefreshNonce.postValue(System.nanoTime())
+                if (curCityId == LOCATION_ID) {
+                    AppRepo.getInstance().getCity(LOCATION_ID)?.let { onCurrentCityChanged(it) }
+                }
             } finally {
                 endLocationRequest()
             }
