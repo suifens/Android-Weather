@@ -15,9 +15,13 @@ import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.modules.others.airQuality.view.AirLifeView;
 import com.goodtech.tq.views.CircleProgressView;
-import com.umeng.analytics.MobclickAgent;
 
 public class AirQualityActivity extends BaseActivity {
+
+    @Override
+    protected String getUmPageChannel() {
+        return "Ac_AirQuality";
+    }
 
     private static final String EXTRA_CITY = "city";
     private static final String EXTRA_AQI = "aqi";
@@ -85,20 +89,6 @@ public class AirQualityActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         configUI();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart("Ac_AirQuality");
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd("Ac_AirQuality");
-        MobclickAgent.onPause(this);
     }
 
     @SuppressLint("DefaultLocale")

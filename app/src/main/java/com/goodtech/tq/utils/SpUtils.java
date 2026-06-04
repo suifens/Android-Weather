@@ -17,7 +17,7 @@ import com.tencent.mmkv.MMKV;
 public class SpUtils {
 
     public static final String VERSION_APP = "version"; //应用版本号
-    public static final String AGREE_PERMISSION = "agree_permission"; //同意权限
+    public static final String AGREE_PERMISSION = "agree_permission"; //同意隐私政策
     private static final String TAG = "SpUtils";
     private MMKV preferences;
 

@@ -14,11 +14,15 @@ import android.webkit.WebViewClient;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.utils.TipHelper;
-import com.umeng.analytics.MobclickAgent;
 
 import java.lang.reflect.Method;
 
 public class TyphoonActivity extends BaseActivity {
+
+    @Override
+    protected String getUmPageChannel() {
+        return "Ac_Typhoon";
+    }
 
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     protected boolean firstLoad = true;
@@ -55,8 +59,6 @@ public class TyphoonActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart("Ac_Typhoon");
-        MobclickAgent.onResume(this);
         if (!TextUtils.isEmpty(mUrl)) {
             if (mWebView.getUrl() != null) {
                 mWebView.reload();
@@ -70,8 +72,6 @@ public class TyphoonActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd("Ac_Typhoon");
-        MobclickAgent.onPause(this);
     }
 
     @Override

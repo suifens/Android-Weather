@@ -32,7 +32,6 @@ import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity;
 import com.goodtech.tq.modules.video.djx.DrawDramaActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
-import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -101,7 +100,6 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
         checkPermissions();
         if (isFirstLoad) {
             isFirstLoad = false;
@@ -109,12 +107,6 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
                 loadFeedAd();
             }
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 
     @SuppressLint({"QueryPermissionsNeeded", "NonConstantResourceId"})
@@ -189,7 +181,7 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
                     "Info List");
         } else if (v.getId() == R.id.layout_share_list) {
             PrivacyWebActivity.redirectTo(this,
-                    Constants.URL_SHARE_LIST,
+                    Constants.URL_PRIVACY_LIST,
                     getResources().getString(R.string.title_share_list),
                     "Share List");
         }

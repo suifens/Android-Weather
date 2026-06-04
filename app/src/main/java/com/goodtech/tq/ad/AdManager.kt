@@ -31,6 +31,12 @@ class AdManager {
     }
 
     fun loadFeedAd(activity: android.app.Activity, codeId: String, width: Int, callback: DataCallback<TTFeedAd>) {
+        com.goodtech.tq.app.App.ensureAdSdkInitialized {
+            loadFeedAdInternal(activity, codeId, width, callback)
+        }
+    }
+
+    private fun loadFeedAdInternal(activity: android.app.Activity, codeId: String, width: Int, callback: DataCallback<TTFeedAd>) {
         val adSlot = AdSlot.Builder()
             .setCodeId(codeId)
             .setExpressViewAcceptedSize(width.toFloat(), 0F)
@@ -133,6 +139,12 @@ class AdManager {
     }
 
     fun loadExpressAd(activity: android.app.Activity, codeId: String, width: Int, height: Int, callback: DataCallback<TTNativeExpressAd>) {
+        com.goodtech.tq.app.App.ensureAdSdkInitialized {
+            loadExpressAdInternal(activity, codeId, width, height, callback)
+        }
+    }
+
+    private fun loadExpressAdInternal(activity: android.app.Activity, codeId: String, width: Int, height: Int, callback: DataCallback<TTNativeExpressAd>) {
         val adSlot = AdSlot.Builder()
             .setCodeId(codeId)
             .setAdCount(1)

@@ -6,7 +6,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.bytedance.sdk.openadsdk.TTAdConfig
 import com.bytedance.sdk.openadsdk.TTAdConstant
 import com.bytedance.sdk.openadsdk.TTAdSdk
-import com.bytedance.sdk.openadsdk.TTCustomController
+import com.goodtech.tq.ad.AdPrivacyController
 
 /**
  * create by hanweiwei on 8/30/23
@@ -25,11 +25,7 @@ object CsjAdHolder {
             .allowShowNotify(true)
             .supportMultiProcess(false)
             .debug(false)
-            .customController(object : TTCustomController() {
-                override fun isCanUseWifiState(): Boolean {
-                    return false
-                }
-            })
+            .customController(AdPrivacyController())
             .build()
         TTAdSdk.init(application, build)
         TTAdSdk.start(object : TTAdSdk.Callback {

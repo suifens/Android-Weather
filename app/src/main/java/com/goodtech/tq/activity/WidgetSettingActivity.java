@@ -17,21 +17,8 @@ import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.widget.MyDoubleWidget;
 import com.goodtech.tq.widget.MyWidget;
-import com.umeng.analytics.MobclickAgent;
 
 public class WidgetSettingActivity extends BaseActivity {
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
 
     private ToggleButton clearBtn;
     private Button singleBtn;

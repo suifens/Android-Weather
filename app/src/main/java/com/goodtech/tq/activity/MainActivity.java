@@ -37,7 +37,6 @@ import com.goodtech.tq.views.popup.UpdatePopup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.lxj.xpopup.XPopup;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
@@ -128,8 +127,9 @@ public class MainActivity extends BaseActivity {
 
     private void initApp() {
         Log.e(TAG, "onCreate: ");
-        
-        // 检查app版本
+        if (SpUtils.getInstance().isAgreePermission()) {
+            App.getInstance().startCoreSdk();
+        }
         mHandler.postDelayed(this::checkNewVersion, 1000);
     }
 
@@ -156,18 +156,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (SpUtils.getInstance().isAgreePermission()) {
-            MobclickAgent.onResume(this);
-        }
         Log.e(TAG, "onResume: ");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (SpUtils.getInstance().isAgreePermission()) {
-            MobclickAgent.onPause(this);
-        }
     }
 
     @Override

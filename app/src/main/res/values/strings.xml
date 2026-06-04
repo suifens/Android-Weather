@@ -36,10 +36,19 @@
     <string name="button_delete">删除</string>
     <string name="button_done">完成</string>
 
-    <string name="permission_title1">感谢您选择%sAPP\n感谢您使用%s！我们深知个人信息对您的重要性,并会尽全力保护您的个人信息安全。在您使用%s提供的服务前，请仔细阅读《隐私政策》及《用户协议》内容,我们将严格按照前述政策，为您提供更好的服务。若您是14岁以下未成年人，请您务必要求您的监护人仔细阅读本协议，并在征得您的监护人同意的前提下使用我们的产品。如您同意该隐私政策,请点击"同意"并开始使用我们的产品及服务。如您对本政策内容有任何疑问、意见或建议,您可以通过邮箱app@1goodtech.com与我们联系。</string>
-    <string name="permission_title2">为了保证您可以正常使用%s的各项基本工具,我们将根据您使用的不同功能，可能会分别向您申请以下一项或多项权限</string>
-    <string name="msg_disagree">游客模式不会收集您的个人信息，但可能导致部分功能无法使用，同意《隐私政策》《用户协议》，体验精准天气预报等功能！</string>
-    <string name="msg_permission">若您想使用此功能，需要您同意《隐私政策》和《用户协议》</string>
+    <string name="permission_title1">感谢您选择%sAPP\n感谢您使用%s！我们深知个人信息对您的重要性,并会尽全力保护您的个人信息安全。在您使用%s提供的服务前，请仔细阅读《隐私政策》《用户协议》及下方第三方SDK说明,我们将严格按照前述内容处理您的个人信息。若您是14岁以下未成年人，请您务必要求您的监护人仔细阅读本协议，并在征得您的监护人同意的前提下使用我们的产品。点击"同意并进入"即表示您已阅读并同意我们及第三方SDK按下列目的、方式与范围处理个人信息；广告类SDK将在您同意本政策后、于即将展示广告时再初始化，不会在同意瞬间批量读取安装列表。如您对本政策内容有任何疑问、意见或建议,您可以通过邮箱app@1goodtech.com与我们联系。</string>
+    <string name="permission_title2">为了保证您可以正常使用%s的各项基本工具,我们将根据您使用的不同功能，可能会分别向您申请以下一项或多项系统权限</string>
+    <string name="permission_title_sdk">第三方SDK处理个人信息说明（同意后将初始化）</string>
+    <string name="permission_sdk_disclosure">【逐项说明】下列为第三方SDK可能处理的个人信息类型、目的、方式与范围；未列明的类型本应用及SDK不收集。\n\n可能收集：IMEI、IMSI、设备MAC、SUPI、SUCI、OAID、Android ID、设备序列号、WiFi SSID/BSSID、IP、软件安装列表、粗略/精确位置、运行进程信息、操作日志。\n不收集：联系人、通话记录、日历、短信、本机电话号码；不主动读取图片、音视频（仅您主动使用相机/相册时按系统权限处理）。\n\n一、推送类：极光推送及小米/华为/OPPO/魅族厂商通道\n目的：消息推送、送达率统计。\n方式：SDK本机采集。\n范围：设备标识（OAID、Android ID、IMEI、IMSI、设备MAC、SUPI、SUCI）、WiFi SSID/BSSID、IP、软件安装列表（合并推送链路）、位置（优化推送节点）。\n\n二、统计类：友盟SDK\n目的：数据统计与分析。\n方式：SDK本机采集。\n范围：设备标识（IMEI、IMSI、OAID、Android ID、MAC、SUPI、SUCI、设备序列号）、WiFi SSID/BSSID、IP、软件安装列表、位置、操作日志。\n\n三、广告类：穿山甲GroMore聚合、优量汇（腾讯广点通）、快手、百度、小米联盟等\n目的：广告投放、监测、归因与反作弊。\n方式：SDK本机采集；安装/卸载时响应系统 PACKAGE_ADDED/REMOVED/REPLACED 广播（非定时扫描）。\n范围：设备标识（IMEI、IMSI、OAID、Android ID、MAC、SUPI、SUCI）、WiFi SSID/BSSID、IP、位置、软件安装列表、运行进程；优量汇SDK可能读取设备传感器类型列表（如加速度计、陀螺仪等系统传感器标识，用于广告反作弊与设备环境识别，不持续采集传感器实时数据）。\n\n四、监控类：Bugly\n目的：崩溃排查与稳定性分析。\n方式：SDK本机采集。\n范围：设备标识、软件安装列表、运行进程。\n\n五、分享类：微信/QQ开放平台SDK\n目的：分享至微信/QQ。\n方式：SDK本机采集。\n范围：设备型号、Android ID、OAID、IP、WiFi SSID、软件安装列表（判断是否已安装对应App）。</string>
+    <string name="permission_title_background">后台/静默状态下收集说明与频率</string>
+    <string name="permission_background_disclosure">在您同意本政策且系统允许的前提下：\n· 系统定位（非第三方SDK）：首次启动、手动刷新、授权后台定位时获取位置；若授权后台定位，约每30分钟更新一次本地天气，位置用于天气查询，不上传至我们的服务器。\n· 推送SDK（含极光）：约每10分钟心跳1次以维持长连接，期间可能收集设备标识、WiFi SSID/BSSID、IP等。\n· 广告SDK安装/卸载监听：无固定周期；仅当系统向本应用发送 PACKAGE_ADDED、PACKAGE_REMOVED、PACKAGE_REPLACED 广播时各处理1次（非后台轮询、非持续扫描），日触发次数取决于您当日安装/卸载/更新第三方应用的次数（通常为0至数次/日）。从后台回前台或广告展示/点击时可能收集设备信息。\n· 优量汇等广告SDK：在广告初始化或展示链路中可能读取传感器类型列表，频次与广告请求相关，非独立定时任务。\n· 统计SDK（友盟）：网络状态变化等场景下可能收集设备与网络信息。\n您可在系统设置中关闭相关权限或卸载应用以停止收集。</string>
+    <string name="permission_sdk_list_footer">完整SDK名称、处理目的、方式、范围及隐私政策链接，请参阅《第三方SDK信息共享清单》。</string>
+    <string name="permission_sdk_list_link">《第三方SDK信息共享清单》</string>
+    <string name="permission_phone_title">设备与网络信息</string>
+    <string name="permission_phone_detail">用于推送、统计、广告等SDK的设备识别与网络环境判断，可能包括OAID、Android ID、IMEI、IMSI、设备MAC、WiFi SSID/BSSID、IP等（详见上方第三方SDK说明）</string>
+    <string name="permission_location_detail">精确/粗略位置，用于本地天气查询（系统定位服务）；授权后台定位时约每30分钟更新一次，不上传至我们的服务器</string>
+    <string name="msg_disagree">游客模式不会初始化第三方SDK，不会收集您的个人信息，但可能导致推送、广告等功能无法使用。\n\n若您点击「同意协议进入」，我们将初始化极光推送、友盟统计等核心SDK；广告SDK（含穿山甲、优量汇、快手等）仅在即将展示广告时初始化，可能处理设备标识（IMEI、IMSI、OAID、Android ID、MAC、SUPI、SUCI）、WiFi SSID/BSSID、IP、软件安装列表、传感器类型列表（优量汇反作弊）等；安装/卸载监听仅在系统发送相关广播时触发，非后台定时扫描。详见《第三方SDK信息共享清单》。\n\n同意《隐私政策》《用户协议》后可体验精准天气预报等功能！</string>
+    <string name="msg_permission">使用此功能需同意《隐私政策》《用户协议》。我们将按政策初始化极光推送、友盟统计等SDK；广告SDK（含穿山甲、优量汇等）仅在展示广告时初始化，可能处理设备标识、安装列表、传感器类型等信息。详见《第三方SDK信息共享清单》。</string>
     <string name="private_title">《隐私政策》</string>
     <string name="agreement_title">《用户协议》</string>
     <string name="btn_u_disagree"><u>不同意</u></string>

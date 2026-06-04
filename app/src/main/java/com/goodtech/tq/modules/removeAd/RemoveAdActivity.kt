@@ -366,14 +366,9 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
     }
 
     private fun requestRewardVideoAd(rewardHours: Int) {
-        // 首次安装时 SDK 可能还在异步初始化，先触发初始化并重试
         if (!TTAdSdk.isInitSuccess()) {
-            App.instance.startUsingApp(this)
-            if (rewardLoadRetryCount < MAX_LOAD_RETRY) {
-                rewardLoadRetryCount++
-                mBinding.root.postDelayed({ requestRewardVideoAd(rewardHours) }, 800)
-                return
-            }
+            App.ensureAdSdkInitialized { requestRewardVideoAd(rewardHours) }
+            return
         }
 
         val adSlot = AdSlot.Builder()

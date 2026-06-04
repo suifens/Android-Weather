@@ -16,11 +16,15 @@ import android.widget.TextView;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.R;
 import com.goodtech.tq.utils.TipHelper;
-import com.umeng.analytics.MobclickAgent;
 
 import java.lang.reflect.Method;
 
 public class DyMoviesActivity extends BaseActivity {
+
+    @Override
+    protected String getUmPageChannel() {
+        return "Ac_Movies";
+    }
 
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     protected boolean firstLoad = true;
@@ -66,8 +70,6 @@ public class DyMoviesActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart("Ac_Movies");
-        MobclickAgent.onResume(this);
         mHandler.postDelayed(() -> {
             if (!TextUtils.isEmpty(mUrl)) {
                 if (mWebView.getUrl() != null) {
@@ -84,8 +86,6 @@ public class DyMoviesActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd("Ac_Movies");
-        MobclickAgent.onPause(this);
     }
 
     @Override

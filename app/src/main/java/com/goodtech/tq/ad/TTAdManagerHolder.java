@@ -7,14 +7,7 @@ import com.blankj.utilcode.util.AppUtils;
 import com.bytedance.sdk.openadsdk.TTAdConfig;
 import com.bytedance.sdk.openadsdk.TTAdManager;
 import com.bytedance.sdk.openadsdk.TTAdSdk;
-import com.bytedance.sdk.openadsdk.TTCustomController;
-import com.bytedance.sdk.openadsdk.mediation.init.MediationConfigUserInfoForSegment;
-import com.bytedance.sdk.openadsdk.mediation.init.MediationPrivacyConfig;
 import com.goodtech.tq.BuildConfig;
-import com.goodtech.tq.utils.Constants;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -85,87 +78,11 @@ public class TTAdManagerHolder {
 //                        return false;
 //                    }
 //                })
-                .customController(getTTCustomController()) //如果您需要设置隐私策略请参考该api
+                .customController(new AdPrivacyController())
 //                .setMediationConfig(new MediationConfig.Builder() //可设置聚合特有参数详细设置请参考该api
 //                        .setMediationConfigUserInfoForSegment(getUserInfoForSegment())//如果您需要配置流量分组信息请参考该api
 //                        .build())
                 .build();
     }
 
-    private static MediationConfigUserInfoForSegment getUserInfoForSegment(){
-        MediationConfigUserInfoForSegment userInfo = new MediationConfigUserInfoForSegment();
-        userInfo.setUserId("msdk-demo");
-        userInfo.setGender(MediationConfigUserInfoForSegment.GENDER_MALE);
-        userInfo.setChannel("msdk-channel");
-        userInfo.setSubChannel("msdk-sub-channel");
-        userInfo.setAge(999);
-        userInfo.setUserValueGroup("msdk-demo-user-value-group");
-
-        Map<String, String> customInfos = new HashMap<>();
-        customInfos.put("aaaa", "test111");
-        customInfos.put("bbbb", "test222");
-        userInfo.setCustomInfos(customInfos);
-        return userInfo;
-    }
-
-    private static TTCustomController getTTCustomController(){
-        return new TTCustomController() {
-
-            @Override
-            public boolean isCanUsePhoneState() {
-                return false;
-            }
-
-            @Override
-            public boolean isCanUseWifiState() {
-                return false;
-            }
-
-            @Override
-            public String getMacAddress() {
-                return super.getMacAddress();
-            }
-
-            @Override
-            public boolean isCanUseWriteExternal() {
-                return super.isCanUseWriteExternal();
-            }
-
-            @Override
-            public String getDevOaid() {
-                return super.getDevOaid();
-            }
-
-            @Override
-            public boolean isCanUseAndroidId() {
-                return super.isCanUseAndroidId();
-            }
-
-            @Override
-            public String getAndroidId() {
-                return super.getAndroidId();
-            }
-
-            @Override
-            public MediationPrivacyConfig getMediationPrivacyConfig() {
-                return new MediationPrivacyConfig() {
-
-                    @Override
-                    public boolean isLimitPersonalAds() {
-                        return super.isLimitPersonalAds();
-                    }
-
-                    @Override
-                    public boolean isProgrammaticRecommend() {
-                        return super.isProgrammaticRecommend();
-                    }
-                };
-            }
-
-            @Override
-            public boolean isCanUsePermissionRecordAudio() {
-                return super.isCanUsePermissionRecordAudio();
-            }
-        };
-    }
 }

@@ -15,20 +15,18 @@ import android.util.Log
 import cn.jiguang.api.utils.JCollectionAuth
 import cn.jpush.android.api.JPushInterface
 import com.blankj.utilcode.util.PermissionUtils
-import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.activity.MainActivity
 import com.goodtech.tq.activity.MyActivityManager
 import com.goodtech.tq.activity.SettingActivity
 import com.goodtech.tq.activity.SplashActivity
-import com.goodtech.tq.ad.TTAdManagerHolder
 import com.goodtech.tq.helpers.DatabaseHelper
 import com.goodtech.tq.jpush.JPushHelper
 import com.goodtech.tq.location.helper.LocationHelper
 import com.goodtech.tq.modules.signing.SigningActivity
-import com.goodtech.tq.modules.video.CsjAdHolder
 import com.goodtech.tq.modules.video.DPHolder
 import com.goodtech.tq.modules.video.djx.DJXHolder
+import com.goodtech.tq.utils.AdSdkInitializer
 import com.goodtech.tq.utils.Constants
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.widget.DoubleWidgetService
@@ -47,6 +45,7 @@ class App : Application() {
     companion object {
         private const val TAG = "BaseApp"
         private const val SITE_ID = "5168917"
+        const val VIDEO_SITE_ID = SITE_ID
         const val SDK_SETTINGS_CONFIG = "SDK_Setting_5168917.json"
         private const val LEVEL_TIME = "LEVEL_TIME"
         private const val BACKGROUND_RETURN_DELAY = 300L
@@ -70,6 +69,11 @@ class App : Application() {
 
         val topRunningActivity: Activity?
             get() = weakTopActivity.get()
+
+        @JvmStatic
+        fun ensureAdSdkInitialized(onReady: Runnable? = null) {
+            AdSdkInitializer.ensureInitialized(onReady)
+        }
     }
 
     var mainActivity: MainActivity? = null
@@ -87,8 +91,8 @@ class App : Application() {
     //  加载插屏广告了
     var hadInitAd = false
     
-    // 标记是否已经初始化SDK
-    private var isSDKInitialized = false
+    // 标记核心 SDK（推送/统计/崩溃）是否已初始化
+    private var isCoreSDKInitialized = false
 
     override fun onCreate() {
         super.onCreate()
@@ -126,8 +130,7 @@ class App : Application() {
             initializeMMKV()
             registerLifecycle()
             initializeDatabase()
-            // 注意：不在这里初始化JPush，延迟到用户同意权限后
-            // JCollectionAuth.setAuth(this, false)
+            JCollectionAuth.setAuth(this, false)
         } catch (e: Exception) {
             Log.e(TAG, "初始化失败", e)
         }
@@ -142,36 +145,34 @@ class App : Application() {
     }
 
     /**
-     * 用户同意权限后调用，初始化所有SDK
+     * 用户同意隐私政策后调用：仅初始化推送/统计/崩溃等核心 SDK，不初始化广告 SDK。
      */
     @SuppressLint("CheckResult")
     fun startUsingApp(activity: Activity?) {
-        if (isSDKInitialized) {
-            Log.d(TAG, "SDK已经初始化，跳过重复初始化")
-            return
-        }
-        
-        mainScope.launch {
-            try {
-                Log.d(TAG, "开始初始化SDK...")
-                initializeAdSDK()
-                configUM()
-                initializeJPush()
-                loadCsjAdHolder()
-                isSDKInitialized = true
-                Log.d(TAG, "SDK初始化完成")
-            } catch (e: Exception) {
-                Log.e(TAG, "SDK初始化失败", e)
-            }
-        }
+        startCoreSdk()
     }
 
-    private fun initializeAdSDK() {
-        try {
-            Log.d(TAG, "初始化广告SDK...")
-            TTAdManagerHolder.init(this)
-        } catch (e: Exception) {
-            Log.e(TAG, "初始化广告SDK失败", e)
+    @SuppressLint("CheckResult")
+    fun startCoreSdk() {
+        if (isCoreSDKInitialized) {
+            Log.d(TAG, "核心SDK已经初始化，跳过重复初始化")
+            return
+        }
+        if (!SpUtils.getInstance().isAgreePermission) {
+            Log.d(TAG, "未同意隐私政策，跳过核心SDK初始化")
+            return
+        }
+
+        mainScope.launch {
+            try {
+                Log.d(TAG, "开始初始化核心SDK...")
+                configUM()
+                initializeJPush()
+                isCoreSDKInitialized = true
+                Log.d(TAG, "核心SDK初始化完成")
+            } catch (e: Exception) {
+                Log.e(TAG, "核心SDK初始化失败", e)
+            }
         }
     }
 
@@ -180,7 +181,7 @@ class App : Application() {
             Log.d(TAG, "初始化极光推送...")
             JPushInterface.setDebugMode(false)
             JPushInterface.init(this)
-            JCollectionAuth.setAuth(this, true);
+            JCollectionAuth.setAuth(this, true)
 
             val registerId = JPushInterface.getRegistrationID(instance)
             if (!TextUtils.isEmpty(registerId)) {
@@ -191,27 +192,8 @@ class App : Application() {
         }
     }
 
-    fun loadCsjAdHolder() {
-        try {
-            Log.d(TAG, "初始化穿山甲广告...")
-            CsjAdHolder.init(SITE_ID, instance, object : TTAdSdk.Callback {
-                override fun success() {
-                    Log.d(TAG, "CsjAdHolder init success")
-                    // 广告SDK初始化成功后，再初始化视频SDK
-                    initVideoSDKs()
-                }
-
-                override fun fail(code: Int, msg: String?) {
-                    Log.e(TAG, "CsjAdHolder init fail: $code, $msg")
-                    // 即使广告SDK失败，也尝试初始化视频SDK
-                    initVideoSDKs()
-                }
-            })
-        } catch (e: Exception) {
-            Log.e(TAG, "初始化广告SDK失败", e)
-            // 异常情况下也尝试初始化视频SDK
-            initVideoSDKs()
-        }
+    fun initVideoSDKsAfterAd() {
+        initVideoSDKs()
     }
 
     private fun initVideoSDKs() {

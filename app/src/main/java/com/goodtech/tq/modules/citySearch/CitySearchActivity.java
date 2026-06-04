@@ -112,11 +112,6 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
         if (getIntent().getBooleanExtra(EXTRA_START, false)) {
             mCancelBtn.setVisibility(View.GONE);
             isStart = true;
-            if (SpUtils.getInstance().isAgreePermission()) {
-                mHandler.postDelayed(() -> {
-                    App.instance.startUsingApp(CitySearchActivity.this);
-                }, 500);
-            }
         }
 
         initSearchView();
@@ -126,8 +121,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
 
         init();
 
-        ServiceSettings.updatePrivacyShow(this,true,true);
-        ServiceSettings.updatePrivacyAgree(this,true);
+        ServiceSettings.updatePrivacyShow(this, true, true);
+        if (SpUtils.getInstance().isAgreePermission()) {
+            ServiceSettings.updatePrivacyAgree(this, true);
+        }
     }
 
     private void init() {

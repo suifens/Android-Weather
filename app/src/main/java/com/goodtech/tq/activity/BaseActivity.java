@@ -28,10 +28,12 @@ import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
+import com.goodtech.tq.utils.PermissionManager;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.StatusBarUtil;
 import com.goodtech.tq.utils.TipHelper;
 import com.goodtech.tq.views.PermissionAlert;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * com.goodtech.tq
@@ -118,12 +120,48 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        trackUmResume();
+        String page = getUmPageChannel();
+        if (!TextUtils.isEmpty(page)) {
+            MobclickAgent.onPageStart(page);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        String page = getUmPageChannel();
+        if (!TextUtils.isEmpty(page)) {
+            MobclickAgent.onPageEnd(page);
+        }
+        trackUmPause();
+        super.onPause();
+    }
+
+    /** 子类 override 以启用页面级统计，例如 "Ac_Calendar" */
+    protected String getUmPageChannel() {
+        return null;
+    }
+
+    protected void trackUmResume() {
+        if (SpUtils.getInstance().isAgreePermission()) {
+            MobclickAgent.onResume(this);
+        }
+    }
+
+    protected void trackUmPause() {
+        if (SpUtils.getInstance().isAgreePermission()) {
+            MobclickAgent.onPause(this);
+        }
+    }
+
     public void showPermissionDialog(Activity activity, View.OnClickListener confirmListener) {
         new PermissionAlert(this, new PermissionAlert.PermissionAlertListener() {
             @Override
             public void onConfirmClick(View view) {
-                SpUtils.getInstance().setPermissionAgree(true);
-                App.instance.startUsingApp(activity);
+                PermissionManager.INSTANCE.onPrivacyAgreed(activity);
 
                 if (confirmListener != null) {
                     confirmListener.onClick(view);

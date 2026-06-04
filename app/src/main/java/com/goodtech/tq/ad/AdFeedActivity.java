@@ -16,6 +16,7 @@ import com.bytedance.sdk.openadsdk.mediation.ad.MediationExpressRenderListener;
 import com.bytedance.sdk.openadsdk.mediation.manager.MediationNativeManager;
 import com.goodtech.tq.base.callback.DataCallback;
 import com.goodtech.tq.activity.BaseActivity;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.base.AppExtKt;
 
 import java.util.List;
@@ -29,7 +30,10 @@ public class AdFeedActivity extends BaseActivity {
     private FrameLayout mFeedContainer;
 
     protected void loadFeedAd(String codeId, int width, DataCallback<TTFeedAd> callback) {
-        // 1、创建AdSlot对象 */
+        App.ensureAdSdkInitialized(() -> loadFeedAdInternal(codeId, width, callback));
+    }
+
+    private void loadFeedAdInternal(String codeId, int width, DataCallback<TTFeedAd> callback) {
         AdSlot adSlot = new AdSlot.Builder()
                 .setCodeId(codeId)
                 .setExpressViewAcceptedSize(width, 0) // 单位px

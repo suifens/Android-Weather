@@ -21,16 +21,13 @@ object PermissionManager {
     
     /**
      * 用户同意隐私政策后调用
-     * 初始化所有可能请求权限的SDK
+     * 初始化推送/统计等核心 SDK（广告 SDK 延迟初始化）
      */
     fun onPrivacyAgreed(context: Context) {
-        Log.d(TAG, "用户同意隐私政策，开始初始化SDK")
+        Log.d(TAG, "用户同意隐私政策")
         
-        // 设置权限同意标记
+        // 仅记录用户同意，核心 SDK 延迟到 Splash/Main 首屏初始化
         SpUtils.getInstance().setPermissionAgree(true)
-        
-        // 延迟初始化SDK，确保权限同意状态已保存
-        App.instance.startUsingApp(context as? android.app.Activity)
     }
     
     /**
@@ -47,7 +44,7 @@ object PermissionManager {
     fun safeInitializeSDK(context: Context) {
         if (canInitializeSDK(context)) {
             Log.d(TAG, "权限已同意，安全初始化SDK")
-            App.instance.startUsingApp(context as? android.app.Activity)
+            App.instance.startCoreSdk()
         } else {
             Log.d(TAG, "权限未同意，跳过SDK初始化")
         }

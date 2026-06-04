@@ -32,6 +32,7 @@ import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd
 import com.goodtech.tq.R
 import com.goodtech.tq.activity.BaseActivity
+import com.goodtech.tq.app.App
 import com.goodtech.tq.common.bus.Bus
 import com.goodtech.tq.common.bus.IBusListener
 import com.goodtech.tq.common.bus.event.DJXStartEvent
@@ -219,78 +220,9 @@ class DrawDramaActivity : BaseActivity() {
 
                 override fun showCustomAd(drama: DJXDrama, callback: IDJXDramaUnlockListener.CustomAdCallback) {
                     TipHelper.showProgressDialog(this@DrawDramaActivity)
-                    val adSlot = AdSlot.Builder()
-                        .setCodeId("102948965") // 广告代码位Id
-                        .setAdLoadType(TTAdLoadType.LOAD) // 本次广告用途：TTAdLoadType.LOAD实时；TTAdLoadType.PRELOAD预请求
-                        .build()
-
-                    TTAdSdk.getAdManager().createAdNative(this@DrawDramaActivity).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {
-                        override fun onError(p0: Int, p1: String?) {
-                            TipHelper.dismissProgressDialog()
-                        }
-
-                        override fun onRewardVideoAdLoad(ad: TTRewardVideoAd?) {
-                            ad?.apply {
-                                setRewardAdInteractionListener(object :
-                                    TTRewardVideoAd.RewardAdInteractionListener {
-                                    override fun onAdShow() {
-//                                        Toast.makeText(this@DrawDramaActivity, "自定义广告展示", Toast.LENGTH_LONG).show()
-                                        callback.onShow("") // CSJ cpm 不对外，可以参考 GroMore getShowEcpm 方法获取
-                                        TipHelper.dismissProgressDialog()
-                                    }
-
-                                    override fun onAdVideoBarClick() {
-                                        // 广告点击
-                                    }
-
-                                    override fun onAdClose() {
-                                        // 广告关闭
-                                    }
-
-                                    override fun onVideoComplete() {
-                                        // 广告素材播放完成，例如视频未跳过，完整的播放了
-                                    }
-
-                                    override fun onVideoError() {
-                                        // 广告展示时出错
-                                        callback.onRewardVerify(DJXRewardAdResult(false))
-                                        TipHelper.dismissProgressDialog()
-                                    }
-
-                                    override fun onRewardVerify(
-                                        rewardVerify: Boolean,
-                                        rewardAmount: Int,
-                                        rewardName: String,
-                                        errorCode: Int,
-                                        errorMsg: String
-                                    ) {
-                                        // 已废弃 请使用 onRewardArrived 替代
-                                    }
-
-                                    override fun onRewardArrived(isRewardValid: Boolean, rewardType: Int, extraInfo: Bundle) {
-                                        val result = DJXRewardAdResult(isRewardValid)
-                                        isRewardArrived = isRewardValid
-                                        callback.onRewardVerify(result)
-                                        TipHelper.dismissProgressDialog()
-                                    }
-
-                                    override fun onSkippedVideo() {
-                                        // 用户在观看时点击了跳过
-                                        if (!isRewardArrived) {
-                                            callback.onRewardVerify(DJXRewardAdResult(false))
-                                        }
-                                        TipHelper.dismissProgressDialog()
-                                    }
-                                })
-                                showRewardVideoAd(this@DrawDramaActivity)
-                            }
-                        }
-
-                        override fun onRewardVideoCached() {}
-
-                        override fun onRewardVideoCached(p0: TTRewardVideoAd?) {}
-
-                    })
+                    App.ensureAdSdkInitialized {
+                        loadDramaRewardAd(callback)
+                    }
                 }
             }).apply {
                 listener(DefaultDramaListener(null))
@@ -343,6 +275,68 @@ class DrawDramaActivity : BaseActivity() {
             return
         }
         super.onBackPressed()
+    }
+
+    private fun loadDramaRewardAd(callback: IDJXDramaUnlockListener.CustomAdCallback) {
+        val adSlot = AdSlot.Builder()
+            .setCodeId("102948965")
+            .setAdLoadType(TTAdLoadType.LOAD)
+            .build()
+
+        TTAdSdk.getAdManager().createAdNative(this).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {
+            override fun onError(p0: Int, p1: String?) {
+                TipHelper.dismissProgressDialog()
+            }
+
+            override fun onRewardVideoAdLoad(ad: TTRewardVideoAd?) {
+                ad?.apply {
+                    setRewardAdInteractionListener(object : TTRewardVideoAd.RewardAdInteractionListener {
+                        override fun onAdShow() {
+                            callback.onShow("")
+                            TipHelper.dismissProgressDialog()
+                        }
+
+                        override fun onAdVideoBarClick() {}
+
+                        override fun onAdClose() {}
+
+                        override fun onVideoComplete() {}
+
+                        override fun onVideoError() {
+                            callback.onRewardVerify(DJXRewardAdResult(false))
+                            TipHelper.dismissProgressDialog()
+                        }
+
+                        override fun onRewardVerify(
+                            rewardVerify: Boolean,
+                            rewardAmount: Int,
+                            rewardName: String,
+                            errorCode: Int,
+                            errorMsg: String
+                        ) {}
+
+                        override fun onRewardArrived(isRewardValid: Boolean, rewardType: Int, extraInfo: Bundle) {
+                            val result = DJXRewardAdResult(isRewardValid)
+                            isRewardArrived = isRewardValid
+                            callback.onRewardVerify(result)
+                            TipHelper.dismissProgressDialog()
+                        }
+
+                        override fun onSkippedVideo() {
+                            if (!isRewardArrived) {
+                                callback.onRewardVerify(DJXRewardAdResult(false))
+                            }
+                            TipHelper.dismissProgressDialog()
+                        }
+                    })
+                    showRewardVideoAd(this@DrawDramaActivity)
+                }
+            }
+
+            override fun onRewardVideoCached() {}
+
+            override fun onRewardVideoCached(p0: TTRewardVideoAd?) {}
+        })
     }
 
     override fun onDestroy() {

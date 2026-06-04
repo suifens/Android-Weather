@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.goodtech.tq.R;
 import com.goodtech.tq.activity.BaseActivity;
 import com.goodtech.tq.utils.TipHelper;
-import com.umeng.analytics.MobclickAgent;
 
 import java.lang.reflect.Method;
 
@@ -24,6 +23,11 @@ public class BaseWebActivity extends BaseActivity {
     protected String mUrl;
     protected TextView mTitleView;
     protected String mChannel;
+
+    @Override
+    protected String getUmPageChannel() {
+        return mChannel;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +48,6 @@ public class BaseWebActivity extends BaseActivity {
         mWebView = findViewById(R.id.web_activity);
 
         configWebView(mWebView);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!TextUtils.isEmpty(mChannel)) {
-            MobclickAgent.onPageStart(mChannel);
-            MobclickAgent.onResume(this);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (!TextUtils.isEmpty(mChannel)) {
-            MobclickAgent.onPageEnd(mChannel);
-            MobclickAgent.onPause(this);
-        }
     }
 
     @Override

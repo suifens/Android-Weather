@@ -520,6 +520,12 @@ class HomeFragment : BaseFragment() {
         }
         
         mLoadSuccess = false
+        App.ensureAdSdkInitialized {
+            loadFullScreenAdInternal()
+        }
+    }
+
+    private fun loadFullScreenAdInternal() {
         adNativeLoader = TTAdSdk.getAdManager().createAdNative(requireActivity())
         val adSlot = AdSlot.Builder()
             .setCodeId(BuildConfig.PGE_INT_POS_ID)

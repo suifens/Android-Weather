@@ -1,30 +1,22 @@
 package com.goodtech.tq.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.AppUtils;
-import com.blankj.utilcode.util.PermissionUtils;
-import com.blankj.utilcode.util.ScreenUtils;
-import com.bytedance.sdk.openadsdk.CSJSplashAd;
 import com.goodtech.tq.R;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.base.AppExtKt;
 import com.goodtech.tq.helpers.BtnLinkHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
-import com.goodtech.tq.location.helper.LocationHelper;
 import com.goodtech.tq.modules.citySearch.CitySearchActivity;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
@@ -101,8 +93,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void checkAppVersion() {
-        String saveVersion = SpUtils.getInstance().getString(SpUtils.VERSION_APP, "");
-        if (TextUtils.isEmpty(saveVersion)) {
+        if (!SpUtils.getInstance().isAgreePermission()) {
             handler.postDelayed(() -> {
                 PermissionActivity.redirectTo(SplashActivity.this);
                 finish();
@@ -114,31 +105,24 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void initializeApp() {
-        if (SpUtils.getInstance().isAgreePermission()) {
-            // 使用权限管理工具安全初始化SDK
-            PermissionManager.INSTANCE.safeInitializeSDK(this);
-            viewModel.prepareWeatherData();
-            BtnLinkHelper.fetchBtnLinks();
-            loadSplashAd();
-        } else {
-            goToMainActivity();
+        if (viewModel == null) {
+            viewModel = new ViewModelProvider(this).get(SplashViewModel.class);
+            setupObservers();
         }
+        PermissionManager.INSTANCE.safeInitializeSDK(this);
+        viewModel.prepareWeatherData();
+        BtnLinkHelper.fetchBtnLinks();
+        loadSplashAd();
     }
 
     private void loadSplashAd() {
-        if (!PermissionUtils.isGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            goToMainActivity();
-            return;
-        }
-
         // 检查是否在去广告有效期内
         if (com.goodtech.tq.utils.AdRemovalManager.INSTANCE.isAdRemovalActive()) {
-            // 在去广告有效期内，直接跳转到主页面，不加载广告
             goToMainActivity();
             return;
         }
 
-        viewModel.loadSplashAd();
+        App.ensureAdSdkInitialized(() -> viewModel.loadSplashAd());
         
         // 设置广告加载超时
         handler.postDelayed(() -> {

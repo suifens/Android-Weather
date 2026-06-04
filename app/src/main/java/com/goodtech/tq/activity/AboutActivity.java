@@ -8,36 +8,21 @@ import com.blankj.utilcode.util.AppUtils;
 import com.goodtech.tq.R;
 import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.utils.Constants;
-import com.umeng.analytics.MobclickAgent;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        //  配置station
         configStationBar(findViewById(R.id.private_station_bar));
 
-        TextView versionTv = findViewById(R.id.tv_version);
-        String version = AppUtils.getAppVersionName();
-        versionTv.setText(String.format("版本: V %s", version));
-
         findViewById(R.id.button_back).setOnClickListener(this);
-        findViewById(R.id.tv_agreement).setOnClickListener(this);
         findViewById(R.id.tv_private).setOnClickListener(this);
+        findViewById(R.id.tv_agreement).setOnClickListener(this);
+
+        TextView versionTv = findViewById(R.id.tv_version);
+        versionTv.setText("版本：V " + AppUtils.getAppVersionName());
     }
 
     @Override

@@ -106,7 +106,7 @@
                     android:id="@+id/title_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="手机信息权限"
+                    android:text="@string/permission_phone_title"
                     android:textColor="@color/black"
                     android:textSize="16dp"
                     android:layout_marginStart="38dp"
@@ -119,15 +119,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:layout_marginEnd="10dp"
-                    android:autoSizeMinTextSize="10dp"
-                    android:ellipsize="end"
                     android:gravity="start"
-                    android:lines="1"
-                    android:text="用于正常识别手机设备,保证账号安全"
+                    android:text="@string/permission_phone_detail"
                     android:textColor="@color/colorSubtitle"
                     android:textSize="13dp"
-                    app:autoSizeMinTextSize="10dp"
-                    app:autoSizeTextType="uniform"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/title_phone" />
@@ -211,20 +206,66 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="38dp"
                     android:layout_marginEnd="10dp"
-                    android:autoSizeMinTextSize="10dp"
-                    android:ellipsize="end"
                     android:gravity="start"
-                    android:lines="1"
-                    android:text="提供精准定位天气及短时预报服务"
+                    android:text="@string/permission_location_detail"
                     android:textColor="@color/colorSubtitle"
                     android:textSize="13dp"
-                    app:autoSizeMinTextSize="10dp"
-                    app:autoSizeTextType="uniform"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/title_location" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/title_sdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/permission_title_sdk"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_sdk_disclosure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/permission_sdk_disclosure"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="13dp" />
+
+            <TextView
+                android:id="@+id/title_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/permission_title_background"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_background_disclosure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/permission_background_disclosure"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="13dp" />
+
+            <TextView
+                android:id="@+id/tv_sdk_list_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/permission_sdk_list_footer"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="13dp" />
 
         </LinearLayout>
 

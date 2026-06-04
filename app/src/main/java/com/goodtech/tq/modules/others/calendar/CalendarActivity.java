@@ -33,7 +33,6 @@ import com.goodtech.tq.utils.TimeUtils;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +40,11 @@ import java.util.Map;
 public class CalendarActivity extends AdFeedActivity implements
         CalendarView.OnCalendarSelectListener,
         CalendarView.OnYearChangeListener {
+
+    @Override
+    protected String getUmPageChannel() {
+        return "Ac_Calendar";
+    }
 
     TextView mTextYearMonth;
     CalendarView mCalendarView;
@@ -89,8 +93,6 @@ public class CalendarActivity extends AdFeedActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart("Ac_Calendar");
-        MobclickAgent.onResume(this);
         if (firstLoad) {
             firstLoad = false;
             mHandler.postDelayed(() -> {
@@ -110,8 +112,6 @@ public class CalendarActivity extends AdFeedActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd("Ac_Calendar");
-        MobclickAgent.onPause(this);
     }
 
     @Override

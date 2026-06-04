@@ -30,7 +30,6 @@ import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
-import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,15 +45,8 @@ public class CityListActivity extends AdFeedActivity implements View.OnClickList
     private static final String TAG = "CityListActivity";
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
     protected void onPause() {
         mRecyclerViewDragDropManager.cancelDrag();
-        MobclickAgent.onPause(this);
         super.onPause();
     }
 

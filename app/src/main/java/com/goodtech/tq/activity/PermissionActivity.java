@@ -31,17 +31,18 @@ import com.goodtech.tq.views.DisagreeAlert;
 import com.goodtech.tq.views.DisagreeAlert.DisagreeAlertListener;
 import com.goodtech.tq.utils.SpUtils;
 import com.goodtech.tq.utils.PermissionManager;
-import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 
 @SuppressLint({"NonConstantResourceId", "StringFormatMatches"})
 public class PermissionActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String boldStr = "请仔细阅读《隐私政策》及《用户协议》内容,我们将严格按照前述政策，为您提供更好的服务。若您是14岁以下未成年人，请您务必要求您的监护人仔细阅读本协议，并在征得您的监护人同意的前提下使用我们的产品。";
+    private static final String boldStr = "请仔细阅读《隐私政策》《用户协议》及下方第三方SDK说明,我们将严格按照前述内容处理您的个人信息。若您是14岁以下未成年人，请您务必要求您的监护人仔细阅读本协议，并在征得您的监护人同意的前提下使用我们的产品。";
     private static final String agreementStr = "《用户协议》";
     private static final String privateStr = "《隐私政策》";
+    private static final String sdkListStr = "《第三方SDK信息共享清单》";
     private TextView mSpannableTv;
+    private TextView mSdkListTv;
     private TextView mTitleTv2;
     private TextView nameTitleTv;
 
@@ -61,6 +62,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         stationBar.setLayoutParams(bars);
 
         mSpannableTv = findViewById(R.id.tv_spannable);
+        mSdkListTv = findViewById(R.id.tv_sdk_list_link);
         mTitleTv2 = findViewById(R.id.title2);
         nameTitleTv = findViewById(R.id.nameTitleTv);
 
@@ -70,6 +72,7 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         nameTitleTv.setText(appName);
 
         configSpannable();
+        configSdkListLink();
 
         findViewById(R.id.button_agree).setOnClickListener(this);
         findViewById(R.id.button_disagree).setOnClickListener(this);
@@ -84,13 +87,19 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
         int agreementEnd = agreementStart + agreementStr.length();
         int privateStart = permissionStr.indexOf(privateStr);
         int privateEnd = privateStart + privateStr.length();
-        int boldStart = permissionStr.indexOf(boldStr);
-        int boldEnd = boldStart + boldStr.length();
         ForegroundColorSpan agreementColorSp = new ForegroundColorSpan(Color.parseColor("#00C4FF"));
-        spannableString.setSpan(agreementColorSp, agreementStart, agreementEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        if (agreementStart >= 0) {
+            spannableString.setSpan(agreementColorSp, agreementStart, agreementEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
         ForegroundColorSpan privateColorSp = new ForegroundColorSpan(Color.parseColor("#00C4FF"));
-        spannableString.setSpan(privateColorSp, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        spannableString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), boldStart, boldEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE); //粗体
+        if (privateStart >= 0) {
+            spannableString.setSpan(privateColorSp, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+        int boldStart = permissionStr.indexOf(boldStr);
+        if (boldStart >= 0) {
+            int boldEnd = boldStart + boldStr.length();
+            spannableString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), boldStart, boldEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
 
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
@@ -101,7 +110,9 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
                         "Agreement");
             }
         };
-        spannableString.setSpan(clickableSpan, agreementStart, agreementEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        if (agreementStart >= 0) {
+            spannableString.setSpan(clickableSpan, agreementStart, agreementEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
 
         ClickableSpan privateClickable = new ClickableSpan() {
             @Override
@@ -112,22 +123,35 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
                         "Privacy");
             }
         };
-        spannableString.setSpan(privateClickable, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        if (privateStart >= 0) {
+            spannableString.setSpan(privateClickable, privateStart, privateEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
 
         mSpannableTv.setMovementMethod(LinkMovementMethod.getInstance());
         mSpannableTv.setText(spannableString);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
+    private void configSdkListLink() {
+        String footerStr = getString(R.string.permission_sdk_list_footer);
+        SpannableString spannableString = new SpannableString(footerStr);
+        int sdkListStart = footerStr.indexOf(sdkListStr);
+        if (sdkListStart >= 0) {
+            int sdkListEnd = sdkListStart + sdkListStr.length();
+            ForegroundColorSpan colorSp = new ForegroundColorSpan(Color.parseColor("#00C4FF"));
+            spannableString.setSpan(colorSp, sdkListStart, sdkListEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    PrivacyWebActivity.redirectTo(PermissionActivity.this,
+                            Constants.URL_PRIVACY_LIST,
+                            getResources().getString(R.string.title_share_list),
+                            "SdkList");
+                }
+            };
+            spannableString.setSpan(clickableSpan, sdkListStart, sdkListEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+        mSdkListTv.setMovementMethod(LinkMovementMethod.getInstance());
+        mSdkListTv.setText(spannableString);
     }
 
     @Override
@@ -178,9 +202,8 @@ public class PermissionActivity extends BaseActivity implements View.OnClickList
     private void onStartWeather(boolean isVisitor) {
         mHandler.post(() -> {
             if (isVisitor) {
-                // 游客模式，不初始化SDK
+                // 游客模式：不初始化SDK，不写 VERSION_APP，下次启动仍会展示隐私弹窗
                 SpUtils.getInstance().setPermissionAgree(false);
-                SpUtils.getInstance().putString(SpUtils.VERSION_APP, AppUtils.getAppVersionName());
                 showVisitor();
             } else {
                 // 用户同意权限，使用权限管理工具初始化SDK
