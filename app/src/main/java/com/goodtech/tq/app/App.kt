@@ -58,7 +58,7 @@ class App : Application() {
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
-        private lateinit var weakTopActivity: WeakReference<Activity>
+        private var weakTopActivity: WeakReference<Activity?> = WeakReference(null)
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
@@ -74,6 +74,10 @@ class App : Application() {
         fun ensureAdSdkInitialized(onReady: Runnable? = null) {
             AdSdkInitializer.ensureInitialized(onReady)
         }
+
+        /** 是否有 Activity 处于前台，用于延迟广告 SDK 初始化，避免后台注册安装/卸载监听 */
+        @JvmStatic
+        fun isInForeground(): Boolean = topActivity != null
     }
 
     var mainActivity: MainActivity? = null
@@ -130,7 +134,6 @@ class App : Application() {
             initializeMMKV()
             registerLifecycle()
             initializeDatabase()
-            JCollectionAuth.setAuth(this, false)
         } catch (e: Exception) {
             Log.e(TAG, "初始化失败", e)
         }
@@ -276,21 +279,27 @@ class App : Application() {
             
             override fun onActivityStarted(activity: Activity) {
                 appCount++
+                weakTopActivity = WeakReference(activity)
                 MyActivityManager.getInstance().setCurrentActivity(activity)
             }
 
             override fun onActivityResumed(activity: Activity) {
+                weakTopActivity = WeakReference(activity)
                 if (isRunInBackground) {
                     mHandler.postDelayed({ back2App(activity) }, BACKGROUND_RETURN_DELAY)
                 }
+                AdSdkInitializer.onAppForeground()
             }
 
             override fun onActivityPaused(activity: Activity) {}
             
             override fun onActivityStopped(activity: Activity) {
                 appCount--
-                if (appCount == 0 && !isSpecialActivity(activity)) {
-                    leaveApp(activity)
+                if (appCount == 0) {
+                    weakTopActivity = WeakReference(null)
+                    if (!isSpecialActivity(activity)) {
+                        leaveApp(activity)
+                    }
                 }
             }
 

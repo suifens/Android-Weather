@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout4"
     android:layout_width="wrap_content"
-    android:layout_height="300dp"
+    android:layout_height="500dp"
     android:layout_gravity="center"
     android:minWidth="320dp"
     android:gravity="center_horizontal"
@@ -14,25 +14,54 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:gravity="center"
-        android:text="温馨提示"
+        android:text="@string/dialog_private_title"
         android:textAlignment="center"
         android:textColor="@color/color_theme"
         android:textSize="24dp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tv_dialog_message"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:lineSpacingExtra="6dp"
-        android:text="@string/msg_permission"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="16dp" />
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <TextView
+                android:id="@+id/tv_dialog_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="start"
+                android:lineSpacingExtra="6dp"
+                android:text="@string/msg_permission"
+                android:textAlignment="viewStart"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tv_dialog_sdk_list_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="start"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/permission_sdk_list_footer"
+                android:textAlignment="viewStart"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="13dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/btn_dialog_confirm"

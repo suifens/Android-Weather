@@ -88,6 +88,7 @@ android {
             buildConfigField 'String', 'UMENG_CHANNEL', '"lianxiang"'
             manifestPlaceholders = [app_name: "天气预报", umeng_channel: "lianxiang"]
         }
+
 //        wdj {
 //            buildConfigField 'int', 'BAIDU_CHANNEL', '999'
 //            buildConfigField 'String', 'UMENG_CHANNEL', '"wandoujia"'
@@ -308,7 +309,7 @@ dependencies {
 
     //融合基础包，必须引入
 //    implementation "com.pangle.cn:mediation-sdk:6.4.1.5"
-//    implementation "com.pangle.cn:mediation-ks-adapter:3.3.67.1.0"//ks adapter
+//    implementation "com.pangle.cn:mediation-ks-adapter:3.3.67.1.0"//ks adapter（已移除，不再集成快手）
 //    implementation "com.pangle.cn:mediation-gdt-adapter:4.575.1445.0" //gdt adapter
 //    implementation "com.pangle.cn:mediation-baidu-adapter:9.37.0"//baidu adapter
 
