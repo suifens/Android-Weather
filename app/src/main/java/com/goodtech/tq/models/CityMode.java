@@ -152,14 +152,33 @@ public class CityMode implements Parcelable {
         }
     };
 
-    public void resolveCour(Cursor cursor){
-        this.cid = cursor.getInt(cursor.getColumnIndex("id"));
-        this.poiId = cursor.getString(cursor.getColumnIndex("poiId"));
-        this.mergerName = cursor.getString(cursor.getColumnIndex("mergerName"));
-        this.city = cursor.getString(cursor.getColumnIndex("cityName"));
-        this.lat = cursor.getString(cursor.getColumnIndex("latitude"));
-        this.lon = cursor.getString(cursor.getColumnIndex("longitude"));
-        this.pinyin = cursor.getString(cursor.getColumnIndex("pinyin"));
+    public void resolveCour(Cursor cursor) {
+        int idCol = cursor.getColumnIndex("id");
+        if (idCol >= 0) {
+            this.cid = cursor.getInt(idCol);
+        }
+        int poiCol = cursor.getColumnIndex("poiId");
+        if (poiCol >= 0) {
+            String value = cursor.getString(poiCol);
+            this.poiId = value != null ? value : "";
+        } else if (this.cid > 0) {
+            // city.db 无 poiId 列，使用行政区划 id 作为天气缓存 key
+            this.poiId = String.valueOf(this.cid);
+        }
+        this.mergerName = getCursorString(cursor, "mergerName");
+        this.city = getCursorString(cursor, "cityName");
+        this.lat = getCursorString(cursor, "latitude");
+        this.lon = getCursorString(cursor, "longitude");
+        this.pinyin = getCursorString(cursor, "pinyin");
+    }
+
+    private static String getCursorString(Cursor cursor, String column) {
+        int col = cursor.getColumnIndex(column);
+        if (col < 0) {
+            return "";
+        }
+        String value = cursor.getString(col);
+        return value != null ? value : "";
     }
 
     @Override

@@ -86,30 +86,20 @@ public class DatabaseHelper {
     }
 
     public ArrayList<CityMode> queryCity(String name) {
-
         if (TextUtils.isEmpty(name)) {
             return null;
         }
 
-        name = name.replace("'", "");
-        name = name.replace(" ", "");
-        name = name.replace("%", "");
-
-//        String sql = String.format("select * from city where mergerName like '%%%s%%'", name);
-
-        // 构建查询语句
-        StringBuilder query = new StringBuilder("SELECT *, (LENGTH(mergerName) - LENGTH(REPLACE(mergerName, '" + name.charAt(0) + "', '')))");
-        for (int i = 1; i < name.length(); i++) {
-            query.append("+ (LENGTH(mergerName) - LENGTH(REPLACE(mergerName, '").append(name.charAt(i)).append("', ''))) ");
+        String keyword = name.trim().replace("'", "").replace("%", "");
+        if (TextUtils.isEmpty(keyword)) {
+            return null;
         }
-        query.append("AS match_count FROM city WHERE ");
-        for (int i = 0; i < name.length(); i++) {
-            query.append("mergerName LIKE '%").append(name.charAt(i)).append("%' OR ");
-        }
-        query = new StringBuilder(query.substring(0, query.length() - 4));  // 去除最后一个OR
-        query.append(" ORDER BY match_count DESC");
 
-        Cursor cursor = mDatabase.rawQuery(String.valueOf(query), null);
+        String like = "%" + keyword + "%";
+        String sql = "SELECT * FROM city WHERE depth <= 2 AND "
+                + "(mergerName LIKE ? OR cityName LIKE ? OR pinyin LIKE ? OR shortName LIKE ?) "
+                + "ORDER BY depth ASC, LENGTH(mergerName) ASC LIMIT 30";
+        Cursor cursor = mDatabase.rawQuery(sql, new String[]{like, like, like, like});
 
         ArrayList<CityMode> list = new ArrayList<>();
         if (cursor == null) {
@@ -143,9 +133,8 @@ public class DatabaseHelper {
 //        query = new StringBuilder(query.substring(0, query.length() - 4));  // 去除最后一个OR
 //        query.append(" ORDER BY match_count DESC");
 
-        String queryStr = String.format("select * from city where cityCode = %s order by cityId asc limit 0,10", cityCode);
-
-        Cursor cursor = mDatabase.rawQuery(queryStr, null);
+        String queryStr = "SELECT * FROM city WHERE cityCode = ? ORDER BY id ASC LIMIT 10";
+        Cursor cursor = mDatabase.rawQuery(queryStr, new String[]{cityCode});
 
         ArrayList<CityMode> list = new ArrayList<>();
         if (cursor == null) {
