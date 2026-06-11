@@ -22,6 +22,10 @@ object AdManager {
     private const val TAG = "AdManager"
     private const val AD_TIME_OUT = 3500
 
+    private fun ensureSdkInit(activity: Activity) {
+        TTAdManagerHolder.init(activity.applicationContext)
+    }
+
     interface AdCallback<T> {
         fun onSuccess(ad: T)
         fun onFail(code: Int, msg: String)
@@ -37,6 +41,7 @@ object AdManager {
         callback: AdCallback<CSJSplashAd>,
         onAdClose: (() -> Unit)? = null
     ) {
+        ensureSdkInit(activity)
         val width = activity.resources.displayMetrics.widthPixels
         val height = activity.resources.displayMetrics.heightPixels
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(activity)
@@ -96,6 +101,7 @@ object AdManager {
         height: Int = 0,
         callback: AdCallback<TTNativeExpressAd>
     ) {
+        ensureSdkInit(activity)
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(activity)
         val adSlot = AdSlot.Builder()
             .setCodeId(BuildConfig.PGE_BANNER_POS_ID)
@@ -155,6 +161,7 @@ object AdManager {
         width: Int,
         callback: AdCallback<TTNativeExpressAd>
     ) {
+        ensureSdkInit(activity)
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(activity)
         val adSlot = AdSlot.Builder()
             .setCodeId(BuildConfig.PGE_FEED_POS_ID)
@@ -190,6 +197,7 @@ object AdManager {
         onReward: (isRewardValid: Boolean) -> Unit,
         onError: (code: Int, msg: String) -> Unit
     ) {
+        ensureSdkInit(activity)
         val adSlot = AdSlot.Builder().setCodeId(codeId).build()
         TTAdSdk.getAdManager().createAdNative(activity).loadRewardVideoAd(adSlot, object : TTAdNative.RewardVideoAdListener {
             override fun onError(code: Int, message: String?) {
@@ -229,6 +237,7 @@ object AdManager {
         width: Int,
         callback: AdCallback<TTFeedAd>
     ) {
+        ensureSdkInit(activity)
         val adSlot = AdSlot.Builder()
             .setCodeId(codeId)
             .setExpressViewAcceptedSize(width.toFloat(), 0F)

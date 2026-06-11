@@ -12,7 +12,9 @@ import com.bytedance.sdk.openadsdk.mediation.init.MediationConfigUserInfoForSegm
 import com.bytedance.sdk.openadsdk.mediation.init.MediationPrivacyConfig;
 import com.chunjing.tq.BuildConfig;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -105,6 +107,22 @@ public class TTAdManagerHolder {
     private static TTCustomController getTTCustomController(){
         return new TTCustomController() {
 
+            /** 禁止采集已安装应用列表（合规检测项） */
+            @Override
+            public boolean alist() {
+                return false;
+            }
+
+            @Override
+            public boolean isCanUseLocation() {
+                return false;
+            }
+
+            @Override
+            public boolean isCanUsePhoneState() {
+                return false;
+            }
+
             @Override
             public boolean isCanUseWifiState() {
                 return false;
@@ -112,17 +130,17 @@ public class TTAdManagerHolder {
 
             @Override
             public String getMacAddress() {
-                return super.getMacAddress();
+                return "";
             }
 
             @Override
             public boolean isCanUseWriteExternal() {
-                return super.isCanUseWriteExternal();
+                return false;
             }
 
             @Override
             public String getDevOaid() {
-                return super.getDevOaid();
+                return "";
             }
 
             @Override
@@ -132,7 +150,7 @@ public class TTAdManagerHolder {
 
             @Override
             public String getAndroidId() {
-                return super.getAndroidId();
+                return "";
             }
 
             @Override
@@ -140,20 +158,30 @@ public class TTAdManagerHolder {
                 return new MediationPrivacyConfig() {
 
                     @Override
+                    public List<String> getCustomAppList() {
+                        return Collections.emptyList();
+                    }
+
+                    @Override
+                    public boolean isCanUseOaid() {
+                        return false;
+                    }
+
+                    @Override
                     public boolean isLimitPersonalAds() {
-                        return super.isLimitPersonalAds();
+                        return true;
                     }
 
                     @Override
                     public boolean isProgrammaticRecommend() {
-                        return super.isProgrammaticRecommend();
+                        return false;
                     }
                 };
             }
 
             @Override
             public boolean isCanUsePermissionRecordAudio() {
-                return super.isCanUsePermissionRecordAudio();
+                return false;
             }
         };
     }

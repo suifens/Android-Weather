@@ -344,6 +344,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private var mFullScreenVideoAdInteractionListener: FullScreenVideoAdInteractionListener? = null // 广告展示监听器
 
     private fun loadInterstitialFullAd() {
+        TTAdManagerHolder.init(this)
         /** 1、创建AdSlot对象  */
 
         val adslot = AdSlot.Builder().setCodeId(BuildConfig.PGE_INT_POS_ID)

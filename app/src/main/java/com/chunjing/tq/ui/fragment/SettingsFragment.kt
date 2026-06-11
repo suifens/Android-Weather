@@ -134,13 +134,8 @@ class SettingsFragment : BaseFragment<FragmentSettingBinding>() {
         mBinding.switchBtnReminder.isChecked = isChecked
 
         val phoneStateTv: TextView = mBinding.tvStatePhone
-        if (PermissionUtils.isGranted(Manifest.permission.READ_PHONE_STATE)) {
-            phoneStateTv.text = grantedStr
-            phoneStateTv.setTextColor(grantedColor)
-        } else {
-            phoneStateTv.text = deniedStr
-            phoneStateTv.setTextColor(deniedColor)
-        }
+        phoneStateTv.text = "未使用"
+        phoneStateTv.setTextColor(deniedColor)
 
         val storageStateTv: TextView = mBinding.tvStateStorage
         if (PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)

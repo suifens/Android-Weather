@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
 import androidx.core.content.FileProvider
-import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chunjing.tq.ext.ShareType
@@ -83,7 +82,7 @@ object ShareFileUtils {
      * 分享图片到微信朋友
      */
     private fun shareImageToWeChat(context: Context, path: String) {
-        if (!AppUtils.isAppInstalled("com.tencent.mm")) {
+        if (!PackageUtils.isPackageInstalled(context, "com.tencent.mm")) {
             ToastUtils.showShort("您还没有安装微信")
             return
         }
@@ -94,7 +93,7 @@ object ShareFileUtils {
      * 分享图片到微信朋友圈
      */
     private fun shareImageToWeChatMoments(context: Context, path: String) {
-        if (!AppUtils.isAppInstalled("com.tencent.mm")) {
+        if (!PackageUtils.isPackageInstalled(context, "com.tencent.mm")) {
             ToastUtils.showShort("您还没有安装微信")
             return
         }
@@ -105,7 +104,7 @@ object ShareFileUtils {
      * 分享图片到微博
      */
     fun shareImageToWeibo(context: Context, path: String) {
-        if (!AppUtils.isAppInstalled("com.sina.weibo")) {
+        if (!PackageUtils.isPackageInstalled(context, "com.sina.weibo")) {
             ToastUtils.showShort("您还没有安装新浪微博")
             return
         }
@@ -116,7 +115,7 @@ object ShareFileUtils {
      * 分享图片给QQ好友，单图
      */
     private fun shareImageToQQ(context: Context, path: String) {
-        if (!AppUtils.isAppInstalled("com.tencent.mobileqq")) {
+        if (!PackageUtils.isPackageInstalled(context, "com.tencent.mobileqq")) {
             ToastUtils.showShort("您还没有安装QQ")
             return
         }

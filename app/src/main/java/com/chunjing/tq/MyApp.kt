@@ -62,8 +62,6 @@ open class MyApp : BaseApp() {
 
         if (ContentUtil.permissionGranted) {
             configUM()
-        } else {
-            JCollectionAuth.setAuth(this, false)
         }
     }
 
@@ -71,9 +69,23 @@ open class MyApp : BaseApp() {
         get() = ViewModelStore()
 
     /**
+     * 关闭第三方 SDK 对「全量应用安装列表」的采集（须在友盟 init 之前调用）。
+     */
+    private fun disableThirdPartyAppListCollection() {
+        try {
+            Class.forName("com.uyumao.sdk.UYMManager")
+                .getMethod("enableYm6", android.content.Context::class.java, java.lang.Boolean.TYPE)
+                .invoke(null, this, false)
+        } catch (_: Exception) {
+            // 低版本 asms 无此 API 时忽略
+        }
+    }
+
+    /**
      * 友盟配置
      */
     open fun configUM() {
+        disableThirdPartyAppListCollection()
         //  配置 UM_APP_ID , 标识
         UMConfigure.init(
             this,
@@ -87,8 +99,9 @@ open class MyApp : BaseApp() {
         //
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
 
-        //  极光推送 register id
+        //  极光推送 register id（关闭智能推送，避免读取已安装应用列表做分群）
         JPushInterface.setDebugMode(false)
+        JPushInterface.setSmartPushEnable(this, false)
         JPushInterface.init(this)
         JCollectionAuth.setAuth(context, true);
 
@@ -100,9 +113,7 @@ open class MyApp : BaseApp() {
 
         /// bug收集
         CrashReport.initCrashReport(applicationContext, "8c7abb6cd2", false)
-
-        // 初始化穿山甲广告 SDK
-        TTAdManagerHolder.init(this)
+        // 穿山甲广告 SDK 延迟到首次加载广告时再初始化（见 AdManager.ensureSdkInit）
     }
 
     open fun getJPushRegId(): String? {

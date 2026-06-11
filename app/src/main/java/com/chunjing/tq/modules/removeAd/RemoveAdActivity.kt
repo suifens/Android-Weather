@@ -19,6 +19,7 @@ import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd
 import com.chunjing.tq.BuildConfig
 import com.chunjing.tq.ad.AdManager
+import com.chunjing.tq.ad.TTAdManagerHolder
 import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.databinding.ActivityRemoveAdBinding
 import com.chunjing.tq.modules.removeAd.model.DailyReward
@@ -283,6 +284,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
     private fun loadAndShowRewardVideoAd(rewardHours: Int) {
         isRewardArrived = false
         mRewardVideoAd = null
+        TTAdManagerHolder.init(this)
 
         val adSlot = AdSlot.Builder()
             .setCodeId(BuildConfig.PGE_REWARD_POS_ID)
