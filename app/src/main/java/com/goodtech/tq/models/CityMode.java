@@ -30,6 +30,9 @@ public class CityMode implements Parcelable {
 
     private String pinyin;
 
+    /** 行政区划码，来自 city.db（如 010、0755） */
+    private String cityCode;
+
     private int listNum;
 
     private boolean location = false;
@@ -110,6 +113,14 @@ public class CityMode implements Parcelable {
         this.pinyin = pinyin;
     }
 
+    public String getCityCode() {
+        return cityCode != null ? cityCode : "";
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
     public int getListNum() {
         return listNum;
     }
@@ -136,6 +147,7 @@ public class CityMode implements Parcelable {
         this.lat = in.readString();
         this.lon = in.readString();
         this.pinyin = in.readString();
+        this.cityCode = in.readString();
         this.listNum = in.readInt();
         this.location = in.readInt() == 0;
     }
@@ -170,6 +182,7 @@ public class CityMode implements Parcelable {
         this.lat = getCursorString(cursor, "latitude");
         this.lon = getCursorString(cursor, "longitude");
         this.pinyin = getCursorString(cursor, "pinyin");
+        this.cityCode = getCursorString(cursor, "cityCode");
     }
 
     private static String getCursorString(Cursor cursor, String column) {
@@ -195,6 +208,7 @@ public class CityMode implements Parcelable {
         dest.writeString(this.lat);
         dest.writeString(this.lon);
         dest.writeString(this.pinyin);
+        dest.writeString(this.cityCode);
         dest.writeInt(this.listNum);
         dest.writeInt(this.location ? 1 : 0);
     }

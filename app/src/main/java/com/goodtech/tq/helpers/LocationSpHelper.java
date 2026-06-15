@@ -7,9 +7,7 @@ import android.location.Location;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.eventbus.MessageEvent;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
-import com.goodtech.tq.models.CityCodeMode;
 import com.goodtech.tq.models.CityMode;
-import com.goodtech.tq.modules.citySearch.CityHelper;
 import com.goodtech.tq.utils.Constants;
 import com.goodtech.tq.utils.SpUtils;
 import com.google.gson.Gson;
@@ -26,6 +24,10 @@ import java.util.Objects;
  */
 public class LocationSpHelper {
 
+    /** 定位城市占位 id，与 AirQualityActivity 等逻辑保持一致 */
+    private static final int LOCATION_CID = 1000;
+    private static final String LOCATION_POI_ID = "1000";
+
     /**
      * 保存当前定位
      */
@@ -40,25 +42,30 @@ public class LocationSpHelper {
             return;
         } else {
             String cityName = getCityName(address, district);
-            String cityCode = getCityCodeByName(cityName, district);
+            String poiName = getPoiName(address);
+            String mergerName = buildMergerName(district, poiName);
 
             cityMode.setListNum(0);
-            // lost 不直接返回高德 cityCode，这里通过本地 cityCode.json 进行城市码反查
-            if (!TextUtils.isEmpty(cityCode)) {
-                cityMode.setPoiId(cityCode);
-                try {
-                    cityMode.setCid(Integer.parseInt(cityCode));
-                } catch (NumberFormatException ignore) {
-                    cityMode.setCid(1000);
-                }
-            } else {
-                cityMode.setCid(1000);
-            }
+            cityMode.setCid(LOCATION_CID);
+            cityMode.setPoiId(LOCATION_POI_ID);
             cityMode.setLat(String.valueOf(location.getLatitude()));
             cityMode.setLon(String.valueOf(location.getLongitude()));
             cityMode.setCity(cityName);
-            cityMode.setMergerName(String.format("%s %s", district, getPoiName(address)));
-            //  获取天气信息
+            cityMode.setMergerName(mergerName);
+
+            // 定位 cityCode 以 city.db 为准（010/021/0755...），不使用 Geocoder 邮编或 cityCode.json
+            CityMode matched = DatabaseHelper.getInstance(App.instance)
+                    .resolveLocationCity(cityName, district, poiName);
+            if (matched != null) {
+                if (!TextUtils.isEmpty(matched.getCityCode())) {
+                    cityMode.setCityCode(matched.getCityCode());
+                }
+                if (!TextUtils.isEmpty(matched.getCity())) {
+                    cityMode.setCity(matched.getCity());
+                }
+                // mergerName 保持「区县 + POI」展示格式，不用 city.db 全路径覆盖（对齐 Simple）
+            }
+
             WeatherHttpHelper httpHelper = new WeatherHttpHelper(App.instance);
             httpHelper.getBaseUrl(() -> httpHelper.fetchWeather(cityMode));
         }
@@ -67,6 +74,16 @@ public class LocationSpHelper {
         SpUtils.getInstance().putString(Constants.SP_LOCATION, json);
 
         EventBus.getDefault().post(new MessageEvent().setLocation(cityMode.getCid() != 0));
+    }
+
+    private static String buildMergerName(String district, String poiName) {
+        if (TextUtils.isEmpty(poiName)) {
+            return district;
+        }
+        if (TextUtils.isEmpty(district)) {
+            return poiName;
+        }
+        return String.format("%s %s", district, poiName);
     }
 
     private static String getDistrict(Address address) {
@@ -116,40 +133,6 @@ public class LocationSpHelper {
         return district;
     }
 
-    private static String getCityCodeByName(String cityName, String district) {
-        String normalizedCity = normalizeCityName(cityName);
-        String normalizedDistrict = normalizeCityName(district);
-        ArrayList<CityCodeMode> codes = CityHelper.getCityCodes(App.instance);
-        for (CityCodeMode code : codes) {
-            String name = normalizeCityName(code.getCity_name());
-            if (TextUtils.isEmpty(name)) {
-                continue;
-            }
-            if (!TextUtils.isEmpty(normalizedCity) && (name.contains(normalizedCity) || normalizedCity.contains(name))) {
-                return code.getCity_code();
-            }
-            if (!TextUtils.isEmpty(normalizedDistrict) && (name.contains(normalizedDistrict) || normalizedDistrict.contains(name))) {
-                return code.getCity_code();
-            }
-        }
-        return "";
-    }
-
-    private static String normalizeCityName(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return "";
-        }
-        return value
-                .replace("省", "")
-                .replace("市", "")
-                .replace("地区", "")
-                .replace("自治州", "")
-                .replace("盟", "")
-                .replace("县", "")
-                .replace("区", "")
-                .trim();
-    }
-
     /**
      * 获取当前定位
      */
@@ -172,10 +155,6 @@ public class LocationSpHelper {
             }
         }
 
-//        for (int i = 0; i < tempList.size(); i++) {
-//            CityMode cityMode = tempList.get(i);
-//            cityMode.listNum = i + 1;
-//        }
         Gson gson = new Gson();
         String json = gson.toJson(tempList);
         SpUtils.getInstance().putString(Constants.SP_LOCATION_LIST, json);

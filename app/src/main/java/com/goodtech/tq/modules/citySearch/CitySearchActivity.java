@@ -23,7 +23,6 @@ import com.goodtech.tq.activity.MainActivity;
 import com.goodtech.tq.app.App;
 import com.goodtech.tq.eventbus.CityEvent;
 import com.goodtech.tq.eventbus.MessageEvent;
-import com.goodtech.tq.helpers.DatabaseHelper;
 import com.goodtech.tq.helpers.LocationSpHelper;
 import com.goodtech.tq.httpClient.WeatherHttpHelper;
 import com.goodtech.tq.location.helper.LocationHelper;
@@ -38,6 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CitySearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
 
@@ -83,6 +83,12 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             mRecommendHeaderView.onStart();
         }
         Log.e(TAG, "onResume: " + System.currentTimeMillis());
+    }
+
+    @Override
+    protected void onDestroy() {
+        CitySearchHelper.cancel(this);
+        super.onDestroy();
     }
 
     private void toGetLocation() {
@@ -177,20 +183,10 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             App.instance.startIntent(CitySearchActivity.this);
 
             if (LocationSpHelper.getLocation() != null && !isRefresh) {
-                if (!CitySearchActivity.this.isFinishing()) {
-                    TipHelper.showProgressDialog(this);
-                }
-                mHandler.postDelayed(() -> {
-                    Log.e(TAG, "message activity");
-                    Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finishToRight();
-                    TipHelper.dismissProgressDialog();
-                }, 500);
                 if (mRecommendHeaderView != null) {
                     mRecommendHeaderView.hideSoftInput(this);
                 }
+                navigateToMain();
                 return;
             }
             isRefresh = false;
@@ -199,15 +195,19 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
     }
 
     private void addCity(CityMode cityMode) {
-        if (cityMode != null) {
-            int index = LocationSpHelper.addCity(cityMode);
-            if (index == -1) {
-                WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
-                helper.getBaseUrl(() -> helper.fetchWeather(cityMode));
-                EventBus.getDefault().post(new CityEvent().addCity(true));
-            } else {
-                EventBus.getDefault().post(new CityEvent().setCityIndex(index));
-            }
+        if (cityMode == null) {
+            return;
+        }
+
+        int index = LocationSpHelper.addCity(cityMode);
+        if (index == -1) {
+            WeatherHttpHelper helper = new WeatherHttpHelper(getApplicationContext());
+            helper.getBaseUrl(() -> helper.fetchWeather(cityMode));
+            ArrayList<CityMode> allCities = LocationSpHelper.getCityListAndLocation();
+            index = Math.max(allCities.size() - 1, 0);
+            EventBus.getDefault().post(new CityEvent().setCityIndex(index));
+        } else {
+            EventBus.getDefault().post(new CityEvent().setCityIndex(index));
         }
 
         isStart = false;
@@ -216,13 +216,14 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             mRecommendHeaderView.hideSoftInput(this);
         }
 
-        TipHelper.showProgressDialog(this);
-        mHandler.postDelayed(() -> {
-            Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finishToRight();
-        }, 200);
+        navigateToMain();
+    }
+
+    private void navigateToMain() {
+        Intent intent = new Intent(CitySearchActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finishToRight();
     }
 
     private void initSearchView() {
@@ -257,19 +258,36 @@ public class CitySearchActivity extends BaseActivity implements SearchView.OnQue
             mRecommendView.setVisibility(View.GONE);
             mRecommendHeaderView.setVisibility(View.GONE);
             searchLocalCities(s);
-        } else if (mRecommendView != null) {
-            mSearchListView.setVisibility(View.GONE);
-            mEmptyView.setVisibility(View.GONE);
-            mRecommendView.setVisibility(View.VISIBLE);
-            mRecommendHeaderView.setVisibility(View.VISIBLE);
+        } else {
+            CitySearchHelper.cancel(this);
+            if (mRecommendView != null) {
+                mSearchListView.setVisibility(View.GONE);
+                mEmptyView.setVisibility(View.GONE);
+                mRecommendView.setVisibility(View.VISIBLE);
+                mRecommendHeaderView.setVisibility(View.VISIBLE);
+            }
         }
         return true;
     }
 
     private void searchLocalCities(String keyword) {
-        ArrayList<CityMode> list = DatabaseHelper.getInstance(this).queryCity(keyword);
+        final String requestKeyword = keyword.trim();
+        CitySearchHelper.search(this, requestKeyword, (query, results) -> {
+            if (isFinishing()) {
+                return;
+            }
+            SearchView searchView = findViewById(R.id.search_view);
+            String currentQuery = searchView != null ? searchView.getQuery().toString().trim() : "";
+            if (!TextUtils.equals(query, currentQuery)) {
+                return;
+            }
+            showSearchResults(query, results);
+        });
+    }
+
+    private void showSearchResults(String keyword, List<CityMode> list) {
         if (list != null && !list.isEmpty()) {
-            mLocalSearchAdapter.update(list);
+            mLocalSearchAdapter.update(list, keyword);
             mSearchListView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         } else {

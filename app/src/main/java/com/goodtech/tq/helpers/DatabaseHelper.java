@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -55,6 +56,12 @@ public class DatabaseHelper {
         this.mDatabase = this.openDatabase(DB_PATH + "/" + DB_NAME);
     }
 
+    private void ensureOpen() {
+        if (mDatabase == null || !mDatabase.isOpen()) {
+            openDatabase();
+        }
+    }
+
     private SQLiteDatabase openDatabase(String dbfile) {
         try {
             if (!(new File(dbfile).exists())) {
@@ -89,6 +96,10 @@ public class DatabaseHelper {
         if (TextUtils.isEmpty(name)) {
             return null;
         }
+        ensureOpen();
+        if (mDatabase == null) {
+            return null;
+        }
 
         String keyword = name.trim().replace("'", "").replace("%", "");
         if (TextUtils.isEmpty(keyword)) {
@@ -96,7 +107,7 @@ public class DatabaseHelper {
         }
 
         String like = "%" + keyword + "%";
-        String sql = "SELECT * FROM city WHERE depth <= 2 AND "
+        String sql = "SELECT * FROM city WHERE "
                 + "(mergerName LIKE ? OR cityName LIKE ? OR pinyin LIKE ? OR shortName LIKE ?) "
                 + "ORDER BY depth ASC, LENGTH(mergerName) ASC LIMIT 30";
         Cursor cursor = mDatabase.rawQuery(sql, new String[]{like, like, like, like});
@@ -119,9 +130,76 @@ public class DatabaseHelper {
         return list;
     }
 
-    public ArrayList<CityMode> searchCitiesWithCode(String cityCode) {
+    /**
+     * 定位反查 cityCode：以 city.db 为准（010/021/0755...），对齐纯净天气 resolveLocationCityCode。
+     */
+    public CityMode resolveLocationCity(String cityName, String district, String poiName) {
+        ensureOpen();
+        if (mDatabase == null) {
+            return null;
+        }
 
-        // 构建查询语句
+        LinkedHashSet<String> candidates = new LinkedHashSet<>();
+        addKeywordCandidate(candidates, cityName);
+        addKeywordCandidate(candidates, district);
+        addKeywordCandidate(candidates, poiName);
+        if (!TextUtils.isEmpty(district) && !TextUtils.isEmpty(poiName)) {
+            addKeywordCandidate(candidates, district + " " + poiName);
+        }
+
+        for (String keyword : candidates) {
+            ArrayList<CityMode> list = queryCity(keyword);
+            if (list == null || list.isEmpty()) {
+                continue;
+            }
+            for (CityMode cityMode : list) {
+                if (!TextUtils.isEmpty(cityMode.getCityCode())) {
+                    return cityMode;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static void addKeywordCandidate(LinkedHashSet<String> candidates, String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+        String trimmed = value.trim();
+        if (!trimmed.isEmpty()) {
+            candidates.add(trimmed);
+        }
+        String stripped = stripAdministrativeSuffix(trimmed);
+        if (!TextUtils.isEmpty(stripped)) {
+            candidates.add(stripped);
+        }
+        int spaceIndex = trimmed.indexOf(' ');
+        if (spaceIndex > 0) {
+            candidates.add(trimmed.substring(0, spaceIndex).trim());
+        }
+    }
+
+    private static String stripAdministrativeSuffix(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return "";
+        }
+        return value
+                .replace("特别行政区", "")
+                .replace("自治州", "")
+                .replace("地区", "")
+                .replace("省", "")
+                .replace("市", "")
+                .replace("县", "")
+                .replace("区", "")
+                .replace("盟", "")
+                .trim();
+    }
+
+    public ArrayList<CityMode> searchCitiesWithCode(String cityCode) {
+        ensureOpen();
+        if (mDatabase == null || TextUtils.isEmpty(cityCode)) {
+            return null;
+        }
 //        StringBuilder query = new StringBuilder("SELECT *, (LENGTH(mergerName) - LENGTH(REPLACE(mergerName, '" + name.charAt(0) + "', '')))");
 //        for (int i = 1; i < name.length(); i++) {
 //            query.append("+ (LENGTH(mergerName) - LENGTH(REPLACE(mergerName, '").append(name.charAt(i)).append("', ''))) ");

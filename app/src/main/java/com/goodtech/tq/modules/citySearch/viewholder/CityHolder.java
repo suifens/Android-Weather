@@ -21,6 +21,7 @@ import com.goodtech.tq.modules.cityList.CityListRecyclerAdapter;
 import com.goodtech.tq.models.CityMode;
 import com.goodtech.tq.models.Hourly;
 import com.goodtech.tq.models.WeatherModel;
+import com.goodtech.tq.utils.CityDisplayHelper;
 import com.goodtech.tq.utils.WeatherUtils;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 
@@ -76,19 +77,18 @@ public class CityHolder extends AbstractDraggableItemViewHolder implements View.
         }
 
         if (mode.getLocation()) {
-            if (TextUtils.isEmpty(mode.getCity())) {
+            String displayName = CityDisplayHelper.getHomeDisplayName(mode);
+            if (TextUtils.isEmpty(mode.getCity()) && "立即定位".equals(displayName)) {
                 mCityNameTv.setText("立即定位");
                 mTipTv.setVisibility(View.GONE);
-            } else {
-                if (mCityNameTv != null) {
-                    mCityNameTv.setText(mCityMode.getMergerName());
-                }
+            } else if (mCityNameTv != null) {
+                mCityNameTv.setText(displayName);
             }
-            mLocationTip.setVisibility(View.VISIBLE);
+            mLocationTip.setVisibility(CityDisplayHelper.shouldShowLocationIcon(mode) ? View.VISIBLE : View.GONE);
             mWeatherLayout.setVisibility(View.VISIBLE);
         } else {
             if (mCityNameTv != null) {
-                mCityNameTv.setText(mCityMode.getMergerName());
+                mCityNameTv.setText(CityDisplayHelper.getHomeDisplayName(mode));
             }
             mLocationTip.setVisibility(View.GONE);
             if (isEdit) {

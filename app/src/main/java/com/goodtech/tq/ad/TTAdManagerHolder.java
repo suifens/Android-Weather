@@ -32,6 +32,7 @@ public class TTAdManagerHolder {
     //step1:接入网盟广告sdk的初始化操作，详情见接入文档和穿山甲平台说明
     private static void doInit(Context context) {
         if (!sInit) {
+            GdtPrivacyConfig.applyBeforeInit();
             //TTAdSdk.init(context, buildConfig(context));
             //setp1.1：初始化SDK
 
@@ -71,7 +72,7 @@ public class TTAdManagerHolder {
                  * 使用聚合功能此开关必须设置为true，默认为false，不会初始化聚合模板，聚合功能会吟唱
                  */
                 .useMediation(true)
-                .supportMultiProcess(true)
+                .supportMultiProcess(false)
 //                .customController(new TTCustomController() {
 //                    @Override
 //                    public boolean isCanUseWifiState() {

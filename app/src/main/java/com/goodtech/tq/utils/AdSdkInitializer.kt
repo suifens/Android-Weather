@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.goodtech.tq.ad.GdtPrivacyConfig
 import com.goodtech.tq.ad.TTAdManagerHolder
 import com.goodtech.tq.app.App
 import com.goodtech.tq.modules.video.CsjAdHolder
@@ -78,6 +79,7 @@ object AdSdkInitializer {
     private fun startInit() {
         Log.d(TAG, "开始延迟初始化广告SDK（前台）")
         try {
+            GdtPrivacyConfig.applyBeforeInit()
             TTAdManagerHolder.init(App.instance)
             CsjAdHolder.init(App.VIDEO_SITE_ID, App.instance, object : TTAdSdk.Callback {
                 override fun success() {

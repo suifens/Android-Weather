@@ -42,6 +42,7 @@ import com.goodtech.tq.modules.cityList.CityListActivity
 import com.goodtech.tq.modules.removeAd.RemoveAdActivity
 import com.goodtech.tq.modules.signing.SigningActivity
 import com.goodtech.tq.utils.IntentReceiver
+import com.goodtech.tq.utils.CityDisplayHelper
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.utils.TimeUtils
 import com.goodtech.tq.utils.TipHelper
@@ -437,8 +438,11 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setAddress(cityMode: CityMode) {
-        binding.imgLocation.visibility = if (cityMode.location) View.VISIBLE else View.GONE
-        binding.tvAddress.text = cityMode.getMergerName()
+        val displayName = CityDisplayHelper.getHomeDisplayName(cityMode)
+        binding.imgLocation.visibility =
+            if (CityDisplayHelper.shouldShowLocationIcon(cityMode)) View.VISIBLE else View.GONE
+        binding.tvAddress.text = displayName
+        binding.tvAddress.isSelected = cityMode.location && displayName.isNotEmpty()
     }
 
     private fun syncLatestLocationIfNeeded() {

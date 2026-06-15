@@ -38,6 +38,7 @@ import com.goodtech.tq.modules.others.test.MyTestActivity
 import com.goodtech.tq.modules.signing.SigningActivity
 import com.goodtech.tq.modules.video.DrawVideoFullScreenActivity
 import com.goodtech.tq.modules.video.djx.DrawDramaActivity
+import com.goodtech.tq.utils.CityDisplayHelper
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.views.popup.AlarmPopup
 import com.goodtech.tq.views.popup.LifeDetailsPopup
@@ -592,7 +593,7 @@ class WeatherFragment : AdFeedFragment(), OnRefreshListener, WeatherHeaderListen
             popup.lifeImgRes = entity.lifeImageWith(lifeItemBean)
         }
         mCityMode?.let { city ->
-            popup.cityName = city.mergerName
+            popup.cityName = CityDisplayHelper.getHomeDisplayName(city)
         }
         mWeatherModel?.let { weather ->
             popup.observation = weather.observation

@@ -250,11 +250,16 @@ public class WeatherHttpHelper {
 
         String province_code = null;
         String city_code = null;
+        if (!TextUtils.isEmpty(cityMode.getCityCode())) {
+            city_code = cityMode.getCityCode();
+        }
         ArrayList<CityCodeMode> list = CityHelper.getCityCodes(mContext);
         for (CityCodeMode cityCodeMode : list) {
             if (cityCodeMode.getCity_name().contains(cityMode.getCity())) {
                 province_code = cityCodeMode.getProvince_code();
-                city_code = cityCodeMode.getCity_code();
+                if (TextUtils.isEmpty(city_code)) {
+                    city_code = cityCodeMode.getCity_code();
+                }
                 break;
             }
         }

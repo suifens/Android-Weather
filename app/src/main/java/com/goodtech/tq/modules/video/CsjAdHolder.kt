@@ -7,6 +7,7 @@ import com.bytedance.sdk.openadsdk.TTAdConfig
 import com.bytedance.sdk.openadsdk.TTAdConstant
 import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.goodtech.tq.ad.AdPrivacyController
+import com.goodtech.tq.ad.GdtPrivacyConfig
 
 /**
  * create by hanweiwei on 8/30/23
@@ -17,6 +18,7 @@ object CsjAdHolder {
     //穿山甲sdk初始化
     @JvmStatic
     fun init(siteId: String, application: Application, callback: TTAdSdk.Callback?) {
+        GdtPrivacyConfig.applyBeforeInit()
         val build = TTAdConfig.Builder()
             .appId(siteId) //穿山甲媒体id
 //            .useTextureView(true)
