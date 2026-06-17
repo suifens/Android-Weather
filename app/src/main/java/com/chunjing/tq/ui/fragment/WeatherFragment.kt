@@ -316,6 +316,13 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
             mainViewModel.setWeather(mCityId, it)
         }
 
+        // MainViewModel 拉到的天气（含添加城市后 awaitFetchWeather）与 Fragment 内 WeatherViewModel 对齐
+        mainViewModel.weatherMap.observe(viewLifecycleOwner) { map ->
+            map[mCityId]?.let { w ->
+                viewModel.applyMainWeather(w)
+            }
+        }
+
         viewModel.warnings.observe(this) {
             mCurrentBinding.warningBtn.visibility = View.VISIBLE
             alarmBean = it

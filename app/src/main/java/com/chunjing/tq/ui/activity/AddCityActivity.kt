@@ -231,14 +231,10 @@ class AddCityActivity : BaseVmActivity<ActivityAddCityBinding, SearchViewModel>(
                 MainActivity.startActivity(this@AddCityActivity, 0)
             } else {
                 mainViewModel.setCityId(cityId)
-                mainViewModel.awaitCitiesCacheRefresh()
-                val tabIndex = mainViewModel.cities.value.orEmpty().indexOfFirst { it.cityId == cityId }
-                if (tabIndex >= 0) {
-                    MainActivity.startActivity(this@AddCityActivity, tabIndex)
-                } else {
-                    mainViewModel.setPendingSelectCityTab(cityId)
-                    MainActivity.startActivityFromAddCity(this@AddCityActivity)
-                }
+                // 必须走 pending：仅 post showIndex 时 configCities 不会把 mCurIndex 切到新 Tab，且易与 cities 更新顺序竞态
+                mainViewModel.setPendingSelectCityTab(cityId)
+                mainViewModel.awaitCitiesCacheRefresh(forcePost = true)
+                MainActivity.startActivityFromAddCity(this@AddCityActivity)
             }
             finish()
         }

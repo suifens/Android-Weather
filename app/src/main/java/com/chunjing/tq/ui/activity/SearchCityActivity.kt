@@ -96,14 +96,9 @@ class SearchCityActivity : BaseVmActivity<ActivitySearchCityBinding, SearchViewM
         viewModel.addFinish.observe(this) { cityId ->
             lifecycleScope.launch {
                 mainViewModel.setCityId(cityId)
-                mainViewModel.awaitCitiesCacheRefresh()
-                val tabIndex = mainViewModel.cities.value.orEmpty().indexOfFirst { it.cityId == cityId }
-                if (tabIndex >= 0) {
-                    MainActivity.startActivity(this@SearchCityActivity, tabIndex)
-                } else {
-                    mainViewModel.setPendingSelectCityTab(cityId)
-                    MainActivity.startActivityFromAddCity(this@SearchCityActivity)
-                }
+                mainViewModel.setPendingSelectCityTab(cityId)
+                mainViewModel.awaitCitiesCacheRefresh(forcePost = true)
+                MainActivity.startActivityFromAddCity(this@SearchCityActivity)
                 finish()
             }
         }

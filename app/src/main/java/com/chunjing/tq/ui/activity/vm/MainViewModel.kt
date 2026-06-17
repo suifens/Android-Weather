@@ -36,8 +36,6 @@ import com.mapzen.android.lost.api.LocationRequest
 import com.mapzen.android.lost.api.LocationServices
 import com.mapzen.android.lost.api.LostApiClient
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Call
@@ -167,6 +165,16 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     * 同步写入城市并强制刷新 [cities]，避免异步 [addCity] 与 UI 跳转竞态导致列表不更新、首页一直 loading。
+     */
+    suspend fun addCityAndRefreshCities(city: CityEntity) {
+        withContext(Dispatchers.IO) {
+            AppRepo.getInstance().addCity(city)
+        }
+        awaitCitiesCacheRefresh(forcePost = true)
+    }
+
     fun getCityWeather(cityId: String): WeatherBean? {
         return mWeatherMap[cityId]
     }
@@ -180,7 +188,7 @@ class MainViewModel : BaseViewModel() {
     /**
      * 从数据库拉取城市列表并更新 [cities]；用于添加城市后确保列表已含新城市再回首页。
      */
-    suspend fun awaitCitiesCacheRefresh() {
+    suspend fun awaitCitiesCacheRefresh(forcePost: Boolean = false) {
         val list = withContext(Dispatchers.IO) {
             val out = ArrayList<CityEntity>()
             val location = AppRepo.getInstance().getCity(LOCATION_ID)
@@ -192,7 +200,7 @@ class MainViewModel : BaseViewModel() {
             }
             out
         }
-        if (isCityListEquivalentForTabs(cities.value, list)) {
+        if (!forcePost && isCityListEquivalentForTabs(cities.value, list)) {
             return
         }
         cities.postValue(list)
@@ -225,74 +233,65 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
-    //  获取所有城市的天气
-    fun getWeathers() {
-        launch {
-            cities.value?.let {
-                for (city in it) {
-                    fetchWeather(city)
+    /**
+     * 同步拉取并落库天气（供添加城市等场景在同协程内完成，避免 [launchSilent] 内异常被静默吞掉导致界面无数据）。
+     */
+    suspend fun awaitFetchWeather(city: CityEntity): WeatherBean? = fetchWeatherCore(city)
+
+    private suspend fun fetchWeatherCore(city: CityEntity): WeatherBean? {
+        if (city.latitude.isBlank() || city.longitude.isBlank()) {
+            Log.e("MainViewModel", "fetchWeatherCore: blank lat/lon cityId=${city.cityId}")
+            return null
+        }
+        val url = String.format(WEATHER_URL, city.latitude, city.longitude)
+        val result = withContext(Dispatchers.IO) {
+            HttpUtils.get<WeatherBean>(url)
+        } ?: return null
+
+        withContext(Dispatchers.IO) {
+            result.updateTime = System.currentTimeMillis()
+
+            val todayStr = TimeUtils.millis2String(System.currentTimeMillis(), "MM月dd日")
+            val todayKey = "$CACHE_WEATHER_DAY${city.cityId}_$todayStr"
+            val yesterdayStr = DateUtil.getYesterday()
+            var needAddDay = true
+            for (i in 0 until result.dailies.size) {
+                val daily = result.dailies[i]
+                val time = daily.time
+                if (time == yesterdayStr) {
+                    needAddDay = false
+                }
+                if (time == todayStr) {
+                    val todayDaily = AppRepo.getInstance().getCache<Daily?>(todayKey)
+                    if (todayDaily == null) {
+                        AppRepo.getInstance()
+                            .saveCache("$CACHE_WEATHER_DAY${city.cityId}_$todayStr", daily)
+                    }
+                    break
                 }
             }
+            if (needAddDay) {
+                val yesterdayKey = "$CACHE_WEATHER_DAY${city.cityId}_$yesterdayStr"
+                AppRepo.getInstance().getCache<Daily?>(yesterdayKey)?.let {
+                    result.dailies.add(0, it)
+                }
+            }
+            Log.e("TAG", "fetchWeather: ${result.dailies.size}")
+            AppRepo.getInstance().saveCache(CACHE_WEATHER_NOW + city.cityId, result)
         }
-    }
 
-    private var getWeathersDebounceJob: Job? = null
-
-    /**
-     * cities 短时间多次 post（如定位前/后各一次）时合并为一次全量拉天气，减轻并发与重复请求。
-     */
-    fun scheduleGetWeathersDebounced() {
-        getWeathersDebounceJob?.cancel()
-        getWeathersDebounceJob = viewModelScope.launch {
-            delay(320)
-            getWeathers()
-        }
+        mWeatherMap[city.cityId] = result
+        weatherMap.postValue(HashMap(mWeatherMap))
+        return result
     }
 
     fun fetchWeather(city: CityEntity, callback: ((WeatherBean?) -> Unit)? = null) {
-        // 实时天气
         launchSilent {
-            val url = String.format(WEATHER_URL, city.latitude, city.longitude)
-            val result = HttpUtils.get<WeatherBean>(url)
-            if (result != null) {
-                result.updateTime = System.currentTimeMillis()
-
-                val todayStr = TimeUtils.millis2String(System.currentTimeMillis(), "MM月dd日")
-                val todayKey = "$CACHE_WEATHER_DAY${city.cityId}_$todayStr"
-                val yesterdayStr = DateUtil.getYesterday()
-                //  需要添加昨日天气
-                var needAddDay = true
-                /// 保存今日
-                for (i in 0 until result.dailies.size) {
-                    val daily = result.dailies[i]
-                    val time = daily.time
-                    if (time == yesterdayStr) {
-                        needAddDay = false
-                    }
-                    if (time == todayStr) {
-                        val todayDaily = AppRepo.getInstance().getCache<Daily?>(todayKey)
-                        if (todayDaily == null) {
-                            AppRepo.getInstance()
-                                .saveCache("$CACHE_WEATHER_DAY${city.cityId}_$todayStr", daily)
-                        }
-                        break
-                    }
-                }
-                if (needAddDay) {
-                    val yesterdayKey = "$CACHE_WEATHER_DAY${city.cityId}_$yesterdayStr"
-                    AppRepo.getInstance().getCache<Daily?>(yesterdayKey)?.let {
-                        //  添加昨天天气
-                        result.dailies.add(0, it)
-                    }
-                }
-                Log.e("TAG", "fetchWeather: ${result.dailies.size}")
-                //  保存数据
-                AppRepo.getInstance().saveCache(CACHE_WEATHER_NOW + city.cityId, result)
-
-                mWeatherMap[city.cityId] = result
-                weatherMap.postValue(mWeatherMap)
-                callback?.invoke(result)
-            } else {
+            try {
+                val r = fetchWeatherCore(city)
+                callback?.invoke(r)
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "fetchWeather: ${e.message}", e)
                 callback?.invoke(null)
             }
         }
@@ -332,7 +331,7 @@ class MainViewModel : BaseViewModel() {
             val cache = AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + cityId)
             cache?.let {
                 mWeatherMap[cityId] = cache
-                weatherMap.postValue(mWeatherMap)
+                weatherMap.postValue(HashMap(mWeatherMap))
             }
             callback?.invoke(cache)
         }
@@ -833,7 +832,6 @@ class MainViewModel : BaseViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        getWeathersDebounceJob?.cancel()
         clearLocationListener()
         try {
             lostApiClient?.disconnect()

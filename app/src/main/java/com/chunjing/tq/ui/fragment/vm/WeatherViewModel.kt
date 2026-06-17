@@ -145,6 +145,11 @@ class WeatherViewModel : BaseViewModel() {
         fetchQueryData(city)
     }
 
+    /** 与 [com.chunjing.tq.ui.activity.vm.MainViewModel.weatherMap] 同步，避免仅更新全局缓存时本页不刷新 */
+    fun applyMainWeather(w: WeatherBean) {
+        weatherNow.postValue(w)
+    }
+
     //  获取背景
     fun getWeatherBgEntity(weather: WeatherBean, isItem: Boolean) {
         launchSilent {

@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.blankj.utilcode.util.BarUtils
@@ -23,6 +24,7 @@ import com.chunjing.tq.ui.base.BaseVmFragment
 import com.chunjing.tq.ui.fragment.WeatherFragment
 import com.goodtech.weatherlib.ext.clickNoRepeat
 import com.goodtech.weatherlib.extension.startActivity
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -106,11 +108,23 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
             }
         }
 
-        mainViewModel.showIndex.observe(this) {
-            if (it == 1000) {
+        mainViewModel.showIndex.observe(this) { idx ->
+            if (idx == 1000) {
                 isNewCity = true
             } else {
-                mCurIndex = it
+                isNewCity = false
+                val last = (mCityList.size - 1).coerceAtLeast(0)
+                mCurIndex = idx.coerceIn(0, last)
+                if (mCityList.isNotEmpty() && mBinding.llRound.childCount == mCityList.size) {
+                    for (i in 0 until mBinding.llRound.childCount) {
+                        mBinding.llRound.getChildAt(i).isEnabled = mCurIndex == i
+                    }
+                    mBinding.viewPager.adapter?.let { ad ->
+                        if (ad.itemCount > mCurIndex) {
+                            mBinding.viewPager.setCurrentItem(mCurIndex, false)
+                        }
+                    }
+                }
             }
         }
 
@@ -146,9 +160,18 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
         super.onResume()
         isShowing = true
         if (mCityChanged) {
+            // cities 可能已在添加页同步刷新，getCitiesCache 会因等价跳过 post，导致 observe 不跑、dismiss 不到；这里强制刷新并一定关掉 loading
             showLoading(true)
-            mainViewModel.getCitiesCache()
-            mCityChanged = false
+            lifecycleScope.launch {
+                try {
+                    mainViewModel.awaitCitiesCacheRefresh(forcePost = true)
+                } finally {
+                    if (isAdded) {
+                        dismissLoading()
+                    }
+                    mCityChanged = false
+                }
+            }
         } else {
             if (mCityList.isNotEmpty()) {
                 for (i in mainViewModel.cities.value!!.indices) {
@@ -285,6 +308,22 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
         mBinding.cityNameTv.text = if (cityList[mCurIndex].isLocal()) cityList[mCurIndex].mergerName else cityList[mCurIndex].cityName
 
         val nextTabIds = cityList.map { it.cityId }
+        val canAppendOneTab = previousTabIds.isNotEmpty() &&
+            nextTabIds.size == previousTabIds.size + 1 &&
+            nextTabIds.take(previousTabIds.size) == previousTabIds
+        val adapter = mBinding.viewPager.adapter as? FragmentPagerAdapter
+        if (canAppendOneTab && adapter != null) {
+            val newCityId = nextTabIds.last()
+            fragments.add(WeatherFragment.newInstance(newCityId))
+            adapter.notifyItemInserted(fragments.size - 1)
+            bindCityPageIndicators(cityList)
+            if (cityList.isNotEmpty()) {
+                mainViewModel.setCity(cityList[mCurIndex])
+                mBinding.viewPager.setCurrentItem(mCurIndex, false)
+            }
+            return
+        }
+
         val sameTabStructure =
             previousTabIds.isNotEmpty() && previousTabIds.size == nextTabIds.size && previousTabIds == nextTabIds
 

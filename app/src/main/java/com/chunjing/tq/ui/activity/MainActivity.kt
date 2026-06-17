@@ -124,10 +124,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun initEvent() {
 
-        mainViewModel.cities.observe(this) {
-            mainViewModel.scheduleGetWeathersDebounced()
-        }
-
         mainViewModel.needLocation.observe(this) { need ->
             if (need == true) {
                 if (NetworkUtils.isConnected() && checkGPSOpen() && checkGPSPermission()) {

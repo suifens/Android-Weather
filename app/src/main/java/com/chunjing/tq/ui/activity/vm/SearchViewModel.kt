@@ -1,17 +1,13 @@
 package com.chunjing.tq.ui.activity.vm
 
 import androidx.lifecycle.MutableLiveData
-import com.blankj.utilcode.util.TimeUtils
 import com.chunjing.tq.R
 import com.chunjing.tq.bean.MessageEvent
-import com.chunjing.tq.bean.WeatherBgBean
 import com.chunjing.tq.db.AppRepo
 import com.chunjing.tq.db.entity.CityEntity
 import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.base.BaseViewModel
 import com.goodtech.weatherlib.BaseApp
-import com.goodtech.weatherlib.net.HttpUtils
-import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 
 class SearchViewModel : BaseViewModel() {
@@ -59,26 +55,30 @@ class SearchViewModel : BaseViewModel() {
      */
     fun addCity(it: CityEntity) {
         launchSilent {
-            val city = AppRepo.getInstance().getCity(it.cityId)
-            if (city == null) {
-                mainViewModel.addCity(it)
-                mainViewModel.fetchWeather(it)
-//                mainViewModel.getCitiesCache()
-                delay(1000L)
-                EventBus.getDefault().post(MessageEvent(cityChanged = true))
+            try {
+                val existing = AppRepo.getInstance().getCity(it.cityId)
+                if (existing == null) {
+                    mainViewModel.addCityAndRefreshCities(it)
+                    mainViewModel.awaitFetchWeather(it)
+                    EventBus.getDefault().post(MessageEvent(cityChanged = true))
+                }
+            } catch (_: Exception) {
+                // 写库失败时仍关闭添加页 loading，避免卡死
+            } finally {
+                addFinish.postValue(it.cityId)
+                EventBus.getDefault().post(MessageEvent(selectedCityId = it.cityId))
             }
-
-            addFinish.postValue(it.cityId)
-            EventBus.getDefault().post(MessageEvent(selectedCityId = it.cityId))
         }
     }
 
     fun updateLocation(city: CityEntity) {
         launchSilent {
-            mainViewModel.addCity(city)
-            mainViewModel.fetchWeather(city)
-//            mainViewModel.getCitiesCache()
-            EventBus.getDefault().post(MessageEvent(cityChanged = true, selectedCityId = city.cityId))
+            try {
+                mainViewModel.addCityAndRefreshCities(city)
+                mainViewModel.awaitFetchWeather(city)
+                EventBus.getDefault().post(MessageEvent(cityChanged = true, selectedCityId = city.cityId))
+            } catch (_: Exception) {
+            }
         }
     }
 }
