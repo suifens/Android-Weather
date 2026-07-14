@@ -1,6 +1,8 @@
 package com.chunjing.tq.utils
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.goodtech.weatherlib.utils.SpUtils
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,6 +25,13 @@ object AdRemovalManager {
 
     private val sp get() = SpUtils.instance
 
+    private val _adRemovalChanged = MutableLiveData<Long>()
+    /** 去广告状态变更（增加时长 / 清除），供首页隐藏广告 */
+    val adRemovalChanged: LiveData<Long> = _adRemovalChanged
+
+    fun notifyAdRemovalChanged() {
+        _adRemovalChanged.postValue(System.currentTimeMillis())
+    }
     /**
      * 添加去广告时长
      */
@@ -33,6 +42,7 @@ object AdRemovalManager {
         val endTime = baseTime + (hours * 60 * 60 * 1000L)
         sp.putLong(KEY_AD_REMOVAL_END_TIME, endTime)
         Log.d(TAG, "添加去广告时长: ${hours}小时，结束时间: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(endTime))}")
+        notifyAdRemovalChanged()
     }
 
     /**
@@ -71,6 +81,7 @@ object AdRemovalManager {
     fun clearAdRemovalTime() {
         sp.remove(KEY_AD_REMOVAL_END_TIME)
         Log.d(TAG, "已清除去广告时间")
+        notifyAdRemovalChanged()
     }
 
     private val videoTaskRewards = listOf(6, 18, 18, 12, 12, 6, 24)

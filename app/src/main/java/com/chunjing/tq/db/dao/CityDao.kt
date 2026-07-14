@@ -9,14 +9,29 @@ interface CityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addCity(city: CityEntity): Long
 
-    @Query("select * from city")
+    @Query("select * from city ORDER BY sortOrder ASC")
     fun getCities(): List<CityEntity>
 
-    @Query("select * from city where cityId != '100000'")
+    @Query("select * from city where cityId != '100000' ORDER BY sortOrder ASC")
     fun getCitiesWithoutLocation(): List<CityEntity>
 
     @Query("select * from city where cityId = :cityId limit 1")
     fun getCity(cityId: String): CityEntity?
+
+    @Query("SELECT IFNULL(MAX(sortOrder), 0) FROM city")
+    fun getMaxSortOrder(): Int
+
+    @Query("UPDATE city SET sortOrder = :sortOrder WHERE cityId = :cityId")
+    fun updateSortOrder(cityId: String, sortOrder: Int)
+
+    @Transaction
+    fun updateCitiesOrder(cities: List<CityEntity>) {
+        cities.forEachIndexed { index, city ->
+            val order = if (city.cityId == "100000") 0 else index + 1
+            city.sortOrder = order
+            updateSortOrder(city.cityId, order)
+        }
+    }
 
     @Query("delete from city where cityId=:id")
     fun removeCity(id: String)

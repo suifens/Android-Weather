@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.chunjing.tq.adapter.SearchAdapter
-import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.databinding.ActivitySearchCityBinding
 import com.chunjing.tq.db.entity.CityEntity
 import com.chunjing.tq.mainViewModel
@@ -23,7 +22,6 @@ import com.chunjing.tq.utils.ContentUtil
 import com.goodtech.weatherlib.ext.showSoftInput
 import com.goodtech.weatherlib.extension.startActivity
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 class SearchCityActivity : BaseVmActivity<ActivitySearchCityBinding, SearchViewModel>() {
 

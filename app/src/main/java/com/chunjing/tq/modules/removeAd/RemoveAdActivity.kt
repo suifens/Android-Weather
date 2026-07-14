@@ -19,7 +19,6 @@ import com.bytedance.sdk.openadsdk.TTAdSdk
 import com.bytedance.sdk.openadsdk.TTRewardVideoAd
 import com.chunjing.tq.BuildConfig
 import com.chunjing.tq.ad.AdManager
-import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.databinding.ActivityRemoveAdBinding
 import com.chunjing.tq.modules.removeAd.model.DailyReward
 import com.chunjing.tq.modules.removeAd.model.DailyRewardStatus
@@ -33,7 +32,6 @@ import com.chunjing.tq.utils.AdRemovalManager
 import com.lxj.xpopup.XPopup
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
 class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewModel>() {
 
@@ -349,10 +347,7 @@ class RemoveAdActivity : BaseVmActivity<ActivityRemoveAdBinding, RemoveAdViewMod
                                     // 重新加载数据以更新UI（包括每日奖励，因为连续观看天数已更新）
                                     viewModel.loadAdRemovalData()
 
-                                    // 发送事件通知首页刷新并移除广告
-                                    EventBus.getDefault().post(
-                                        MessageEvent(needReload = true)
-                                    )
+                                    // claimVideoTaskReward → addAdRemovalTime 已通知 adRemovalChanged
 
                                     // 获取连续观看天数
                                     val continuousDays = AdRemovalManager.getContinuousDays()

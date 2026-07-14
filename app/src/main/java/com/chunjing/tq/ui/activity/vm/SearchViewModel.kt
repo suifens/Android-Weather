@@ -2,13 +2,11 @@ package com.chunjing.tq.ui.activity.vm
 
 import androidx.lifecycle.MutableLiveData
 import com.chunjing.tq.R
-import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.db.AppRepo
 import com.chunjing.tq.db.entity.CityEntity
 import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.base.BaseViewModel
 import com.goodtech.weatherlib.BaseApp
-import org.greenrobot.eventbus.EventBus
 
 class SearchViewModel : BaseViewModel() {
 
@@ -51,7 +49,7 @@ class SearchViewModel : BaseViewModel() {
     }
 
     /**
-     * 添加城市
+     * 添加城市：写库 + 刷新 [mainViewModel.cities]，由首页 LiveData 驱动更新。
      */
     fun addCity(it: CityEntity) {
         launchSilent {
@@ -60,13 +58,11 @@ class SearchViewModel : BaseViewModel() {
                 if (existing == null) {
                     mainViewModel.addCityAndRefreshCities(it)
                     mainViewModel.awaitFetchWeather(it)
-                    EventBus.getDefault().post(MessageEvent(cityChanged = true))
                 }
             } catch (_: Exception) {
                 // 写库失败时仍关闭添加页 loading，避免卡死
             } finally {
                 addFinish.postValue(it.cityId)
-                EventBus.getDefault().post(MessageEvent(selectedCityId = it.cityId))
             }
         }
     }
@@ -76,7 +72,6 @@ class SearchViewModel : BaseViewModel() {
             try {
                 mainViewModel.addCityAndRefreshCities(city)
                 mainViewModel.awaitFetchWeather(city)
-                EventBus.getDefault().post(MessageEvent(cityChanged = true, selectedCityId = city.cityId))
             } catch (_: Exception) {
             }
         }

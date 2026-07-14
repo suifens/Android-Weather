@@ -2,7 +2,6 @@ package com.chunjing.tq.jpush.service;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.chunjing.tq.ui.activity.MainActivity;
@@ -25,13 +24,6 @@ public class PushMessageReceiver extends JPushMessageReceiver {
     @Override
     public void onMessage(Context context, CustomMessage message) {
         Log.e(TAG, "[onMessage]:" + message);
-//        // RxBusUtils.get().post(KEY_PUSH_MESSAGE, PushMessage.wrap(MessageType.TYPE_CUSTOM, message));
-        if (!TextUtils.isEmpty(message.message)) {
-//            JReceiveEntity entity = new Gson().fromJson(message.message, new TypeToken<JReceiveEntity>() {}.getType());
-//            if (entity != null) {
-//                EventBus.getDefault().post(entity);
-//            }
-        }
     }
 
 
@@ -42,7 +34,6 @@ public class PushMessageReceiver extends JPushMessageReceiver {
     @Override
     public void onNotifyMessageArrived(Context context, NotificationMessage message) {
         Log.e(TAG, "[onNotifyMessageArrived]:" + message);
-//        // RxBusUtils.get().post(KEY_PUSH_MESSAGE, PushMessage.wrap(MessageType.TYPE_NOTIFICATION, message));
     }
 
     /**

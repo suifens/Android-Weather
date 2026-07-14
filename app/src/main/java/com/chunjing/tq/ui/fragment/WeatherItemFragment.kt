@@ -19,8 +19,7 @@ import com.chunjing.tq.ui.activity.MainActivity
 import com.chunjing.tq.ui.base.BaseFragment
 import com.goodtech.weatherlib.extension.startActivity
 import com.goodtech.weatherlib.utils.WeatherUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -46,6 +45,7 @@ class WeatherItemFragment : BaseFragment<FragmentHomeItemBinding>() {
 
     fun setupWeather(city: CityEntity, weather: WeatherBean?, position: Int = 0) {
         this.mCity = city
+        this.mCityId = city.cityId
         this.weatherBean = weather
         this.mPosition = position
         this.needUpdate = true
@@ -131,7 +131,7 @@ class WeatherItemFragment : BaseFragment<FragmentHomeItemBinding>() {
     }
 
     private fun showWeather(weather: WeatherBean) {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val observation = weather.observation
             mBinding.tempTv.text = "${observation.metric.temp}°"
             mBinding.iconImgV.setImageResource(WeatherUtils.getIcon(observation.wxIcon))

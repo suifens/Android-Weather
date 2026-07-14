@@ -29,6 +29,9 @@ class CityEntity() : Parcelable, Serializable {
 
     var pinyin: String = ""
 
+    /** 展示顺序：定位城固定为 0，其余从 1 递增 */
+    var sortOrder: Int = 0
+
     fun isLocal(): Boolean {
         return cityId == LOCATION_ID
     }
@@ -46,6 +49,7 @@ class CityEntity() : Parcelable, Serializable {
         latitude = parcel.readString().toString()
         longitude = parcel.readString().toString()
         pinyin = parcel.readString().toString()
+        sortOrder = parcel.readInt()
     }
 
     @Ignore
@@ -75,6 +79,7 @@ class CityEntity() : Parcelable, Serializable {
         parcel.writeString(latitude)
         parcel.writeString(longitude)
         parcel.writeString(pinyin)
+        parcel.writeInt(sortOrder)
     }
 
     override fun describeContents(): Int {

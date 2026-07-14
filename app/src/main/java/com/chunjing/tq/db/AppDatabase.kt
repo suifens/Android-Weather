@@ -20,7 +20,7 @@ import com.chunjing.tq.db.entity.CalendarBgEntity
  */
 @Database(
     entities = [WeatherBgEntity::class, CacheEntity::class, CityEntity::class, CalendarBgEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 internal abstract class AppDatabase : RoomDatabase() {
@@ -54,8 +54,7 @@ internal abstract class AppDatabase : RoomDatabase() {
                 context, AppDatabase::class.java,
                 DATABASE_NAME
             )
-                .addMigrations(MIGRATION1_2)
-                .allowMainThreadQueries()
+                .addMigrations(MIGRATION1_2, MIGRATION2_3)
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
@@ -90,6 +89,16 @@ internal abstract class AppDatabase : RoomDatabase() {
             //4.将新表user_new重命名为user,升级完毕
             database.execSQL("ALTER TABLE WeatherBgImg RENAME TO WeatherImg")
 //            database.close()
+        }
+    }
+
+    object MIGRATION2_3 : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL(
+                "ALTER TABLE city ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0"
+            )
+            database.execSQL("UPDATE city SET sortOrder = rowid WHERE cityId != '100000'")
+            database.execSQL("UPDATE city SET sortOrder = 0 WHERE cityId = '100000'")
         }
     }
 }

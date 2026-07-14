@@ -1,12 +1,9 @@
 package com.chunjing.tq.ui.activity.vm
 
 import androidx.lifecycle.MutableLiveData
-import com.chunjing.tq.bean.WeatherBean
-import com.chunjing.tq.db.AppRepo
+import com.chunjing.tq.db.CityRepository
 import com.chunjing.tq.db.entity.CityEntity
-import com.chunjing.tq.db.entity.LOCATION_ID
 import com.chunjing.tq.ui.base.BaseViewModel
-import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_NOW
 
 class CityManagerViewModel : BaseViewModel() {
 
@@ -14,23 +11,17 @@ class CityManagerViewModel : BaseViewModel() {
 
     fun getCities() {
         launch {
-            val results = AppRepo.getInstance().getAdditionalCities()
+            val results = CityRepository.getInstance().getAdditionalCities()
             cities.postValue(results)
         }
     }
 
-    fun removeCity(cityId: String) {
-        launchSilent {
-            AppRepo.getInstance().removeCity(cityId)
-        }
+    suspend fun removeCities(cityIds: List<String>) {
+        val repo = CityRepository.getInstance()
+        cityIds.forEach { repo.removeCity(it) }
     }
 
-    fun updateCities(it: List<CityEntity>) {
-        launchSilent {
-            AppRepo.getInstance().removeAllCityWithout(LOCATION_ID)
-            it.forEach {
-                AppRepo.getInstance().addCity(it)
-            }
-        }
+    suspend fun updateCitiesOrder(ordered: List<CityEntity>) {
+        CityRepository.getInstance().updateCitiesOrder(ordered)
     }
 }

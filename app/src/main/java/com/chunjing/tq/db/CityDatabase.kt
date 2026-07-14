@@ -11,7 +11,7 @@ import com.chunjing.tq.db.entity.CityEntity
 
 @Database(
     entities = [CityEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 internal abstract class CityDatabase : RoomDatabase() {
@@ -36,30 +36,53 @@ internal abstract class CityDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context): CityDatabase {
             return Room.databaseBuilder(context, CityDatabase::class.java, DATABASE_NAME)
-                .createFromAsset("city.db")
+                .createFromAsset(
+                    "city.db",
+                    object : RoomDatabase.PrepackagedDatabaseCallback() {
+                        override fun onOpenPrepackagedDatabase(db: SupportSQLiteDatabase) {
+                            // 资产库无 sortOrder，复制后立刻补齐，避免 Room 校验失败
+                            ensureSortOrderColumn(db)
+                        }
+                    }
+                )
+                .addMigrations(MIGRATION1_2)
                 .build()
+        }
+
+        private fun ensureSortOrderColumn(db: SupportSQLiteDatabase) {
+            val cursor = db.query("PRAGMA table_info(city)")
+            var hasSortOrder = false
+            cursor.use {
+                val nameIndex = it.getColumnIndex("name")
+                while (it.moveToNext()) {
+                    if (nameIndex >= 0 && it.getString(nameIndex) == "sortOrder") {
+                        hasSortOrder = true
+                        break
+                    }
+                }
+            }
+            if (!hasSortOrder) {
+                db.execSQL("ALTER TABLE city ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
+            }
         }
     }
 
-    object MIGRATION0_1 : Migration(0, 1) {
+    object MIGRATION1_2 : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
-            //1.创建一个新的符合Entity字段的新表user_new
-            database.execSQL(
-                "CREATE TABLE AdProfile_New (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-                        + "name TEXT,"       //关注点1
-                        + "url TEXT,"       //关注点1
-                        + "md5 TEXT,"       //关注点1
-                        + "size TEXT,"       //关注点1
-                        + "download INTEGER NOT NULL,"     //关注点2
-                        + "enable INTEGER NOT NULL)"     //关注点2
-            )
-            //2.将旧表user中的数据拷贝到新表user_new中
-            database.execSQL(("INSERT INTO AdProfile_New(id,name,url,md5,size,download,enable) " + "SELECT id,name,url,md5,size,download,enable FROM AdProfile"))
-            //3.删除旧表user
-            database.execSQL("DROP TABLE AdProfile")
-            //4.将新表user_new重命名为user,升级完毕
-            database.execSQL("ALTER TABLE AdProfile_New RENAME TO AdProfile")
-//            database.close()
+            val cursor = database.query("PRAGMA table_info(city)")
+            var hasSortOrder = false
+            cursor.use {
+                val nameIndex = it.getColumnIndex("name")
+                while (it.moveToNext()) {
+                    if (nameIndex >= 0 && it.getString(nameIndex) == "sortOrder") {
+                        hasSortOrder = true
+                        break
+                    }
+                }
+            }
+            if (!hasSortOrder) {
+                database.execSQL("ALTER TABLE city ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0")
+            }
         }
     }
 }

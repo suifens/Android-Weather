@@ -45,68 +45,89 @@ class WeatherViewModel : BaseViewModel() {
     val calendarBgPath = MutableLiveData<String?>()
 
     @SuppressLint("NullSafeMutableLiveData")
+    fun loadCacheDisplayOnly(cityId: String) {
+        launch {
+            loadCacheInternal(cityId, fetchNetwork = false)
+        }
+    }
+
+    @SuppressLint("NullSafeMutableLiveData")
     fun loadCache(cityId: String) {
         launch {
-            val city = AppRepo.getInstance().getCity(cityId)
-            if (city == null && cityId == LOCATION_ID) {
-                mainViewModel.curLocation.value?.let { loc ->
-                    if (loc.isLocal()) {
+            loadCacheInternal(cityId, fetchNetwork = true)
+        }
+    }
+
+    private suspend fun loadCacheInternal(cityId: String, fetchNetwork: Boolean) {
+        val city = AppRepo.getInstance().getCity(cityId)
+        if (city == null && cityId == LOCATION_ID) {
+            mainViewModel.curLocation.value?.let { loc ->
+                if (loc.isLocal()) {
+                    if (fetchNetwork) {
                         refreshWithCity(loc)
-                        return@launch
+                    } else {
+                        curCity.postValue(loc)
+                        AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + loc.cityId)?.let {
+                            weatherNow.postValue(it)
+                        }
                     }
+                    return
                 }
             }
-            city?.let {
-                curCity.postValue(it)
+        }
+        city?.let {
+            curCity.postValue(it)
+            if (fetchNetwork) {
                 getPeripheralCities()
-                //  天气
-                val weather = AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + city.cityId)
-                if (weather != null) {
-                    weatherNow.postValue(weather)
-                    if (!TimeUtils.isToday(weather.updateTime)
-                        || TimeUtils.getTimeSpanByNow(weather.updateTime, TimeConstants.HOUR) != 0L) {
-                        fetchWeatherData(city)
-                    }
-                } else {
+            }
+            val weather = AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + city.cityId)
+            if (weather != null) {
+                weatherNow.postValue(weather)
+                if (fetchNetwork && (!TimeUtils.isToday(weather.updateTime)
+                        || TimeUtils.getTimeSpanByNow(weather.updateTime, TimeConstants.HOUR) != 0L)
+                ) {
                     fetchWeatherData(city)
                 }
+            } else if (fetchNetwork) {
+                fetchWeatherData(city)
+            }
 
-                //  预警
-                val cityCode = getCityCode(city.cityName)
-                if (cityCode != null && cityCode.isNotEmpty()) {
-                    val alarm = AppRepo.getInstance().getCache<JuheAlarmBean?>(CACHE_ALARM_NOW + cityCode)
-                    if (alarm != null) {
-                        warnings.postValue(alarm)
-                        if (!TimeUtils.isToday(alarm.updateTime)) {
-                            fetchAlarmData(city)
-                        }
-                    } else {
+            if (!fetchNetwork) {
+                return
+            }
+
+            val cityCode = getCityCode(city.cityName)
+            if (cityCode != null && cityCode.isNotEmpty()) {
+                val alarm = AppRepo.getInstance().getCache<JuheAlarmBean?>(CACHE_ALARM_NOW + cityCode)
+                if (alarm != null) {
+                    warnings.postValue(alarm)
+                    if (!TimeUtils.isToday(alarm.updateTime)) {
                         fetchAlarmData(city)
                     }
+                } else {
+                    fetchAlarmData(city)
                 }
+            }
 
-                getLifeCityName(city.cityName)?.let { cityName ->
-                    //  生活
-                    val life = AppRepo.getInstance().getCache<LifeEntity?>(CACHE_LIFE + cityName)
-                    if (life != null) {
-                        lifeLiveData.postValue(life)
-                        if (!TimeUtils.isToday(life.updateTime)) {
-                            fetchLifeData(city)
-                        }
-                    } else {
+            getLifeCityName(city.cityName)?.let { cityName ->
+                val life = AppRepo.getInstance().getCache<LifeEntity?>(CACHE_LIFE + cityName)
+                if (life != null) {
+                    lifeLiveData.postValue(life)
+                    if (!TimeUtils.isToday(life.updateTime)) {
                         fetchLifeData(city)
                     }
+                } else {
+                    fetchLifeData(city)
+                }
 
-                    //  聚合天气
-                    val jWeather = AppRepo.getInstance().getCache<JuheWeather?>(CACHE_JUHE_WEATHER + cityName)
-                    if (jWeather != null) {
-                        todayAqi.postValue(jWeather.aqi)
-                        if (!TimeUtils.isToday(jWeather.updateTime)) {
-                            fetchQueryData(city)
-                        }
-                    } else {
+                val jWeather = AppRepo.getInstance().getCache<JuheWeather?>(CACHE_JUHE_WEATHER + cityName)
+                if (jWeather != null) {
+                    todayAqi.postValue(jWeather.aqi)
+                    if (!TimeUtils.isToday(jWeather.updateTime)) {
                         fetchQueryData(city)
                     }
+                } else {
+                    fetchQueryData(city)
                 }
             }
         }

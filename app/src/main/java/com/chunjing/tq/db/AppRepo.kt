@@ -1,18 +1,15 @@
 package com.chunjing.tq.db
 
-
 import android.util.Log
-import androidx.room.Query
-import com.goodtech.weatherlib.BaseApp
 import com.chunjing.tq.db.dao.CacheDao
 import com.chunjing.tq.db.dao.CalendarBgDao
 import com.chunjing.tq.db.dao.CityDao
 import com.chunjing.tq.db.dao.WeatherBgDao
-import com.chunjing.tq.db.entity.*
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
+import com.chunjing.tq.db.entity.CacheEntity
+import com.chunjing.tq.db.entity.CalendarBgEntity
+import com.chunjing.tq.db.entity.CityEntity
+import com.chunjing.tq.db.entity.WeatherBgEntity
+import com.goodtech.weatherlib.BaseApp
 
 const val TIME_HOUR = 60 * 60
 const val TIME_DAY = TIME_HOUR * 24
@@ -24,13 +21,13 @@ class AppRepo {
 
     private val cacheDao: CacheDao = AppDatabase.getInstance(BaseApp.context).cacheDao()
 
-    private val cityDao: CityDao = AppDatabase.getInstance(BaseApp.context).cityDao()
+    private val cityRepository: CityRepository = CityRepository.getInstance()
     //  搜索
     private val searchDao: CityDao = CityDatabase.getInstance(BaseApp.context).cityDao()
 
     suspend fun addWeatherBg(bg: WeatherBgEntity) {
         val code = weatherBgDao.saveWeatherBg(bg)
-        Log.e("TAG", "addWeatherBg: $code" )
+        Log.e("TAG", "addWeatherBg: $code")
     }
 
     /**
@@ -52,7 +49,7 @@ class AppRepo {
 
     suspend fun addCalendarBg(bg: CalendarBgEntity) {
         val code = calendarBgDao.saveCalendarBg(bg)
-        Log.e("TAG", "addCalendarBg: $code" )
+        Log.e("TAG", "addCalendarBg: $code")
     }
 
     /**
@@ -63,42 +60,46 @@ class AppRepo {
     }
 
     // 删除前定位城市
-    fun removeLocal() {
-        cityDao.removeCity(LOCATION_ID)
+    suspend fun removeLocal() {
+        cityRepository.removeLocal()
     }
 
     suspend fun addCity(city: CityEntity) {
-        cityDao.addCity(city)
+        cityRepository.addCity(city)
     }
 
     suspend fun removeCity(cityId: String) {
-        cityDao.removeCity(cityId)
+        cityRepository.removeCity(cityId)
     }
 
     suspend fun removeAllCity() {
-        cityDao.removeAllCity()
+        cityRepository.removeAllCity()
     }
 
     suspend fun removeAllCityWithout(cityId: String) {
-        cityDao.removeAllCityWithout(cityId)
+        cityRepository.removeAllCityWithout(cityId)
+    }
+
+    suspend fun updateCitiesOrder(cities: List<CityEntity>) {
+        cityRepository.updateCitiesOrder(cities)
     }
 
     suspend fun getCity(cityId: String): CityEntity? {
-        return cityDao.getCity(cityId)
+        return cityRepository.getCity(cityId)
     }
 
     /**
      * 获取城市列表
      */
     suspend fun getCities(): List<CityEntity> {
-        return cityDao.getCities()
+        return cityRepository.getCities()
     }
 
     /**
      * 获取除定位外的城市列表
      */
     suspend fun getAdditionalCities(): List<CityEntity> {
-        return cityDao.getCitiesWithoutLocation()
+        return cityRepository.getAdditionalCities()
     }
 
     suspend fun searchCity(name: String): List<CityEntity> {
@@ -129,7 +130,7 @@ class AppRepo {
     suspend fun <T> saveCache(key: String, body: T, saveTime: Int) {
         val cache = CacheEntity()
         cache.key = key
-        cache.data = toByteArray(body)
+        cache.data = CacheCodec.encode(body as Any)
         if (saveTime == 0) {
             cache.dead_line = 0
         } else {
@@ -140,41 +141,17 @@ class AppRepo {
 
     suspend fun <T> getCache(key: String): T? {
         val cache: CacheEntity? = cacheDao.getCache(key)
-        return if (cache?.data != null) {
-            if (cache.dead_line == 0L) {
-                toObject(cache.data) as T
-            } else {
-                if (cache.dead_line > System.currentTimeMillis() / 1000) {
-                    toObject(cache.data) as T
-                } else {
-                    null
-                }
-            }
-        } else {
-            null
+        val data = cache?.data ?: return null
+        if (cache.dead_line != 0L && cache.dead_line <= System.currentTimeMillis() / 1000) {
+            return null
         }
-    }
-
-    //序列化存储数据需要转换成二进制
-    private fun <T> toByteArray(body: T): ByteArray {
-        val baos = ByteArrayOutputStream()
-        val oos = ObjectOutputStream(baos)
-        oos.writeObject(body)
-        oos.flush()
-        oos.close()
-        return baos.toByteArray()
-    }
-
-    //反序列,把二进制数据转换成java object对象
-    private fun toObject(data: ByteArray?): Any? {
-        val bais = ByteArrayInputStream(data)
-        val ois = ObjectInputStream(bais)
-        val readObject = ois.readObject()
-        ois.close()
-        return readObject
+        @Suppress("UNCHECKED_CAST")
+        return CacheCodec.decode(data) as T?
     }
 
     companion object {
+        private const val TAG = "AppRepo"
+
         @Volatile
         private var instance: AppRepo? = null
 

@@ -1,52 +1,30 @@
 package com.chunjing.tq.ui.activity.vm
 
-import android.location.Geocoder
-import android.location.Location
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.TimeUtils
-import com.chunjing.tq.bean.CalendarBgBean
+import com.chunjing.tq.bean.CityWeatherUpdate
 import com.chunjing.tq.bean.Daily
 import com.chunjing.tq.bean.VersionBean
 import com.chunjing.tq.bean.WeatherBean
-import com.chunjing.tq.bean.WeatherBgBean
 import com.chunjing.tq.bean.juhe.JuheBean
 import com.chunjing.tq.bean.juhe.JuheSoul
 import com.chunjing.tq.db.AppRepo
-import com.chunjing.tq.db.entity.CalendarBgEntity
+import com.chunjing.tq.db.CityListLogic
+import com.chunjing.tq.db.LocationRepository
+import com.chunjing.tq.db.WeatherBgRepository
+import com.chunjing.tq.db.WeatherRepository
 import com.chunjing.tq.db.entity.CityEntity
 import com.chunjing.tq.db.entity.LOCATION_ID
 import com.chunjing.tq.db.entity.WeatherBgEntity
 import com.chunjing.tq.ext.JUHE_SOUL
-import com.chunjing.tq.ext.WEATHER_URL
 import com.chunjing.tq.ui.base.BaseViewModel
-import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_DAY
-import com.chunjing.tq.ui.fragment.vm.CACHE_WEATHER_NOW
-import com.chunjing.tq.utils.ContentUtil
-import com.goodtech.weatherlib.BaseApp
 import com.goodtech.weatherlib.net.HttpUtils
 import com.goodtech.weatherlib.net.LoadState
 import com.goodtech.weatherlib.utils.DateUtil
 import com.goodtech.weatherlib.utils.SpUtils
 import com.goodtech.weatherlib.utils.WeatherUtils
-import com.mapzen.android.lost.api.LocationListener
-import com.mapzen.android.lost.api.LocationRequest
-import com.mapzen.android.lost.api.LocationServices
-import com.mapzen.android.lost.api.LostApiClient
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 
@@ -57,11 +35,15 @@ const val CACHE_RECOMMEND_INTERVAL = "recommend_interval"
 class MainViewModel : BaseViewModel() {
     private companion object {
         const val LOCATION_INTERVAL_SECONDS = 15 * 60
-        const val MAX_LAST_KNOWN_AGE_MS = 2 * 60 * 1000L
     }
 
     val cities = MutableLiveData<List<CityEntity>>()
+    /** @deprecated 优先订阅 [weatherUpdate]；保留供旧代码读取快照 */
     val weatherMap = MutableLiveData<HashMap<String, WeatherBean>>()
+    /** 单城天气变更，避免全量 map 广播触发所有 Tab / 列表刷新 */
+    val weatherUpdate = MutableLiveData<CityWeatherUpdate>()
+    /** 当前 Tab 及左右相邻 cityId，仅这些 Tab 会触发网络刷新 */
+    val weatherRefreshWindow = MutableLiveData<Set<String>>(emptySet())
     val showIndex = MutableLiveData<Int>()
 
     var curCityId = ""
@@ -83,30 +65,9 @@ class MainViewModel : BaseViewModel() {
     val todaySoul = MutableLiveData<String?>()
     var lasLocation = 0L
 
-    /// key: tempType-timeType
-    private val mBgMap = HashMap<String, WeatherBgEntity>()
-
-    private val mWeatherMap = HashMap<String, WeatherBean>()
-    private var lostApiClient: LostApiClient? = null
-    private var locationListener: LocationListener? = null
-
-    /** 合并短时间内的多次 [getLocation]（如冷启动 + needLocation 粘性、连续 connect/onConnected） */
-    @Volatile
-    private var locationRequestActive = false
-
-    @Synchronized
-    private fun tryBeginLocationRequest(): Boolean {
-        if (locationRequestActive) {
-            return false
-        }
-        locationRequestActive = true
-        return true
-    }
-
-    @Synchronized
-    private fun endLocationRequest() {
-        locationRequestActive = false
-    }
+    private val weatherRepository = WeatherRepository.getInstance()
+    private val locationRepository = LocationRepository.getInstance()
+    private val weatherBgRepository = WeatherBgRepository.getInstance()
 
     /** 定时定位请求被消费后复位，避免 needLocation 一直为 true 导致每次进首页再拉一次 */
     fun acknowledgeNeedLocationRequest() {
@@ -176,7 +137,29 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun getCityWeather(cityId: String): WeatherBean? {
-        return mWeatherMap[cityId]
+        return weatherRepository.getMemoryWeather(cityId)
+    }
+
+    fun getWeatherMapSnapshot(): Map<String, WeatherBean> = weatherRepository.getMemorySnapshot()
+
+    private fun publishWeather(cityId: String, weather: WeatherBean) {
+        weatherRepository.putMemory(cityId, weather)
+        weatherUpdate.postValue(CityWeatherUpdate(cityId, weather))
+    }
+
+    /** 切换 Tab 时更新可刷新窗口（当前 ±1） */
+    fun updateWeatherRefreshWindow(cities: List<CityEntity>, centerIndex: Int) {
+        weatherRefreshWindow.postValue(
+            CityListLogic.refreshWindowIds(cities.map { it.cityId }, centerIndex)
+        )
+    }
+
+    /** 从 Room 预加载各城缓存到内存，供城市列表展示 */
+    private suspend fun preloadWeatherCaches(cityIds: List<String>) {
+        val loaded = weatherRepository.preloadFromCache(cityIds)
+        for ((cityId, weather) in loaded) {
+            weatherUpdate.postValue(CityWeatherUpdate(cityId, weather))
+        }
     }
 
     fun getCitiesCache() {
@@ -204,6 +187,9 @@ class MainViewModel : BaseViewModel() {
             return
         }
         cities.postValue(list)
+        preloadWeatherCaches(list.map { it.cityId })
+        val centerIndex = list.indexOfFirst { it.cityId == curCityId }.let { if (it >= 0) it else 0 }
+        updateWeatherRefreshWindow(list, centerIndex)
     }
 
     /** 城市 Tab 顺序与展示用字段一致时不再 post，避免触发首页 ViewPager 无意义重建 */
@@ -211,23 +197,24 @@ class MainViewModel : BaseViewModel() {
         old: List<CityEntity>?,
         new: List<CityEntity>
     ): Boolean {
-        if (old == null || old.size != new.size) {
-            return false
-        }
-        for (i in new.indices) {
-            val a = old[i]
-            val b = new[i]
-            if (a.cityId != b.cityId) return false
-            if (a.latitude != b.latitude || a.longitude != b.longitude) return false
-            if (a.cityName != b.cityName || a.mergerName != b.mergerName) return false
-        }
-        return true
+        return CityListLogic.isEquivalentForTabs(
+            old?.map {
+                CityListLogic.CityTabSnapshot(
+                    it.cityId, it.sortOrder, it.latitude, it.longitude, it.cityName, it.mergerName
+                )
+            },
+            new.map {
+                CityListLogic.CityTabSnapshot(
+                    it.cityId, it.sortOrder, it.latitude, it.longitude, it.cityName, it.mergerName
+                )
+            }
+        )
     }
 
     //  获取天气缓存
     fun getWeatherCache(cityId: String, callback: ((WeatherBean?) -> Unit)? = null) {
         launchSilent {
-            AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + cityId).let {
+            weatherRepository.getCachedWeather(cityId).let {
                 callback?.invoke(it)
             }
         }
@@ -236,59 +223,16 @@ class MainViewModel : BaseViewModel() {
     /**
      * 同步拉取并落库天气（供添加城市等场景在同协程内完成，避免 [launchSilent] 内异常被静默吞掉导致界面无数据）。
      */
-    suspend fun awaitFetchWeather(city: CityEntity): WeatherBean? = fetchWeatherCore(city)
-
-    private suspend fun fetchWeatherCore(city: CityEntity): WeatherBean? {
-        if (city.latitude.isBlank() || city.longitude.isBlank()) {
-            Log.e("MainViewModel", "fetchWeatherCore: blank lat/lon cityId=${city.cityId}")
-            return null
-        }
-        val url = String.format(WEATHER_URL, city.latitude, city.longitude)
-        val result = withContext(Dispatchers.IO) {
-            HttpUtils.get<WeatherBean>(url)
-        } ?: return null
-
-        withContext(Dispatchers.IO) {
-            result.updateTime = System.currentTimeMillis()
-
-            val todayStr = TimeUtils.millis2String(System.currentTimeMillis(), "MM月dd日")
-            val todayKey = "$CACHE_WEATHER_DAY${city.cityId}_$todayStr"
-            val yesterdayStr = DateUtil.getYesterday()
-            var needAddDay = true
-            for (i in 0 until result.dailies.size) {
-                val daily = result.dailies[i]
-                val time = daily.time
-                if (time == yesterdayStr) {
-                    needAddDay = false
-                }
-                if (time == todayStr) {
-                    val todayDaily = AppRepo.getInstance().getCache<Daily?>(todayKey)
-                    if (todayDaily == null) {
-                        AppRepo.getInstance()
-                            .saveCache("$CACHE_WEATHER_DAY${city.cityId}_$todayStr", daily)
-                    }
-                    break
-                }
-            }
-            if (needAddDay) {
-                val yesterdayKey = "$CACHE_WEATHER_DAY${city.cityId}_$yesterdayStr"
-                AppRepo.getInstance().getCache<Daily?>(yesterdayKey)?.let {
-                    result.dailies.add(0, it)
-                }
-            }
-            Log.e("TAG", "fetchWeather: ${result.dailies.size}")
-            AppRepo.getInstance().saveCache(CACHE_WEATHER_NOW + city.cityId, result)
-        }
-
-        mWeatherMap[city.cityId] = result
-        weatherMap.postValue(HashMap(mWeatherMap))
+    suspend fun awaitFetchWeather(city: CityEntity): WeatherBean? {
+        val result = weatherRepository.fetchAndCache(city) ?: return null
+        weatherUpdate.postValue(CityWeatherUpdate(city.cityId, result))
         return result
     }
 
     fun fetchWeather(city: CityEntity, callback: ((WeatherBean?) -> Unit)? = null) {
         launchSilent {
             try {
-                val r = fetchWeatherCore(city)
+                val r = awaitFetchWeather(city)
                 callback?.invoke(r)
             } catch (e: Exception) {
                 Log.e("MainViewModel", "fetchWeather: ${e.message}", e)
@@ -328,10 +272,9 @@ class MainViewModel : BaseViewModel() {
      */
     fun loadWeather(cityId: String, callback: ((WeatherBean?) -> Unit)? = null) {
         launchSilent {
-            val cache = AppRepo.getInstance().getCache<WeatherBean?>(CACHE_WEATHER_NOW + cityId)
+            val cache = weatherRepository.getCachedWeather(cityId)
             cache?.let {
-                mWeatherMap[cityId] = cache
-                weatherMap.postValue(HashMap(mWeatherMap))
+                publishWeather(cityId, cache)
             }
             callback?.invoke(cache)
         }
@@ -339,10 +282,6 @@ class MainViewModel : BaseViewModel() {
 
     /**
      * 通过天气信息获取天气背景
-     *
-     * @param weather 天气
-     * @param isItem  是否是item
-     * @param callback 回调
      */
     fun getWeatherBg(
         weather: WeatherBean,
@@ -351,27 +290,12 @@ class MainViewModel : BaseViewModel() {
         launchSilent {
             val tempType = WeatherUtils.getTempType(weather.observation.wxIcon)
             val timeType = WeatherUtils.getTimeType(weather.timeType())
-            val key = "$tempType-$timeType"
-            val entity = if (mBgMap.contains(key))
-                mBgMap[key]
-            else
-                AppRepo.getInstance().getWeatherBg(tempType, timeType)
-
+            var entity = weatherBgRepository.getWeatherBg(tempType, timeType)
             if (entity == null) {
-                fetchWeatherBg {
-                    viewModelScope.launch() {
-                        if (it != null && it) {
-                            val result =
-                                AppRepo.getInstance().getWeatherBg(tempType, timeType)
-                            callback?.invoke(result)
-                        } else {
-                            callback?.invoke(null)
-                        }
-                    }
-                }
-            } else {
-                callback?.invoke(entity)
+                weatherBgRepository.fetchAndSyncWeatherBg()
+                entity = weatherBgRepository.getWeatherBg(tempType, timeType)
             }
+            callback?.invoke(entity)
         }
     }
 
@@ -381,22 +305,12 @@ class MainViewModel : BaseViewModel() {
             val tempType = WeatherUtils.getTempType(iconCd)
             val isDay = daily.dayPart != null
             val timeType = WeatherUtils.getTimeType(isDay)
-            val entity = AppRepo.getInstance().getWeatherBg(tempType, timeType)
+            var entity = weatherBgRepository.getWeatherBg(tempType, timeType)
             if (entity == null) {
-                fetchWeatherBg {
-                    viewModelScope.launch() {
-                        if (it != null && it) {
-                            val result =
-                                AppRepo.getInstance().getWeatherBg(tempType, timeType)
-                            callback?.invoke(result)
-                        } else {
-                            callback?.invoke(null)
-                        }
-                    }
-                }
-            } else {
-                callback?.invoke(entity)
+                weatherBgRepository.fetchAndSyncWeatherBg()
+                entity = weatherBgRepository.getWeatherBg(tempType, timeType)
             }
+            callback?.invoke(entity)
         }
     }
 
@@ -426,130 +340,44 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun getLocation() {
-        if (!tryBeginLocationRequest()) {
-            return
-        }
-        loadState.postValue(LoadState.Start("正在获取位置..."))
-        val client = lostApiClient ?: createLostApiClient()
-        if (client.isConnected()) {
-            requestSingleUpdateFallback(client)
-            return
-        }
-        try {
-            client.connect()
-        } catch (securityException: SecurityException) {
-            endLocationRequest()
-            loadState.postValue(LoadState.Error("定位权限不足，请重试"))
-            loadState.postValue(LoadState.Finish)
-        } catch (e: Exception) {
-            endLocationRequest()
-            loadState.postValue(LoadState.Error("获取定位失败,请重试"))
-            loadState.postValue(LoadState.Finish)
-        }
-    }
+        locationRepository.requestLocation(object : LocationRepository.Callbacks {
+            override fun onStart() {
+                loadState.postValue(LoadState.Start("正在获取位置..."))
+            }
 
-    private fun createLostApiClient(): LostApiClient {
-        val client = LostApiClient.Builder(BaseApp.context)
-            .addConnectionCallbacks(object : LostApiClient.ConnectionCallbacks {
-                override fun onConnected() {
-                    requestSingleUpdateFallback(lostApiClient ?: return)
+            override fun onLocation(location: android.location.Location) {
+                launchSilent {
+                    try {
+                        val city = withContext(Dispatchers.IO) {
+                            locationRepository.location2CityEntity(location)
+                        }
+                        val resolvedCode = locationRepository.resolveLocationCityCode(city)
+                        if (resolvedCode.isNotBlank()) {
+                            city.cityCode = resolvedCode
+                        }
+                        curLocation.postValue(city)
+                        AppRepo.getInstance().addCity(city)
+                        lasLocation = System.currentTimeMillis()
+                        awaitCitiesCacheRefresh()
+                        locationWeatherRefreshNonce.postValue(System.nanoTime())
+                    } finally {
+                        locationRepository.endLocationRequest()
+                        loadState.postValue(LoadState.Finish)
+                    }
                 }
+            }
 
-                override fun onConnectionSuspended() {
-                    endLocationRequest()
-                    loadState.postValue(LoadState.Error("获取定位失败,请重试"))
+            override fun onError(message: String) {
+                loadState.postValue(LoadState.Error(message))
+            }
+
+            override fun onFinish() {
+                // 成功路径在协程 finally 里 Finish；失败路径这里再补一次
+                if (loadState.value !is LoadState.Finish) {
                     loadState.postValue(LoadState.Finish)
                 }
-            })
-            .build()
-        lostApiClient = client
-        return client
-    }
-
-    private fun requestSingleUpdateFallback(client: LostApiClient) {
-        val request = LocationRequest.create()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(2000L)
-            .setFastestInterval(1000L)
-
-        clearLocationListener()
-        locationListener = LocationListener { location ->
-            clearLocationListener()
-            if (location != null) {
-                handleLocationSuccess(location)
-            } else {
-                endLocationRequest()
-                loadState.postValue(LoadState.Error("获取定位失败,请重试"))
-                loadState.postValue(LoadState.Finish)
             }
-        }
-
-        try {
-            val lastKnown = LocationServices.FusedLocationApi.getLastLocation(client)
-            val isRecentLocation = lastKnown != null &&
-                    (System.currentTimeMillis() - lastKnown.time) <= MAX_LAST_KNOWN_AGE_MS
-            if (isRecentLocation) {
-                handleLocationSuccess(lastKnown)
-                return
-            }
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                client,
-                request,
-                locationListener ?: return
-            )
-        } catch (securityException: SecurityException) {
-            clearLocationListener()
-            endLocationRequest()
-            loadState.postValue(LoadState.Error("定位权限不足，请重试"))
-            loadState.postValue(LoadState.Finish)
-        } catch (e: Exception) {
-            clearLocationListener()
-            endLocationRequest()
-            loadState.postValue(LoadState.Error("获取定位失败,请重试"))
-            loadState.postValue(LoadState.Finish)
-        }
-    }
-
-    private fun clearLocationListener() {
-        val client = lostApiClient
-        val listener = locationListener
-        if (client != null && client.isConnected() && listener != null) {
-            try {
-                LocationServices.FusedLocationApi.removeLocationUpdates(client, listener)
-            } catch (_: Exception) {
-                // ignore cleanup errors
-            }
-        }
-        locationListener = null
-    }
-
-    private fun handleLocationSuccess(location: Location) {
-        clearLocationListener()
-        val client = lostApiClient
-        if (client != null && client.isConnected()) {
-            try {
-                client.disconnect()
-            } catch (_: Exception) {
-                // ignore disconnect errors
-            }
-        }
-        launchSilent {
-            try {
-                val city = location2CityEntity(location)
-                val resolvedCode = resolveLocationCityCode(city)
-                if (resolvedCode.isNotBlank()) {
-                    city.cityCode = resolvedCode
-                }
-                curLocation.postValue(city)
-                AppRepo.getInstance().addCity(city)
-                lasLocation = System.currentTimeMillis()
-                awaitCitiesCacheRefresh()
-                locationWeatherRefreshNonce.postValue(System.nanoTime())
-            } finally {
-                endLocationRequest()
-            }
-        }
-        loadState.postValue(LoadState.Finish)
+        })
     }
 
     fun getCacheLocation() {
@@ -567,77 +395,13 @@ class MainViewModel : BaseViewModel() {
         var needShow = false
         val showTime = SpUtils.instance.getLong(CACHE_RECOMMEND_TIME, 0)
         if (System.currentTimeMillis() > showTime) {
-//            val interval = SpUtils.instance.getInt(CACHE_RECOMMEND_INTERVAL, 3)
             SpUtils.instance.putLong(
                 CACHE_RECOMMEND_TIME,
                 System.currentTimeMillis() + 7 * DateUtil.dayMillis()
             )
-//            SpUtils.instance.putInt(CACHE_RECOMMEND_INTERVAL, interval + 3)
             needShow = true
         }
         return needShow
-    }
-
-//    private var number = 0
-    private fun location2CityEntity(location: Location): CityEntity {
-        val cityEntity = CityEntity()
-        var cityName = ""
-        var district = ""
-        var poiName = ""
-        var cityCode = ""
-//        number += 1
-
-        try {
-            val geocoder = Geocoder(BaseApp.context, Locale.getDefault())
-//            val latitude = if (number%2 == 1) location.latitude else 39.9
-//            val longitude = if (number%2 == 1) location.longitude else 116.4
-            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-            val address = addresses?.firstOrNull()
-            cityName = address?.locality ?: address?.subAdminArea ?: ""
-            district = address?.subLocality ?: address?.subAdminArea ?: ""
-            poiName = address?.featureName ?: ""
-            cityCode = address?.postalCode ?: ""
-        } catch (e: Exception) {
-            // ignore geocoder errors and keep fallback values
-        }
-
-        val fallbackName = cityName.ifBlank { "当前位置" }
-        cityEntity.cityId = LOCATION_ID
-        cityEntity.cityName = fallbackName
-        cityEntity.cityCode = cityCode
-        cityEntity.shortName = fallbackName
-        cityEntity.mergerName =
-            listOf(district, poiName).filter { it.isNotBlank() }.joinToString(" ").ifBlank { fallbackName }
-        cityEntity.latitude = location.latitude.toString()
-        cityEntity.longitude = location.longitude.toString()
-        cityEntity.setLocal()
-        Log.e("TAG", "location2CityEntity: city = ${cityEntity.toString()}")
-        return cityEntity
-    }
-
-    /**
-     * 定位得到的 cityCode 以 city.db 为准（010/021/0755...）。
-     * Geocoder 的 postalCode 常为空或为邮编，不适合作为业务 cityCode。
-     */
-    private suspend fun resolveLocationCityCode(city: CityEntity): String {
-        val candidates = linkedSetOf(
-            city.cityName,
-            city.shortName,
-            city.mergerName,
-            city.mergerName.substringBefore(" ").trim(),
-            city.cityName.removeSuffix("市").removeSuffix("县").removeSuffix("区").trim(),
-            city.shortName.removeSuffix("市").removeSuffix("县").removeSuffix("区").trim()
-        ).filter { it.isNotBlank() }
-
-        for (keyword in candidates) {
-            val match = AppRepo.getInstance()
-                .searchCity(keyword)
-                .firstOrNull { it.cityCode.isNotBlank() && !it.isLocal() }
-            if (match != null) {
-                return match.cityCode
-            }
-        }
-        return ""
     }
 
     // </editor-fold>
@@ -645,39 +409,8 @@ class MainViewModel : BaseViewModel() {
     /// 获取背景图
     fun fetchWeatherBg(callback: ((Boolean?) -> Unit)? = null) {
         launchSilent {
-            val url = "https://app.yiguxm.com/chunjing/beijing.json"
-            val result = HttpUtils.get<WeatherBgBean>(url)
-            if (result != null) {
-//                val list = AppRepo.getInstance().getAllBgWeathers()
-//                list.forEach { bgWeather ->
-//                    if (bgWeather.videoPath.endsWith("mp4")
-//                        && bgWeather.videoPath.startsWith("http")) {
-//                        downAloneVideo(bgWeather, false)
-//                    }
-//                }
-
-                val lastTime = AppRepo.getInstance().getCache<String?>("Weather_Bg_Update")
-                val updateTime = TimeUtils.string2Millis(result.updateTime, "yyyy-MM-dd")
-                if (lastTime == null || updateTime > TimeUtils.string2Millis(
-                        lastTime,
-                        "yyyy-MM-dd"
-                    )
-                ) {
-                    for (entity in result.imgList) {
-//                        if (entity.videoPath.contains(".mp4")) {
-//                            downAloneVideo(entity, true)
-//                        }
-                        AppRepo.getInstance().addWeatherBg(entity)
-                    }
-                    AppRepo.getInstance().saveCache("Weather_Bg_Update", result.updateTime)
-                    callback?.invoke(true)
-                    return@launchSilent
-                } else {
-                    callback?.invoke(false)
-                }
-            } else {
-                callback?.invoke(false)
-            }
+            val updated = weatherBgRepository.fetchAndSyncWeatherBg()
+            callback?.invoke(updated)
         }
     }
 
@@ -686,101 +419,24 @@ class MainViewModel : BaseViewModel() {
      * cover: 是否覆盖
      */
     fun downAloneVideo(info: WeatherBgEntity, cover: Boolean) {
-        val url = info.videoPath
-        val splitList = url.split("/")
-        val fileName = splitList.last()
-        if (!fileName.endsWith("mp4")) {
-            return
-        }
-
-        val filePath = File("${ContentUtil.getVideoDir()}/$fileName")
-        if (FileUtils.isFileExists(filePath) && !cover) {
-            /// 视频存在
-            info.videoPath = filePath.absolutePath
-            changeWeatherBg(info)
-            return
-        }
-
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .get()
-            .url(url)
-            .build()
-        val call = client.newCall(request)
-        call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e("moer", "onFailure: ")
+        weatherBgRepository.downloadBgVideo(info, cover) { entity ->
+            launchSilent {
+                weatherBgRepository.saveWeatherBg(entity)
             }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                val inputFile = File("${ContentUtil.getVideoDir()}/$fileName")
-
-                val `is` = response.body!!.byteStream()
-                val fos = FileOutputStream(inputFile)
-                var len = 0
-                val buffer = ByteArray(2048)
-                while (-1 != `is`.read(buffer).also { len = it }) {
-                    fos.write(buffer, 0, len)
-                }
-                fos.flush()
-                fos.close()
-                `is`.close()
-                if (inputFile.length() > 0) {
-                    Log.e("TAG", "onResponse: ${info.imgPath} ------ ${inputFile.absolutePath}")
-                    info.videoPath = inputFile.absolutePath
-                    changeWeatherBg(info)
-                }
-            }
-        })
+        }
     }
 
     fun changeWeatherBg(entity: WeatherBgEntity) {
         launchSilent {
-            AppRepo.getInstance().addWeatherBg(entity)
+            weatherBgRepository.saveWeatherBg(entity)
         }
     }
 
     /// 获取日历背景图
     fun fetchCalendarBg(callback: ((Boolean?) -> Unit)? = null) {
         launchSilent {
-            val url = "https://app.yiguxm.com/chunjing/rili.json"
-            val result = HttpUtils.get<CalendarBgBean>(url)
-            if (result != null) {
-                val lastTime = AppRepo.getInstance().getCache<String?>("Calendar_Bg_Update")
-                val updateTime = TimeUtils.string2Millis(result.updateTime, "yyyy-MM-dd")
-                if (lastTime == null || updateTime > TimeUtils.string2Millis(
-                        lastTime,
-                        "yyyy-MM-dd"
-                    )
-                ) {
-                    AppRepo.getInstance().saveCache("Calendar_Bg_Update", result.updateTime)
-                    for (entity in result.holidayList) {
-                        if (entity.duration.toInt() in 2..9) {
-                            val time = TimeUtils.string2Millis(entity.holidayTime, "yyyy-MM-dd")
-                            for (i in 0 until entity.duration.toInt()) {
-                                val nextTime = time + DateUtil.dayMillis() * i
-                                entity.holidayTime = TimeUtils.millis2String(nextTime, "yyyy-MM-dd")
-                                val newEntity = CalendarBgEntity()
-                                newEntity.holiday = entity.holiday
-                                newEntity.holidayTime = entity.holidayTime
-                                newEntity.duration = entity.duration
-                                newEntity.imgPath = entity.imgPath
-
-                                AppRepo.getInstance().addCalendarBg(newEntity)
-                            }
-                        } else {
-                            AppRepo.getInstance().addCalendarBg(entity)
-                        }
-                    }
-                    callback?.invoke(true)
-                    return@launchSilent
-                } else {
-                    callback?.invoke(false)
-                }
-            } else {
-                callback?.invoke(false)
-            }
+            val updated = weatherBgRepository.fetchAndSyncCalendarBg()
+            callback?.invoke(updated)
         }
     }
 
@@ -789,12 +445,8 @@ class MainViewModel : BaseViewModel() {
         callback: ((String?) -> Unit)? = null
     ) {
         launchSilent {
-            val entity = AppRepo.getInstance().getCalendarBg(holidayTime)
-            if (entity != null) {
-                callback?.invoke(entity.imgPath)
-            } else {
-                callback?.invoke(null)
-            }
+            val entity = weatherBgRepository.getCalendarBg(holidayTime)
+            callback?.invoke(entity?.imgPath)
         }
     }
 
@@ -832,13 +484,7 @@ class MainViewModel : BaseViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        clearLocationListener()
-        try {
-            lostApiClient?.disconnect()
-        } catch (_: Exception) {
-            // ignore disconnect errors
-        }
-        endLocationRequest()
+        locationRepository.endLocationRequest()
         timer?.cancel()
     }
 

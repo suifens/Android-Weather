@@ -1,35 +1,31 @@
 package com.chunjing.tq.ui.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chunjing.tq.adapter.CityManagerAdapter
 import com.chunjing.tq.adapter.MyItemTouchCallback
-import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.databinding.ActivityCityManagerBinding
 import com.chunjing.tq.db.entity.CityEntity
+import com.chunjing.tq.mainViewModel
 import com.chunjing.tq.ui.activity.vm.CityManagerViewModel
 import com.chunjing.tq.ui.base.BaseVmActivity
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
+import kotlinx.coroutines.withContext
 
 /**
  * 编辑城市
  */
-@SuppressLint("NotifyDataSetChanged")
 class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManagerViewModel>() {
 
-    private val datas by lazy { ArrayList<CityEntity>() }
     private val removeIds by lazy { ArrayList<String>() }
     private val sortList by lazy { ArrayList<CityEntity>() }
 
     private var adapter: CityManagerAdapter? = null
 
-    //    @Inject
     lateinit var itemTouchCallback: MyItemTouchCallback
 
     override fun bindView() = ActivityCityManagerBinding.inflate(layoutInflater)
@@ -43,40 +39,45 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
         mBinding.backButton.setOnClickListener { finish() }
         BarUtils.setStatusBarLightMode(this, true)
 
-        //  完成编辑
         mBinding.doneBtn.setOnClickListener {
-            if (removeIds.size > 0) {
-                for (cityId in removeIds) {
-                    viewModel.removeCity(cityId)
+            lifecycleScope.launch {
+                val hasRemove = removeIds.isNotEmpty()
+                val hasSort = sortList.isNotEmpty()
+                if (!hasRemove && !hasSort) {
+                    finish()
+                    return@launch
                 }
-                EventBus.getDefault().post(MessageEvent(cityChanged = true))
+                val currentOrder = adapter?.snapshot().orEmpty()
+                withContext(Dispatchers.IO) {
+                    if (hasRemove) {
+                        viewModel.removeCities(removeIds)
+                    }
+                    when {
+                        hasSort -> viewModel.updateCitiesOrder(sortList)
+                        hasRemove -> viewModel.updateCitiesOrder(currentOrder)
+                    }
+                }
+                mainViewModel.awaitCitiesCacheRefresh(forcePost = true)
+                finish()
             }
-            if (sortList.size > 0) {
-                viewModel.updateCities(sortList)
-                EventBus.getDefault().post(MessageEvent(cityChanged = true))
-            }
-            finish()
         }
 
         itemTouchCallback = MyItemTouchCallback(this)
 
-        adapter = CityManagerAdapter(datas) {
+        adapter = CityManagerAdapter {
             this.sortList.clear()
             this.sortList.addAll(it)
         }
 
         adapter!!.listener = object : CityManagerAdapter.OnCityRemoveListener {
             override fun onCityRemove(pos: Int) {
-                if (pos >= datas.size) return
                 mBinding.recyclerView.closeMenu()
-
-                removeIds.add(datas[pos].cityId)
-                datas.removeAt(pos)
-                adapter?.notifyDataSetChanged()
+                val removed = adapter?.removeAt(pos) ?: return
+                removeIds.add(removed.cityId)
             }
 
             override fun onCityDeleteClick(pos: Int) {
-                CoroutineScope(Dispatchers.Main).launch {
+                lifecycleScope.launch {
                     mBinding.recyclerView.showDeleteMenu(pos, SizeUtils.dp2px(80f))
                 }
             }
@@ -93,9 +94,7 @@ class CityManagerActivity : BaseVmActivity<ActivityCityManagerBinding, CityManag
 
     override fun initEvent() {
         viewModel.cities.observe(this) {
-            datas.clear()
-            datas.addAll(it)
-            adapter?.notifyDataSetChanged()
+            adapter?.submitList(it)
         }
     }
 

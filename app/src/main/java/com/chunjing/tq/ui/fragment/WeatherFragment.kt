@@ -20,7 +20,6 @@ import com.chunjing.tq.adapter.ForecastHourlyAdapter
 import com.chunjing.tq.adapter.LifeListAdapter
 import com.chunjing.tq.bean.Daily
 import com.chunjing.tq.bean.Hourly
-import com.chunjing.tq.bean.MessageEvent
 import com.chunjing.tq.bean.LifeEntity
 import com.chunjing.tq.bean.LifeItemBean
 import com.chunjing.tq.bean.WeatherBean
@@ -60,9 +59,6 @@ import com.goodtech.weatherlib.utils.DateUtil
 import com.goodtech.weatherlib.utils.WeatherUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.lxj.xpopup.XPopup
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  *  天气详情页面
@@ -121,10 +117,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     override fun onStart() {
         super.onStart()
-        viewModel.loadCache(mCityId)
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
+        viewModel.loadCacheDisplayOnly(mCityId)
     }
 
     override fun onPause() {
@@ -135,9 +128,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     override fun onResume() {
         super.onResume()
 
-//        mCityId.let {
-//            mainViewModel.setCityId(it)
-//        }
         bgEntity?.let {
             mainViewModel.setBgEntity(mCityId, it)
         }
@@ -163,13 +153,6 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         if (!isAdLoadAttempted) {
             isAdLoadAttempted = true
             view?.post { loadTTFeedAd() }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this)
         }
     }
 
@@ -275,14 +258,13 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         mBinding.adBannerContainer.removeAllViews()
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: MessageEvent) {
-        if (event.needReload) {
-            hideAd()
-        }
-    }
-
     override fun initEvent() {
+        AdRemovalManager.adRemovalChanged.observe(viewLifecycleOwner) {
+            if (AdRemovalManager.isAdRemovalActive()) {
+                hideAd()
+            }
+        }
+
         mBinding.refreshLayout.setOnRefreshListener {
             val host = requireActivity()
             if (mCityId == LOCATION_ID &&
@@ -317,9 +299,15 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
         }
 
         // MainViewModel 拉到的天气（含添加城市后 awaitFetchWeather）与 Fragment 内 WeatherViewModel 对齐
-        mainViewModel.weatherMap.observe(viewLifecycleOwner) { map ->
-            map[mCityId]?.let { w ->
-                viewModel.applyMainWeather(w)
+        mainViewModel.weatherUpdate.observe(viewLifecycleOwner) { update ->
+            if (update.cityId == mCityId) {
+                viewModel.applyMainWeather(update.weather)
+            }
+        }
+
+        mainViewModel.weatherRefreshWindow.observe(viewLifecycleOwner) { window ->
+            if (mCityId in window) {
+                viewModel.loadCache(mCityId)
             }
         }
 
@@ -367,7 +355,11 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
     }
 
     override fun loadData() {
-        viewModel.loadCache(mCityId)
+        if (mainViewModel.weatherRefreshWindow.value?.contains(mCityId) == true) {
+            viewModel.loadCache(mCityId)
+        } else {
+            viewModel.loadCacheDisplayOnly(mCityId)
+        }
     }
 
     fun showWeatherNow(now: WeatherBean) {

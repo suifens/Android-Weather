@@ -21,7 +21,6 @@ object WeatherSpUtils {
         if (jsonObject != null) {
             SpUtils.instance.putString(key, jsonObject.toString())
             SpUtils.instance.putLong(timeKey, System.currentTimeMillis())
-//            EventBus.getDefault().post(MessageEvent().setFetchCId(cid))
         }
     }
 
@@ -73,8 +72,6 @@ object WeatherSpUtils {
         if (jsonObject != null) {
             SpUtils.instance.putString(key, jsonObject)
             SpUtils.instance.putLong(timeKey, System.currentTimeMillis())
-
-            // EventBus.getDefault().post(new MessageEvent().setFetchCId(cid));
         }
     }
 
@@ -88,7 +85,6 @@ object WeatherSpUtils {
         val timeKey = String.format("life_%d_update", cid)
         if (jsonObject != null) {
             SpUtils.instance.putString(key, jsonObject)
-//            EventBus.getDefault().post(MessageEvent().setFetchCId(cid))
         }
     }
 
