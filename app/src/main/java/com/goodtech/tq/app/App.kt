@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -29,8 +28,7 @@ import com.goodtech.tq.modules.video.djx.DJXHolder
 import com.goodtech.tq.utils.AdSdkInitializer
 import com.goodtech.tq.utils.Constants
 import com.goodtech.tq.utils.SpUtils
-import com.goodtech.tq.widget.DoubleWidgetService
-import com.goodtech.tq.widget.WidgetService
+import com.goodtech.tq.widget.WidgetWorkScheduler
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mmkv.MMKV
 import com.umeng.analytics.MobclickAgent
@@ -89,7 +87,6 @@ class App : Application() {
     var needStatePerm: Boolean = true
     var needLocationPerm: Boolean = true
     var mJPushRegId: String? = null
-    private var isServiceStarted = false
     private var appCount = 0
     private var isRunInBackground = false
     //  加载插屏广告了
@@ -227,20 +224,13 @@ class App : Application() {
         }
     }
 
+    /**
+     * 城市列表发生变化（添加/删除/切换）时调用：立即刷新桌面小部件。
+     * 由 [WidgetWorkScheduler] 调度 [com.goodtech.tq.widget.WidgetUpdateWorker] 执行。
+     */
     fun startIntent(activity: Activity) {
-        if (!isServiceStarted) {
-            startService(activity)
-            isServiceStarted = true
-        }
-    }
-
-    fun startService(context: Context) {
-        try {
-            context.startService(Intent(context, WidgetService::class.java))
-            context.startService(Intent(context, DoubleWidgetService::class.java))
-        } catch (e: Exception) {
-            Log.e(TAG, "启动服务失败", e)
-        }
+        WidgetWorkScheduler.schedulePeriodic(activity)
+        WidgetWorkScheduler.enqueueOneTime(activity)
     }
 
     private fun configUM() {

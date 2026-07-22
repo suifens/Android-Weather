@@ -69,7 +69,7 @@ public class WeatherHttpHelper {
             }
             return;
         }
-        String url = "http://www.yiguxm.com/weather_conf.json";
+        String url = "https://www.yiguxm.com/weather_conf.json";
         ApiClient client = ApiClient.getInstance();
         client.get(url, null, new ApiResponseHandler() {
             @Override
@@ -107,7 +107,9 @@ public class WeatherHttpHelper {
     public boolean fetchWeather(final CityMode cityMode, final ApiCallback callback) {
 
         if (cityMode == null) {
-            callback.onResponse(false, null, null);
+            if (callback != null) {
+                callback.onResponse(false, null, null);
+            }
             return false;
         }
 
@@ -124,7 +126,16 @@ public class WeatherHttpHelper {
                     needUpdate = true;
                 }
             }
-//            new Thread(() -> getWeather(cityMode, callback));
+
+            if (!needUpdate) {
+                // 5 分钟内且同一小时：直接用缓存回调，避免重复网络请求
+                WeatherModel cachedModel = WeatherSpHelper.getWeatherModel(cityMode.getPoiId());
+                if (callback != null) {
+                    callback.onResponse(true, cachedModel, null);
+                }
+                return true;
+            }
+
             getWeather(cityMode, callback);
             return true;
         }

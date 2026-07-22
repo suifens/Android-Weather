@@ -20,7 +20,7 @@
         android:layout_marginEnd="55dp"
         android:ellipsize="end"
         android:lines="1"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvWeather"
@@ -30,7 +30,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/ivWeather"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvTemp"
@@ -40,7 +40,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/tvWeather"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvUpdateTime"
@@ -50,7 +50,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/tvTemp"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <ImageView
         android:layout_width="45dp"

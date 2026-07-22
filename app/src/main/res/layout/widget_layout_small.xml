@@ -60,7 +60,7 @@
                     android:lines="1"
                     android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -100,9 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:textSize="21dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:textSize="21sp" />
 
                     <TextView
                         android:id="@+id/sTv_wx_phrase"
@@ -113,7 +111,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:textColor="@color/white"
-                        android:textSize="14dp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -133,9 +131,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
                     android:textColor="@color/white_alpha80"
-                    android:textSize="12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_current" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
 

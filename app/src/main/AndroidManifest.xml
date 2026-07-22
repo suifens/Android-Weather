@@ -245,13 +245,6 @@
                 android:resource="@xml/appwidget_info" />
         </receiver>
 
-        <service
-            android:name=".widget.WidgetService"
-            android:directBootAware="true"
-            android:enabled="true"
-            android:exported="true"
-            android:foregroundServiceType="mediaPlayback" />
-
         <receiver
             android:name=".widget.MyDoubleWidget"
             android:exported="true">
@@ -263,13 +256,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_info_double" />
         </receiver>
-
-        <service
-            android:name=".widget.DoubleWidgetService"
-            android:directBootAware="true"
-            android:enabled="true"
-            android:exported="true"
-            android:foregroundServiceType="mediaPlayback" /> <!-- Pangle ===== -->
+        <!-- Pangle ===== -->
         <provider
             android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
             android:authorities="${applicationId}.TTFileProvider"
