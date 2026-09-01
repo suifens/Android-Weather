@@ -167,16 +167,18 @@ class WeatherViewModel : BaseViewModel() {
     }
 
     /** 与 [com.chunjing.tq.ui.activity.vm.MainViewModel.weatherMap] 同步，避免仅更新全局缓存时本页不刷新 */
-    fun applyMainWeather(w: WeatherBean) {
+    fun applyMainWeather(w: WeatherBean, cityId: String) {
         weatherNow.postValue(w)
+        getWeatherBgEntity(w, cityId, false)
     }
 
     //  获取背景
-    fun getWeatherBgEntity(weather: WeatherBean, isItem: Boolean) {
+    fun getWeatherBgEntity(weather: WeatherBean, cityId: String, isItem: Boolean) {
         launchSilent {
-            mainViewModel.getWeatherBg(weather) { entity ->
-                entity?.let {
-                    curBgEntity.postValue(it)
+            mainViewModel.resolveWeatherBg(weather)?.let { entity ->
+                curBgEntity.postValue(entity)
+                if (!isItem) {
+                    mainViewModel.setBgEntity(cityId, entity)
                 }
             }
         }

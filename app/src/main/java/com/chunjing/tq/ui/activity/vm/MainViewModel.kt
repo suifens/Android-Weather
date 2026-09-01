@@ -51,6 +51,9 @@ class MainViewModel : BaseViewModel() {
     val curWeather = MutableLiveData<WeatherBean>()
     val curBgEntity = MutableLiveData<WeatherBgEntity>()
 
+    /** 各城市最新背景，避免 Tab 未选中时 [setBgEntity] 被丢弃后无法恢复 */
+    private val bgByCityId = HashMap<String, WeatherBgEntity>()
+
     val curLocation = MutableLiveData<CityEntity>()
 
     /**
@@ -97,10 +100,24 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun setBgEntity(cityId: String, bgEntity: WeatherBgEntity) {
-        if (curCityId != cityId) {
-            return
+        if (bgEntity.imgPath.isBlank()) return
+        bgByCityId[cityId] = bgEntity
+        if (curCityId == cityId) {
+            curBgEntity.postValue(bgEntity)
         }
-        curBgEntity.postValue(bgEntity)
+    }
+
+    private fun applyBgForCurrentCity() {
+        bgByCityId[curCityId]?.let { curBgEntity.postValue(it) }
+    }
+
+    private fun ensureBgForCity(cityId: String) {
+        if (bgByCityId.containsKey(cityId)) return
+        getCityWeather(cityId)?.let { weather ->
+            launchSilent {
+                resolveWeatherBg(weather)?.let { setBgEntity(cityId, it) }
+            }
+        }
     }
 
     fun setWeather(cityId: String, weather: WeatherBean) {
@@ -113,10 +130,14 @@ class MainViewModel : BaseViewModel() {
     fun setCity(city: CityEntity) {
         curCityId = city.cityId
         curCity.postValue(city)
+        applyBgForCurrentCity()
+        ensureBgForCity(city.cityId)
     }
 
     fun setCityId(cityId: String) {
         curCityId = cityId
+        applyBgForCurrentCity()
+        ensureBgForCity(cityId)
     }
 
     fun addCity(city: CityEntity) {
@@ -280,6 +301,12 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
+    suspend fun resolveWeatherBg(weather: WeatherBean): WeatherBgEntity? {
+        val tempType = WeatherUtils.getTempType(weather.observation.wxIcon)
+        val timeType = WeatherUtils.getTimeType(weather.timeType())
+        return weatherBgRepository.resolveWeatherBg(tempType, timeType)
+    }
+
     /**
      * 通过天气信息获取天气背景
      */
@@ -288,14 +315,7 @@ class MainViewModel : BaseViewModel() {
         callback: ((WeatherBgEntity?) -> Unit)? = null
     ) {
         launchSilent {
-            val tempType = WeatherUtils.getTempType(weather.observation.wxIcon)
-            val timeType = WeatherUtils.getTimeType(weather.timeType())
-            var entity = weatherBgRepository.getWeatherBg(tempType, timeType)
-            if (entity == null) {
-                weatherBgRepository.fetchAndSyncWeatherBg()
-                entity = weatherBgRepository.getWeatherBg(tempType, timeType)
-            }
-            callback?.invoke(entity)
+            callback?.invoke(resolveWeatherBg(weather))
         }
     }
 
@@ -305,12 +325,7 @@ class MainViewModel : BaseViewModel() {
             val tempType = WeatherUtils.getTempType(iconCd)
             val isDay = daily.dayPart != null
             val timeType = WeatherUtils.getTimeType(isDay)
-            var entity = weatherBgRepository.getWeatherBg(tempType, timeType)
-            if (entity == null) {
-                weatherBgRepository.fetchAndSyncWeatherBg()
-                entity = weatherBgRepository.getWeatherBg(tempType, timeType)
-            }
-            callback?.invoke(entity)
+            callback?.invoke(weatherBgRepository.resolveWeatherBg(tempType, timeType))
         }
     }
 

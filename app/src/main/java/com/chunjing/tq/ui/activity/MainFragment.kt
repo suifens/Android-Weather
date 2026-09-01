@@ -74,6 +74,7 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
         }
 
         mainViewModel.curBgEntity.observe(this) {
+            mBgEntity = it
             if (isShowing) {
                 showBg(it)
             }
@@ -127,6 +128,7 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
     override fun onResume() {
         super.onResume()
         isShowing = true
+        (mBgEntity ?: mainViewModel.curBgEntity.value)?.let { showBg(it) }
         if (mCityList.isNotEmpty()) {
             for (i in mCityList.indices) {
                 mBinding.llRound.getChildAt(i)?.isEnabled = mCurIndex == i
@@ -149,6 +151,7 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
     }
 
     private fun showWeatherImg(bgEntity: WeatherBgEntity) {
+        if (bgEntity.imgPath.isBlank()) return
         mBinding.weatherImgV.visibility = View.VISIBLE
         val originDrawable = mBinding.weatherImgV.drawable
         mBinding.weatherImgV.load(bgEntity.imgPath, imageLoader) {
@@ -191,8 +194,8 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
             bindCityPageIndicators(cityList)
             if (cityList.isNotEmpty()) {
                 mainViewModel.setCity(cityList[mCurIndex])
-                mBinding.viewPager.setCurrentItem(mCurIndex, false)
                 mainViewModel.updateWeatherRefreshWindow(cityList, mCurIndex)
+                mBinding.viewPager.setCurrentItem(mCurIndex, false)
             }
             return
         }
@@ -204,19 +207,19 @@ class MainFragment : BaseVmFragment<FragmentMainBinding, MainViewModel>() {
             bindCityPageIndicators(cityList)
             if (cityList.isNotEmpty()) {
                 mainViewModel.setCity(cityList[mCurIndex])
-                mBinding.viewPager.setCurrentItem(mCurIndex, false)
                 mainViewModel.updateWeatherRefreshWindow(cityList, mCurIndex)
+                mBinding.viewPager.setCurrentItem(mCurIndex, false)
             }
             return
         }
 
         bindCityPageIndicators(cityList)
-        adapter?.submitCityIds(nextTabIds)
-        mBinding.viewPager.currentItem = mCurIndex
         if (cityList.isNotEmpty()) {
             mainViewModel.setCity(cityList[mCurIndex])
             mainViewModel.updateWeatherRefreshWindow(cityList, mCurIndex)
         }
+        adapter?.submitCityIds(nextTabIds)
+        mBinding.viewPager.currentItem = mCurIndex
     }
 
     private fun bindCityPageIndicators(cityList: List<CityEntity>) {

@@ -13,6 +13,7 @@ import com.chunjing.tq.R
 import com.chunjing.tq.calendarVM
 import com.chunjing.tq.databinding.FragmentCalendarBinding
 import com.chunjing.tq.db.entity.CityEntity
+import com.chunjing.tq.db.entity.LOCATION_ID
 import com.chunjing.tq.ext.shotView
 import com.chunjing.tq.imageLoader
 import com.chunjing.tq.mainViewModel
@@ -107,7 +108,7 @@ open class CalendarFragment : BaseVmFragment<FragmentCalendarBinding, WeatherVie
 
         viewModel.weatherNow.observe(this) {
             //  获取背景
-            viewModel.getWeatherBgEntity(it, true)
+            viewModel.getWeatherBgEntity(it, LOCATION_ID, true)
 
             mBinding.imgWeather.load(WeatherUtils.getIcon(it.getIconCd()))
             mBinding.tvWeather.text = "${it.getCurrentTemp()}°"

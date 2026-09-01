@@ -37,42 +37,66 @@ class WeatherBgRepository private constructor(
         }
         val entity = appRepo.getWeatherBg(tempType, timeType)
         if (entity != null) {
-            synchronized(memoryCache) {
-                memoryCache[key] = entity
-            }
+            cacheEntity(entity)
         }
         return entity
     }
 
     /**
+     * 按天气信息解析背景；本地缺失时会尝试同步远端。
+     */
+    suspend fun resolveWeatherBg(tempType: String, timeType: String): WeatherBgEntity? {
+        getWeatherBg(tempType, timeType)?.let { return it }
+        fetchAndSyncWeatherBg()
+        getWeatherBg(tempType, timeType)?.let { return it }
+        fetchAndSyncWeatherBg(force = true)
+        getWeatherBg(tempType, timeType)?.let { return it }
+        // 无精确匹配时回退到「晴」
+        if (tempType != "晴") {
+            getWeatherBg("晴", timeType)?.let { return it }
+        }
+        return getWeatherBg("晴", "白天")
+    }
+
+    /**
      * 从远端拉取天气背景列表；若比本地缓存新则落库。
+     * @param force true 时忽略版本标记强制拉取（本地表为空时也会强制）
      * @return true 表示有更新并写入，false 表示无需更新或请求失败
      */
-    suspend fun fetchAndSyncWeatherBg(): Boolean = withContext(Dispatchers.IO) {
+    suspend fun fetchAndSyncWeatherBg(force: Boolean = false): Boolean = withContext(Dispatchers.IO) {
         val result = HttpUtils.get<WeatherBgBean>(WEATHER_BG_URL) ?: return@withContext false
         val lastTime = appRepo.getCache<String?>(CACHE_WEATHER_BG_UPDATE)
         val updateTime = TimeUtils.string2Millis(result.updateTime, "yyyy-MM-dd")
         val lastMillis = lastTime?.let { TimeUtils.string2Millis(it, "yyyy-MM-dd") } ?: 0L
-        if (lastTime != null && updateTime <= lastMillis) {
+        val localEmpty = appRepo.getAllBgWeathers().isEmpty()
+        if (!force && lastTime != null && updateTime <= lastMillis && !localEmpty) {
+            warmMemoryFromDb()
             return@withContext false
         }
         for (entity in result.imgList) {
             appRepo.addWeatherBg(entity)
-            val key = "${entity.tempType}-${entity.timeType}"
-            synchronized(memoryCache) {
-                memoryCache[key] = entity
-            }
+            cacheEntity(entity)
         }
         appRepo.saveCache(CACHE_WEATHER_BG_UPDATE, result.updateTime)
         true
     }
 
-    suspend fun saveWeatherBg(entity: WeatherBgEntity) {
-        appRepo.addWeatherBg(entity)
+    private suspend fun warmMemoryFromDb() {
+        for (entity in appRepo.getAllBgWeathers()) {
+            cacheEntity(entity)
+        }
+    }
+
+    private fun cacheEntity(entity: WeatherBgEntity) {
         val key = "${entity.tempType}-${entity.timeType}"
         synchronized(memoryCache) {
             memoryCache[key] = entity
         }
+    }
+
+    suspend fun saveWeatherBg(entity: WeatherBgEntity) {
+        appRepo.addWeatherBg(entity)
+        cacheEntity(entity)
     }
 
     /**

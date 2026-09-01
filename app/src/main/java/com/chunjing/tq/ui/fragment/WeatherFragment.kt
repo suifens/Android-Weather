@@ -117,7 +117,7 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
     override fun onStart() {
         super.onStart()
-        viewModel.loadCacheDisplayOnly(mCityId)
+        loadData()
     }
 
     override fun onPause() {
@@ -294,14 +294,14 @@ class WeatherFragment : BaseVmFragment<FragmentWeatherBinding, WeatherViewModel>
 
         viewModel.weatherNow.observe(this) {
             showWeatherNow(it)
-            viewModel.getWeatherBgEntity(it, false)
+            viewModel.getWeatherBgEntity(it, mCityId, false)
             mainViewModel.setWeather(mCityId, it)
         }
 
         // MainViewModel 拉到的天气（含添加城市后 awaitFetchWeather）与 Fragment 内 WeatherViewModel 对齐
         mainViewModel.weatherUpdate.observe(viewLifecycleOwner) { update ->
             if (update.cityId == mCityId) {
-                viewModel.applyMainWeather(update.weather)
+                viewModel.applyMainWeather(update.weather, mCityId)
             }
         }
 
