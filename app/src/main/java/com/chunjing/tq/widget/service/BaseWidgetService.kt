@@ -44,6 +44,8 @@ import java.util.*
 
 const val Notify_Id = 999
 
+/** @deprecated 已迁移到 [com.chunjing.tq.widget.WidgetUpdateWorker]，保留类仅用于 stopService 兼容旧进程。 */
+@Deprecated("Use WidgetUpdateWorker")
 open class BaseWidgetService : LifecycleService() {
 
     lateinit var connManager: ConnectivityManager

@@ -245,7 +245,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         if (isFirstLoad && ContentUtil.permissionGranted) {
             isFirstLoad = false
             if (!AdRemovalManager.isAdRemovalActive()) {
-                loadInterstitialFullAd()
+                if (BuildConfig.FLAVOR != "xiaomi2") {
+                    loadInterstitialFullAd()
+                }
             }
         }
     }

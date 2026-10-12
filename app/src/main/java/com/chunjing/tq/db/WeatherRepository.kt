@@ -12,6 +12,8 @@ import com.goodtech.weatherlib.net.HttpUtils
 import com.goodtech.weatherlib.utils.DateUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.chunjing.tq.MyApp
+import com.chunjing.tq.widget.WidgetRenderer
 
 /**
  * 天气 HTTP 拉取、Room 缓存与内存快照；UI 层通过 [MainViewModel] 订阅更新事件。
@@ -85,6 +87,14 @@ class WeatherRepository private constructor(
         }
 
         putMemory(city.cityId, result)
+        // App 内拉网成功后同步桌面小部件（读缓存重绘，失败路径不会走到这里）
+        try {
+            val widgetCity = WidgetRenderer.resolveWidgetCity()
+            if (widgetCity != null && widgetCity.cityId == city.cityId) {
+                WidgetRenderer.updateWidgetsIfNecessaryAsync(MyApp.instance())
+            }
+        } catch (_: Exception) {
+        }
         return result
     }
 

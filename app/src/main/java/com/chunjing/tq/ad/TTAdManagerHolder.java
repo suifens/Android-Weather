@@ -11,7 +11,9 @@ import com.bytedance.sdk.openadsdk.TTCustomController;
 import com.bytedance.sdk.openadsdk.mediation.init.MediationConfigUserInfoForSegment;
 import com.bytedance.sdk.openadsdk.mediation.init.MediationPrivacyConfig;
 import com.chunjing.tq.BuildConfig;
+import com.qq.e.comm.managers.setting.GlobalSetting;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +40,7 @@ public class TTAdManagerHolder {
     //step1:接入网盟广告sdk的初始化操作，详情见接入文档和穿山甲平台说明
     private static void doInit(Context context) {
         if (!sInit && !TTAdSdk.isSdkReady()) {
-            //TTAdSdk.init(context, buildConfig(context));
+            applyGdtPrivacyBeforeInit();
             //setp1.1：初始化SDK
 
             TTAdSdk.init(context, buildConfig(context));
@@ -102,8 +104,57 @@ public class TTAdManagerHolder {
         return userInfo;
     }
 
+    /**
+     * 优量汇在聚合初始化前关闭可选采集（传感器、AndroidID、安装列表等），
+     * 避免 164 号文「未清晰明示 / 超范围收集」。
+     */
+    private static void applyGdtPrivacyBeforeInit() {
+        try {
+            Map<String, String> extra = new HashMap<>();
+            extra.put("sensor_ts", "0");
+            GlobalSetting.setExtraUserData(extra);
+            GlobalSetting.setAgreeReadAndroidId(false);
+            GlobalSetting.setAgreeReadDeviceId(false);
+            GlobalSetting.setEnableCollectAppInstallStatus(false);
+
+            Map<String, Boolean> privacy = new HashMap<>();
+            privacy.put("android_id", false);
+            privacy.put("mac_address", false);
+            privacy.put("device_id", false);
+            privacy.put("imsi", false);
+            privacy.put("ssid", false);
+            privacy.put("bssid", false);
+            privacy.put("cell_id", false);
+            privacy.put("wipaddr", false);
+            privacy.put("sensor", false);
+            GlobalSetting.setAgreeReadPrivacyInfo(privacy);
+        } catch (Throwable t) {
+            Log.w(TAG, "applyGdtPrivacyBeforeInit: " + t.getMessage());
+        }
+    }
+
     private static TTCustomController getTTCustomController(){
         return new TTCustomController() {
+
+            @Override
+            public boolean isCanUseLocation() {
+                return false;
+            }
+
+            @Override
+            public boolean alist() {
+                return false;
+            }
+
+            @Override
+            public boolean isCanUsePhoneState() {
+                return false;
+            }
+
+            @Override
+            public String getDevImei() {
+                return "";
+            }
 
             @Override
             public boolean isCanUseWifiState() {
@@ -112,17 +163,12 @@ public class TTAdManagerHolder {
 
             @Override
             public String getMacAddress() {
-                return super.getMacAddress();
+                return "";
             }
 
             @Override
             public boolean isCanUseWriteExternal() {
-                return super.isCanUseWriteExternal();
-            }
-
-            @Override
-            public String getDevOaid() {
-                return super.getDevOaid();
+                return false;
             }
 
             @Override
@@ -132,28 +178,42 @@ public class TTAdManagerHolder {
 
             @Override
             public String getAndroidId() {
-                return super.getAndroidId();
+                return "";
+            }
+
+            @Override
+            public boolean isCanUsePermissionRecordAudio() {
+                return false;
+            }
+
+            @Override
+            public boolean isCanUseMessage() {
+                return false;
             }
 
             @Override
             public MediationPrivacyConfig getMediationPrivacyConfig() {
                 return new MediationPrivacyConfig() {
+                    @Override
+                    public java.util.List<String> getCustomAppList() {
+                        return Collections.emptyList();
+                    }
+
+                    @Override
+                    public boolean isCanUseOaid() {
+                        return true;
+                    }
 
                     @Override
                     public boolean isLimitPersonalAds() {
-                        return super.isLimitPersonalAds();
+                        return false;
                     }
 
                     @Override
                     public boolean isProgrammaticRecommend() {
-                        return super.isProgrammaticRecommend();
+                        return true;
                     }
                 };
-            }
-
-            @Override
-            public boolean isCanUsePermissionRecordAudio() {
-                return super.isCanUsePermissionRecordAudio();
             }
         };
     }

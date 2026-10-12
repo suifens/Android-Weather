@@ -28,8 +28,6 @@ import com.blankj.utilcode.util.PermissionUtils
 import com.chunjing.tq.MyApp
 import com.chunjing.tq.R
 import com.chunjing.tq.dialog.PermissionPopup
-import com.chunjing.tq.widget.service.WidgetServiceDouble
-import com.chunjing.tq.widget.service.WidgetServiceSmall
 import com.chunjing.tq.ui.base.BaseVmActivity
 import com.chunjing.tq.ui.base.BaseWebActivity
 import com.chunjing.tq.utils.ContentUtil
@@ -46,6 +44,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
+import com.chunjing.tq.widget.WidgetWorkScheduler
 
 //  友盟appid
 const val UM_APP_ID = "63747e9905844627b5824c88"
@@ -177,34 +176,17 @@ fun FragmentActivity.showPermissionDialog(action: (agree: Boolean) -> Unit = {})
         .show()
 }
 
+/**
+ * 启动/刷新桌面小部件任务（A 方案）。
+ * 保留方法名以兼容 Splash/AddCity 调用，内部改为 WorkManager，不再启前台 Service。
+ */
 fun FragmentActivity.startWidgetService() {
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-
-        PermissionUtils.permission(
-            Manifest.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK
-        ).callback(object : PermissionUtils.SimpleCallback {
-            override fun onGranted() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(this@startWidgetService)) {
-                    startForegroundService(Intent(this@startWidgetService, WidgetServiceSmall::class.java))
-                    startForegroundService(Intent(this@startWidgetService, WidgetServiceDouble::class.java))
-                } else {
-                    startService(Intent(this@startWidgetService, WidgetServiceSmall::class.java))
-                    startService(Intent(this@startWidgetService, WidgetServiceDouble::class.java))
-                }
-            }
-            override fun onDenied() {
-            }
-        }).request()
-    } else {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Settings.canDrawOverlays(this)) {
-            startForegroundService(Intent(this, WidgetServiceSmall::class.java))
-            startForegroundService(Intent(this, WidgetServiceDouble::class.java))
-        } else {
-            startService(Intent(this, WidgetServiceSmall::class.java))
-            startService(Intent(this, WidgetServiceDouble::class.java))
-        }
+    if (!WidgetWorkScheduler.hasAnyWidget(this)) {
+        WidgetWorkScheduler.stopLegacyServices(this)
+        return
     }
+    WidgetWorkScheduler.schedulePeriodic(this)
+    WidgetWorkScheduler.enqueueOneTime(this)
 }
 
 fun FragmentActivity.shotView(view: View, window: Window, bitmapCallback: (Bitmap) -> Unit) {

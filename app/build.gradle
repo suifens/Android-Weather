@@ -26,8 +26,8 @@ android {
         applicationId "com.chunjing.tq"
         minSdk 24
         targetSdk 35
-        versionCode 560
-        versionName "5.6.0"
+        versionCode 561
+        versionName "5.6.1"
         signingConfig signingConfigs.config
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -60,6 +60,11 @@ android {
     flavorDimensions "default"
     productFlavors {
         xiaomi {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '10'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
+            manifestPlaceholders=[app_name:"纯净天气预报"]
+        }
+        xiaomi2 {
             buildConfigField 'int', 'BAIDU_CHANNEL', '10'
             buildConfigField 'String', 'UMENG_CHANNEL', '"xiaomi"'
             manifestPlaceholders=[app_name:"纯净天气预报"]
@@ -238,6 +243,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.work:work-runtime-ktx:2.10.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'

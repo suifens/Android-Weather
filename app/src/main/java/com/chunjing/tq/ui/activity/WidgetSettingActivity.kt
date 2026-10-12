@@ -16,6 +16,7 @@ import com.chunjing.tq.databinding.ActivityWidgetSettingBinding
 import com.chunjing.tq.ui.activity.WidgetSettingActivity.WidgetType.*
 import com.chunjing.tq.ui.base.BaseActivity
 import com.goodtech.weatherlib.utils.SpUtils
+import com.chunjing.tq.widget.WidgetRenderer
 
 const val WIDGET_TYPE = "WIDGET_TYPE"
 const val WIDGET_TRANSPARENT = "WIDGET_TRANSPARENT"
@@ -69,13 +70,8 @@ class WidgetSettingActivity : BaseActivity<ActivityWidgetSettingBinding>() {
 
     override fun onDestroy() {
         if (hadChanged) {
-//            val intent = Intent(this, MyWidget::class.java)
-//            intent.putExtra("WidgetUpdate", true)
-//            sendBroadcast(intent)
-//
-//            val doubleIntent = Intent(this, MyDoubleWidget::class.java)
-//            doubleIntent.putExtra("WidgetUpdate", true)
-//            sendBroadcast(doubleIntent)
+            // 样式变更只需读缓存重绘，不必拉网
+            WidgetRenderer.updateWidgetsIfNecessaryAsync(this)
         }
         super.onDestroy()
     }

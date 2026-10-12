@@ -20,6 +20,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:node="remove" />
+    <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
@@ -211,13 +214,6 @@
                 android:resource="@xml/weather_widget_info_small" />
         </receiver>
 
-        <service
-            android:name=".widget.service.WidgetServiceSmall"
-            android:directBootAware="true"
-            android:enabled="true"
-            android:exported="true"
-            android:foregroundServiceType="mediaPlayback" />
-
         <receiver
             android:name=".widget.WeatherWidgetDouble"
             android:exported="true">
@@ -229,13 +225,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/weather_widget_info_double" />
         </receiver>
-
-        <service
-            android:name=".widget.service.WidgetServiceDouble"
-            android:directBootAware="true"
-            android:enabled="true"
-            android:exported="true"
-            android:foregroundServiceType="mediaPlayback" />
 
         <receiver
             android:name=".receiver.BootCompleteReceiver"
@@ -294,31 +283,18 @@
                     android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />
             </intent-filter>
-            <!-- Optional -->
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver> <!-- Required SDK 核心功能 -->
+        </receiver> <!-- Required SDK 核心功能；不监听安装/卸载，避免后台收集超出必要范围 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false"
+            tools:node="replace">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!-- Required  显示通知栏 -->
                 <category android:name="${JPUSH_PKGNAME}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-            <!-- Optional -->
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <data android:scheme="package" />
             </intent-filter>
         </receiver>
         <receiver
