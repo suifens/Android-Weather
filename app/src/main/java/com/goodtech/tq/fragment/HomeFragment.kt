@@ -525,7 +525,9 @@ class HomeFragment : BaseFragment() {
         
         mLoadSuccess = false
         App.ensureAdSdkInitialized {
-            loadFullScreenAdInternal()
+            if (BuildConfig.FLAVOR != "huawei2") {
+                loadFullScreenAdInternal()
+            }
         }
     }
 

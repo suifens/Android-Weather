@@ -13,7 +13,6 @@ import com.goodtech.tq.httpClient.ApiCallback
 import com.goodtech.tq.httpClient.ErrorCode
 import com.goodtech.tq.httpClient.WeatherHttpHelper
 import com.goodtech.tq.models.CityMode
-import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.utils.TimeUtils
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -21,13 +20,12 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
 
 /**
- * 桌面小部件天气刷新 Worker。
+ * 桌面小部件天气刷新 Worker（A 方案）。
  *
- * 取代原 [WidgetService] / [DoubleWidgetService] 的常驻前台 Service + while 循环方案：
  * - 由 [WidgetWorkScheduler] 以周期任务（约 30 分钟）+ 网络约束调度
- * - 单次执行：拉天气 → 渲染所有已安装的 widget → 检查预警
+ * - 单次执行：必要时拉天气 → [WidgetRenderer.updateWidgetsIfNecessary] 只读缓存重绘
  * - 无 widget 安装时直接返回，避免空跑
- * - 不再更新通知栏天气，仅刷新桌面 RemoteViews
+ * - 拉取失败不覆盖桌面已有有效数据
  */
 class WidgetUpdateWorker(
     context: Context,
@@ -72,10 +70,10 @@ class WidgetUpdateWorker(
             return Result.success()
         }
 
-        // 先读缓存，渲染一次保证 widget 不会停留在 initialLayout
+        // 先用缓存重绘，保证桌面不空白；失败保持现状
         val cachedModel = WeatherSpHelper.getWeatherModel(location.poiId)
         if (cachedModel != null) {
-            renderWidgets(context, location, widgetIds, cachedModel)
+            WidgetRenderer.updateWidgetsIfNecessary(context)
         }
 
         // 数据未过期（< 1 小时且同小时）时跳过网络请求，节省流量与电量
@@ -84,7 +82,7 @@ class WidgetUpdateWorker(
             return Result.success()
         }
 
-        // 拉取最新天气
+        // 拉取最新天气；仅成功时再重绘，失败不覆盖桌面
         val fetchSuccess = try {
             fetchWeatherSync(location)
         } catch (e: Exception) {
@@ -92,11 +90,8 @@ class WidgetUpdateWorker(
             false
         }
 
-        // 拉取成功后用新数据再渲染一次
         if (fetchSuccess) {
-            WeatherSpHelper.getWeatherModel(location.poiId)?.let {
-                renderWidgets(context, location, widgetIds, it)
-            }
+            WidgetRenderer.updateWidgetsIfNecessary(context)
             checkAlarmIfNeeded(context)
             return Result.success()
         }
@@ -117,23 +112,6 @@ class WidgetUpdateWorker(
         val smallIds = manager.getAppWidgetIds(ComponentName(context, MyWidget::class.java))
         val doubleIds = manager.getAppWidgetIds(ComponentName(context, MyDoubleWidget::class.java))
         return WidgetIds(smallIds, doubleIds)
-    }
-
-    /**
-     * 用传入的 [model] 渲染所有已安装的桌面小部件（不再更新通知栏）。
-     */
-    private fun renderWidgets(
-        context: Context,
-        cityMode: CityMode,
-        widgetIds: WidgetIds,
-        model: WeatherModel
-    ) {
-        if (widgetIds.smallIds.isNotEmpty()) {
-            WidgetRenderer.renderSmall(context, cityMode, model)
-        }
-        if (widgetIds.doubleIds.isNotEmpty()) {
-            WidgetRenderer.renderDouble(context, cityMode, model)
-        }
     }
 
     /**

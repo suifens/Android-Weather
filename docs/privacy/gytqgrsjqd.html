@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>收集个人信息清单</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; margin: 0; background-color: #fff; }
+        h1 { font-size: 22px; text-align: center; margin-bottom: 10px; }
+        .app-note { font-size: 14px; color: #666; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; table-layout: fixed; }
+        th, td { border: 1px solid #ddd; padding: 12px 10px; text-align: left; vertical-align: top; word-wrap: break-word; }
+        th { background-color: #f5f5f5; font-weight: bold; }
+        a { color: #007aff; word-break: break-all; }
+        .note { font-size: 14px; color: #666; background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px; }
+        .note ul { margin: 10px 0; padding-left: 20px; }
+        .note li { margin-bottom: 5px; }
+        .warning { background-color: #fff9f0; border-left: 4px solid #ff9800; padding: 8px 12px; margin: 5px 0; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<h1>收集个人信息清单</h1>
+<p class="app-note">适用于：更云天气预报app、天气预报app<br>更新日期：2026年9月23日</p>
+
+<p>本清单依据《常见类型移动互联网应用程序必要个人信息范围规定》及相关法律法规编制，旨在透明展示一古（厦门）科技有限公司在提供天气信息服务过程中直接收集的个人信息类型、字段及用途。详细说明请参阅<a href="tqybPrivacy.html">《隐私政策》</a>。</p>
+
+<table>
+    <thead>
+        <tr><th style="width:16%">信息类型</th><th style="width:28%">具体信息字段</th><th style="width:18%">收集目的</th><th style="width:12%">是否必需</th><th style="width:12%">存储位置</th><th style="width:14%">备注</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>位置信息</strong></td>
+            <td>精确位置（GPS定位）或粗略位置（网络基站、WiFi热点信息）</td>
+            <td>获取当前位置，提供精准的本地天气信息查询服务</td>
+            <td>是（若拒绝将无法自动获取本地天气，需手动搜索）</td>
+            <td>仅本地使用，不上传服务器</td>
+            <td><strong>通过手机系统定位服务获取，不涉及第三方SDK</strong>。定位时机：启动时、手动刷新时、后台约30分钟/次</td>
+        </tr>
+        <tr>
+            <td><strong>设备标识信息</strong></td>
+            <td>设备型号、设备MAC地址、唯一设备识别码（IMEI、Android ID、OAID、IDFA、OpenUDID、GUID、IMSI、ICCID、MEID、SUPI、SUCI、设备序列号）、操作系统版本、分辨率</td>
+            <td>识别设备身份，保障网络与服务安全，统计分析，广告归因与投放</td>
+            <td>是（基础服务必需）</td>
+            <td>不主动存储；由第三方SDK（友盟、Bugly、广告SDK等）在传输过程中自动采集</td>
+            <td>详情见《第三方共享清单》。静默/后台时部分SDK仍会以特定频率收集（见隐私政策第八条）。<strong>SUPI、SUCI为5G网络环境下的设备标识符</strong>，由部分SDK在5G网络下收集</td>
+        </tr>
+        <tr>
+            <td><strong>网络信息</strong></td>
+            <td>IP地址、网络接入方式和类型、WiFi扫描结果、WLAN接入点（SSID、BSSID）、运营商信息</td>
+            <td>优化网络连接和数据访问速度，辅助定位，广告投放，推送通道建立与维持长连接</td>
+            <td>是</td>
+            <td>不主动存储；由第三方SDK在传输过程中自动采集</td>
+            <td><strong>WiFi SSID/BSSID</strong>由推送SDK、广告SDK、统计SDK收集，用于网络环境识别和推送通道维持。IP地址可能被广告SDK用于定向推送</td>
+        </tr>
+        <tr>
+            <td><strong>应用进程及列表信息</strong></td>
+            <td>当前运行进程名、已安装应用包名（软件安装列表）</td>
+            <td>判断是否安装微信/QQ以完成分享；推送消息通道合并；广告投放归因与反作弊；Bugly问题排查</td>
+            <td>部分功能必要</td>
+            <td>不主动存储；由推送SDK、Bugly、广告SDK在特定场景下采集</td>
+            <td>仅在您使用相应功能（如分享）时读取，非启动即收集。<strong>本应用及广告SDK已关闭对应用安装/更新/卸载事件的监听</strong></td>
+        </tr>
+        <tr>
+            <td><strong>日志信息</strong></td>
+            <td>操作日志、搜索关键词、IP地址、访问日期和时间、软件版本号、系统错误日志、崩溃日志</td>
+            <td>提升应用稳定性，排查与分析问题</td>
+            <td>是</td>
+            <td>不主动存储；由Bugly、友盟等SDK自动采集并上报</td>
+            <td>详情见《第三方共享清单》</td>
+        </tr>
+        <tr>
+            <td><strong>传感器信息</strong></td>
+            <td>加速度、陀螺仪、磁力、重力等传感器类型列表</td>
+            <td>优量汇原用于体感广告与反作弊；现已关闭</td>
+            <td>否（已关闭优量汇采集）</td>
+            <td>不采集</td>
+            <td><strong>本应用已关闭优量汇传感器类型列表采集</strong>。其他广告源如仍读取，仅在广告展示及交互时</td>
+        </tr>
+        <tr>
+            <td><strong>天气搜索记录</strong></td>
+            <td>您手动搜索的城市名称</td>
+            <td>方便您快速查看历史搜索城市的天气</td>
+            <td>否（仅当您使用搜索功能时）</td>
+            <td>仅存储在您的手机本地</td>
+            <td>卸载应用或清除数据即永久删除</td>
+        </tr>
+        <tr>
+            <td><strong>短剧/小视频标识</strong></td>
+            <td>Android ID 等可选设备标识</td>
+            <td>仅在您主动进入短剧或小视频功能时提供内容播放</td>
+            <td>否（已关闭可选采集）</td>
+            <td>不采集 Android ID</td>
+            <td><strong>仅功能页初始化</strong>；已关闭 Android ID、IMEI、IMSI、MAC、OAID 等可选标识。天气首页及后台不读取</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="note">
+    <strong>重要说明：</strong>
+    <ul>
+        <li><strong>本应用无需注册登录</strong>，是一款单机工具。您手动搜索的城市列表、关注城市等信息，<strong>仅保存在您的手机本地</strong>，我们不会上传至服务器。</li>
+        <li><strong>定位功能</strong>已使用系统定位服务替代高德SDK，定位数据仅用于天气查询。</li>
+        <li>标注为"由第三方SDK采集"的信息，是为了实现天气服务（推送、广告、统计、崩溃修复）而接入的必要合作方自动收集。我们已在《第三方共享清单》中逐一明示各SDK收集这些信息的目的和方式。</li>
+        <li><strong>后台/静默收集</strong>已在隐私政策第八条明示，定位每30分钟/次，推送心跳约10分钟/次。本应用及广告SDK已关闭安装/卸载监听；优量汇已关闭传感器采集；短剧/小视频仅功能页初始化且不采 Android ID。</li>
+        <li><strong>定向推送</strong>可通过App内"设置"→"关闭个性化广告"按钮关闭。</li>
+    </ul>
+</div>
+
+<p style="margin-top:20px; font-size:14px; color:#666;">如有任何疑问，请联系我们：dabin@1goodtech.com<br>地址：厦门思明区紫金广场b座805-1</p>
+
+</body>
+</html>

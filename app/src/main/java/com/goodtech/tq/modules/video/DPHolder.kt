@@ -70,6 +70,34 @@ object DPHolder {
                 override fun isCanUsePhoneState(): Boolean {
                     return false
                 }
+
+                override fun isCanUseAndroidId(): Boolean {
+                    return false
+                }
+
+                override fun isCanUseMac(): Boolean {
+                    return false
+                }
+
+                override fun isCanUseOAID(): Boolean {
+                    return false
+                }
+
+                override fun isCanUseICCID(): Boolean {
+                    return false
+                }
+
+                override fun isCanUseSerialNumber(): Boolean {
+                    return false
+                }
+
+                override fun isCanUseGAID(): Boolean {
+                    return false
+                }
+
+                override fun isCanUseOperatorInfo(): Boolean {
+                    return false
+                }
             }
         }
 

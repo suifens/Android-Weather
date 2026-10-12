@@ -19,6 +19,7 @@ import com.goodtech.tq.models.Observation;
 import com.goodtech.tq.models.WeatherModel;
 import com.goodtech.tq.modules.others.airQuality.AirQualityHelper;
 import com.goodtech.tq.utils.TimeUtils;
+import com.goodtech.tq.widget.WidgetRenderer;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * com.goodtech.tq.httpClient
@@ -173,6 +175,8 @@ public class WeatherHttpHelper {
                 if (success) {
                     WeatherSpHelper.saveWeather(jsonObject, cityMode.getPoiId());
                     WeatherModel model = parseWeatherJson(jsonObject, cityMode.getPoiId());
+                    // App 内拉网成功后同步桌面小部件（仅当数据属于小组件展示的定位城市）
+                    notifyWidgetsIfNeeded(cityMode);
 
                     if (callback != null) {
                         callback.onResponse(true, model, errCode);
@@ -184,6 +188,21 @@ public class WeatherHttpHelper {
                 }
             }
         });
+    }
+
+    /**
+     * 网络写入成功后，若该城市是小组件当前展示城市，则读缓存重绘桌面。
+     * 失败路径不调用，避免用空数据盖掉桌面有效内容。
+     */
+    private void notifyWidgetsIfNeeded(CityMode cityMode) {
+        if (cityMode == null || mContext == null) {
+            return;
+        }
+        CityMode widgetCity = LocationSpHelper.getLocation();
+        if (widgetCity == null || !Objects.equals(widgetCity.getPoiId(), cityMode.getPoiId())) {
+            return;
+        }
+        WidgetRenderer.updateWidgetsIfNecessaryAsync(mContext);
     }
 
     public static WeatherModel parseWeatherJson(JSONObject jsonObject, String poiId) {

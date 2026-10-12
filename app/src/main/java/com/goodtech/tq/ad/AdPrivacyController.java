@@ -4,7 +4,8 @@ import com.bytedance.sdk.openadsdk.TTCustomController;
 import com.bytedance.sdk.openadsdk.mediation.init.MediationPrivacyConfig;
 
 /**
- * 穿山甲/GroMore 聚合隐私开关：限制非必要采集，安装列表仅在广告展示链路按需由 SDK 处理。
+ * 穿山甲/GroMore 聚合隐私开关：限制非必要采集。
+ * alist()=false：禁止 SDK 读取应用安装列表。
  */
 public class AdPrivacyController extends TTCustomController {
 
@@ -13,6 +14,7 @@ public class AdPrivacyController extends TTCustomController {
         return false;
     }
 
+    /** 禁止读取应用安装列表（合规：天气业务不需要） */
     @Override
     public boolean alist() {
         return false;

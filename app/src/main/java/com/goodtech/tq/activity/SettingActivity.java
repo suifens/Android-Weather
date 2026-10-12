@@ -25,6 +25,7 @@ import com.bytedance.sdk.openadsdk.TTFeedAd;
 import com.goodtech.tq.BuildConfig;
 import com.goodtech.tq.R;
 import com.goodtech.tq.ad.AdFeedActivity;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.modules.others.test.MyTestActivity;
 import com.goodtech.tq.modules.others.test.PrivacyWebActivity;
 import com.goodtech.tq.modules.removeAd.RemoveAdActivity;
@@ -155,15 +156,17 @@ public class SettingActivity extends AdFeedActivity implements View.OnClickListe
         } else if (v.getId() == R.id.switchBtn_reminder) {
             updateReminder();
         } else if (v.getId() == R.id.short_play_btn) {
-            if (DJXSdk.isStartSuccess()) {
-                DrawDramaActivity.start(this);
+            if (!DJXSdk.isStartSuccess()) {
+                App.getInstance().initDJX();
             }
+            DrawDramaActivity.start(this);
         } else if (v.getId() == R.id.mini_video_btn) {
-            if (DPSdk.isStartSuccess()) {
-                Intent intent = new Intent(this, DrawVideoFullScreenActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+            if (!DPSdk.isStartSuccess()) {
+                App.getInstance().initDP();
             }
+            Intent intent = new Intent(this, DrawVideoFullScreenActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         } else if (v.getId() == R.id.layout_agreement) {
             PrivacyWebActivity.redirectTo(this,
                     Constants.URL_AGREEMENT,

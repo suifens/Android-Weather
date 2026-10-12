@@ -141,6 +141,8 @@ class DrawDramaActivity : BaseActivity() {
         Bus.getInstance().addListener(function)
         if (DJXSdk.isStartSuccess()) {
             init()
+        } else {
+            App.instance.initDJX()
         }
     }
 

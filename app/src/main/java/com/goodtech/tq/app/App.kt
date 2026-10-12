@@ -192,18 +192,12 @@ class App : Application() {
         }
     }
 
+    /**
+     * 广告 SDK 就绪后不再自动启动短剧/小视频 SDK。
+     * 164号文场景10：未进入短剧页即读取 AndroidID 属于超范围采集。
+     */
     fun initVideoSDKsAfterAd() {
-        initVideoSDKs()
-    }
-
-    private fun initVideoSDKs() {
-        try {
-            Log.d(TAG, "初始化视频SDK...")
-            initDJX()
-            initDP()
-        } catch (e: Exception) {
-            Log.e(TAG, "初始化视频SDK失败", e)
-        }
+        Log.d(TAG, "跳过自动初始化短剧/小视频 SDK，待用户进入对应功能页再启动")
     }
 
     fun initDJX() {
@@ -225,10 +219,13 @@ class App : Application() {
     }
 
     /**
-     * 城市列表发生变化（添加/删除/切换）时调用：立即刷新桌面小部件。
+     * 城市列表发生变化（添加/删除/切换）时调用：立即拉网并刷新桌面小部件。
      * 由 [WidgetWorkScheduler] 调度 [com.goodtech.tq.widget.WidgetUpdateWorker] 执行。
      */
     fun startIntent(activity: Activity) {
+        if (!WidgetWorkScheduler.hasAnyWidget(activity)) {
+            return
+        }
         WidgetWorkScheduler.schedulePeriodic(activity)
         WidgetWorkScheduler.enqueueOneTime(activity)
     }

@@ -69,6 +69,8 @@ class DrawDramaFragment : BaseFragment() {
         Bus.getInstance().addListener(listener)
         if (DJXSdk.isStartSuccess()) {
             init()
+        } else {
+            App.instance.initDJX()
         }
     }
 

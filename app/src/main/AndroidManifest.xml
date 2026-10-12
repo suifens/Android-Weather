@@ -67,6 +67,12 @@
     <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" /> <!-- Android 13版本适配，细化存储权限 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
+    <!-- 天气业务不读取安装列表；移除优量汇等 SDK 合并进来的 QUERY_ALL_PACKAGES，避免审核判定后台读取安装列表 -->
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:node="remove"
+        tools:ignore="QueryAllPackagesPermission" />
+
     <application
         android:name=".app.App"
         android:allowBackup="true"

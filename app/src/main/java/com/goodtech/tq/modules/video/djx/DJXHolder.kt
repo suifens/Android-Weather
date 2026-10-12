@@ -2,7 +2,6 @@ package com.goodtech.tq.modules.video.djx
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import com.bytedance.sdk.djx.DJXSdk
 import com.bytedance.sdk.djx.DJXSdkConfig
 import com.bytedance.sdk.djx.IDJXPrivacyController
@@ -16,7 +15,8 @@ import com.bytedance.sdk.djx.model.DJXDramaUnlockAdMode
 import com.bytedance.sdk.djx.params.DJXWidgetDramaHomeParams
 import com.bytedance.sdk.djx.params.DJXWidgetDrawParams
 import com.goodtech.tq.app.App
-import com.goodtech.tq.BuildConfig
+import com.goodtech.tq.common.bus.Bus
+import com.goodtech.tq.common.bus.event.DJXStartEvent
 
 /**
  * create by hanweiwei on 8/30/23
@@ -28,14 +28,29 @@ object DJXHolder {
     const val FREE_SET = 5
     const val LOCK_SET = 2
 
-    //初始化
+    @Volatile
+    private var initialized = false
+
+    //初始化：仅在用户主动进入短剧功能时调用
     fun init(application: Application) {
-        doInitTask(application)
+        if (initialized) {
+            if (!DJXSdk.isStartSuccess()) {
+                start(null)
+            }
+            return
+        }
+        synchronized(this) {
+            if (initialized) {
+                return
+            }
+            doInitTask(application)
+            initialized = true
+        }
     }
 
     private fun doInitTask(application: Application) {
         val config = DJXSdkConfig.Builder()
-            .debug(true)
+            .debug(false)
             .newUser(true)
             .build()
 
@@ -52,21 +67,44 @@ object DJXHolder {
             override fun isCanUsePhoneState(): Boolean {
                 return false
             }
+
+            override fun isCanUseAndroidId(): Boolean {
+                return false
+            }
+
+            override fun isCanUseMac(): Boolean {
+                return false
+            }
+
+            override fun isCanUseOAID(): Boolean {
+                return false
+            }
+
+            override fun isCanUseICCID(): Boolean {
+                return false
+            }
+
+            override fun isCanUseSerialNumber(): Boolean {
+                return false
+            }
+
+            override fun isCanUseGAID(): Boolean {
+                return false
+            }
+
+            override fun isCanUseOperatorInfo(): Boolean {
+                return false
+            }
         }
 
-        // 配置隐私控制开关，可选
-        //config.privacyController()
-
-        //注入路由功能
-//        config.router = DJXRouterImpl()
-
         DJXSdk.init(application, App.SDK_SETTINGS_CONFIG, config)
-        start {  }
+        start(null)
     }
 
     fun start(callback: ((success: Boolean) -> Unit)?) {
         DJXSdk.start(DJXSdk.StartListener { isSuccess, message, error ->
             Log.d(TAG, "doInitTask: $isSuccess, $message, $error")
+            Bus.getInstance().sendEvent(DJXStartEvent(isSuccess))
             callback?.invoke(isSuccess)
         })
     }

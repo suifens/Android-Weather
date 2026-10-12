@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>第三方共享清单</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; margin: 0; background-color: #fff; }
+        h1 { font-size: 22px; text-align: center; margin-bottom: 10px; }
+        .app-note { font-size: 14px; color: #666; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; table-layout: fixed; }
+        th, td { border: 1px solid #ddd; padding: 10px 8px; text-align: left; vertical-align: top; word-wrap: break-word; }
+        th { background-color: #f5f5f5; font-weight: bold; }
+        a { color: #007aff; word-break: break-all; }
+        .note { font-size: 14px; color: #666; background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px; }
+        .note ul { margin: 10px 0; padding-left: 20px; }
+        .note li { margin-bottom: 5px; }
+        .warning { background-color: #fff9f0; border-left: 4px solid #ff9800; padding: 3px 8px; margin: 3px 0; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<h1>第三方共享清单</h1>
+<p class="app-note">适用于：更云天气预报app、天气预报app<br>更新日期：2026年9月23日</p>
+
+<p>本清单透明展示一古（厦门）科技有限公司在提供天气服务过程中接入的第三方SDK及其收集的个人信息。我们不会主动共享，但以下SDK会在特定场景下自动采集必要信息。<strong>定位功能已使用系统定位服务，未接入高德等第三方定位SDK。</strong>详细信息请参阅<a href="tqybPrivacy.html">《隐私政策》</a>。</p>
+
+<table>
+    <thead>
+        <tr><th style="width:16%">SDK名称</th><th style="width:10%">SDK类型</th><th style="width:16%">第三方公司</th><th style="width:10%">使用目的</th><th style="width:20%">收集个人信息类型</th><th style="width:10%">共享方式</th><th style="width:18%">第三方隐私政策</th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>友盟SDK</td><td>统计分析</td><td>友盟同欣（北京）科技有限公司</td><td>统计与分析</td>
+            <td><strong>设备MAC、IMEI、IMSI、SUPI、SUCI、Android ID、IDFA、序列号、位置、IP、WiFi SSID/BSSID、软件安装列表、操作记录</strong></td>
+            <td>SDK采集</td><td><a href="https://www.umeng.com/policy" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>Bugly Android</td><td>性能监控</td><td>深圳市腾讯计算机系统有限公司</td><td>崩溃排查</td>
+            <td><strong>设备MAC、IMEI、IMSI、设备信息、软件安装列表、进程名</strong></td>
+            <td>SDK采集</td><td><a href="https://privacy.qq.com/document/preview/fc748b3d96224fdb825ea79e132c1a56" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>小米推送</td><td>推送</td><td>北京小米移动软件有限公司</td><td>小米设备推送</td>
+            <td><strong>设备MAC、OAID、Android ID、WiFi SSID、设备信息、软件安装列表</strong></td>
+            <td>SDK采集</td><td><a href="https://dev.mi.com/console/doc/detail?pId=1822" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>极光推送SDK</td><td>推送</td><td>深圳市和讯华谷信息技术有限公司</td><td>消息推送</td>
+            <td><strong>设备MAC、IMEI、IMSI、SUPI、SUCI、IDFA、Android ID、位置、IP、WiFi SSID/BSSID、软件安装列表</strong></td>
+            <td>SDK采集</td><td><a href="https://www.jiguang.cn/license/privacy" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>华为PUSH SDK</td><td>推送</td><td>华为软件技术有限公司</td><td>华为设备推送</td>
+            <td><strong>设备MAC、IMEI、IMSI、Android ID、WiFi SSID、设备信息、软件安装列表</strong></td>
+            <td>SDK采集</td><td><a href="https://consumer.huawei.com/cn/privacy/privacy-policy/" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>OPPO PUSH SDK</td><td>推送</td><td>广东欢太科技有限公司</td><td>OPPO设备推送</td>
+            <td><strong>设备MAC、IMEI、IMSI、Android ID、WiFi SSID、设备信息、软件安装列表</strong></td>
+            <td>SDK采集</td><td><a href="https://open.oppomobile.com/new/developmentDoc/info?id=11228" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>VIVO PUSH SDK</td><td>推送</td><td>维沃移动通信有限公司</td><td>VIVO设备推送</td>
+            <td><strong>设备MAC、IMEI、IMSI、Android ID、WiFi SSID、设备信息、软件安装列表</strong></td>
+            <td>SDK采集</td><td><a href="https://dev.vivo.com.cn/documentCenter/doc/366" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>魅族PUSH SDK</td><td>推送</td><td>珠海星纪魅族信息技术有限公司</td><td>魅族设备推送</td>
+            <td><strong>设备MAC、IMEI、IMSI、Android ID、WiFi SSID、设备信息、软件安装列表</strong></td>
+            <td>SDK采集</td><td><a href="https://open.flyme.cn/docs?id=202" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>穿山甲广告SDK</td><td>广告</td><td>北京巨量引擎网络技术有限公司</td><td>广告投放与归因</td>
+            <td><strong>设备MAC、IMEI（需授权）、IMSI、SUPI、SUCI、OAID、Android ID、位置、IP、WiFi SSID/BSSID、传感器、软件安装列表、广告交互数据</strong><br>已关闭对应用安装/更新/卸载事件的监听</td>
+            <td>SDK采集</td><td><a href="https://www.csjplatform.com/privacy" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>优量汇SDK</td><td>广告</td><td>腾讯科技（深圳）有限公司</td><td>广告投放</td>
+            <td><strong>设备MAC、IMEI、IMSI、SUPI、SUCI、Android ID、位置、IP、WiFi SSID/BSSID、软件安装列表、进程信息</strong><br><strong>已关闭传感器类型列表采集</strong>（加速度、陀螺仪、磁力、重力）；已关闭对应用安装/更新/卸载事件的监听</td>
+            <td>SDK采集</td><td><a href="https://www.tencent.com/zh-cn/privacy-policy.html" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>快手联盟广告SDK</td><td>广告</td><td>北京快手科技有限公司</td><td>广告投放</td>
+            <td><strong>设备MAC、IMEI、IMSI、SUPI、SUCI、Android ID、位置、IP、WiFi SSID/BSSID、传感器、软件安装列表</strong><br>已关闭对应用安装/更新/卸载事件的监听</td>
+            <td>SDK采集</td><td><a href="https://www.kuaishou.com/about/policy?tab=privacy" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>小米联盟广告SDK</td><td>广告</td><td>北京小米科技有限责任公司</td><td>广告投放</td>
+            <td><strong>设备MAC、IMEI、IMSI、SUPI、SUCI、Android ID、位置、IP、WiFi SSID/BSSID、软件安装列表</strong></td>
+            <td>SDK采集</td><td><a href="https://dev.mi.com/console/doc/detail?pId=1698" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>微信开放平台SDK</td><td>分享</td><td>腾讯</td><td>分享至微信</td>
+            <td><strong>设备型号、Android ID、IP、WiFi SSID、软件安装列表</strong></td>
+            <td>SDK采集</td><td><a href="https://privacy.qq.com/" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>腾讯QQ开放平台SDK</td><td>分享</td><td>腾讯</td><td>分享至QQ</td>
+            <td><strong>设备型号、Android ID、IP、WiFi SSID、软件安装列表、存储权限</strong></td>
+            <td>SDK采集</td><td><a href="https://privacy.qq.com/" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>360加固SDK</td><td>安全</td><td>北京奇虎科技有限公司</td><td>应用加固</td>
+            <td><strong>设备MAC、IMEI、IMSI、软件安装列表、SD卡权限</strong></td>
+            <td>SDK采集</td><td><a href="https://jiagu.360.cn/#/global/help/295" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>巨量引擎短剧SDK</td><td>内容服务</td><td>北京巨量引擎网络技术有限公司</td><td>仅进入短剧页时播放短剧</td>
+            <td><strong>仅在您主动进入短剧功能页时初始化</strong>；已关闭 Android ID、IMEI、IMSI、MAC、OAID 等可选设备标识采集。天气预报核心功能不读取上述信息</td>
+            <td>SDK采集（仅功能页）</td><td><a href="https://www.csjplatform.com/terms/28451" target="_blank">链接</a></td>
+        </tr>
+        <tr>
+            <td>巨量引擎小视频SDK</td><td>内容服务</td><td>北京巨量引擎网络技术有限公司</td><td>仅进入小视频页时播放视频</td>
+            <td><strong>仅在您主动进入小视频功能页时初始化</strong>；已关闭 Android ID 等可选设备标识采集</td>
+            <td>SDK采集（仅功能页）</td><td><a href="https://www.csjplatform.com/terms/28451" target="_blank">链接</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="note">
+    <strong>特别说明：</strong>
+    <ul>
+        <li><strong>定位功能已改用系统定位服务，未接入高德定位SDK。</strong></li>
+        <li>以上已明确列出所有SDK收集的<strong>设备MAC地址、IMEI、IMSI、SUPI、SUCI、WiFi SSID、软件安装列表</strong>等敏感信息，符合OPPO、vivo等应用商店审核要求。</li>
+        <li>本应用及广告SDK已关闭对应用安装/更新/卸载事件的监听。</li>
+        <li>优量汇已关闭传感器类型列表采集（加速度、陀螺仪、磁力、重力）。</li>
+        <li>短剧/小视频SDK仅在您主动进入对应功能页时初始化，并已关闭 Android ID 采集。</li>
+        <li>魅族PUSH SDK链接已更新为官方最新地址。</li>
+        <li>关于后台/静默收集细节，详见隐私政策第八条。</li>
+    </ul>
+</div>
+<p style="margin-top:20px; font-size:14px; color:#666;">如有任何疑问，请联系我们：dabin@1goodtech.com<br>地址：厦门思明区紫金广场b座805-1</p>
+
+</body>
+</html>

@@ -21,6 +21,7 @@ import com.bytedance.sdk.dp.IDPAdListener;
 import com.bytedance.sdk.dp.IDPDrawListener;
 import com.bytedance.sdk.dp.IDPWidget;
 import com.goodtech.tq.activity.BaseActivity;
+import com.goodtech.tq.app.App;
 import com.goodtech.tq.common.bus.Bus;
 import com.goodtech.tq.common.bus.IBusListener;
 import com.goodtech.tq.common.bus.event.DPStartEvent;
@@ -82,6 +83,8 @@ public class DrawVideoFullScreenActivity extends BaseActivity {
         Bus.getInstance().addListener(function);
         if (DPSdk.isStartSuccess()) {
             init();
+        } else {
+            App.getInstance().initDP();
         }
     }
 

@@ -14,7 +14,7 @@ import com.goodtech.tq.R
 import com.goodtech.tq.modules.others.widget.WidgetType
 import com.goodtech.tq.utils.Constants
 import com.goodtech.tq.utils.SpUtils
-import com.goodtech.tq.widget.WidgetWorkScheduler
+import com.goodtech.tq.widget.WidgetRenderer
 
 /**
  * 桌面小部件样式设置页。
@@ -74,8 +74,8 @@ class WidgetSettingActivity : BaseActivity() {
 
     override fun onDestroy() {
         if (hadChanged) {
-            // 样式变更后立即触发一次刷新，让已安装的 widget 应用新样式
-            WidgetWorkScheduler.enqueueOneTime(this)
+            // 样式变更只需读缓存重绘，不必再拉网
+            WidgetRenderer.updateWidgetsIfNecessaryAsync(this)
         }
         super.onDestroy()
     }

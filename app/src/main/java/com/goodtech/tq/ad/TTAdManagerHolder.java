@@ -42,12 +42,14 @@ public class TTAdManagerHolder {
             TTAdSdk.start(new TTAdSdk.Callback() {
                 @Override
                 public void success() {
-
-                    Log.i(TAG, "success: " + TTAdSdk.isInitSuccess());
+                    GdtPrivacyConfig.reapplyAfterSdkStart();
+                    Log.i(TAG, "success: " + TTAdSdk.isInitSuccess()
+                            + ", GdtPrivacy=" + GdtPrivacyConfig.isApplySucceeded());
                 }
 
                 @Override
                 public void fail(int code, String msg) {
+                    GdtPrivacyConfig.reapplyAfterSdkStart();
                     Log.i(TAG, "fail:  code = " + code + " msg = " + msg);
                 }
             });

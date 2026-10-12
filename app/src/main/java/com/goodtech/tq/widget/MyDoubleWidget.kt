@@ -11,8 +11,8 @@ import com.goodtech.tq.utils.SpUtils
 /**
  * 双城大尺寸桌面小部件 Provider。
  *
- * 由 [WidgetWorkScheduler] 调度 [WidgetUpdateWorker] 周期刷新，
- * 不再依赖常驻前台 Service。
+ * A 方案：此处只负责调度周期任务 + 读缓存重绘，不拉网。
+ * 网络刷新由 [WidgetUpdateWorker] / App 内天气请求完成后统一触发。
  */
 class MyDoubleWidget : AppWidgetProvider() {
 
@@ -21,8 +21,7 @@ class MyDoubleWidget : AppWidgetProvider() {
     }
 
     /**
-     * 第一个 widget 被添加：注册周期刷新任务并立即触发一次。
-     * 同时记录双城 widget 已启用标记，供其他模块判断。
+     * 第一个 widget 被添加：注册周期任务，并立即触发一次拉网（可能尚无缓存）。
      */
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
@@ -32,6 +31,9 @@ class MyDoubleWidget : AppWidgetProvider() {
         WidgetWorkScheduler.enqueueOneTime(context)
     }
 
+    /**
+     * 系统要求重绘时：只读缓存画 UI，避免与周期 Worker 重复拉网。
+     */
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -40,16 +42,9 @@ class MyDoubleWidget : AppWidgetProvider() {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         Log.d(TAG, "onUpdate")
         WidgetWorkScheduler.schedulePeriodic(context)
-        // 系统周期 onUpdate 用节流版，避免与周期任务短时间内重复执行
-        WidgetWorkScheduler.enqueueOneTimeThrottled(context)
-        // 用缓存立即渲染一次，避免 Worker 执行延迟期间首屏空白
         renderCachedAsync(context)
     }
 
-    /**
-     * 通过 goAsync 在后台线程用缓存立即渲染 widget，
-     * 避免 Worker 执行延迟（通常 1-3 秒）期间显示空白 initialLayout。
-     */
     private fun renderCachedAsync(context: Context) {
         val pendingResult = goAsync()
         Thread {

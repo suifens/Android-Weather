@@ -32,11 +32,13 @@ object CsjAdHolder {
         TTAdSdk.init(application, build)
         TTAdSdk.start(object : TTAdSdk.Callback {
             override fun success() {
+                GdtPrivacyConfig.reapplyAfterSdkStart()
                 callback?.success()
                 Log.e(TAG, "TTAdSdk aysnc init success")
             }
 
             override fun fail(code: Int, msg: String?) {
+                GdtPrivacyConfig.reapplyAfterSdkStart()
                 callback?.fail(code, msg)
                 Log.e(TAG, "TTAdSdk aysnc init fail, code = $code msg = $msg")
             }

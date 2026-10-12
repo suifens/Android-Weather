@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.bytedance.sdk.openadsdk.TTAdSdk
+import com.goodtech.tq.BuildConfig
 import com.goodtech.tq.ad.GdtPrivacyConfig
 import com.goodtech.tq.ad.TTAdManagerHolder
 import com.goodtech.tq.app.App
@@ -77,17 +78,24 @@ object AdSdkInitializer {
     }
 
     private fun startInit() {
-        Log.d(TAG, "开始延迟初始化广告SDK（前台）")
+        Log.d(TAG, "开始延迟初始化广告SDK（前台），DISABLE_GDT_FOR_REVIEW=${BuildConfig.DISABLE_GDT_FOR_REVIEW}")
         try {
-            GdtPrivacyConfig.applyBeforeInit()
+            // 必须在任何广告 SDK init 之前调用；失败会打 ERROR 日志便于提审前排查
+            val privacyOk = GdtPrivacyConfig.applyBeforeInit()
+            if (!privacyOk && !BuildConfig.DISABLE_GDT_FOR_REVIEW) {
+                Log.e(TAG, "优量汇隐私配置未生效，存在审核风险：后台安装/卸载监听可能仍会注册")
+            }
+
             TTAdManagerHolder.init(App.instance)
             CsjAdHolder.init(App.VIDEO_SITE_ID, App.instance, object : TTAdSdk.Callback {
                 override fun success() {
+                    GdtPrivacyConfig.reapplyAfterSdkStart()
                     onAdSdkReady()
                 }
 
                 override fun fail(code: Int, msg: String?) {
                     Log.e(TAG, "CsjAdHolder init fail: $code, $msg")
+                    GdtPrivacyConfig.reapplyAfterSdkStart()
                     onAdSdkReady()
                 }
             })
@@ -98,7 +106,7 @@ object AdSdkInitializer {
     }
 
     private fun onAdSdkReady() {
-        App.instance.initVideoSDKsAfterAd()
+        // 短剧/小视频 SDK 仅在用户进入对应功能页时初始化，避免未使用即读取 AndroidID
         synchronized(this) {
             isAdSdkInitialized = true
             isInitializing = false
@@ -109,6 +117,6 @@ object AdSdkInitializer {
                 callbacks.forEach { it.run() }
             }
         }
-        Log.d(TAG, "广告SDK初始化完成")
+        Log.d(TAG, "广告SDK初始化完成，GdtPrivacy applied=${GdtPrivacyConfig.isApplySucceeded()}")
     }
 }

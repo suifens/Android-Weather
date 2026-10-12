@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.goodtech.tq.R
@@ -22,6 +23,7 @@ import com.goodtech.tq.helpers.WeatherSpHelper
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.utils.TimeUtils
 import com.goodtech.tq.utils.WeatherUtils
+import java.util.concurrent.Executors
 
 /**
  * 桌面小部件 RemoteViews 构建与更新的纯函数集合。
@@ -29,8 +31,18 @@ import com.goodtech.tq.utils.WeatherUtils
  * 把原 [WidgetService.updateSmall] / [DoubleWidgetService.updateDouble] 中
  * 与 Service 生命周期耦合的 RemoteViews 渲染逻辑抽离出来，
  * 使其可在 Worker / Receiver 等任意无生命周期上下文中复用。
+ *
+ * 刷新约定（对齐 Breezy 思路的 A 方案）：
+ * - Provider.onUpdate 只读缓存重绘，不拉网
+ * - 网络刷新由 [WidgetUpdateWorker] / App 内 fetch 完成后再调 [updateWidgetsIfNecessary]
  */
 object WidgetRenderer {
+
+    private const val TAG = "WidgetRenderer"
+
+    private val backgroundExecutor = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "widget-render").apply { isDaemon = true }
+    }
 
     /**
      * 读取用户在设置页选择的 [WidgetType]，判断是否为透明样式。
@@ -77,12 +89,50 @@ object WidgetRenderer {
     }
 
     /**
-     * 用 MMKV 缓存立即渲染指定类型的 widget（不更新通知）。
-     * 供 [android.appwidget.AppWidgetProvider.onUpdate] 在后台线程调用，
-     * 避免 Worker 执行延迟期间 widget 停留在 initialLayout 空白布局。
+     * 用本地缓存重绘所有已安装的天气小部件（不拉网）。
+     * 失败或无数据时保持桌面现状，不覆盖为空白。
      *
-     * 调用方应通过 [android.content.BroadcastReceiver.goAsync] 在后台线程执行，
-     * 因为涉及 JSON 反序列化，不应在主线程调用。
+     * 调用方须在后台线程（Worker / goAsync / [updateWidgetsIfNecessaryAsync]）。
+     */
+    @JvmStatic
+    fun updateWidgetsIfNecessary(context: Context) {
+        if (!WidgetWorkScheduler.hasAnyWidget(context)) {
+            return
+        }
+        val location = LocationSpHelper.getLocation() ?: return
+        val model = WeatherSpHelper.getWeatherModel(location.poiId) ?: return
+
+        val manager = AppWidgetManager.getInstance(context)
+        val smallIds = manager.getAppWidgetIds(ComponentName(context, MyWidget::class.java))
+        val doubleIds = manager.getAppWidgetIds(ComponentName(context, MyDoubleWidget::class.java))
+
+        if (smallIds.isNotEmpty()) {
+            renderSmall(context, location, model)
+        }
+        if (doubleIds.isNotEmpty()) {
+            renderDouble(context, location, model)
+        }
+    }
+
+    /**
+     * 任意线程可调用：内部切到后台线程执行 [updateWidgetsIfNecessary]。
+     * 供主线程回调（如天气拉取成功、设置页改样式）使用。
+     */
+    @JvmStatic
+    fun updateWidgetsIfNecessaryAsync(context: Context) {
+        val appContext = context.applicationContext
+        backgroundExecutor.execute {
+            try {
+                updateWidgetsIfNecessary(appContext)
+            } catch (e: Exception) {
+                Log.e(TAG, "异步重绘小部件失败", e)
+            }
+        }
+    }
+
+    /**
+     * 用 MMKV 缓存立即绘制指定类型的 widget（不拉网）。
+     * 供 [android.appwidget.AppWidgetProvider.onUpdate] 在后台线程调用。
      */
     fun renderCachedForWidget(context: Context, widgetClass: Class<*>) {
         val location = LocationSpHelper.getLocation() ?: return

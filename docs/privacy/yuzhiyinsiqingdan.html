@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>隐私清单说明</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; margin: 0; background-color: #fff; }
+        h1 { font-size: 22px; text-align: center; margin-bottom: 10px; }
+        h2 { font-size: 18px; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 25px; margin-bottom: 12px; }
+        p { font-size: 15px; margin-bottom: 15px; }
+        .app-note { font-size: 14px; color: #666; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; table-layout: fixed; }
+        th, td { border: 1px solid #ddd; padding: 10px 8px; text-align: left; vertical-align: top; word-wrap: break-word; }
+        th { background-color: #f5f5f5; font-weight: bold; }
+        a { color: #007aff; word-break: break-all; }
+        .note { background-color: #f9f9f9; padding: 12px; border-radius: 5px; font-size: 14px; color: #555; margin-top: 20px; }
+        .warning { background-color: #fff9f0; border-left: 4px solid #ff9800; padding: 8px 12px; margin: 8px 0; font-size: 13px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<h1>隐私清单说明</h1>
+<p class="app-note">适用于：更云天气预报app、天气预报app<br>更新日期：2026年9月23日</p>
+
+<p>本清单简要说明了一古（厦门）科技有限公司在提供天气服务过程中如何处理您的个人信息。详细内容请参阅完整的<a href="tqybPrivacy.html">《隐私政策》</a>、<a href="gytqgrsjqd.html">《收集个人信息清单》</a>及<a href="gytqgxqd.html">《第三方共享清单》</a>。</p>
+
+<h2>一、个人信息收集概览</h2>
+<table>
+    <thead><tr><th style="width:22%">信息类型</th><th style="width:28%">主要字段</th><th style="width:25%">收集目的</th><th style="width:25%">存储与共享</th></tr></thead>
+    <tbody>
+        <tr><td><strong>位置信息</strong></td><td>GPS定位、网络位置</td><td>获取本地天气</td><td><strong>系统定位服务</strong>，不涉及第三方SDK，不上传服务器。时机：启动/手动刷新/后台30分钟</td></tr>
+        <tr><td><strong>设备标识</strong></td><td>MAC、IMEI、IMSI、SUPI、SUCI、Android ID、OAID、序列号等</td><td>设备识别、安全、统计、广告</td><td>由SDK采集（友盟、Bugly、广告SDK等）</td></tr>
+        <tr><td><strong>网络信息</strong></td><td>IP地址、WiFi SSID/BSSID、运营商</td><td>网络优化、辅助定位、广告、推送通道维持</td><td>由SDK采集（推送、广告、统计SDK）</td></tr>
+        <tr><td><strong>软件安装列表</strong></td><td>已安装应用包名、进程名</td><td>分享判断、推送合并、崩溃排查</td><td>由相关SDK按需采集。本应用及广告SDK已关闭对安装/更新/卸载的后台监听</td></tr>
+        <tr><td><strong>传感器信息</strong></td><td>加速度、陀螺仪、磁力、重力等传感器类型列表</td><td>优量汇原用于体感广告与反作弊</td><td><strong>已关闭优量汇传感器采集</strong>；其他广告源如仍读取，仅在广告展示及交互时</td></tr>
+        <tr><td><strong>短剧/小视频</strong></td><td>Android ID 等可选设备标识</td><td>仅在您主动进入对应功能时提供内容播放</td><td>仅功能页初始化；<strong>已关闭 Android ID 等可选标识采集</strong>，天气首页不读取</td></tr>
+        <tr><td><strong>搜索记录</strong></td><td>城市名称</td><td>历史天气搜索</td><td>仅手机本地存储</td></tr>
+    </tbody>
+</table>
+
+<h2>二、第三方SDK及收集敏感字段清单</h2>
+<p><strong>定位功能使用系统服务，以下清单不含定位SDK。本应用及广告SDK均已关闭对应用安装/更新/卸载事件的监听。</strong></p>
+<table>
+    <thead>
+        <tr><th>SDK名称</th><th>类型</th><th>公司</th><th>MAC</th><th>IMEI</th><th>WiFi SSID</th><th>安装列表</th><th>监听安装/卸载</th><th>隐私政策</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>友盟SDK</td><td>统计</td><td>友盟同欣</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://www.umeng.com/policy" target="_blank">链接</a></td></tr>
+        <tr><td>Bugly Android</td><td>性能</td><td>腾讯</td><td>✅</td><td>✅</td><td>—</td><td>✅</td><td>—</td><td><a href="https://privacy.qq.com/document/preview/fc748b3d96224fdb825ea79e132c1a56" target="_blank">链接</a></td></tr>
+        <tr><td>小米推送</td><td>推送</td><td>小米</td><td>✅</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://dev.mi.com/console/doc/detail?pId=1822" target="_blank">链接</a></td></tr>
+        <tr><td>极光推送SDK</td><td>推送</td><td>和讯华谷</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://www.jiguang.cn/license/privacy" target="_blank">链接</a></td></tr>
+        <tr><td>华为PUSH SDK</td><td>推送</td><td>华为</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://consumer.huawei.com/cn/privacy/privacy-policy/" target="_blank">链接</a></td></tr>
+        <tr><td>OPPO PUSH SDK</td><td>推送</td><td>广东欢太</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://open.oppomobile.com/new/developmentDoc/info?id=11228" target="_blank">链接</a></td></tr>
+        <tr><td>VIVO PUSH SDK</td><td>推送</td><td>维沃移动</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://dev.vivo.com.cn/documentCenter/doc/366" target="_blank">链接</a></td></tr>
+        <tr><td>魅族PUSH SDK</td><td>推送</td><td>珠海星纪魅族</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://open.flyme.cn/docs?id=202" target="_blank">链接</a></td></tr>
+        <tr><td>穿山甲广告SDK</td><td>广告</td><td>巨量引擎</td><td>✅</td><td>需授权</td><td>✅</td><td>✅</td><td>已关闭</td><td><a href="https://www.csjplatform.com/privacy" target="_blank">链接</a></td></tr>
+        <tr><td>优量汇SDK</td><td>广告</td><td>腾讯</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>已关闭</td><td><a href="https://www.tencent.com/zh-cn/privacy-policy.html" target="_blank">链接</a></td></tr>
+        <tr><td>快手联盟广告SDK</td><td>广告</td><td>快手</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>已关闭</td><td><a href="https://www.kuaishou.com/about/policy?tab=privacy" target="_blank">链接</a></td></tr>
+        <tr><td>小米联盟广告SDK</td><td>广告</td><td>小米</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://dev.mi.com/console/doc/detail?pId=1698" target="_blank">链接</a></td></tr>
+        <tr><td>微信开放平台SDK</td><td>分享</td><td>腾讯</td><td>—</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://privacy.qq.com/" target="_blank">链接</a></td></tr>
+        <tr><td>腾讯QQ开放平台SDK</td><td>分享</td><td>腾讯</td><td>—</td><td>—</td><td>✅</td><td>✅</td><td>—</td><td><a href="https://privacy.qq.com/" target="_blank">链接</a></td></tr>
+        <tr><td>360加固SDK</td><td>安全</td><td>奇虎360</td><td>✅</td><td>✅</td><td>—</td><td>✅</td><td>—</td><td><a href="https://jiagu.360.cn/#/global/help/295" target="_blank">链接</a></td></tr>
+        <tr><td>巨量引擎短剧SDK</td><td>内容</td><td>巨量引擎</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><a href="https://www.csjplatform.com/terms/28451" target="_blank">链接</a></td></tr>
+        <tr><td>巨量引擎小视频SDK</td><td>内容</td><td>巨量引擎</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><a href="https://www.csjplatform.com/terms/28451" target="_blank">链接</a></td></tr>
+    </tbody>
+</table>
+
+<div class="note">
+    <strong>关键提示：</strong><br>
+    • 本应用无需注册登录，数据仅本地保存。<br>
+    • <strong>定位使用系统定位服务（GPS/WiFi/基站），启动/手动刷新/后台30分钟/次</strong>，不涉及第三方SDK。<br>
+    • <strong>个性化广告关闭路径：</strong>"设置"→"关闭个性化广告"。<br>
+    • 后台/静默收集详情见隐私政策第八条。<br>
+    • <strong>优量汇已关闭传感器类型列表采集</strong>（加速度、陀螺仪、磁力、重力）。<br>
+    • <strong>短剧/小视频SDK仅在您主动进入对应功能页时初始化，并已关闭 Android ID 采集</strong>。<br>
+    • <strong>本应用及广告SDK已关闭对应用安装/更新/卸载事件的监听。</strong>
+</div>
+
+<p style="margin-top:20px; font-size:14px; color:#666;">如有任何疑问，请联系我们：dabin@1goodtech.com<br>地址：厦门思明区紫金广场b座805-1</p>
+
+</body>
+</html>

@@ -25,8 +25,8 @@ android {
         applicationId "com.goodtech.tq"
         minSdk 24
         targetSdk 35
-        versionCode 1630
-        versionName "16.3.0"
+        versionCode 1700
+        versionName "17.0.0"
         signingConfig signingConfigs.config
         multiDexEnabled true
 
@@ -46,6 +46,12 @@ android {
         buildConfigField 'String', 'PGE_EXPRESS_POS_ID3', '"103501276"' //动态信息流 id
         buildConfigField 'String', 'PGE_CALENDAR_POS_ID', '"103501633"' //日历动态信息流 id
         buildConfigField 'String', 'PGE_INT_POS_ID', '"102498281"'  //插屏广告 id
+
+        // 提审合规：./gradlew assembleHuaweiRelease -PdisableGdtForReview=true
+        // true 时从 libs 排除优量汇 AAR，从根源去掉 PACKAGE_* 监听
+        def disableGdt = project.hasProperty('disableGdtForReview') &&
+                project.property('disableGdtForReview').toString().toBoolean()
+        buildConfigField 'boolean', 'DISABLE_GDT_FOR_REVIEW', disableGdt ? 'true' : 'false'
 
 //        广告应用ID
 //        buildConfigField 'String', 'PGE_APP_ID', '5353290'
@@ -79,6 +85,11 @@ android {
 //        }报", umeng_channel: "xiaomi"]
 //        }
         huawei {
+            buildConfigField 'int', 'BAIDU_CHANNEL', '8'
+            buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
+            manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "huawei"]
+        }
+        huawei2 {
             buildConfigField 'int', 'BAIDU_CHANNEL', '8'
             buildConfigField 'String', 'UMENG_CHANNEL', '"huawei"'
             manifestPlaceholders = [app_name: "更云天气预报", umeng_channel: "huawei"]
@@ -227,7 +238,19 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:2.0.20"
     implementation 'androidx.work:work-runtime-ktx:2.10.0'
 
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    // 提审时可排除优量汇：-PdisableGdtForReview=true
+    def disableGdtForReview = project.hasProperty('disableGdtForReview') &&
+            project.property('disableGdtForReview').toString().toBoolean()
+    if (disableGdtForReview) {
+        logger.lifecycle(">>> disableGdtForReview=true：排除 GDTSDK / mediation_gdt_adapter")
+        implementation fileTree(
+                dir: 'libs',
+                include: ['*.jar', '*.aar'],
+                exclude: ['GDTSDK*.aar', 'mediation_gdt_adapter*.aar']
+        )
+    } else {
+        implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    }
     implementation project(':cropimage')
     implementation project(':insaitlib')
 

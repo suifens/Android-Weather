@@ -12,18 +12,15 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.goodtech.tq.utils.SpUtils
 import java.util.concurrent.TimeUnit
 
 /**
- * 桌面小部件刷新任务的统一调度入口。
+ * 桌面小部件网络刷新任务的统一调度入口。
  *
- * - [schedulePeriodic]：注册 30 分钟周期任务（最小允许间隔），仅在联网时执行
- * - [enqueueOneTime]：立即触发一次刷新（widget 添加/更新、网络恢复、回前台等场景）
+ * - [schedulePeriodic]：注册 30 分钟周期任务，仅在联网时执行
+ * - [enqueueOneTime]：立即拉网刷新（首次添加 widget、城市列表变更等）
+ * - Provider.onUpdate 不再走这里拉网，只读缓存；样式变更走 [WidgetRenderer.updateWidgetsIfNecessaryAsync]
  * - [cancelIfNoWidgets]：两种 widget 都已删除时才取消周期任务
- *
- * 使用唯一 workName 保证全局只有一个周期任务在运行，
- * 配合 [ExistingPeriodicWorkPolicy.KEEP] 避免重复调度覆盖已有任务。
  */
 object WidgetWorkScheduler {
 
@@ -38,12 +35,6 @@ object WidgetWorkScheduler {
 
     /** 失败重试的初始退避延迟（线性增长：30s、60s、90s...）。 */
     private const val BACKOFF_DELAY_SECONDS = 30L
-
-    /** 一次性刷新的节流间隔，避免系统 onUpdate 与周期任务短时间内重复触发。 */
-    private const val ONE_TIME_THROTTLE_MS = 60_000L
-
-    /** 记录上次一次性刷新时间的 SP key。 */
-    private const val SP_KEY_LAST_ONE_TIME = "widget_last_one_time_ms"
 
     /** 历史天气通知 ID（迁移前前台 Service 使用），升级后需主动清除。 */
     private const val LEGACY_NOTIFY_ID_SMALL = 999
@@ -76,7 +67,8 @@ object WidgetWorkScheduler {
     /**
      * 立即触发一次刷新。使用 [ExistingWorkPolicy.REPLACE] 保证最新请求生效。
      * 已有未执行的 one-time 任务会被替换，避免排队堆积。
-     * 适用于用户主动操作（添加 widget、切换城市、改样式）等需要立即反馈的场景。
+     * 适用于首次添加 widget、切换城市等需要立刻拉网的场景。
+     * 仅改样式请用 [WidgetRenderer.updateWidgetsIfNecessaryAsync]。
      */
     fun enqueueOneTime(context: Context) {
         val request = OneTimeWorkRequestBuilder<WidgetUpdateWorker>()
@@ -89,21 +81,6 @@ object WidgetWorkScheduler {
             ExistingWorkPolicy.REPLACE,
             request
         )
-        SpUtils.getInstance().putLong(SP_KEY_LAST_ONE_TIME, System.currentTimeMillis())
-    }
-
-    /**
-     * 带节流的立即刷新：距上次刷新不足 [ONE_TIME_THROTTLE_MS] 时跳过。
-     * 适用于系统 [android.appwidget.AppWidgetProvider.onUpdate] 等高频回调场景，
-     * 避免与周期任务短时间内重复执行（fetchWeather 内部已有 5 分钟节流，
-     * 此处节流进一步避免不必要的 Worker 启动开销）。
-     */
-    fun enqueueOneTimeThrottled(context: Context) {
-        val last = SpUtils.getInstance().getLong(SP_KEY_LAST_ONE_TIME, 0L)
-        if (System.currentTimeMillis() - last < ONE_TIME_THROTTLE_MS) {
-            return
-        }
-        enqueueOneTime(context)
     }
 
     /**
