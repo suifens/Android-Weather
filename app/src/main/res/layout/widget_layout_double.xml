@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginTop="12dp"
+            android:orientation="horizontal"
             >
 
             <ImageView
@@ -43,9 +44,21 @@
                 android:layout_height="18dp"
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:ellipsize="middle"
                 android:lines="1"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <TextClock
+                android:id="@+id/widget_time_clock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:ellipsize="end"
+                android:format12Hour="h:mm E (MM'月'dd)"
+                android:format24Hour="H:mm E (MM'月'dd)"
+                android:maxLines="1"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
 

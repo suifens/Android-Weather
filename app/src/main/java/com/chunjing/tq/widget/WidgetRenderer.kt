@@ -114,6 +114,7 @@ object WidgetRenderer {
 
     fun renderSmall(context: Context, cityName: String, now: WeatherBean?, aqi: Int) {
         val views = RemoteViews(context.packageName, R.layout.widget_layout_small)
+        applyWidgetClock(views)
         val location = if (cityName.contains("-")) cityName.split("-")[1] else cityName
         views.setTextViewText(R.id.tvLocation, location)
         views.setImageViewResource(R.id.locationImgView, R.drawable.ic_loc_w)
@@ -140,6 +141,7 @@ object WidgetRenderer {
 
     fun renderDouble(context: Context, cityName: String, now: WeatherBean?, aqi: Int) {
         val views = RemoteViews(context.packageName, R.layout.widget_layout_double)
+        applyWidgetClock(views)
         val location = if (cityName.contains("-")) cityName.split("-")[1] else cityName
         views.setTextViewText(R.id.dtvLocation, location)
         views.setImageViewResource(R.id.dLocationImgView, R.drawable.ic_loc_w)
@@ -177,6 +179,18 @@ object WidgetRenderer {
         applyBackgroundVisibility(views, R.id.divBackground)
         views.setOnClickPendingIntent(R.id.dWidgetBtn, buildClickIntent(context))
         pushWidget(context, WeatherWidgetDouble::class.java, views)
+    }
+
+
+    /**
+     * 配置 TextClock：`9:41 周一 (07月12)`。
+     * 由桌面进程按分钟自刷新，不依赖天气 Worker。
+     */
+    private fun applyWidgetClock(views: RemoteViews) {
+        val format12 = "h:mm E (MM'月'dd)"
+        val format24 = "H:mm E (MM'月'dd)"
+        views.setCharSequence(R.id.widget_time_clock, "setFormat12Hour", format12)
+        views.setCharSequence(R.id.widget_time_clock, "setFormat24Hour", format24)
     }
 
     private fun applyBackgroundVisibility(views: RemoteViews, backgroundId: Int) {
