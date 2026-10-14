@@ -13,6 +13,7 @@ import com.goodtech.tq.httpClient.ApiCallback
 import com.goodtech.tq.httpClient.ErrorCode
 import com.goodtech.tq.httpClient.WeatherHttpHelper
 import com.goodtech.tq.models.CityMode
+import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.utils.TimeUtils
 import kotlinx.coroutines.suspendCancellableCoroutine

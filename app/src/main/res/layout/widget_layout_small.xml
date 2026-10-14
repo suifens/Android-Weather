@@ -43,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/locationImgView"
@@ -53,25 +54,33 @@
 
                 <TextView
                     android:id="@+id/sAddressTv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:maxWidth="260dp"
-                    android:lines="1"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
                     android:ellipsize="end"
+                    android:lines="1"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
 
                 <ImageView
                     android:id="@+id/img_quality"
                     android:layout_width="32dp"
                     android:layout_height="20dp"
-                    android:visibility="invisible" />
+                    android:layout_marginEnd="6dp"
+                    android:visibility="gone" />
+
+                <TextClock
+                    android:id="@+id/widget_time_clock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:format12Hour="h:mm E (MM'月'dd日)"
+                    android:format24Hour="H:mm E (MM'月'dd日)"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 

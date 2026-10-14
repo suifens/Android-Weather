@@ -89,6 +89,18 @@ object WidgetRenderer {
     }
 
     /**
+     * 配置 [TextClock] 格式：`9:41 周一 (07月12)`。
+     * TextClock 由桌面进程按分钟自刷新，不依赖天气 Worker。
+     */
+    private fun applyWidgetClock(remoteViews: RemoteViews) {
+        // SimpleDateFormat：E → 周一；MM'月'dd → 07月12
+        val format12 = "h:mm E (MM'月'dd日)"
+        val format24 = "H:mm E (MM'月'dd日)"
+        remoteViews.setCharSequence(R.id.widget_time_clock, "setFormat12Hour", format12)
+        remoteViews.setCharSequence(R.id.widget_time_clock, "setFormat24Hour", format24)
+    }
+
+    /**
      * 用本地缓存重绘所有已安装的天气小部件（不拉网）。
      * 失败或无数据时保持桌面现状，不覆盖为空白。
      *
@@ -154,6 +166,7 @@ object WidgetRenderer {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout_small)
 
         applyBackground(remoteViews)
+        applyWidgetClock(remoteViews)
 
         remoteViews.setTextViewText(R.id.sAddressTv, cityMode.mergerName)
         remoteViews.setImageViewResource(R.id.locationImgView, R.drawable.ic_location_blue)
@@ -233,6 +246,7 @@ object WidgetRenderer {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
 
         applyBackground(remoteViews)
+        applyWidgetClock(remoteViews)
 
         remoteViews.setTextViewText(R.id.addressTv, cityMode.mergerName)
         remoteViews.setImageViewResource(R.id.locationImgView, R.drawable.ic_location_blue)
