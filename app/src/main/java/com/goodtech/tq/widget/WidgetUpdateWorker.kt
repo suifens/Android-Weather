@@ -1,9 +1,20 @@
 package com.goodtech.tq.widget
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.goodtech.tq.alarm.JAlarmReceiver
@@ -16,17 +27,18 @@ import com.goodtech.tq.models.CityMode
 import com.goodtech.tq.models.WeatherModel
 import com.goodtech.tq.utils.SpUtils
 import com.goodtech.tq.utils.TimeUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import java.util.Locale
 import kotlin.coroutines.resume
 
 /**
  * 桌面小部件天气刷新 Worker（A 方案）。
  *
- * - 由 [WidgetWorkScheduler] 以周期任务（约 30 分钟）+ 网络约束调度
- * - 单次执行：必要时拉天气 → [WidgetRenderer.updateWidgetsIfNecessary] 只读缓存重绘
- * - 无 widget 安装时直接返回，避免空跑
- * - 拉取失败不覆盖桌面已有有效数据
+ * - 周期约 30 分钟；有效拉网间隔也是 30 分钟
+ * - 拉天气前先尝试刷新定位（有权限时），再拉网重绘
  */
 class WidgetUpdateWorker(
     context: Context,
@@ -35,28 +47,38 @@ class WidgetUpdateWorker(
 
     companion object {
         private const val TAG = "WidgetUpdateWorker"
-        /** 单次天气请求超时，避免回调不触发时协程永久挂起。 */
         private const val REQUEST_TIMEOUT_MS = 30_000L
-        /** 网络失败时最大重试次数，超过后不再重试。 */
+        private const val LOCATION_TIMEOUT_MS = 15_000L
         private const val MAX_RETRY_ATTEMPTS = 3
+        /** 有效拉网间隔：30 分钟 */
+        private const val STALE_MS = 30 * 60 * 1000L
+        /** 最近定位可复用时长 */
+        private const val LAST_KNOWN_MAX_AGE_MS = 5 * 60 * 1000L
     }
 
-    /** 一次 doWork 内缓存的 widget 安装情况，避免重复查询 AppWidgetManager。 */
     private data class WidgetIds(val smallIds: IntArray, val doubleIds: IntArray) {
         fun hasAny(): Boolean = smallIds.isNotEmpty() || doubleIds.isNotEmpty()
     }
 
     override suspend fun doWork(): Result {
         val context = applicationContext
-
-        // 清除迁移前残留的天气通知栏
         WidgetWorkScheduler.clearLegacyWeatherNotifications(context)
 
-        // 一次性查询所有已安装 widget，后续复用，避免重复 IPC
         val widgetIds = queryWidgetIds(context)
         if (!widgetIds.hasAny()) {
             Log.d(TAG, "无 widget 安装，跳过本次刷新")
             return Result.success()
+        }
+
+        // 与天气同节奏：即将拉网时先刷新定位（失败则沿用缓存定位）
+        val lastUpdateHint = LocationSpHelper.getLocation()?.poiId?.let {
+            WeatherSpHelper.getLastUpdate(it)
+        } ?: 0L
+        val needNetwork = lastUpdateHint <= 0L ||
+            System.currentTimeMillis() - lastUpdateHint >= STALE_MS
+
+        if (needNetwork) {
+            refreshLocationIfPossible(context)
         }
 
         val location = LocationSpHelper.getLocation()
@@ -64,26 +86,22 @@ class WidgetUpdateWorker(
             Log.d(TAG, "无定位城市，跳过刷新")
             return Result.success()
         }
-
-        // lat/lon 缺失属于配置问题，重试无意义，直接成功结束
         if (location.lat.isNullOrEmpty() || location.lon.isNullOrEmpty()) {
             Log.d(TAG, "定位城市缺少经纬度，跳过刷新")
             return Result.success()
         }
 
-        // 先用缓存重绘，保证桌面不空白；失败保持现状
         val cachedModel = WeatherSpHelper.getWeatherModel(location.poiId)
         if (cachedModel != null) {
             WidgetRenderer.updateWidgetsIfNecessary(context)
         }
 
-        // 数据未过期（< 1 小时且同小时）时跳过网络请求，节省流量与电量
-        if (cachedModel != null && !cachedModel.needReload()) {
-            Log.d(TAG, "缓存数据未过期，跳过网络请求")
+        val lastUpdate = WeatherSpHelper.getLastUpdate(location.poiId)
+        if (lastUpdate > 0L && System.currentTimeMillis() - lastUpdate < STALE_MS) {
+            Log.d(TAG, "缓存未满 30 分钟，跳过网络请求")
             return Result.success()
         }
 
-        // 拉取最新天气；仅成功时再重绘，失败不覆盖桌面
         val fetchSuccess = try {
             fetchWeatherSync(location)
         } catch (e: Exception) {
@@ -97,7 +115,6 @@ class WidgetUpdateWorker(
             return Result.success()
         }
 
-        // 拉取失败（网络问题等）：限制重试次数，避免无限重试
         return if (runAttemptCount < MAX_RETRY_ATTEMPTS) {
             Log.d(TAG, "拉取失败，准备第 ${runAttemptCount + 1} 次重试")
             Result.retry()
@@ -107,7 +124,6 @@ class WidgetUpdateWorker(
         }
     }
 
-    /** 一次性查询两种 widget 的安装情况。 */
     private fun queryWidgetIds(context: Context): WidgetIds {
         val manager = AppWidgetManager.getInstance(context)
         val smallIds = manager.getAppWidgetIds(ComponentName(context, MyWidget::class.java))
@@ -116,14 +132,109 @@ class WidgetUpdateWorker(
     }
 
     /**
-     * 把 [WeatherHttpHelper.fetchWeather] 的回调式 API 包装成 suspend。
-     * 内部先获取 baseUrl，再发请求。
-     *
-     * 注意：[WeatherHttpHelper.fetchWeather] 在 lat/lon 为空时不会触发回调，
-     * 因此用 [withTimeoutOrNull] 兜底，避免协程永久挂起。
+     * 后台静默定位：有权限则更新 [LocationSpHelper]，无弹窗。
+     * 失败不影响后续用缓存城市拉天气。
      */
+    private suspend fun refreshLocationIfPossible(context: Context): Boolean {
+        val fine = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        if (!fine && !coarse) {
+            Log.d(TAG, "无定位权限，跳过定位刷新")
+            return false
+        }
+
+        val location = withTimeoutOrNull(LOCATION_TIMEOUT_MS) {
+            requestLocationOnce(context)
+        } ?: return false
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val geocoder = Geocoder(context, Locale.getDefault())
+                @Suppress("DEPRECATION")
+                val address = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    ?.firstOrNull()
+                LocationSpHelper.saveWithLocation(location, address)
+                Log.d(TAG, "定位已更新: ${location.latitude},${location.longitude}")
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "保存定位失败", e)
+                false
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private suspend fun requestLocationOnce(context: Context): Location? {
+        val lm = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+            ?: return null
+        if (!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) &&
+            !lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        ) {
+            return null
+        }
+
+        val last = sequenceOf(
+            LocationManager.NETWORK_PROVIDER,
+            LocationManager.GPS_PROVIDER,
+            LocationManager.PASSIVE_PROVIDER
+        ).mapNotNull { provider ->
+            runCatching { lm.getLastKnownLocation(provider) }.getOrNull()
+        }.maxByOrNull { it.time }
+
+        if (last != null && System.currentTimeMillis() - last.time <= LAST_KNOWN_MAX_AGE_MS) {
+            return last
+        }
+
+        return suspendCancellableCoroutine { cont ->
+            val mainHandler = Handler(Looper.getMainLooper())
+            val listener = object : LocationListener {
+                override fun onLocationChanged(location: Location) {
+                    runCatching {
+                        lm.removeUpdates(this)
+                    }
+                    if (cont.isActive) cont.resume(location)
+                }
+
+                override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+                override fun onProviderEnabled(provider: String) {}
+                override fun onProviderDisabled(provider: String) {}
+            }
+
+            cont.invokeOnCancellation {
+                runCatching { lm.removeUpdates(listener) }
+            }
+
+            mainHandler.post {
+                try {
+                    var requested = false
+                    if (lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                        lm.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER, 0L, 0f, listener, Looper.getMainLooper()
+                        )
+                        requested = true
+                    }
+                    if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        lm.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER, 0L, 0f, listener, Looper.getMainLooper()
+                        )
+                        requested = true
+                    }
+                    if (!requested) {
+                        if (cont.isActive) cont.resume(last)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "请求定位失败", e)
+                    if (cont.isActive) cont.resume(last)
+                }
+            }
+        }
+    }
+
     private suspend fun fetchWeatherSync(cityMode: CityMode): Boolean {
-        // 前置检查：lat/lon 缺失时 fetchWeather 不会回调，直接返回
         if (cityMode.lat.isNullOrEmpty() || cityMode.lon.isNullOrEmpty()) {
             return false
         }
@@ -131,7 +242,6 @@ class WidgetUpdateWorker(
         val result = withTimeoutOrNull(REQUEST_TIMEOUT_MS) {
             suspendCancellableCoroutine { cont ->
                 val helper = WeatherHttpHelper.getInstance()
-
                 helper.getBaseUrl {
                     helper.fetchWeather(cityMode, object : ApiCallback {
                         override fun onResponse(
@@ -143,14 +253,12 @@ class WidgetUpdateWorker(
                         }
                     })
                 }
-
-                cont.invokeOnCancellation { /* OkHttp 请求由其自身管理生命周期 */ }
+                cont.invokeOnCancellation { }
             }
         }
         return result ?: false
     }
 
-    /** 每天最多拉一次预警，避免重复请求聚合 API。 */
     private fun checkAlarmIfNeeded(context: Context) {
         val curDay = TimeUtils.timeToDay(System.currentTimeMillis())
         if (SpUtils.getInstance().getString("alarmDay", "") != curDay) {

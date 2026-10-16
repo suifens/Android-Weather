@@ -18,9 +18,9 @@ import java.util.concurrent.TimeUnit
  * 桌面小部件网络刷新任务的统一调度入口。
  *
  * - [schedulePeriodic]：注册 30 分钟周期任务，仅在联网时执行
+ * - Worker 内有效拉网间隔也为 30 分钟，并在拉网前同步刷新定位
  * - [enqueueOneTime]：立即拉网刷新（首次添加 widget、城市列表变更等）
  * - Provider.onUpdate 不再走这里拉网，只读缓存；样式变更走 [WidgetRenderer.updateWidgetsIfNecessaryAsync]
- * - [cancelIfNoWidgets]：两种 widget 都已删除时才取消周期任务
  */
 object WidgetWorkScheduler {
 
