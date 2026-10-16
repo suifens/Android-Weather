@@ -1,17 +1,23 @@
 package com.chunjing.tq.widget
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.TimeUtils
 import com.chunjing.tq.MyApp
 import com.chunjing.tq.R
+import com.chunjing.tq.bean.CityCode
 import com.chunjing.tq.bean.WeatherBean
 import com.chunjing.tq.bean.juhe.JuheAlarmBean
 import com.chunjing.tq.bean.juhe.JuheBean
 import com.chunjing.tq.bean.juhe.JuheWeather
 import com.chunjing.tq.db.AppRepo
+import com.chunjing.tq.db.LocationRepository
 import com.chunjing.tq.db.WeatherRepository
 import com.chunjing.tq.db.entity.CityEntity
 import com.chunjing.tq.ext.JUHE_ALARM
@@ -24,15 +30,20 @@ import com.goodtech.weatherlib.net.HttpUtils
 import com.goodtech.weatherlib.utils.DateUtil
 import com.goodtech.weatherlib.utils.SpUtils
 import com.goodtech.weatherlib.utils.Utils
-import com.chunjing.tq.bean.CityCode
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.resume
 
 /**
  * 小组件天气刷新 Worker（A 方案）。
- * 过期才拉网 → 成功后 [WidgetRenderer.updateWidgetsIfNecessary]；失败不覆盖桌面。
+ * - 有效拉网间隔 30 分钟
+ * - 拉网前同步刷新定位，再拉天气重绘
  */
 class WidgetUpdateWorker(
     context: Context,
@@ -42,7 +53,8 @@ class WidgetUpdateWorker(
     companion object {
         private const val TAG = "WidgetUpdateWorker"
         private const val MAX_RETRY_ATTEMPTS = 3
-        private const val STALE_MS = 60 * 60 * 1000L
+        private const val STALE_MS = 30 * 60 * 1000L
+        private const val LOCATION_TIMEOUT_MS = 20_000L
     }
 
     override suspend fun doWork(): Result {
@@ -54,25 +66,34 @@ class WidgetUpdateWorker(
             return Result.success()
         }
 
-        val city = WidgetRenderer.resolveWidgetCity()
-        if (city == null || city.latitude.isBlank() || city.longitude.isBlank()) {
+        var city = WidgetRenderer.resolveWidgetCity()
+        val cached = city?.let { WeatherRepository.getInstance().getCachedWeather(it.cityId) }
+        val needNetwork = cached == null || cached.needReload()
+
+        if (needNetwork) {
+            refreshLocationIfPossible()?.let { city = it }
+        }
+
+        city = city ?: WidgetRenderer.resolveWidgetCity()
+        if (city == null || city!!.latitude.isBlank() || city!!.longitude.isBlank()) {
             Log.d(TAG, "无可用城市/经纬度，跳过")
             return Result.success()
         }
+        val cityNow = city!!
 
         val repo = WeatherRepository.getInstance()
-        val cached = repo.getCachedWeather(city.cityId)
-        if (cached != null) {
+        val latestCached = repo.getCachedWeather(cityNow.cityId)
+        if (latestCached != null) {
             WidgetRenderer.updateWidgetsIfNecessary(context)
         }
 
-        if (cached != null && !cached.needReload()) {
-            Log.d(TAG, "缓存未过期，跳过拉网")
+        if (latestCached != null && !latestCached.needReload()) {
+            Log.d(TAG, "缓存未满 30 分钟，跳过拉网")
             return Result.success()
         }
 
         val fetched = try {
-            repo.fetchAndCache(city)
+            repo.fetchAndCache(cityNow)
         } catch (e: Exception) {
             Log.e(TAG, "拉天气失败", e)
             null
@@ -86,19 +107,75 @@ class WidgetUpdateWorker(
             }
         }
 
-        refreshJuheAqi(city)
+        refreshJuheAqi(cityNow)
         WidgetRenderer.updateWidgetsIfNecessary(context)
-        checkAlarmIfNeeded(context, city)
+        checkAlarmIfNeeded(context, cityNow)
         return Result.success()
     }
 
     private fun WeatherBean.needReload(): Boolean {
         if (updateTime <= 0L) return true
-        val now = System.currentTimeMillis()
-        if (now - updateTime > STALE_MS) return true
-        val curHour = TimeUtils.millis2String(now, "HH")
-        val lastHour = TimeUtils.millis2String(updateTime, "HH")
-        return curHour != lastHour
+        return System.currentTimeMillis() - updateTime >= STALE_MS
+    }
+
+    /**
+     * 有定位权限时刷新定位城并写入 DB；失败返回 null，沿用旧城市。
+     */
+    private suspend fun refreshLocationIfPossible(): CityEntity? {
+        val context = applicationContext
+        val fine = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        if (!fine && !coarse) {
+            Log.d(TAG, "无定位权限，跳过定位刷新")
+            return null
+        }
+
+        val locationRepo = LocationRepository.getInstance()
+        val location = withTimeoutOrNull(LOCATION_TIMEOUT_MS) {
+            suspendCancellableCoroutine { cont ->
+                locationRepo.requestLocation(object : LocationRepository.Callbacks {
+                    override fun onStart() {}
+
+                    override fun onLocation(location: Location) {
+                        if (cont.isActive) cont.resume(location)
+                    }
+
+                    override fun onError(message: String) {
+                        Log.d(TAG, "定位失败: $message")
+                        if (cont.isActive) cont.resume(null)
+                    }
+
+                    override fun onFinish() {}
+                })
+            }
+        }
+
+        if (location == null) {
+            locationRepo.endLocationRequest()
+            return null
+        }
+
+        return try {
+            withContext(Dispatchers.IO) {
+                val city = locationRepo.location2CityEntity(location)
+                val resolvedCode = locationRepo.resolveLocationCityCode(city)
+                if (resolvedCode.isNotBlank()) {
+                    city.cityCode = resolvedCode
+                }
+                AppRepo.getInstance().addCity(city)
+                Log.d(TAG, "定位已更新: ${city.mergerName}")
+                city
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "保存定位城失败", e)
+            null
+        } finally {
+            locationRepo.endLocationRequest()
+        }
     }
 
     private suspend fun refreshJuheAqi(city: CityEntity) {
@@ -128,7 +205,7 @@ class WidgetUpdateWorker(
             val result = HttpUtils.get<JuheBean<List<JuheAlarmBean>>>(url)
             val list = result?.result ?: return
             if (list.isEmpty()) return
-            var alarm = list.firstOrNull { city.cityName.contains(it.district) } ?: list[0]
+            val alarm = list.firstOrNull { city.cityName.contains(it.district) } ?: list[0]
             val timestamp = TimeUtils.string2Millis(alarm.time, "yyyy-MM-dd HH:mm")
             SpUtils.instance.putString(key, TimeUtils.millis2String(timestamp, "dd"))
             JPushHelper.buildLocalNotification(
