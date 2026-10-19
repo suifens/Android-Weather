@@ -10,12 +10,18 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.goodtech.tq.alarm.JAlarmReceiver
 import com.goodtech.tq.helpers.LocationSpHelper
@@ -54,6 +60,50 @@ class WidgetUpdateWorker(
         private const val STALE_MS = 30 * 60 * 1000L
         /** 最近定位可复用时长 */
         private const val LAST_KNOWN_MAX_AGE_MS = 5 * 60 * 1000L
+        private const val CHANNEL_ID = "widget_weather_sync"
+        private const val FOREGROUND_NOTIFY_ID = 10042
+    }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo = buildForegroundInfo()
+
+    private fun buildForegroundInfo(): ForegroundInfo {
+        val context = applicationContext
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "天气小组件更新",
+                NotificationManager.IMPORTANCE_LOW
+            )
+            manager.createNotificationChannel(channel)
+        }
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_menu_compass)
+            .setContentTitle(context.getString(com.goodtech.tq.R.string.app_name))
+            .setContentText("正在更新天气")
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .build()
+        val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            var flags = ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            val fine = ContextCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+            val coarse = ContextCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+            if (fine || coarse) {
+                flags = flags or ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+            }
+            flags
+        } else {
+            0
+        }
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ForegroundInfo(FOREGROUND_NOTIFY_ID, notification, type)
+        } else {
+            ForegroundInfo(FOREGROUND_NOTIFY_ID, notification)
+        }
     }
 
     private data class WidgetIds(val smallIds: IntArray, val doubleIds: IntArray) {
@@ -62,8 +112,23 @@ class WidgetUpdateWorker(
 
     override suspend fun doWork(): Result {
         val context = applicationContext
+        WidgetWorkScheduler.armNextAlarm(context)
+        try {
+            setForeground(getForegroundInfo())
+        } catch (e: Exception) {
+            Log.e(TAG, "升前台失败，继续尝试刷新", e)
+        }
         WidgetWorkScheduler.clearLegacyWeatherNotifications(context)
 
+        return try {
+            refresh(context)
+        } finally {
+            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .cancel(FOREGROUND_NOTIFY_ID)
+        }
+    }
+
+    private suspend fun refresh(context: Context): Result {
         val widgetIds = queryWidgetIds(context)
         if (!widgetIds.hasAny()) {
             Log.d(TAG, "无 widget 安装，跳过本次刷新")

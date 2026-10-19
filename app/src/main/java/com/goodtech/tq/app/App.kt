@@ -131,6 +131,11 @@ class App : Application() {
             initializeMMKV()
             registerLifecycle()
             initializeDatabase()
+            // 进程起来就挂上 30 分钟闹钟；已有小组件时补一次刷新
+            WidgetWorkScheduler.schedulePeriodic(this)
+            if (WidgetWorkScheduler.hasAnyWidget(this)) {
+                WidgetWorkScheduler.enqueueOneTime(this)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "初始化失败", e)
         }

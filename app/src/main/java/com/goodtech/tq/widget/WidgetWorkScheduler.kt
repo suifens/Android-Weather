@@ -1,15 +1,21 @@
 package com.goodtech.tq.widget
 
+import android.app.AlarmManager
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.util.Log
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
@@ -17,70 +23,102 @@ import java.util.concurrent.TimeUnit
 /**
  * 桌面小部件网络刷新任务的统一调度入口。
  *
- * - [schedulePeriodic]：注册 30 分钟周期任务，仅在联网时执行
- * - Worker 内有效拉网间隔也为 30 分钟，并在拉网前同步刷新定位
- * - [enqueueOneTime]：立即拉网刷新（首次添加 widget、城市列表变更等）
- * - Provider.onUpdate 不再走这里拉网，只读缓存；样式变更走 [WidgetRenderer.updateWidgetsIfNecessaryAsync]
+ * WorkManager 周期任务在息屏/省电下常被推迟数小时，因此主调度改为 AlarmManager：
+ * 每 30 分钟唤醒进程并立刻入队一次刷新（不附加网络约束，避免一直 BLOCKED）。
  */
 object WidgetWorkScheduler {
 
-    /** 周期任务唯一名称。 */
+    private const val TAG = "WidgetWorkScheduler"
+    const val ACTION_REFRESH = "com.goodtech.tq.widget.ACTION_REFRESH"
     private const val PERIODIC_WORK_NAME = "widget_weather_periodic"
-
-    /** 一次性立即刷新任务唯一名称。 */
     private const val ONE_TIME_WORK_NAME = "widget_weather_one_time"
-
-    /** 周期刷新间隔，与原 [WidgetService] 内的 delay(1800_000) 保持一致。 */
-    private const val INTERVAL_MINUTES = 30L
-
-    /** 失败重试的初始退避延迟（线性增长：30s、60s、90s...）。 */
-    private const val BACKOFF_DELAY_SECONDS = 30L
+    private const val ALARM_REQUEST_CODE = 0x5747
+    const val INTERVAL_MS = 30 * 60 * 1000L
 
     /** 历史天气通知 ID（迁移前前台 Service 使用），升级后需主动清除。 */
     private const val LEGACY_NOTIFY_ID_SMALL = 999
     private const val LEGACY_NOTIFY_ID_DOUBLE = 998
 
-    private fun constraints(): Constraints =
-        Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
     /**
-     * 注册或保留周期刷新任务。
-     * 已存在周期任务时保持原任务（不重置计时），避免每次 widget onUpdate 都重置周期。
+     * 有小组件时设定下一次 30 分钟闹钟，并取消旧的周期 Work（避免和闹钟重复、且周期任务易被推迟）。
      */
     fun schedulePeriodic(context: Context) {
-        val request = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(
-            INTERVAL_MINUTES, TimeUnit.MINUTES
-        )
-            .setConstraints(constraints())
-            .setBackoffCriteria(BackoffPolicy.LINEAR, BACKOFF_DELAY_SECONDS, TimeUnit.SECONDS)
+        val app = context.applicationContext
+        if (!hasAnyWidget(app)) {
+            cancelAlarm(app)
+            WorkManager.getInstance(app).cancelUniqueWork(PERIODIC_WORK_NAME)
+            return
+        }
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        val request = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(
+            30, TimeUnit.MINUTES,
+            10, TimeUnit.MINUTES
+        )
+            .setConstraints(constraints)
+            .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES)
+            .build()
+        WorkManager.getInstance(app).enqueueUniquePeriodicWork(
             PERIODIC_WORK_NAME,
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.UPDATE,
             request
         )
+        armNextAlarm(app)
     }
 
     /**
-     * 立即触发一次刷新。使用 [ExistingWorkPolicy.REPLACE] 保证最新请求生效。
-     * 已有未执行的 one-time 任务会被替换，避免排队堆积。
-     * 适用于首次添加 widget、切换城市等需要立刻拉网的场景。
-     * 仅改样式请用 [WidgetRenderer.updateWidgetsIfNecessaryAsync]。
+     * 立刻入队。加急执行，配额用完时退回普通任务。
+     * 任务内部会升成前台同步，避免被系统杀掉。
      */
     fun enqueueOneTime(context: Context) {
         val request = OneTimeWorkRequestBuilder<WidgetUpdateWorker>()
-            .setConstraints(constraints())
-            .setBackoffCriteria(BackoffPolicy.LINEAR, BACKOFF_DELAY_SECONDS, TimeUnit.SECONDS)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .build()
-
         WorkManager.getInstance(context).enqueueUniqueWork(
             ONE_TIME_WORK_NAME,
             ExistingWorkPolicy.REPLACE,
             request
         )
+    }
+
+    fun armNextAlarm(context: Context) {
+        val app = context.applicationContext
+        if (!hasAnyWidget(app)) {
+            cancelAlarm(app)
+            return
+        }
+        val am = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val triggerAt = System.currentTimeMillis() + INTERVAL_MS
+        val pi = refreshPendingIntent(app)
+        try {
+            val canExact = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || am.canScheduleExactAlarms()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && canExact) {
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi)
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi)
+            } else {
+                am.setExact(AlarmManager.RTC_WAKEUP, triggerAt, pi)
+            }
+            Log.d(TAG, "已设定 ${INTERVAL_MS / 60000} 分钟后刷新")
+        } catch (e: SecurityException) {
+            Log.e(TAG, "精确闹钟被拒绝，改用不精确闹钟", e)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pi)
+            }
+        }
+    }
+
+    fun cancelAlarm(context: Context) {
+        val app = context.applicationContext
+        val am = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        am.cancel(refreshPendingIntent(app))
+    }
+
+    private fun refreshPendingIntent(context: Context): PendingIntent {
+        val intent = Intent(context, WidgetRefreshReceiver::class.java).setAction(ACTION_REFRESH)
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        return PendingIntent.getBroadcast(context, ALARM_REQUEST_CODE, intent, flags)
     }
 
     /**
@@ -91,7 +129,9 @@ object WidgetWorkScheduler {
         if (hasAnyWidget(context)) {
             return
         }
+        WorkManager.getInstance(context).cancelUniqueWork(ONE_TIME_WORK_NAME)
         WorkManager.getInstance(context).cancelUniqueWork(PERIODIC_WORK_NAME)
+        cancelAlarm(context)
         clearLegacyWeatherNotifications(context)
     }
 
