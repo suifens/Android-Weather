@@ -13,6 +13,7 @@ import com.chunjing.tq.jpush.JPushHelper
 import com.chunjing.tq.ui.activity.vm.CalendarViewModel
 import com.chunjing.tq.ui.activity.vm.MainViewModel
 import com.chunjing.tq.utils.ContentUtil
+import com.chunjing.tq.widget.WidgetWorkScheduler
 import com.goodtech.weatherlib.BaseApp
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.mmkv.MMKV
@@ -53,6 +54,10 @@ open class MyApp : BaseApp() {
         calendarVmInstance = getAppViewModelProvider()[CalendarViewModel::class.java]
         mainViewModelInstance = getAppViewModelProvider()[MainViewModel::class.java]
         MMKV.initialize(this)
+        WidgetWorkScheduler.schedulePeriodic(this)
+        if (WidgetWorkScheduler.hasAnyWidget(this)) {
+            WidgetWorkScheduler.enqueueOneTime(this)
+        }
 
         try {
             UMConfigure.preInit(this, UM_APP_ID, BuildConfig.UMENG_CHANNEL)
